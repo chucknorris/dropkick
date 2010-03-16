@@ -16,7 +16,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.CommandLine;
 
     public class CommandTestDeploy :
-        Deployment<CommandTestDeploy>
+        Deployment<CommandTestDeploy, object>
     {
         public static Role Web { get; set; }
 

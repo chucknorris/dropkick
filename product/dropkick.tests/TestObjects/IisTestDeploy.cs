@@ -5,7 +5,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Iis;
 
     public class IisTestDeploy :
-        Deployment<IisTestDeploy>
+        Deployment<IisTestDeploy, object>
     {
         static IisTestDeploy()
         {

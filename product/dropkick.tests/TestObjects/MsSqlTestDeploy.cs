@@ -16,7 +16,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.MsSql;
 
     public class MsSqlTestDeploy :
-        Deployment<MsSqlTestDeploy>
+        Deployment<MsSqlTestDeploy, object>
     {
         static MsSqlTestDeploy()
         {

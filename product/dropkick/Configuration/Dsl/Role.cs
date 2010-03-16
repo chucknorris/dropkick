@@ -9,10 +9,10 @@ namespace dropkick.Configuration.Dsl
         void ConfigureServer(DeploymentServer server);
     }
 
-    public class Role<T> :
+    public class Role<T,C> :
         Role,
         DeploymentInspectorSite
-        where T : Deployment<T>, new()
+        where T : Deployment<T,C>, new()
     {
         Action<Server> _serverConfiguration;
         Server _server = new PrototypicalServer();
@@ -29,9 +29,9 @@ namespace dropkick.Configuration.Dsl
             inspector.Inspect(this, () => _server.InspectWith(inspector));
         }
 
-        public static Role<T> GetRole(Role input)
+        public static Role<T,C> GetRole(Role input)
         {
-            Role<T> result = input as Role<T>;
+            Role<T,C> result = input as Role<T,C>;
             if(result == null)
                 throw new ArgumentException(string.Format("The part is not valid for this deployment"), "input");
 

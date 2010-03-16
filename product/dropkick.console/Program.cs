@@ -23,19 +23,19 @@ namespace dropkick.console
             BasicConfigurator.Configure();
 
             // commands 
-            //   verify     v
-            //   execute    e
-            //   trace      t   (default)
+            //   verify
+            //   execute
+            //   trace     (default)
 
             // args
-            //   environment    /e:local - used to work with config files
-            //   part           /p:all|web - a bastardized capistrano roles
-            //   deployment
-            //      /d:FHLBank.Flames.Deployment.dll (an assembly)
-            //      /d:FHLBank.Flames.Deployment.StandardDepoy (a class, lack of .dll)
+            //   /environment:local is the default - used to work with config files
+            //   /role: all is the default
+            //   /configuration: the location of the config files
+            //   /deployment:
+            //      FHLBank.Flames.Deployment.dll (an assembly)
+            //      FHLBank.Flames.Deployment.StandardDepoy (a class, lack of .dll)
             //      (null) - if omitted search for a dll ending with 'Deployment' then pass that name in
 
-            //goal
             Runner.Deploy(args.Aggregate((a, b) => a + " " + b).Trim());
         }
     }

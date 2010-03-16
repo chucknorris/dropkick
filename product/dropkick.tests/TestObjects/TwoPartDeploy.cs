@@ -4,7 +4,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Files;
 
     public class TwoPartDeploy :
-        Deployment<TwoPartDeploy>
+        Deployment<TwoPartDeploy, object>
     {
         public static Role Web { get; set; }
         public static Role Db { get; set; }

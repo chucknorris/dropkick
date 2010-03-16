@@ -36,6 +36,8 @@ namespace dropkick.Engine
             var enviro = commandLineElements.GetDefinition("environment", "LOCAL");
             arguments.Environment = enviro;
 
+            var config = commandLineElements.GetDefinition("configuration", "settings");
+            arguments.ConfigurationDirectory = config;
         }
 
         static IEnumerable<ICommandLineElement> P(string commandLine)

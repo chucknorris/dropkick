@@ -5,7 +5,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.WinService;
 
     public class WinServiceTestDeploy :
-        Deployment<WinServiceTestDeploy>
+        Deployment<WinServiceTestDeploy, object>
     {
         public static Role Web { get; set; }
         public static Role File { get; set; }

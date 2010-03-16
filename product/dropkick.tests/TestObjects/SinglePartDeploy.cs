@@ -17,7 +17,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Msmq;
 
     public class SinglePartDeploy :
-        Deployment<SinglePartDeploy>
+        Deployment<SinglePartDeploy, object>
     {
         static SinglePartDeploy()
         {

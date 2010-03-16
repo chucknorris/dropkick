@@ -10,7 +10,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.WinService;
 
     public class TestDeployment :
-        Deployment<TestDeployment>
+        Deployment<TestDeployment, object>
     {
         static TestDeployment()
         {
