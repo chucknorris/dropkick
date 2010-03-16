@@ -1,0 +1,8 @@
+;Separators in AHK
+,
+** `n `r
+|
+(
+)
+{
+}

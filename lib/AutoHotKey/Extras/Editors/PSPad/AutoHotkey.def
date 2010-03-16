@@ -1,0 +1,1372 @@
+;;; ==================================================================
+;;;   PSPad clip definition file for AutoHotkey
+;;;   Language:       English
+;;;   AUTHOR(s)       beardboy, GoGoGadgetScott
+;;;   VERSION:        1.1.1, 04/19/2004 - 02/08/2005
+;;;                   Kept updated with new syntax upon each new
+;;;                   AutoHotkey release. Please send corrections and
+;;;                   improvements to support@autohotkey.com
+;;; ==================================================================
+;;;   HISTORY:
+;;;    1.1.1
+;;;     - Added a few missing spaces in command descriptions.
+;;; ==================================================================
+;;; G (green)       - PHPad hotkeys
+;;; R (red)         - File, Directory, and Disk Management
+;;; F (fuchsia)     - GUI, MsgBox, InputBox & Other Dialogs
+;;; M (maroon)      - Keyboard & Mouse Control
+;;; D (dark gray)   - Process Management
+;;; N (navy)        - String Management
+;;; P (purple)      - Window Management
+;;; B (blue)        - Directives
+;;;   (black)       - Misc. & Unsorted Commands
+;;; ==================================================================
+;
+;
+; --------------------------------------------------------------------
+;                               Macro definition
+; --------------------------------------------------------------------
+[Macro definition]
+; Directives
+%AllowSameLineComments%=@K AllowSameLineComments:,#AllowSameLineComments
+%ClipboardTimeout%=@E ClipboardTimeout (ms):,#ClipboardTimeout ,
+%CommentFlag%=@C Comment String:,#CommentFlag ,,"//";"@";"!";"/";"*;";"C*"
+%ErrorStdOut%=@K ErrorStdOut:,#ErrorStdOut
+%EscapeChar%=@C Escape Char:,#EscapeChar ,,"\";"`"
+%HotkeyInterval%=@E HotkeyInterval (ms):,#HotkeyInterval ,
+%HotkeyModifierTimeout%=@E HotkeyModifierTimeout (ms):,#HotkeyModifierTimeout ,
+%Hotstring%=@C Hotstring:,#Hotstring ,,"-()[]{}':;""/\,.?!`n `t";"`n `t";"-()[]{}"
+%IfWinActive%=@E IfWinActive:,#IfWinActive
+%IfWinExist%=@E IfWinExist:,#IfWinExist
+%IfWinNotActive%=@E IfWinNotActive:,#IfWinNotActive
+%IfWinNotExist%=@E IfWinNotExist:,#IfWinNotExist
+%Include%=@O Include:,#Include ,SomeFile.ahk,AutoHotKey Scripts (*.ahk)|*.ahk
+%IncludeAgain%=@O IncludeAgain:,#IncludeAgain ,SomeFile.ahk,AutoHotKey Scripts (*.ahk)|*.ahk
+%InstallKeybdHook%=@K InstallKeybdHook:,#InstallKeybdHook ,
+%InstallMouseHook%=@K InstallMouseHook:,#InstallMouseHook ,
+%KeyHistory%=@E MaxEvents (num):,#KeyHistory ,
+%LTrim%=@C LTrim:,#LTrim ,,"On";"Off"
+%MaxHotkeysPerInterval%=@E MaxHotkeys/Interval (num):,#MaxHotkeysPerInterval ,
+%MaxMem%=@E MaxMem (MB):,#MaxMem ,
+%MaxThreads%=@E MaxThreads (num):,#MaxThreads ,
+%MaxThreadsBuffer%=@C MaxThreadsBuffer:,#MaxThreadsBuffer ,,"On";"Off"
+%MaxThreadsPerHotkey%=@E MaxThreads/Hotkey (num):,#MaxThreadsPerHotkey ,
+%NoEnv%=@K NoEnv:,#NoEnv
+%NoTrayIcon%=@K NoTrayIcon:,#NoTrayIcon
+%Persistent%=@K Persistent:,#Persistent
+%SingleInstance%=@C SingleInstance:,#SingleInstance ,,"force";"ignore";"off"
+%UseHook%=@C UseHook:,#UseHook ,,"On";"Off"
+%WinActivateForce%=@K WinActivateForce:,#WinActivateForce
+; mandatory elements
+%options%=@C MsgBox type:,,0,"1";"2";"3";"4";"5";"16";"32";"48";"64";"256";"512";"4096";"8192"
+%title%=@E Title:,,Title,,
+%label%=@E Label:,,Label,,
+%text%=@E Text:,,Message,,
+%wait%=@E Wait:
+%BlockInput%=@C BlockInput:,,,"On";"Off";"Send";"Mouse";"SendAndMouse";"Default";"MouseMove";"MouseMoveOff"
+%SetState%=@C State:,,,"On";"Off";"AlwaysOn";"AlwaysOff"
+%onoff%=@C Value:,,,"On";"Off"
+%onofft%=@C Value:,,,"On";"Off";"Toggle"
+%speed%=@C Speed:,,,"Fast";"Slow"
+%sound%=@O Filename:,,%SystemRoot%\Media\ding.wav,Auto file (*.wav;*.mp3;*.avi)|*.wav;*.mp3;*.avi
+%ValueType%=@C ValueType:,,,"REG_SZ";"REG_EXPAND_SZ";"REG_MULTI_SZ";"REG_DWORD";"REG_BINARY"
+%RootKey%=@C RootKey:,,,"HKLM";"HKU";"HKCU";"HKCR";"HKCC"
+%cmd%=@C Command:,,,"Exist";"Close";"Priority";"Wait";"WaitClose"
+%ButtonName%=@C ButtonName:,,,"Yes";"No";"OK";"Cancel";"Abort";"Ignore";"Retry";"TryAgain";"Continue";"Timeout"
+; optional elements
+%timeoutoptional%=@E Timeout (s) (optional):
+;
+;
+; --------------------------------------------------------------------
+;                           PHPad hotkeys
+; --------------------------------------------------------------------
+[Retrieve |G Retrievecontents of this variable]*Shift+Ctrl+R
+%§|%
+[Label |G name of the label or hotkey label]*Shift+Ctrl+L
+§|::
+[Hotstring |G name of the label or hotkey label]*Shift+Ctrl+H
+::§::|
+;
+; --------------------------------------------------------------------
+;                              Comments
+; --------------------------------------------------------------------
+[Comment | Comment out lines]
+/*
+§|
+*/
+;
+;
+; --------------------------------------------------------------------
+;                File, Directory, and Disk Management
+; --------------------------------------------------------------------
+[Drive |R Ejects/retracts tray]
+Drive, Sub-command [, Drive , Value]
+[DriveGet |R Retrieves information about drive(s)]
+DriveGet, OutputVar, Cmd [, Value]
+[DriveSpaceFree |R Free disk space of drive (Megabytes)]
+DriveSpaceFree, OutputVar, C:\
+[FileAppend |R Appends text to file]
+FileAppend [, Text`n, Filename]
+[FileCopy |R Copies one or more files]
+FileCopy, Source, Dest [, Flag (1 = overwrite)]
+[FileCopyDir |R Copies folder along with all its sub-folders & files]
+FileCopyDir, Source, Dest [, Flag]
+[FileCreateDir |R Creates a folder]
+FileCreateDir, DirName
+[FileCreateShortcut |R Creates a shortcut (.lnk) file]
+FileCreateShortcut, Target, LinkFile [, WorkingDir, Args, Description, IconFile, ShortcutKey, IconNumber, RunState]
+[FileDelete |R Deletes one or more files]
+FileDelete, FilePattern
+[FileExist | Checks if file/dir exists]
+FileExist(FilePattern)
+[FileInstall |R Includes specified file inside compiled script]
+FileInstall, Source, Dest [, Flag (1 = overwrite)]
+[FileGetAttrib |R Whether file/folder is read-only, hidden, etc]
+FileGetAttrib, OutputVar(RASHNDOCT) [, Filename]
+[FileGetShortcut |R information about shortcut (.lnk) file]
+FileGetShortcut, LinkFile [, OutTarget, OutDir, OutArgs, OutDescription, OutIcon, OutIconNum, OutRunState]
+[FileGetSize |R Retrieves size of file]
+FileGetSize, OutputVar [, Filename, Units]
+[FileGetTime |R Retrieves datetime stamp of file or folder]
+FileGetTime, OutputVar [, Filename, WhichTime (M, C, or -- default is M)]
+[FileGetVersion |R Retrieves the version of a file]
+FileGetVersion, OutputVar [, Filename]
+[FileMove |R Moves or renames one or more files]
+FileMove, Source, Dest [, Flag (1 = overwrite)]
+[FileMoveDir |R Moves folder along with all its contents]
+FileMoveDir, Source, Dest [, Flag (2 = overwrite)]
+[FileRead |R Reads all of file's text into variable]
+FileRead, OutputVar, Filename
+[FileReadLine |R specified line from file & stores text in variable]
+FileReadLine, OutputVar, Filename, LineNum
+[FileRecycle |R Sends file or directory to recycle bin]
+FileRecycle, FilePattern
+[FileRecycleEmpty |R Empties the recycle bin]
+FileRecycleEmpty [, C:\]
+[FileRemoveDir |R Deletes a folder]
+FileRemoveDir, Path [, Recurse? (1 = yes)]
+[FileSetAttrib |R Sets file/folder attributes]
+FileSetAttrib, Attributes(RASHNOT) [, FilePattern, OperateOnFolders?, Recurse?]
+[FileSetTime |R Changes datetime stamp of one or more files or folders]
+FileSetTime [, YYYYMMDDHH24MISS, FilePattern, WhichTime (M|C|A), OperateOnFolders?, Recurse?]
+[IfExist |R Checks for the existence of a file or folder]
+IfExist, File|Dir|Pattern
+[IfNotExist |R Checks for the existence of a file or folder]
+IfNotExist, File|Dir|Pattern
+[IniDelete |R Deletes a value from a standard format .ini file]
+IniDelete, Filename, Section [, Key]
+[IniRead |R Reads a value from a standard format .ini file]
+IniRead, OutputVar, Filename, Section, Key [, Default]
+[IniWrite |R Writes value to standard format .ini file]
+IniWrite, Value, Filename, Section, Key
+[Loop (files & folders) |R Retrieves files or folders, one at a time]
+Loop, C:\My Folder\*.txt [, IncludeFolders?, Recurse?]
+{
+	MsgBox Current file or folder name (with full path) is: %A_LoopFileFullPath%
+	MsgBox Same as above but built from two components: %A_LoopFileDir%\%A_LoopFileName%
+}
+[Loop (read file contents) |R Retrieves lines in text file, one at time]
+Loop, Read, InputFile [, OutputFile]
+{
+	MsgBox The current line is:`n%A_LoopReadLine%
+	FileAppend This text is appended to OutputFile (if present).`n
+}
+[SetWorkingDir |script's current working directory]
+SetWorkingDir, DirName
+[SplitPath |R Separates file name or URL into its name, directory, extension, & drive]
+SplitPath, InputVar [, OutFileName, OutDir, OutExtension, OutNameNoExt, OutDrive]
+;
+;
+; --------------------------------------------------------------------
+;              GUI, MsgBox, InputBox & Other Dialogs
+; --------------------------------------------------------------------
+[FileSelectFile |F standard dialog  that allowsuser to select files]
+FileSelectFile, OutputVar [, Options, RootDir[\DefaultFilename], Prompt, Filter]
+[FileSelectFolder |F Displays select folder]
+FileSelectFolder, OutputVar [, *StartingFolder, Options, Prompt]
+[Gui |F Creates & manages windows & controls]
+GUI, sub-command [, Param2, Param3, Param4]
+[GuiControl |F Makes variety of changes to control in GUI window]
+GuiControl, Sub-command, ControlID [, Param3] 
+[GuiControlGet |F Information about control in GUI window]
+GuiControlGet, OutputVar [, Sub-command, ControlID, Param4]
+[IfMsgBox |F Which button was pushed by last MsgBox command]
+IfMsgBox, %ButtonName%
+[IL_Add |F Adds an icon or picture to an ImageList]
+IL_Add(ImageListID, Filename [, IconNumber, ResizeNonIcon?])
+[IL_Create |F Creates an empty ImageList]
+IL_Create([InitialCount, GrowCount, LargeIcons?])
+[IL_Destroy |F Destroys an ImageList]
+IL_Destroy(ImageListID)
+[LV_Add |F Adds a row to a ListView]
+LV_Add([Options, Col1, Col2, ...])
+[LV_Delete |F Deletes a row from a ListView]
+LV_Delete([RowNumber])
+[LV_DeleteCol |F Delets a column from a ListView]
+LV_DeleteCol(ColumnNumber)
+[LV_GetCount |F Gets the total rows in a ListView]
+LV_GetCount(["S"])
+[LV_GetNext |F Finds the next selected, checked, or focused item in a ListView]
+LV_GetNext([StartingRowNumber, "C|F"])
+[LV_GetText |F Retrieves the text from rows or column headers in a ListView]
+LV_GetText(OutputVar, RowNumber [, ColumnNumber])
+[LV_Insert |F Inserts a row into a ListView]
+LV_Insert(RowNumber [, Options, Col1, Col2, ...])
+[LV_InsertCol |F Inserts a column into a ListView]
+LV_InsertCol(ColumnNumber [, Options, ColumnTitle])
+[LV_Modify |F Modifies a row in a ListView]
+LV_Modify(RowNumber, Options [, NewCol1, NewCol2, ...])
+[LV_ModifyCol |F Modifies a column in a ListView]
+LV_ModifyCol([ColumnNumber, Options, ColumnTitle])
+[LV_SetImageList |F Assigns an ImageList to a ListView]
+LV_SetImageList(ImageListID [, 0|1|2])
+[InputBox |F Displays an input box to ask to enter string]
+InputBox, OutputVar [, Title, Prompt, HIDE, Width, Height, X, Y, Font, Timeout, Default]
+[MsgBox |F Displays simple message box]
+MsgBox, Text
+[MsgBox+ |F Displays simple message box with optional timeout]
+MsgBox, %options%, %title%, %text%, %timeoutoptional%
+[Progress |F Creates or updates window containing progress bar]
+Progress, Param1 [, SubText, MainText, WinTitle, FontName]
+[SB_SetIcon |F Displays an icon to the left of the text]
+SB_SetIcon(Filename [, IconNumber, PartNumber])
+[SB_SetParts |F Divides the bar into multiple sections]
+SB_SetParts([Width1, Width2, ... Width255])
+[SB_SetText |F Displays text in the bar]
+SB_SetText(NewText [, PartNumber, Style])
+[SplashImage |F Creates or updates window containing image]
+SplashImage [, ImageFile, Options, SubText, MainText, WinTitle, FontName]
+[SplashTextOn |F customizable text popup window]
+SplashTextOn [, Width, Height, Title, Text]
+[SplashTextOff |F above window]
+SplashTextOff
+[ToolTip |F Creates an always-on-top window anywhere onscreen]
+ToolTip [, Text, X, Y, WhichToolTip]
+[TrayTip |F Creates balloon message window neartray icon]
+TrayTip [, Title, Text, Seconds, Options]
+[TV_Add |F Adds a new item to the TreeView]
+TV_Add(Name, [ParentItemID, Options])
+[TV_Delete |F Deletes an item (or all items) from the Tree]
+TV_Delete([ItemID])
+[TV_GetChild |F Returns the ID of the item's top child]
+TV_GetChild(ParentItemID)
+[TV_GetCount |F Returns the number of items in the tree]
+TV_GetCount()
+[TV_GetNext |F Returns the ID of the sibling below the item (or traverses entire tree)]
+TV_GetNext([ItemID, "Checked | Full"])
+[TV_Get |F Returns expanded/checked/bold status of the item]
+TV_Get(ItemID, "Expand | Check | Bold")
+[TV_GetParent |F Returns the ID of the item's parent (or 0)]
+TV_GetParent(ItemID)
+[TV_GetPrev |F Returns the ID of the sibling above the item]
+TV_GetPrev(ItemID)
+[TV_GetSelection |F Returns the ID of the selected item]
+TV_GetSelection()
+[TV_GetText |F Retrieves the item's text/name]
+TV_GetText(OutputVar, ItemID)
+[TV_Modify |F Modifies the attributes and/or name of an item]
+TV_Modify(ItemID [, Options, NewName])
+;
+;
+; --------------------------------------------------------------------
+;                      Keyboard & Mouse Control
+; --------------------------------------------------------------------
+[Hotkey |M Creates, modifies, enables, or disables hotkey]
+Hotkey, KeyName [, Label, Options]
+[ListHotkeys |M Displays hotkeys in use bycurrent script]
+ListHotkeys
+[Pause |M Pauses script's current thread]
+Pause [, On|Off|Toggle, OperateOnUnderlyingThread?]
+[Reload |M Replace scurrently running instance of script]
+Reload
+[Suspend |M Disables all or selected hotkeys]
+Suspend [, Mode]
+[BlockInput |M Dis/enables mouse & keyboard]
+BlockInput, %BlockInput%
+[ControlSend |M to window or control]
+ControlSend [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlSendRaw |M to window or control]
+ControlSendRaw [, Control, Keys, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[GetKeyState |M Checks if key or button is down or up]
+GetKeyState, OutputVar, WhichKey [, Mode (P|T)]
+[KeyHistory |M History of most recent keystrokes and mouse clicks]
+KeyHistory
+[KeyWait |M Waits for key or button to be released or pressed down]
+KeyWait, KeyName [, Options]
+[Input |M Waits for the user to type string]
+Input [, OutputVar, Options, EndKeys, MatchList]
+[Send |M simulated keystrokes to active window]
+Send, Keys
+[SendEvent |M simulated keystrokes to active window]
+SendEvent, Keys
+[SendInput |M simulated fast keystrokes to active window]
+SendInput, Keys
+[SendMode |M Makes Send synonymous with SendInput/Play]
+SendMode, Event|Play|Input|InputThenPlay
+[SendPlay |M simulated keystrokes to active window]
+SendPlay, Keys
+[SendRaw |M simulated keystrokes to active window]
+SendRaw, Keys
+[SetKeyDelay |M Sets delay after each keystroke]
+SetKeyDelay [, Delay, PressDuration]
+[SetNumlockState |M state of Numlock key]
+SetNumLockState, On|Off|AlwaysOn|AlwaysOff
+[SetScrollLockState |M state of Scrolllock key]
+SetScrollLockState, On|Off|AlwaysOn|AlwaysOff
+[SetCapslockState |M state of Capslock key]
+SetCapsLockState, On|Off|AlwaysOn|AlwaysOff
+[SetStoreCapslockModeSend |M Whether to restore state of CapsLock]
+SetStoreCapslockMode, On|Off|AlwaysOn|AlwaysOff
+[Click |M Clicks a mouse button or turns the wheel]
+Click [, Options]
+[ControlClick |M Mouse button or mouse wheel event to control]
+ControlClick [, Control-or-Pos, WinTitle, WinText, WhichButton, ClickCount, Options, ExcludeTitle, ExcludeText]
+[MouseClick |M Clicks or holds mouse button, or turns mouse wheel]
+MouseClick, WhichButton [, X, Y, ClickCount, Speed, D|U, R]
+[MouseClickDrag |M Clicks, holds mouse button, moves, releases]
+MouseClickDrag, WhichButton, X1, Y1, X2, Y2 [, Speed, R]
+[MouseGetPos |M Retrieves current position of mouse cursor]
+MouseGetPos, [OutputVarX, OutputVarY, OutputVarWin, OutputVarControl, 1|2|3]
+[MouseMove |M Moves mouse cursor]
+MouseMove, X, Y [, Speed, R]
+[SetDefaultMouseSpeed |M Mouse speed if unspecified]
+SetDefaultMouseSpeed, Speed
+[SetMouseDelay |M Delay after each mouse movement or click]
+SetMouseDelay, Delay
+;
+;
+; --------------------------------------------------------------------
+;                         Process Management
+; --------------------------------------------------------------------
+[Exit |D Exits current thread]
+Exit [, ExitCode]
+[ExitApp |D Terminates script unconditionally]
+ExitApp [, ExitCode]
+[OnExit |D Specifies subroutine to run whenscript exits]
+OnExit [, Label]
+[OutputDebug |D Sends a string to the debugger for display]
+OutputDebug, Text
+[Process |D Performs operations on process]
+Process, %cmd%, PID-or-Name [, Param3]
+[Run |D Runs an external program]
+Run, Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+[RunAs |D Specifies user credentials to use Run and RunWait]
+RunAs [, User, Password, Domain]
+[RunWait |D Runs an external program & waits u]
+RunWait, Target [, WorkingDir, Max|Min|Hide|UseErrorLevel, OutputVarPID]
+[Shutdown |D Shuts down, restarts, or logs offsystem]
+Shutdown, Code
+[Sleep |D Waits specified amount of time before continuing]
+Sleep, Delay
+;
+;
+; --------------------------------------------------------------------
+;                         String Management
+; --------------------------------------------------------------------
+[EnvGet |N Retrieves an environment variable]
+EnvGet, OutputVar, EnvVarName
+[EnvSet |N Writes value to variable contained in environment]
+EnvSet, EnvVar, Value
+[FormatTime |N Transforms timestamp into specified date/time format]
+FormatTime, OutputVar [, YYYYMMDDHH24MISS, Format]
+[If |N If blank or 0]
+If var
+[IfEqual |N If var = value]
+IfEqual, var, value
+[IfNotEqual |N If var <> value]
+IfNotEqual, var, value
+[IfGreater |N If var > value]
+IfGreater, var, value
+[IfGreaterOrEqual |N If var >= value]
+IfGreaterOrEqual, var, value
+[IfLess |N If var < value]
+IfLess, var, value
+[IfLessOrEqual |N If var <= value]
+IfLessOrEqual, var, value
+[IfInString |N Checks if variable contains specified string]
+IfInString, var, SearchString
+[IfNotInString |N Checks if variable contains specified string]
+IfNotInString, var, SearchString
+[InStr |N Searches for substring]
+InStr(Haystack, Needle [, CaseSensitive?, StartingPos])
+[SubStr |N Extracts part of a string]
+SubStr(String, StartingPos [, Length])
+[Loop (parse string) |N Retrieves substrings from a string]
+Loop, Parse, InputVar [, Delimiters|CSV, OmitChars]
+{
+	MsgBox The current field is: %A_LoopField%
+}
+[RegExMatch |N Searches for a pattern (regular expression)]
+RegExMatch(Haystack, NeedleRegEx [, UnquotedOutputVar = "", StartingPos = 1])
+[RegExReplace |N Replaces a pattern (regular expression)]
+RegExReplace(Haystack, NeedleRegEx [, Replacement = "", OutputVarCount = "", Limit = -1, StartingPos = 1])
+[SetEnv |N Assigns value to variable.]
+SetEnv, var, Value
+[SetFormat |N Sets format of integers & floating point numbers]
+SetFormat, NumberType, Format
+[Sort |N Arranges in alphabetical, numerical, or random order]
+Sort, varName [, Options]
+[StringCaseSense |N whether string comparisons are case sensitive (default is no)]
+StringCaseSense, On|Off|Locale
+[StringGetPos |N Position ofspecified substring within string]
+StringGetPos, OutputVar, InputVar, SearchText [, L#|R#, Offset]
+[StringLeft |N Retrieves number of characters fromleft hand sid]
+StringLeft, OutputVar, InputVar, Count
+[StringRight |N Retrieves number of characters fromright hand sid]
+StringRight, OutputVar, InputVar, Count
+[StringLen |N Count of how many characters are in string]
+StringLen, OutputVar, InputVar
+[StrLen |N Length of string]
+StrLen(String)
+[StringLower |N Converts string to lowercase]
+StringLower, OutputVar, InputVar [, T]
+[StringUpper |N Converts string to uppercase]
+StringUpper, OutputVar, InputVar [, T]
+[StringMid |N Retrieves characters from specified position in string]
+StringMid, OutputVar, InputVar, StartChar [, Count, L]
+[StringReplace |N Replaces the specified substring with a new string]
+StringReplace, OutputVar, InputVar, SearchText [, ReplaceText, ReplaceAll?] 
+[StringSplit |N An array of substrings using specified delimiters]
+StringSplit, OutputArray, InputVar [, Delimiters, OmitChars]
+[StringTrimLeft |N Removes number of characters from left side of a string]
+StringTrimLeft, OutputVar, InputVar, Count
+[StringTrimRight |N Removes number of characters from right side of a string]
+StringTrimRight, OutputVar, InputVar, Count
+;
+;
+; --------------------------------------------------------------------
+;                         Window Management
+; --------------------------------------------------------------------
+[WinMenuSelectItem |P menu item frommenu bar of window]
+WinMenuSelectItem, WinTitle, WinText, Menu [, SubMenu1, SubMenu2, SubMenu3, SubMenu4, SubMenu5, SubMenu6, ExcludeTitle, ExcludeText]
+[SetControlDelay |P delay after each control-modifying command]
+SetControlDelay, Delay
+[SendMessage |P Sends message to window or control]
+SendMessage, Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[PostMessage |P Places message queue of window or control]
+PostMessage, Msg [, wParam, lParam, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[Menu |P Creates, deletes, modifies & displays menus & menu items]
+Menu, MenuName, Cmd [, P3, P4, P5]
+[Control |P Makes variety of changes to control]
+Control, Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlFocus |P Input focus to given control on window]
+ControlFocus [,Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlGet |P Retrieves various types of information about control]
+ControlGet, OutputVar, Cmd [, Value, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlGetFocus |P Which control of target window has focus]
+ControlGetFocus, OutputVar [WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlGetPos |P position & size of control]
+ControlGetPos [, X, Y, Width, Height, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlGetText |P text from control]
+ControlGetText, OutputVar [, Control, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlMove |P Moves or resizes control]
+ControlMove, Control, X, Y, Width, Height [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[ControlSetText |text of control]
+ControlSetText [, Control, NewText, WinTitle, WinText, ExcludeTitle, ExcludeText] 
+[GroupActivate |P next window in window group]
+GroupActivate, GroupName [, R]
+[GroupAdd |P Adds window specification to group, creating group if necessary]
+GroupAdd, GroupName, WinTitle [, WinText, Label, ExcludeTitle, ExcludeText]
+[GroupClose |P Closes active window if it was just activated by GroupActivate/Deactivate]
+GroupClose, GroupName [, A|R]
+[GroupDeactivate |P to Activates next window not in group]
+GroupDeactivate, GroupName [, R]
+[DetectHiddenText |P Invisible text in window is seen]
+DetectHiddenText, %onoff%
+[DetectHiddenWindows |P Invisible windows are seen by script]
+DetectHiddenWindows, %onoff%
+[DllCall |P Calls a function in a DLL]
+DllCall("[DllFile\]Function" [, "Type1", Arg1, "Type2", Arg2, "Cdecl ReturnType"])
+[IfWinActive |]
+IfWinActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[IfWinNotActive |]
+IfWinNotActive [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[IfWinExist |]
+IfWinExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[IfWinNotExist |]
+IfWinNotExist [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[OnMessage |]
+OnMessage(MsgNumber [, "FunctionName", MaxThreads])
+[SetTitleMatchMode |P window titles search mode]
+SetTitleMatchMode, 1|2|3|RegEx|Fast|Slow
+[SetWinDelay |P Sets delay after windowing command]
+SetWinDelay, Delay
+[StatusBarGetText |P Retrieves text from standard status bar control]
+StatusBarGetText, OutputVar [, Part#, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[StatusBarWait |P Waits until window's status bar contains specified string]
+StatusBarWait [, BarText, Seconds, Part#, WinTitle, WinText, Interval, ExcludeTitle, ExcludeText] 
+[WinActivate |P Brings window to foreground]
+WinActivate [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinActivateBottom |P Activates least recently used (bottommost) matching window]
+WinActivateBottom [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinClose |P Closes window]
+WinClose [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
+[WinGetActiveStats |P WinGetActiveTitle and WinGetPos in one command]
+WinGetActiveStats, Title, Width, Height, X, Y
+[WinGetActiveTitle |P title of active window]
+WinGetActiveTitle, OutputVar
+[WinGetClass |P Retrieves window's class name]
+WinGetClass, OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinGet |P Retrieves window's ID, process ID/Name, or list of its controls. Can retrieve list of windows matching specified criteria]
+WinGet, OutputVar [, Cmd, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinGetPos |P Retrieves position & size of given window]
+WinGetPos [, X, Y, Width, Height, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinGetText |P Retrieves text from window]
+WinGetText, OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinGetTitle |P Retrieves title of window]
+WinGetTitle, OutputVar [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinHide |P Hides window]
+WinHide [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinKill |P Forces window to close]
+WinKill [, WinTitle, WinText, SecondsToWait, ExcludeTitle, ExcludeText]
+[WinMaximize |P Enlarges window to its Max size]
+WinMaximize [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinMinimize |P Collapses window into button on taskbar]
+WinMinimize [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinMinimizeAll |P all windows]
+WinMinimizeAll
+[WinMinimizeAllUndo |P effect of previous WinMinimizeAll]
+WinMinimizeAllUndo
+[WinMove |P Changes position and/or size of window]
+WinMove, WinTitle, WinText, X, Y [, Width, Height, ExcludeTitle, ExcludeText]
+[WinRestore |P Unminimizes or unmaximizes]
+WinRestore [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinSet |P Makes window always on top, transparent, or other changes]
+WinSet, Attribute, Value [, WinTitle, WinText,  ExcludeTitle, ExcludeText]
+[WinSetTitle |P Changes title of window]
+WinSetTitle, WinTitle, WinText, NewTitle [, ExcludeTitle, ExcludeText]
+[WinShow |P Unhides hidden window]
+WinShow [, WinTitle, WinText, ExcludeTitle, ExcludeText]
+[WinWait |P until specified window exists]
+WinWait, WinTitle, WinText, Seconds [, ExcludeTitle, ExcludeText]
+[WinWaitActive |P until specified window is active]
+WinWaitActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+[WinWaitClose |P until specified window does not exist]
+WinWaitClose, WinTitle, WinText, Seconds [, ExcludeTitle, ExcludeText]
+[WinWaitNotActive |P until specified window is not active]
+WinWaitNotActive [, WinTitle, WinText, Seconds, ExcludeTitle, ExcludeText]
+;
+;
+; --------------------------------------------------------------------
+;                             Directives
+; --------------------------------------------------------------------
+[Directives |B Change directives]
+;;;; Directives, required by this script (do not change)
+%AllowSameLineComments%
+%CommentFlag%
+%ErrorStdOut%
+%EscapeChar%
+%HotkeyInterval%
+%HotkeyModifierTimeout%
+%Hotstring%
+%InstallKeybdHook%
+%InstallMouseHook%
+%MaxHotkeysPerInterval%
+%MaxMem%
+%MaxThreads%
+%MaxThreadsBuffer%
+%MaxThreadsPerHotkey%
+%NoTrayIcon%
+%Persistent%
+%SingleInstance%
+%UseHook%
+%WinActivateForce%
+
+[AllowSameLineComments |B Only for use in .aut files]
+%AllowSameLineComments%
+
+[CommentFlag |B Changes script's comment symbol]
+%CommentFlag%
+
+[ErrorStdOut |B Sends any syntax error]
+%ErrorStdOut%
+
+[EscapeChar |B Changes script's escape character]
+%EscapeChar%
+
+[HotkeyInterval |B rate of hotkey activations]
+%HotkeyInterval%
+
+[HotkeyModifierTimeout |B behavior of hotkey modifiers: CTRL, ALT, WIN, & SHIFT]
+%HotkeyModifierTimeout%
+
+[Hotstring |B Changes hotstring options or ending characters]
+%Hotstring%
+
+[Include |B Include external file]
+%Include%
+
+[IncludeAgain |B Include external file again]
+%IncludeAgain%
+
+[InstallKeybdHook |B Unconditional installation of keyboard hook]
+%InstallKeybdHook%
+
+[InstallMouseHook |B Unconditional installation of mouse hook]
+%InstallMouseHook%
+
+[MaxHotkeysPerInterval |B Rate of hotkey activations]
+%MaxHotkeysPerInterval%
+
+[MaxMem |B Max capacity of each var, in megabytes]
+%MaxMem%
+
+[MaxThreads |B Max number of simultaneous threads]
+%MaxThreads%
+
+[MaxThreadsBuffer |B Causes hotkeys to buffer]
+%MaxThreadsBuffer%
+
+[MaxThreadsPerHotkey |B Max number of simultaneous threads per hotkey]
+%MaxThreadsPerHotkey%
+
+[NoTrayIcon |B Disables showing of tray icon]
+%NoTrayIcon%
+
+[Persistent |B Keeps non-hotkey script permanently running]
+%Persistent%
+[SingleInstance |B More than one instance of script]
+%SingleInstance%
+
+[UseHook |B Forces use of hook to implement keyboard hotkeys]
+%UseHook%
+
+[WinActivateForce |B Skip gentle method, go straight to forceful method]
+%WinActivateForce%
+
+;
+;
+; --------------------------------------------------------------------
+;                     Misc. & Unsorted Commands
+; --------------------------------------------------------------------
+[Abs |F Absolute value]
+Abs(Number)
+[ACos |]
+ACos(Number)
+[ASin |]
+ASin(Number)
+[ATan |]
+ATan(Number)
+[Cos |]
+Cos(Number)
+[Sin |]
+Sin(Number)
+[Tan |]
+Tan(Number)
+[Asc |F ASCII code of a first char in string]
+Asc(String)
+[AutoTrim | Whether SetEnv & var = remove spaces & tabs]
+AutoTrim, %onoff%
+[Break | Exits (terminates) loop. Valid only inside loop]
+Break
+[Chr |F Get character that corresponds to ASCII code]
+Chr(Number)
+[Ceil |F Rounds up to nearest integer]
+Ceil(Number)
+[ClipWait | Waits until clipboard contains data]
+ClipWait [, SecondsToWait, 1]
+[Continue | Skips rest of current loop iteration & begins new one]
+Continue
+[CoordMode | Sets coordinate mode]
+CoordMode, ToolTip|Pixel|Mouse [, Screen|Relative]
+[Edit | Opens current script for editing in associated editor]
+Edit
+[Else | Specifies command to perform IF-command = FALSE]
+Else
+[EnvAdd |Var += Value]
+EnvAdd, Var, Value [, TimeUnits]
+[EnvDiv | var /= value]
+EnvDiv, Var, Value  
+[EnvMult | var *= value]
+EnvMult, Var, Value 
+[EnvSub | var -= value]
+EnvSub, Var, Value [, TimeUnits]
+[EnvUpdate | Notifies OS that environment variables have changed]
+EnvUpdate
+[Exp | "e" raised to a power]
+Exp(Number)
+[Floor |F Rounds down to nearest integer]
+Floor(Number)
+[Gosub | Jumps to label]
+Gosub, Label
+[Goto | Jumps to label]
+Goto, Label
+[Break | Exits loop]
+Break
+[Continue | Skips rest of current loop iteration and begins new one]
+Continue
+[If Else | Compares a variable to a value]
+if var = Value | IfWinExist, WinTitle | etc.
+{
+	command1
+	command2
+}
+else
+{
+	command1
+	command2
+}
+[While | Perform a series of commands until expression is false]
+While expression
+{
+}
+[Loop | Perform a series of commands repeatedly]
+Loop [, Count]
+{
+	If var%a_index% = 
+		break
+}
+[Loop (registry) | Retrieves contents of registry subkey]
+Loop, HKLM|HKU|HKCU|HKCR|HKCC [, Key, IncludeSubkeys?, Recurse?]
+{
+	MsgBox The current value or subkey is %A_LoopRegName% and its type is %A_LoopRegType%.
+}
+[ImageSearch | Searches a region of the screen for an image]
+ImageSearch, OutputVarX, OutputVarY, X1, Y1, X2, Y2, ImageFile
+[Ln |]
+Ln(Number)
+[Log |]
+Log(Number)
+[ListLines | Displays script lines most recently executed]
+ListLines
+[ListVars | Displays script's variables and value]
+ListVars
+[Mod |F Find remainder]
+Mod(Dividend, Divisor)
+[PixelGetColor | Color of pixel at specified x, y screen coordinates]
+PixelGetColor, OutputVar, X, Y [, Alt|Slow|RGB]
+[PixelSearch | Searches screen for pixel of color(s)]
+PixelSearch, OutputVarX, OutputVarY, X1, Y1, X2, Y2, ColorID [, variation, Fast|RGB]
+[Round |F Rounds off a number]
+Round(Number [, Places])
+[Random | Generates pseudo-random number]
+Random, OutputVar [, Min, Max]
+[IsFunc |]
+IsLabel(FunctionName)
+[IsLabel |]
+IsLabel(LabelName)
+[NumGet |]
+NumGet(VarOrAddress [, Offset = 0, Type = "UInt"])
+[NumPut |]
+NumPut(Number, VarOrAddress [, Offset = 0, Type = "UInt"])
+[RegisterCallback |]
+RegisterCallback("FunctionName" [, Options = "", ParamCount = FormalCount, EventInfo = Address])
+[RegDelete | Deletes subkey or value from registry]
+RegDelete, %RootKey%, |SubKey [, ValueName]
+[RegRead | Reads value from registry]
+RegRead, |OutputVar, %RootKey%, SubKey [, ValueName]
+[RegWrite | Writes value to registry]
+RegWrite, %ValueType%, %RootKey%, |SubKey [, ValueName, Value]
+[Return | Returns from subroutine]
+Return [, Expression]
+[SetBatchLines | how fast script will run (affects CPU utilization)]
+SetBatchLines, -1 | 20ms | LineCount
+[SetTimer | Causes subroutine launch at specified time interval]
+SetTimer, %label% , [%onoff%, Priority]
+[SoundBeep | Emits a tone from the PC speaker]
+SoundBeep [, Frequency, Duration]
+[SoundGet | Retrieves various settings from sound device]
+SoundGet, OutputVar [, ComponentType, ControlType, DeviceNumber]
+[SoundGetWaveVolume | wave output volume from sound device]
+SoundGetWaveVolume, OutputVar [, DeviceNumber]
+[SoundPlay | Plays sound, video, or other supported file type]
+SoundPlay, %sound%, %wait%
+[SoundSet | Changes various settings of sound device]
+SoundSet, NewSetting [, ComponentType, ControlType, DeviceNumber]
+[SoundSetWaveVolume | wave output volume for sound device]
+SoundSetWaveVolume, Percent [, DeviceNumber]
+[Sqrt |]
+Sqrt(Number)
+[SysGet | Retrieves screen info & system properties]
+SysGet, OutputVar, Sub-command [, Param3] 
+[Critical | Prevents the current thread from being interrupted]
+Critical [, Off|MsgCheckInterval]
+[Thread | Disables timesr or sets priority/interruptibility of threads]
+Thread, Setting, P2 [, P3]
+[Transform | Performs miscellaneous math functions]
+Transform, OutputVar, Cmd, Value1 [, Value2]
+[URLDownloadToFile | file from Internet]
+URLDownloadToFile, URL, Filename
+[VarSetCapacity | Shrinks or enlarges a variable]
+GrantedCapacity := VarSetCapacity(Var [, RequestedCapacity, FillByte])
+;
+;
+; --------------------------------------------------------------------
+;                              Keywords
+; --------------------------------------------------------------------
+[Keywords]
+A_AhkPath
+A_AhkVersion
+A_AppData
+A_AppDataCommon
+A_Temp
+A_AutoTrim
+A_BatchLines
+A_CaretX
+A_CaretY
+A_ComputerName
+A_ControlDelay
+A_CURSOR
+A_DD
+A_DDD
+A_DDDD
+A_DefaultMouseSpeed
+A_Desktop
+A_DesktopCommon
+A_DetectHiddenText
+A_DetectHiddenWindows
+A_EndChar
+A_EventInfo
+A_ExitReason
+A_FormatFloat
+A_FormatInteger
+A_Gui
+A_GuiEvent
+A_GuiControl
+A_GuiControlEvent
+A_GuiHeight
+A_GuiWidth
+A_GuiX
+A_GuiY
+A_HOUR
+A_IconFile
+A_IconHidden
+A_IconNumber
+A_IconTip
+A_INDEX
+A_IPADDRESS1
+A_IPADDRESS2
+A_IPADDRESS3
+A_IPADDRESS4
+A_ISADMIN
+A_IsCompiled
+A_IsCritical
+A_IsPaused
+A_IsSuspended
+A_KeyDelay
+A_Language
+A_LastError
+A_LineFile
+A_LineNumber
+A_LOOPFIELD
+A_LOOPFILEATTRIB
+A_LOOPFILEDIR
+A_LoopFileExt
+A_LOOPFILEFULLPATH
+A_LoopFileLongPath
+A_LOOPFILENAME
+A_LOOPFILESHORTNAME
+A_LoopFileShortPath
+A_LOOPFILESIZE
+A_LOOPFILESIZEKB
+A_LOOPFILESIZEMB
+A_LOOPFILETIMEACCESSED
+A_LOOPFILETIMECREATED
+A_LOOPFILETIMEMODIFIED
+A_LOOPREADLINE
+A_LOOPREGKEY
+A_LOOPREGNAME
+A_LOOPREGSUBKEY
+A_LOOPREGTIMEMODIFIED
+A_LOOPREGTYPE
+A_MDAY
+A_Min
+A_MM
+A_MMM
+A_MMMM
+A_Mon
+A_MouseDelay
+A_MSec
+A_MyDocuments
+A_Now
+A_NowUTC
+A_NUMBATCHLINES
+A_OSTYPE
+A_OSVERSION
+A_PRIORHOTKEY
+ProgramFiles
+A_ProgramFiles
+A_Programs
+A_ProgramsCommon
+A_ScreenHeight
+A_ScreenWidth
+A_SCRIPTDIR
+A_SCRIPTFULLPATH
+A_SCRIPTNAME
+A_SEC
+A_SPACE
+A_StartMenu
+A_StartMenuCommon
+A_Startup
+A_StartupCommon
+A_StringCaseSense
+A_TAB
+A_Temp
+A_ThisFunc
+A_ThisLabel
+A_THISHOTKEY
+A_ThisMenu
+A_ThisMenuItem
+A_ThisMenuPos
+A_TICKCOUNT
+A_TIMEIDLE
+A_TIMEIDLEPHYSICAL
+A_TIMESINCEPRIORHOTKEY
+A_TIMESINCETHISHOTKEY
+A_TitleMatchMode
+A_TitleMatchModeSpeed
+A_UserName
+A_WDAY
+A_WinDelay
+A_WinDir
+A_WORKINGDIR
+A_YDAY
+A_YEAR
+A_YWeek
+A_YYYY
+ALT
+ALTDOWN
+ALTUP
+APPSKEY
+ASC
+BACKSPACE
+{BLIND}
+{RAW}
+BS
+Capslock
+Clipboard
+ClipboardAll
+ComSpec
+True
+False
+CONTROL
+CTRL
+CTRLBREAK
+CTRLDOWN
+CTRLUP
+DEL
+DELETE
+DOWN
+END
+ENTER
+ERRORLEVEL
+ESC
+ESCAPE
+F1
+F10
+F11
+F12
+F13
+F14
+F15
+F16
+F17
+F18
+F19
+F2
+F20
+F21
+F22
+F23
+F24
+F3
+F4
+F5
+F6
+F7
+F8
+F9
+HOME
+INS
+INSERT
+Joy1
+Joy10
+Joy11
+Joy12
+Joy13
+Joy14
+Joy15
+Joy16
+Joy17
+Joy18
+Joy19
+Joy2
+Joy20
+Joy21
+Joy22
+Joy23
+Joy24
+Joy25
+Joy26
+Joy27
+Joy28
+Joy29
+Joy3
+Joy30
+Joy31
+Joy32
+Joy4
+Joy5
+Joy6
+Joy7
+Joy8
+Joy9
+JoyAxes
+JoyButtons
+JoyInfo
+JoyName
+JoyPOV
+JoyR
+JoyU
+JoyV
+JoyX
+JoyY
+JoyZ
+LALT
+LButton
+LCONTROL
+LCTRL
+LEFT
+LSHIFT
+LWIN
+LWINDOWN
+MButton
+Numlock
+NUMPAD0
+NUMPAD1
+NUMPAD2
+NUMPAD3
+NUMPAD4
+NUMPAD5
+NUMPAD6
+NUMPAD7
+NUMPAD8
+NUMPAD9
+NUMPADADD
+NUMPADCLEAR
+NUMPADDEL
+NUMPADDIV
+NUMPADDOT
+NUMPADDOWN
+NUMPADEND
+NUMPADENTER
+NUMPADHOME
+NUMPADINS
+NUMPADLEFT
+NUMPADMULT
+NUMPADPGDN
+NUMPADPGUP
+NUMPADRIGHT
+NUMPADSUB
+NUMPADUP
+PAUSE
+PGDN
+PGUP
+PRINTSCREEN
+RALT
+RButton
+RCONTROL
+RCTRL
+RIGHT
+RSHIFT
+RWIN
+RWINDOWN
+ScrollLock
+SHIFT
+SHIFTDOWN
+SHIFTUP
+SPACE
+TAB
+UP
+WheelDown
+WheelLeft
+WheelRight
+WheelUp
+XButton1
+XButton2
+Browser_Back
+Browser_Forward
+Browser_Refresh
+Browser_Stop
+Browser_Search
+Browser_Favorites
+Browser_Home
+Volume_Mute
+Volume_Down
+Volume_Up
+Media_Next
+Media_Prev
+Media_Stop
+Media_Play_Pause
+Launch_Mail
+Launch_Media
+Launch_App1
+Launch_App2
+; Used with CoordMode or PixelXXX commands:
+PIXEL
+MOUSE
+SCREEN
+RELATIVE
+RGB
+; Used with SetFormat and/or "if Var is [not] type" & BETWEEN/IN
+Between
+In
+Integer
+Float
+IntegerFast
+FloatFast
+Number
+Digit
+Xdigit
+Alpha
+Upper
+Lower
+Alnum
+Time
+Date
+; Omitted because it's a key name too: SPACE
+; Used with Drive/DriveGet and/or WinGet/WinSet:
+AlwaysOnTop
+Topmost
+Bottom
+Transparent
+TransColor
+Redraw
+Region
+ID
+IDLast
+ProcessName
+MinMax
+ControlList
+Count
+List
+Capacity
+StatusCD
+Eject
+Lock
+Unlock
+Label
+FileSystem
+Label
+SetLabel
+Serial
+Type
+Status
+; Time units for use with addition and subtraction:
+Seconds
+Minutes
+Hours
+Days
+static
+global
+local
+ByRef
+; For use with the Loop command:
+Read
+Parse
+; A_ExitReason
+Logoff
+Close
+Error
+Single
+; The following are Commented out because they are already a keywords due to being a commands:
+;Shutdown
+;Menu
+;Exit
+;Reload
+; Keywords used with the "menu" command:
+Tray
+Add
+Rename
+Check
+UnCheck
+ToggleCheck
+Enable
+Disable
+ToggleEnable
+Default
+NoDefault
+Standard
+NoStandard
+Color
+Delete
+DeleteAll
+Icon
+NoIcon
+Tip
+Click
+Show
+MainWindow
+NoMainWindow
+UseErrorLevel
+;Keywords used with GUI:
+Font
+Resize
+Owner
+Submit
+NoHide
+Minimize
+Maximize
+Restore
+NoActivate
+NA
+Cancel
+Destroy
+Center
+Text
+Picture
+Pic
+GroupBox
+Button
+Checkbox
+Radio
+DropDownList
+DDL
+ComboBox
+ListBox
+ListView
+TreeView
+DateTime
+MonthCal
+UpDown
+Slider
+Tab
+Tab2
+StatusBar
+; Note that Edit, Progress and Hotkey aren't included since they are already command keywords.
+TabStop
+Section
+AltSubmit
+Wrap
+HScroll
+VScroll
+Border
+Top
+Bottom
+Buttons
+Expand
+First
+ImageList
+Lines
+WantCtrlA
+WantF2
+Vis
+VisFirst
+Number
+Uppercase
+Lowercase
+Limit
+Password
+Multi
+WantReturn
+Group
+Background
+Theme
+Caption
+Delimiter
+MinimizeBox
+MaximizeBox
+SysMenu
+ToolWindow
+Flash
+Style
+ExStyle
+Check3
+Checked
+CheckedGray
+ReadOnly
+Password
+Hidden
+Left
+Right
+Center
+NoTab
+Section
+Move
+Focus
+Hide
+Choose
+ChooseString
+Text
+Pos
+Enabled
+Disabled
+Visible
+LastFound
+LastFoundExist
+; Already included with menu:
+;Show
+;Menu
+;Color
+;Edit
+;Default
+;Enable
+;Disable
+;Default
+; Keywords used with the Hotkey command:
+AltTab
+ShiftAltTab
+AltTabMenu
+AltTabAndMenu
+AltTabMenuDismiss
+; Keywords used with the Transform command:
+Unicode
+Asc
+Chr
+Deref
+Mod
+Pow
+Exp
+Sqrt
+Log
+Ln
+Round
+Ceil
+Floor
+Abs
+Sin
+Cos
+Tan
+ASin
+ACos
+ATan
+BitNot
+BitAnd
+BitOr
+BitXOr
+BitShiftLeft
+BitShiftRight
+; Keywords used with "IfMsgBox":
+Yes
+No
+Ok
+Cancel
+Abort
+Retry
+Ignore
+TryAgain
+; Misc:
+true
+false
+; Registry root keys:
+HKEY_LOCAL_MACHINE
+HKEY_USERS
+HKEY_CURRENT_USER
+HKEY_CLASSES_ROOT
+HKEY_CURRENT_CONFIG
+HKLM
+HKU
+HKCU
+HKCR
+HKCC
+; Registry value types:
+REG_SZ
+REG_EXPAND_SZ
+REG_MULTI_SZ
+REG_DWORD
+REG_BINARY
+; Window Management:
+ahk_id
+ahk_pid
+ahk_class
+ahk_group

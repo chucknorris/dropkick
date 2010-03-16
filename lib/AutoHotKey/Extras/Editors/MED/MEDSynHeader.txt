@@ -1,0 +1,88 @@
+#===========================================================
+#
+# MED file mode definition file (www.med-editor.com)
+# for AutoHotkey (www.autohotkey.com)
+# by Wolfgang Reszel (Tekl)
+#
+#===========================================================
+
+files: *.ahk	|^[^:]+:[\t ]*Send[\t ]+,	100
+title: AutoHotkey
+
+related: *.ini
+suffixIsRegexp: no
+default: no
+caseSensitive: no
+checkCommentInString: yes
+shiftDistance: 3
+tabWidth: 3
+tabLoadExpand: 1
+tabInsAsBlank: 1
+
+sectionRegexp: ^(;-)?[ \t]*(:[^ \t:;,]*)?:*[ \t]*[^ \t:;,]+( +& +)?[^ \t:;,]*::?.*$|^[a-zA-Z0-9#_@$?]+\(.*\)[ \t]*{
+sectionDisplayRegexp: ^;?-?[ \t]*(:?[^\t:;,]*:?[^\t:;,]+|[a-zA-Z0-9#_@$?]+)(:+|\( *(.*) *\)[\t ]*{)([\t ]*;? *)?(.*)$
+sectionBrowserOrder: 1 3 5
+sectionDisplayOrder: 1 3 5
+sectionBrowserMainKey: 1
+sectionDisplay: 100000, 100000
+
+wordWrap: disabled 76 >!:~#
+
+wordSep:'&(){}\<>,;-+*.:?!=-|"%
+
+# 3rd party online help
+# NOTE: The pipe in the below (inside "Program Files") is required (it equals the space character).
+inf: * C:\Program|Files\AutoHotkey\AutoHotkey.chm * AutoHotKey|Help
+
+# brackets
+bracket: { } 1
+bracket: ( ) 1
+
+# Color definitions
+defineColor: myOrange 230 115 0
+defineColor: myDarkGray 89 89 89
+defineColor: myBlueGreen 31 97 77
+
+foregroundColor: black
+backgroundColor: white
+blockColor: palegray
+
+# Comments
+color: myOrange, normal, myOrange, normal
+eolCom: ;
+comCol: 0
+
+openCom: /*
+closeCom: */
+
+# Symbols
+
+color: darkgreen, normal, black, normal
+string: "
+
+color: darkred, normal, black, normal
+char:
+
+color: myDarkGray, normal, black, normal
+MEDCHAR_T:
+
+color: blue, normal, black, normal
+literal: `
+
+color: darkblue, normal, black, normal
+funcParml: (
+
+color: myBlueGreen, normal, black, normal
+decPrefix:
+
+color: blue, normal, black, normal
+hexPrefix: 0x
+
+color: darkcyan, normal, black, normal
+symbol: ,:[]=-/{}
+color: darkgreen, normal, black, normal
+symbol: $^#!+<>*~
+color: brown, normal, black, normal
+symbol: ()&
+
+# Reserved words

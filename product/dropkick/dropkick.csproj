@@ -1,0 +1,160 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>9.0.30729</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>dropkick</RootNamespace>
+    <AssemblyName>dropkick</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\references\log4net\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="Magnum, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\references\magnum\Magnum.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Microsoft.Web.Administration.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.EnterpriseServices" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Messaging" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\SolutionVersion.cs">
+      <Link>SolutionVersion.cs</Link>
+    </Compile>
+    <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
+    <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
+    <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
+    <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoCopyTask.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisVersion.cs" />
+    <Compile Include="Configuration\Dsl\Msmq\ProtoMsmqTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\ProtoMsSqlTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\ProtoOutputSqlTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\ProtoRunSqlScriptTask.cs" />
+    <Compile Include="Configuration\Dsl\NetworkShare\ProtoFolderShareTask.cs" />
+    <Compile Include="Configuration\Dsl\Server.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
+    <Compile Include="Engine\RoleToServerMap.cs" />
+    <Compile Include="DeploymentModel\DeploymentServer.cs" />
+    <Compile Include="Engine\DeploymentCommandLineParser.cs" />
+    <Compile Include="Engine\DeploymentFinders\SearchesForAnAssemblyEndingInDeployment.cs" />
+    <Compile Include="Engine\DeploymentFinders\TypeWasSpecifiedAssumingItHasADefaultConstructor.cs" />
+    <Compile Include="Engine\DeploymentPlanDispatcher.cs" />
+    <Compile Include="DeploymentModel\DeploymentItem.cs" />
+    <Compile Include="DeploymentModel\DeploymentResult.cs" />
+    <Compile Include="DeploymentModel\DeploymentItemStatus.cs" />
+    <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\CommandLine\LocalCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\CommandLine\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Deployment.cs" />
+    <Compile Include="Exceptions\DeploymentException.cs" />
+    <Compile Include="Configuration\Dsl\DeploymentInspector.cs" />
+    <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
+    <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
+    <Compile Include="Tasks\Dsn\DsnAction.cs" />
+    <Compile Include="Tasks\Dsn\DsnDriver.cs" />
+    <Compile Include="Configuration\Dsl\Dsn\DsnOptions.cs" />
+    <Compile Include="Tasks\Dsn\DsnTask.cs" />
+    <Compile Include="Configuration\Dsl\Dsn\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Files\AppFileActions.cs" />
+    <Compile Include="Configuration\Dsl\Files\CopyOptions.cs" />
+    <Compile Include="Tasks\Files\CopyTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Files\FileAction.cs" />
+    <Compile Include="Configuration\Dsl\Files\FileActions.cs" />
+    <Compile Include="Configuration\Dsl\Files\SomeFileActions.cs" />
+    <Compile Include="Configuration\Dsl\Files\WebFileActions.cs" />
+    <Compile Include="Tasks\Iis\BaseIisTask.cs" />
+    <Compile Include="Configuration\Dsl\Iis\Extension.cs" />
+    <Compile Include="Tasks\Iis\Iis7Task.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisSiteOptions.cs" />
+    <Compile Include="Tasks\Iis\Iis6Task.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisVersionSelector.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisVirtualDirectoryOptions.cs" />
+    <Compile Include="Configuration\Dsl\Msmq\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Msmq\MsmqOptions.cs" />
+    <Compile Include="Tasks\Msmq\MsmqTask.cs" />
+    <Compile Include="Configuration\Dsl\Msmq\QueueAddress.cs" />
+    <Compile Include="Tasks\MsSql\BaseSqlTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\DatabaseOptions.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\Extension.cs" />
+    <Compile Include="Tasks\MsSql\OutputSqlTask.cs" />
+    <Compile Include="Tasks\MsSql\RunSqlScriptTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\SqlOptions.cs" />
+    <Compile Include="Configuration\Dsl\NetworkShare\Extensions.cs" />
+    <Compile Include="Configuration\Dsl\NetworkShare\FolderShareOptions.cs" />
+    <Compile Include="Tasks\NetworkShare\FolderShareTask.cs" />
+    <Compile Include="Tasks\NoteTask.cs" />
+    <Compile Include="Configuration\Dsl\Role.cs" />
+    <Compile Include="DeploymentModel\Task.cs" />
+    <Compile Include="Tasks\WinService\BaseServiceTask.cs" />
+    <Compile Include="Tasks\NestedTask.cs" />
+    <Compile Include="Tasks\WinService\WinServiceStartTask.cs" />
+    <Compile Include="Tasks\WinService\WinServiceStopTask.cs" />
+    <Compile Include="Engine\DeploymentFinders\AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass.cs" />
+    <Compile Include="Engine\DeploymentArguments.cs" />
+    <Compile Include="Engine\DeploymentCommands.cs" />
+    <Compile Include="Configuration\Dsl\DropkickDeploymentInspector.cs" />
+    <Compile Include="DeploymentModel\DeploymentDetail.cs" />
+    <Compile Include="DeploymentModel\DeploymentRole.cs" />
+    <Compile Include="DeploymentModel\DeploymentPlan.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="Configuration\Dsl\WinService\Extension.cs" />
+    <Compile Include="Configuration\Dsl\WinService\WinServiceOptions.cs" />
+    <Compile Include="Engine\DeploymentFinders\DeploymentFinder.cs" />
+    <Compile Include="Engine\Runner.cs" />
+    <Compile Include="Configuration\Dsl\ProtoTask.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Logging\" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

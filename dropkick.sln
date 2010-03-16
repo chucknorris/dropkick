@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.tests", "product\dropkick.tests\dropkick.tests.csproj", "{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick", "product\dropkick\dropkick.csproj", "{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.console", "product\dropkick.console\dropkick.console.csproj", "{4F9DA31A-86EE-4CB1-BEB3-A00155CCB351}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4F9DA31A-86EE-4CB1-BEB3-A00155CCB351}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4F9DA31A-86EE-4CB1-BEB3-A00155CCB351}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4F9DA31A-86EE-4CB1-BEB3-A00155CCB351}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4F9DA31A-86EE-4CB1-BEB3-A00155CCB351}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

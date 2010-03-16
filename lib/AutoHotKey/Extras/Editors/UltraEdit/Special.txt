@@ -1,0 +1,15 @@
+;Special Keywords for highlight in UE
+All
+AutoSize
+bold
+BackgroundTrans
+cBlue
+cDefault
+cGreen
+cRed
+cWhite
+is
+norm
+not
+Off
+On
