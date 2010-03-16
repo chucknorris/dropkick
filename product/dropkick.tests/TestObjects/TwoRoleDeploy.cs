@@ -11,7 +11,7 @@ namespace dropkick.tests.TestObjects
 
         public TwoRoleDeploy()
         {
-            Define(() =>
+            Define(settings =>
                 {
                     DeploymentStepsFor(Web, p =>
                         {

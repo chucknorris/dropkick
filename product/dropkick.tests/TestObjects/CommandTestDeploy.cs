@@ -22,7 +22,7 @@ namespace dropkick.tests.TestObjects
 
         public CommandTestDeploy()
         {
-            Define(() =>
+            Define(settings =>
                    DeploymentStepsFor(Web, server => 
                    { 
                        server.CommandLine("ipconfig");

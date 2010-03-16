@@ -21,7 +21,7 @@ namespace dropkick.tests.TestObjects
     {
         public SingleRoleDeploy()
         {
-            Define(() =>
+            Define(settings =>
                    DeploymentStepsFor(Web, server =>
                    {
                        server.CopyTo(@".\bill")

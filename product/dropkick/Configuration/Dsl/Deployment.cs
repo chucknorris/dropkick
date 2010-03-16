@@ -8,7 +8,7 @@ namespace dropkick.Configuration.Dsl
     public interface Deployment :
         DeploymentInspectorSite
     {
-        void SetSettings(object settings);
+        void Initialize(object settings);
     }
 
     public class Deployment<Inheritor, SETTINGS> :
@@ -16,14 +16,18 @@ namespace dropkick.Configuration.Dsl
         where Inheritor : Deployment<Inheritor, SETTINGS>, new()
     {
         readonly Dictionary<string, ServerRole> _roles = new Dictionary<string, ServerRole>();
+        Action<SETTINGS> _definition;
 
-        public Deployment()
+
+        //this has replaced the static constructor
+        public void Initialize(object settings)
         {
             InitializeParts();
             VerifyDeploymentConfiguration();
+
+            Settings = (SETTINGS)settings;
+            _definition(Settings);
         }
-
-
 
         void InitializeParts()
         {
@@ -38,17 +42,16 @@ namespace dropkick.Configuration.Dsl
                 _roles.Add(role.Name, role);
             }
         }
-
         void VerifyDeploymentConfiguration()
         {
             if(_roles.Count == 0)
-                throw new DeploymentConfigurationException("A deployment must have at least one part to be valid.");
+                throw new DeploymentConfigurationException("A deployment must have at least one role to be valid.");
         }
 
         //initial setup to be called in the static constructor
-        protected void Define(Action definition)
+        protected void Define(Action<SETTINGS> definition)
         {
-            definition();
+            _definition = definition;
         }
 
         //needs to be renamed
@@ -87,9 +90,5 @@ namespace dropkick.Configuration.Dsl
 
         public SETTINGS Settings { get; private set; }
 
-        public void SetSettings(object settings)
-        {
-            Settings = (SETTINGS) settings;
-        }
     }
 }

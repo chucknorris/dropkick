@@ -13,7 +13,7 @@ namespace dropkick.tests.TestObjects
         public WinServiceTestDeploy()
         {
             //this is just a means to check the nested closure would work, not that one would actually do this
-            Define(() =>
+            Define(settings =>
             {
                 DeploymentStepsFor(Web, server => server.WinService("MSMQ").Do(s => s
                                                                       .Msmq()
