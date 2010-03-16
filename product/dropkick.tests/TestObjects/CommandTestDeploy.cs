@@ -20,7 +20,7 @@ namespace dropkick.tests.TestObjects
     {
         public static Role Web { get; set; }
 
-        static CommandTestDeploy()
+        public CommandTestDeploy()
         {
             Define(() =>
                    DeploymentStepsFor(Web, server => 

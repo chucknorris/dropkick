@@ -1,13 +1,12 @@
 namespace dropkick.tests.TestObjects
 {
-    using System;
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.Iis;
 
     public class IisTestDeploy :
         Deployment<IisTestDeploy, object>
     {
-        static IisTestDeploy()
+        public IisTestDeploy()
         {
             Define(() => DeploymentStepsFor(Web, server =>
             {

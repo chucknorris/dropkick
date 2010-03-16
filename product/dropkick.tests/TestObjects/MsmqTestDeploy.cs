@@ -7,7 +7,7 @@ namespace dropkick.tests.TestObjects
     public class MsmqTestDeploy :
         Deployment<MsmqTestDeploy, object>
     {
-        static MsmqTestDeploy()
+        public MsmqTestDeploy()
         {
             Define(() =>
                    DeploymentStepsFor(Web, server => server.Msmq()

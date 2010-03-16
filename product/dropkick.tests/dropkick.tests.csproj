@@ -87,8 +87,8 @@
     <Compile Include="TestObjects\IisTestDeploy.cs" />
     <Compile Include="TestObjects\MsSqlTestDeploy.cs" />
     <Compile Include="TestObjects\MsmqTestDeploy.cs" />
-    <Compile Include="TestObjects\SinglePartDeploy.cs" />
-    <Compile Include="TestObjects\TwoPartDeploy.cs" />
+    <Compile Include="TestObjects\SingleRoleDeploy.cs" />
+    <Compile Include="TestObjects\TwoRoleDeploy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestObjects\TestDeployment.cs" />
     <Compile Include="TestObjects\TestTask.cs" />

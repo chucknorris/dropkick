@@ -13,19 +13,22 @@
 namespace dropkick.tests.TestObjects
 {
     using dropkick.Configuration.Dsl;
-    using dropkick.Configuration.Dsl.MsSql;
+    using dropkick.Configuration.Dsl.Files;
+    using dropkick.Configuration.Dsl.Msmq;
 
-    public class MsSqlTestDeploy :
-        Deployment<MsSqlTestDeploy, object>
+    public class SingleRoleDeploy :
+        Deployment<SingleRoleDeploy, object>
     {
-        public MsSqlTestDeploy()
+        public SingleRoleDeploy()
         {
             Define(() =>
                    DeploymentStepsFor(Web, server =>
                    {
-                       server.SqlInstance(".")
-                           .Database("test")
-                           .RunScript(@".\create_database.sql");
+                       server.CopyTo(@".\bill")
+                           .From(@".\bob");
+
+                       server.Msmq()
+                           .PrivateQueueNamed("mt_timeout");
                    })
                 );
         }

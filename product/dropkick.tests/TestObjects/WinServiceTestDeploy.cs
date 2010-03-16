@@ -9,7 +9,8 @@ namespace dropkick.tests.TestObjects
     {
         public static Role Web { get; set; }
         public static Role File { get; set; }
-        static WinServiceTestDeploy()
+        
+        public WinServiceTestDeploy()
         {
             //this is just a means to check the nested closure would work, not that one would actually do this
             Define(() =>

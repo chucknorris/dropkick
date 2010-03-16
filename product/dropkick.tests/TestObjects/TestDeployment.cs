@@ -12,7 +12,7 @@ namespace dropkick.tests.TestObjects
     public class TestDeployment :
         Deployment<TestDeployment, object>
     {
-        static TestDeployment()
+        public TestDeployment()
         {
             Define(() =>
             {

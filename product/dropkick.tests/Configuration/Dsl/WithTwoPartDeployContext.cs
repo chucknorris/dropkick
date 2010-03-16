@@ -20,14 +20,14 @@ namespace dropkick.tests.Configuration.Dsl
     [TestFixture]
     public abstract class WithTwoPartDeployContext
     {
-        public TwoPartDeploy Deployment { get; private set; }
+        public TwoRoleDeploy Deployment { get; private set; }
         public DropkickDeploymentInspector Inspector { get; private set; }
         public RoleToServerMap Map { get; private set; }
 
         [TestFixtureSetUp]
         public void EstablishContext()
         {
-            Deployment = new TwoPartDeploy();
+            Deployment = new TwoRoleDeploy();
             Inspector = new DropkickDeploymentInspector();
             Map = new RoleToServerMap();
             Map.AddMap("Web", "SrvTopeka09");

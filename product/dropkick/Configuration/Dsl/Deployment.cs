@@ -15,19 +15,17 @@ namespace dropkick.Configuration.Dsl
         Deployment
         where Inheritor : Deployment<Inheritor, SETTINGS>, new()
     {
-        static readonly Dictionary<string, Role<Inheritor, SETTINGS>> _roles = new Dictionary<string, Role<Inheritor,SETTINGS>>();
+        readonly Dictionary<string, ServerRole> _roles = new Dictionary<string, ServerRole>();
 
-        static Deployment()
+        public Deployment()
         {
             InitializeParts();
-        }
-
-        protected Deployment()
-        {
             VerifyDeploymentConfiguration();
         }
 
-        static void InitializeParts()
+
+
+        void InitializeParts()
         {
             Type machineType = typeof(Inheritor);
 
@@ -35,28 +33,28 @@ namespace dropkick.Configuration.Dsl
             {
                 if(IsNotARole(propertyInfo)) continue;
 
-                Role<Inheritor,SETTINGS> role = SetPropertyValue(propertyInfo, x => new Role<Inheritor,SETTINGS>(x.Name));
+                ServerRole role = SetPropertyValue(propertyInfo, x => new ServerRole(x.Name));
 
                 _roles.Add(role.Name, role);
             }
         }
 
-        static void VerifyDeploymentConfiguration()
+        void VerifyDeploymentConfiguration()
         {
             if(_roles.Count == 0)
                 throw new DeploymentConfigurationException("A deployment must have at least one part to be valid.");
         }
 
         //initial setup to be called in the static constructor
-        protected static void Define(Action definition)
+        protected void Define(Action definition)
         {
             definition();
         }
 
         //needs to be renamed
-        protected static void DeploymentStepsFor(Role inputRole, Action<Server> action)
+        protected void DeploymentStepsFor(Role inputRole, Action<Server> action)
         {
-            Role<Inheritor, SETTINGS> role = Role<Inheritor,SETTINGS>.GetRole(inputRole);
+            var role = ServerRole.GetRole(inputRole);
             role.BindAction(action);
         }
 
@@ -73,14 +71,14 @@ namespace dropkick.Configuration.Dsl
 
         static bool IsNotARole(PropertyInfo propertyInfo)
         {
-            return !(propertyInfo.PropertyType == typeof(Role<Inheritor, SETTINGS>) || propertyInfo.PropertyType == typeof(Role));
+            return !(propertyInfo.PropertyType == typeof(ServerRole) || propertyInfo.PropertyType == typeof(Role));
         }
 
         public void InspectWith(DeploymentInspector inspector)
         {
             inspector.Inspect(this, () =>
             {
-                foreach (Role<Inheritor, SETTINGS> role in _roles.Values)
+                foreach (ServerRole role in _roles.Values)
                 {
                     role.InspectWith(inspector);
                 }

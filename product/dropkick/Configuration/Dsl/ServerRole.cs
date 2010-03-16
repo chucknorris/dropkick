@@ -13,7 +13,8 @@ namespace dropkick.Configuration.Dsl
         Role,
         DeploymentInspectorSite
     {
-        readonly Server _server = new PrototypicalServer();
+        Action<Server> _serverConfiguration;
+        Server _server = new PrototypicalServer();
 
         public ServerRole(string name)
         {
@@ -31,7 +32,7 @@ namespace dropkick.Configuration.Dsl
         {
             ServerRole result = input as ServerRole;
             if(result == null)
-                throw new ArgumentException(string.Format("The role is not valid for this deployment"), "input");
+                throw new ArgumentException(string.Format("The part is not valid for this deployment"), "input");
 
             return result;
         }
