@@ -8,13 +8,14 @@ namespace dropkick.Configuration.Dsl
     public interface Deployment :
         DeploymentInspectorSite
     {
+        void SetSettings(object settings);
     }
 
-    public class Deployment<Inheritor, CONFIG> :
+    public class Deployment<Inheritor, SETTINGS> :
         Deployment
-        where Inheritor : Deployment<Inheritor, CONFIG>, new()
+        where Inheritor : Deployment<Inheritor, SETTINGS>, new()
     {
-        static readonly Dictionary<string, Role<Inheritor, CONFIG>> _roles = new Dictionary<string, Role<Inheritor,CONFIG>>();
+        static readonly Dictionary<string, Role<Inheritor, SETTINGS>> _roles = new Dictionary<string, Role<Inheritor,SETTINGS>>();
 
         static Deployment()
         {
@@ -34,7 +35,7 @@ namespace dropkick.Configuration.Dsl
             {
                 if(IsNotARole(propertyInfo)) continue;
 
-                Role<Inheritor,CONFIG> role = SetPropertyValue(propertyInfo, x => new Role<Inheritor,CONFIG>(x.Name));
+                Role<Inheritor,SETTINGS> role = SetPropertyValue(propertyInfo, x => new Role<Inheritor,SETTINGS>(x.Name));
 
                 _roles.Add(role.Name, role);
             }
@@ -55,7 +56,7 @@ namespace dropkick.Configuration.Dsl
         //needs to be renamed
         protected static void DeploymentStepsFor(Role inputRole, Action<Server> action)
         {
-            Role<Inheritor, CONFIG> role = Role<Inheritor,CONFIG>.GetRole(inputRole);
+            Role<Inheritor, SETTINGS> role = Role<Inheritor,SETTINGS>.GetRole(inputRole);
             role.BindAction(action);
         }
 
@@ -72,20 +73,25 @@ namespace dropkick.Configuration.Dsl
 
         static bool IsNotARole(PropertyInfo propertyInfo)
         {
-            return !(propertyInfo.PropertyType == typeof(Role<Inheritor, CONFIG>) || propertyInfo.PropertyType == typeof(Role));
+            return !(propertyInfo.PropertyType == typeof(Role<Inheritor, SETTINGS>) || propertyInfo.PropertyType == typeof(Role));
         }
 
         public void InspectWith(DeploymentInspector inspector)
         {
             inspector.Inspect(this, () =>
             {
-                foreach (Role<Inheritor, CONFIG> role in _roles.Values)
+                foreach (Role<Inheritor, SETTINGS> role in _roles.Values)
                 {
                     role.InspectWith(inspector);
                 }
             });
         }
 
-        public static CONFIG Configuration { get; private set; }
+        public SETTINGS Settings { get; private set; }
+
+        public void SetSettings(object settings)
+        {
+            Settings = (SETTINGS) settings;
+        }
     }
 }

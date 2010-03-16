@@ -82,4 +82,9 @@ namespace dropkick.tests.TestObjects
         public static Role Db { get; set; }
         public static Role Service { get; set; }
     }
+
+    public class TestSettings
+    {
+        public string Name { get; set; }
+    }
 }

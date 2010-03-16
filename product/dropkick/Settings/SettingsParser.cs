@@ -1,5 +1,6 @@
 namespace dropkick.Settings
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using Magnum.CommandLineParser;
@@ -15,31 +16,34 @@ namespace dropkick.Settings
 
             var po = _parser.Parse(contents);
 
-            Set(result, po);
+            Set(typeof(T), result, po);
 
             return result;
         }
 
         public T Parse<T>(FileInfo file) where T : new()
         {
-            var result = new T();
+            return (T) Parse(typeof (T), file);
+        }
+
+        public object Parse(Type t, FileInfo file)
+        {
+            var result = FastActivator.Create(t);
 
             var contents = File.ReadAllText(file.FullName);
             var po = _parser.Parse(contents);
 
-            Set(result, po);
+            Set(t, result, po);
 
             return result;
         }
 
-        void Set<T>(T result, IEnumerable<ICommandLineElement> enumerable)
+        void Set(Type type, object result, IEnumerable<ICommandLineElement> enumerable)
         {
-            var type = typeof (T);
-            
             foreach (IDefinitionElement argument in enumerable)
             {
                 var pi = type.GetProperty(argument.Key);
-                var fp = new FastProperty<T>(pi);
+                var fp = new FastProperty(pi);
                 fp.Set(result, argument.Value);
             }
         }

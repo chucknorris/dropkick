@@ -19,7 +19,8 @@ namespace dropkick.Engine
             Command = DeploymentCommands.Trace;
             Role = "ALL";
             ServerMappings = new RoleToServerMap();
-            ConfigurationDirectory = "";
+            SettingsDirectory = ".\\settings";
+            Deployment = "SEARCH";
         }
 
         public string Environment { get; set; }
@@ -27,6 +28,6 @@ namespace dropkick.Engine
         public string Deployment { get; set; }
         public DeploymentCommands Command { get; set; }
         public RoleToServerMap ServerMappings { get; private set; }
-        public string ConfigurationDirectory { get; set;}
+        public string SettingsDirectory { get; set;}
     }
 }
