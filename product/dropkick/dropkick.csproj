@@ -83,6 +83,7 @@
     <Compile Include="DeploymentModel\DeploymentItem.cs" />
     <Compile Include="DeploymentModel\DeploymentResult.cs" />
     <Compile Include="DeploymentModel\DeploymentItemStatus.cs" />
+    <Compile Include="Settings\SettingsParser.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\CommandLine\LocalCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\Extension.cs" />
