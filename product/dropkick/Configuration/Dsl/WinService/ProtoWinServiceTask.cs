@@ -21,8 +21,7 @@ namespace dropkick.Configuration.Dsl.WinService
         WinServiceOptions
     {
         readonly string _serviceName;
-        Action<Server> _registerAdditionalActions;
-        Server _server;
+        readonly Server _server;
 
         public ProtoWinServiceTask(Server server, string serviceName)
         {
@@ -61,7 +60,7 @@ namespace dropkick.Configuration.Dsl.WinService
     public class ProtoWinServiceStopTask :
         BaseTask
     {
-        string _serviceName;
+        readonly string _serviceName;
 
         public ProtoWinServiceStopTask(string serviceName)
         {
@@ -77,7 +76,7 @@ namespace dropkick.Configuration.Dsl.WinService
     public class ProtoWinServiceStartTask :
         BaseTask
     {
-        string _serviceName;
+        readonly string _serviceName;
 
         public ProtoWinServiceStartTask(string serviceName)
         {

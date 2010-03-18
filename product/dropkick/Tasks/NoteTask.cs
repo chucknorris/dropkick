@@ -20,7 +20,7 @@ namespace dropkick.Tasks
     public class NoteTask :
         Task
     {
-        string _message;
+        readonly string _message;
 
         public NoteTask(string message)
         {

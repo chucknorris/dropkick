@@ -18,7 +18,7 @@ namespace dropkick.tests.Engine
     [TestFixture]
     public class ExecutionArguments_Specs
     {
-        string _arguments = "verify -environment:staging -deployment:MyStuff.dll -part:WEB";
+        const string _arguments = "verify -environment:staging -deployment:MyStuff.dll -part:WEB";
 
         [Test]
         public void Default_parts_should_be_ALL()

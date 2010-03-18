@@ -34,5 +34,16 @@ namespace dropkick.Engine
         {
             return _mappings[roleName];
         }
+
+        public void	 Merge(RoleToServerMap map)
+        {
+            foreach (var mapping in map._mappings)
+            {
+                foreach (var server in mapping.Value)
+                {
+                    _mappings[mapping.Key].Add(server);
+                }
+            }
+        }
     }
 }

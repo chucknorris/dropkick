@@ -72,6 +72,7 @@
     <Compile Include="Configuration\Dsl\MsSql\ProtoOutputSqlTask.cs" />
     <Compile Include="Configuration\Dsl\MsSql\ProtoRunSqlScriptTask.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\ProtoFolderShareTask.cs" />
+    <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
     <Compile Include="Configuration\Dsl\Server.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
     <Compile Include="Engine\RoleToServerMap.cs" />
@@ -83,6 +84,7 @@
     <Compile Include="DeploymentModel\DeploymentItem.cs" />
     <Compile Include="DeploymentModel\DeploymentResult.cs" />
     <Compile Include="DeploymentModel\DeploymentItemStatus.cs" />
+    <Compile Include="Settings\ServerMapParser.cs" />
     <Compile Include="Settings\SettingsParser.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\CommandLine\LocalCommandLineTask.cs" />

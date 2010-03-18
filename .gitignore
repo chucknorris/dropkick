@@ -4,6 +4,7 @@ code_drop
 bin
 obj
 _ReSharper*
+NDependOut
 
 *.suo
 *.user 
