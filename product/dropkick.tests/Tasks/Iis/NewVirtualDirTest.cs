@@ -8,8 +8,8 @@ namespace dropkick.tests.Tasks.Iis
     [TestFixture]
     public class NewVirtualDirTest
     {
-        [Test]
-        public void NAME()
+        [Test,Explicit]
+        public void Create_A_VirtualDiretory()
         {
             if(Directory.Exists(".\\bob"))
                 Directory.Delete(".\\bob", true);
@@ -17,9 +17,9 @@ namespace dropkick.tests.Tasks.Iis
             Directory.CreateDirectory(".\\bob");
             var task = new Iis7Task
                        {
-                           PathOnServer = new DirectoryInfo(".\\bob"),
+                           PathOnServer = new DirectoryInfo(".\\dk_test"),
                            ServerName = Environment.MachineName,
-                           VdirPath = "bob",
+                           VdirPath = "dk_test",
                            WebsiteName = "Default Web Site"
                        };
             var output = task.Execute();

@@ -14,12 +14,15 @@ namespace dropkick.Tasks.Iis
 {
     using System;
     using DeploymentModel;
+    using log4net;
     using Microsoft.Web.Administration;
 
     //http://blogs.msdn.com/carlosag/archive/2006/04/17/MicrosoftWebAdministration.aspx
     public class Iis7Task :
         BaseIisTask
     {
+        static readonly ILog _logger = LogManager.GetLogger(typeof (Iis7Task));
+
         public override int VersionNumber
         {
             get { return 7; }
@@ -33,7 +36,8 @@ namespace dropkick.Tasks.Iis
 
             CheckServerName(result);
 
-            CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(new ServerManager(), WebsiteName)), result);
+            var iisManager = ServerManager.OpenRemote(ServerName);
+            CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
 
             return result;
         }
@@ -42,7 +46,7 @@ namespace dropkick.Tasks.Iis
         {
             var result = new DeploymentResult();
 
-            var iisManager = new ServerManager();
+            var iisManager = ServerManager.OpenRemote(ServerName);
 
             if (DoesSiteExist())
             {
@@ -65,19 +69,26 @@ namespace dropkick.Tasks.Iis
 
         void CreateVirtualDirectory(Site site)
         {
+            Magnum.Guard.Against.Null(site, "The site argument is null and should not be");
+            var appPath = "/" + VdirPath;
+
             Application appToAdd = null;
             foreach (var app in site.Applications)
             {
-                if (app.Path.Equals("/" + VdirPath))
+                if (app.Path.Equals(appPath))
                 {
                     appToAdd = app;
+                    _logger.Debug("Found the app {0} and will not create it".FormatWith(VdirPath));
+                    break;
                 }
             }
 
             if (appToAdd == null)
             {
+                _logger.Info("Application was not found, creating.");
                 //create it
-                site.Applications.Add("/" + VdirPath, PathOnServer.FullName);
+                _logger.Debug(PathOnServer);
+                site.Applications.Add(appPath, PathOnServer.FullName);
             }
         }
 
@@ -91,10 +102,10 @@ namespace dropkick.Tasks.Iis
 
         public bool DoesSiteExist()
         {
-            var iisManager = new ServerManager();
+            var iisManager = ServerManager.OpenRemote(ServerName);
             foreach (var site in iisManager.Sites)
             {
-                if (site.Name.Equals(base.WebsiteName))
+                if (site.Name.Equals(WebsiteName))
                 {
                     return true;
                 }

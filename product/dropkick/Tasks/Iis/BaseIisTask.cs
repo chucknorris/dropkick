@@ -44,9 +44,9 @@ namespace dropkick.Tasks.Iis
 
         public void CheckServerName(DeploymentResult result)
         {
-            if (!Environment.MachineName.Equals(ServerName))
+            if (!Environment.MachineName.Equals(ServerName, StringComparison.InvariantCultureIgnoreCase))
             {
-                result.AddAlert("You are not on the right server [On: '{0}' - Target: '{1}'", Environment.MachineName,
+                result.AddAlert("You are not on the right server [On: '{0}' - Target: '{1}']", Environment.MachineName,
                                 ServerName);
             }
         }

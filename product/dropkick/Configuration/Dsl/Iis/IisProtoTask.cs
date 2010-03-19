@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
+    using System;
     using System.IO;
     using DeploymentModel;
     using Tasks;
@@ -52,6 +53,12 @@ namespace dropkick.Configuration.Dsl.Iis
         public void CreateIfItDoesntExist()
         {
             ShouldCreate = true;
+        }
+
+        public IisVirtualDirectoryOptions SetPathTo(string path)
+        {
+            PathOnServer = new DirectoryInfo(path);
+            return this;
         }
 
         #endregion
