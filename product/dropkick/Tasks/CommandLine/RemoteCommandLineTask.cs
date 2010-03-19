@@ -85,13 +85,20 @@ namespace dropkick.Tasks.CommandLine
             var inParams = processClass.GetMethodParameters("Create");
 
             inParams["CommandLine"] = Command;
+
+            //if (this.WorkingDirectory != null)
+            //    inParams["CurrentDirectory"] = this.WorkingDirectory;
+
+
             var outParams = processClass.InvokeMethod("Create", inParams, null);
 
+            
             int returnVal = Convert.ToInt32(outParams["returnValue"]);
 
             if (returnVal != 0)
                 result.AddError(_status[returnVal]);
-            //TODO: how to tell DK to stop executing?
+            
+            //TODO: how can I get the output back from the computer?
 
             return result;
         }
