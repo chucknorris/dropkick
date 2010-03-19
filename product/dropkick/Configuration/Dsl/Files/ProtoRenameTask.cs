@@ -21,9 +21,12 @@ namespace dropkick.Configuration.Dsl.Files
             _to = name;
         }
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            throw new NotImplementedException();
+            return s =>
+                   {
+                       throw new NotImplementedException();
+                   };
         }
     }
 }

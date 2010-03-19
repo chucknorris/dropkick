@@ -67,9 +67,12 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = serviceName;
         }
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            return new WinServiceStopTask(server.Name, _serviceName);
+            return s =>
+                   {
+                       s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
+                   };
         }
     }
 
@@ -83,9 +86,12 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = serviceName;
         }
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            return new WinServiceStartTask(server.Name, _serviceName);
+            return s =>
+                   {
+                       s.AddTask(new WinServiceStartTask(s.Name, _serviceName));
+                   };
         }
     }
 }

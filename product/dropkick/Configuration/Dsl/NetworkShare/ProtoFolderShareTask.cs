@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NetworkShare
 {
+    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.NetworkShare;
@@ -22,7 +23,7 @@ namespace dropkick.Configuration.Dsl.NetworkShare
     {
         bool _createIfNotExist;
         string _pointingTo;
-        string _shareName;
+        readonly string _shareName;
 
         public ProtoFolderShareTask(string shareName)
         {
@@ -44,13 +45,16 @@ namespace dropkick.Configuration.Dsl.NetworkShare
 
         #endregion
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            return new FolderShareTask
+            return s =>
                    {
-                       PointingTo = _pointingTo,
-                       Server = server.Name,
-                       ShareName = _shareName
+                       s.AddTask(new FolderShareTask
+                                     {
+                                         PointingTo = _pointingTo,
+                                         Server = s.Name,
+                                         ShareName = _shareName
+                                     });
                    };
         }
     }

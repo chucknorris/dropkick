@@ -61,10 +61,10 @@ namespace dropkick.Configuration.Dsl.Files
         }
 
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
             var mt = new MultiCopyTask();
-            
+
             foreach (var f in _froms)
             {
                 var o = new CopyTask(f, _to);
@@ -72,8 +72,10 @@ namespace dropkick.Configuration.Dsl.Files
             }
 
             //TODO: Add renames in here
-
-            return mt;
+            return s =>
+                   {
+                       s.AddTask(mt);
+                   };
         }
     }
 }

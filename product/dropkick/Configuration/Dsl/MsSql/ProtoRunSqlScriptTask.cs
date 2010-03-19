@@ -1,5 +1,6 @@
 namespace dropkick.Configuration.Dsl.MsSql
 {
+    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.MsSql;
@@ -16,11 +17,14 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         public string ScriptToRun { get; set; }
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            return new RunSqlScriptTask(server.Name, _databaseName)
+            return s =>
                    {
-                       ScriptToRun = this.ScriptToRun
+                       s.AddTask(new RunSqlScriptTask(s.Name, _databaseName)
+                                     {
+                                         ScriptToRun = this.ScriptToRun
+                                     });
                    };
         }
     }

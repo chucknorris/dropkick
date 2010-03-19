@@ -78,6 +78,7 @@
     <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
     <Compile Include="Configuration\Dsl\Server.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
+    <Compile Include="DeploymentModel\TaskSite.cs" />
     <Compile Include="Engine\DeploymentFinders\MultipleFinder.cs" />
     <Compile Include="Engine\RoleToServerMap.cs" />
     <Compile Include="DeploymentModel\DeploymentServer.cs" />
@@ -135,6 +136,7 @@
     <Compile Include="Configuration\Dsl\NetworkShare\Extensions.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\FolderShareOptions.cs" />
     <Compile Include="Tasks\NetworkShare\FolderShareTask.cs" />
+    <Compile Include="Tasks\NoteProtoTask.cs" />
     <Compile Include="Tasks\NoteTask.cs" />
     <Compile Include="Configuration\Dsl\Role.cs" />
     <Compile Include="DeploymentModel\Task.cs" />

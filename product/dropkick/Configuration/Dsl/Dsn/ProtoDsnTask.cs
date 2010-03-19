@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Dsn
 {
+    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.Dsn;
@@ -37,9 +38,12 @@ namespace dropkick.Configuration.Dsl.Dsn
 
         #endregion
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            return new DsnTask(server.Name, _dsnName, DsnAction.AddSystemDsn, DsnDriver.Sql(), _databaseName);
+            return s =>
+                   {
+                       s.AddTask(new DsnTask(s.Name, _dsnName, DsnAction.AddSystemDsn, DsnDriver.Sql(), _databaseName));
+                   };
         }
     }
 }

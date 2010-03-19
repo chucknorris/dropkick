@@ -12,6 +12,7 @@ namespace dropkick.Tasks
             inspector.Inspect(this);
         }
 
-        public abstract Task ConstructTasksForServer(DeploymentServer server);
+        public abstract Action<TaskSite> RegisterTasks();
+        
     }
 }

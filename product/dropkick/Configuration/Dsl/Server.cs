@@ -28,12 +28,11 @@ namespace dropkick.Configuration.Dsl
             });
         }
 
-        //TODO: YUCK
         public void MapTo(DeploymentServer server)
         {
             foreach (var task in _tasks)
             {
-                server.AddDetail(task.ConstructTasksForServer(server).ToDetail(server));
+                task.RegisterTasks()(server);
             }
         }
 

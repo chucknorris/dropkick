@@ -2,8 +2,10 @@ namespace dropkick.DeploymentModel
 {
     using System;
     using System.Collections.Generic;
+    using Configuration.Dsl;
 
-    public class DeploymentServer
+    public class DeploymentServer :
+        TaskSite
     {
         //because tasks need to be customized per server
         readonly IList<DeploymentDetail> _details;
@@ -42,6 +44,17 @@ namespace dropkick.DeploymentModel
         public int DetailCount
         {
             get { return _details.Count; }
+        }
+
+
+        public void AddTask(Task task)
+        {
+            _details.Add(task.ToDetail(this));
+        }
+
+        public void AddTask(ProtoTask task)
+        {
+            task.RegisterTasks()(this);
         }
     }
 }

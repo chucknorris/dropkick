@@ -2,21 +2,6 @@ namespace dropkick.Tasks
 {
     using DeploymentModel;
 
-    public class NoteProtoTask :
-        BaseTask
-    {
-        public string Message { get; set; }
-
-        public NoteProtoTask(string message)
-        {
-            Message = message;
-        }
-
-        public override Task ConstructTasksForServer(DeploymentServer server)
-        {
-            return new NoteTask(Message);
-        }
-    }
     public class NoteTask :
         Task
     {

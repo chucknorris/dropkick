@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Msmq
 {
+    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.Msmq;
@@ -43,12 +44,15 @@ namespace dropkick.Configuration.Dsl.Msmq
 
         #endregion
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            return new MsmqTask()
+            return s =>
                    {
-                       QueueName = _queueName,
-                       ServerName = server.Name
+                       s.AddTask(new MsmqTask()
+                                     {
+                                         QueueName = _queueName,
+                                         ServerName = s.Name
+                                     });
                    };
         }
     }

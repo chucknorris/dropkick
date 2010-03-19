@@ -53,22 +53,25 @@ namespace dropkick.Configuration.Dsl.CommandLine
 
         #endregion
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            //TODO: The rest of the args
-            if (server.IsLocal)
-                return new LocalCommandLineTask(_command)
-                       {
-                           Args = _args,
-                           ExecutableIsLocatedAt = _path,
-                           WorkingDirectory = _workingDirectory
-                       };
-
-            return new RemoteCommandLineTask(_command)
+            return s =>
                    {
-                       Args = _args,
-                       ExecutableIsLocatedAt = _path,
-                       WorkingDirectory = _workingDirectory
+                       if (s.IsLocal)
+                           s.AddTask(new LocalCommandLineTask(_command)
+                                         {
+                                             Args = _args,
+                                             ExecutableIsLocatedAt = _path,
+                                             WorkingDirectory = _workingDirectory
+                                         });
+
+                       if (!s.IsLocal)
+                           s.AddTask(new RemoteCommandLineTask(_command)
+                                         {
+                                             Args = _args,
+                                             ExecutableIsLocatedAt = _path,
+                                             WorkingDirectory = _workingDirectory
+                                         });
                    };
         }
     }

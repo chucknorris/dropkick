@@ -46,14 +46,16 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         #endregion
 
-        public override Task ConstructTasksForServer(DeploymentServer server)
+        public override Action<TaskSite> RegisterTasks()
         {
-            var t = new RunSqlScriptTask(server.Name, _databaseName)
-                    {
-                        ScriptToRun = _scriptFile,
-                        InstanceName = this.InstanceName
-                    };
-            return t;
+            return s =>
+                   {
+                       s.AddTask(new RunSqlScriptTask(s.Name, _databaseName)
+                                     {
+                                         ScriptToRun = _scriptFile,
+                                         InstanceName = this.InstanceName
+                                     });
+                   };
         }
     }
 }
