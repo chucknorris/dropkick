@@ -13,30 +13,44 @@
 namespace dropkick.Configuration.Dsl.Files
 {
     using System;
+    using System.Collections.Generic;
     using DeploymentModel;
     using Tasks;
     using Tasks.Files;
 
     public class ProtoCopyTask :
         BaseTask,
-        CopyOptions
+        CopyOptions,
+        FromOptions
     {
         readonly Server _server;
-        readonly string _to;
+        string _to;
         Action<FileActions> _followOn;
-        string _from;
+        readonly IList<string> _froms = new List<string>();
+        readonly IList<ProtoRenameTask> _renameTasks = new List<ProtoRenameTask>();
 
-        public ProtoCopyTask(Server server, string to)
+        public ProtoCopyTask(Server server)
         {
-            _to = to;
             _server = server;
         }
 
-        #region CopyOptions Members
+        public RenameOptions Include(string path)
+        {
+            _froms.Add(path);
+            var rn = new ProtoRenameTask(path);
+            _renameTasks.Add(rn);
+            return rn;
+        }
 
         public CopyOptions From(string sourcePath)
         {
-            _from = sourcePath;
+            _froms.Add(sourcePath);
+            return this;
+        }
+
+        public CopyOptions To(string destinationPath)
+        {
+            _to = destinationPath;
             return this;
         }
 
@@ -46,11 +60,20 @@ namespace dropkick.Configuration.Dsl.Files
             copyAction(new SomeFileActions(_server));
         }
 
-        #endregion
 
         public override Task ConstructTasksForServer(DeploymentServer server)
         {
-            return new CopyTask(_from, _to);
+            var mt = new MultiCopyTask();
+            
+            foreach (var f in _froms)
+            {
+                var o = new CopyTask(f, _to);
+                mt.Add(o);
+            }
+
+            //TODO: Add renames in here
+
+            return mt;
         }
     }
 }

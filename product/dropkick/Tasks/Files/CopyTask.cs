@@ -5,7 +5,6 @@ namespace dropkick.Tasks.Files
     using DeploymentModel;
     using Exceptions;
 
-
     public class CopyTask :
         Task
     {

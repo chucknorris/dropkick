@@ -17,6 +17,7 @@ namespace dropkick.Configuration.Dsl.Files
     public interface CopyOptions
     {
         CopyOptions From(string sourcePath);
+        CopyOptions To(string destinationPath);
         void With(Action<FileActions> copyAction);
     }
 }

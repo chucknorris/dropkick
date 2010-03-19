@@ -13,13 +13,18 @@ namespace dropkick.tests.TestObjects
         {
             Define(settings =>
                 {
-                    DeploymentStepsFor(Web, p =>
+                    DeploymentStepsFor(Web, server =>
                         {
-                            p.CopyTo(".\\anthony").From(".\\katie");
+                            server.CopyTo(".\\anthony").From(".\\katie");
+                            server.Copy(o =>
+                                   {
+                                       o.Include("..\\FHLBank.Cue.Website");
+                                       o.Include("..\\settings\\web.test.config").Rename("web.config");
+                                   }).To("E:\\FHLBApps\\CUE");
                         });
-                    DeploymentStepsFor(Db, p =>
+                    DeploymentStepsFor(Db, server =>
                         {
-                            p.CopyTo(".\\rob").From(".\\brandy");
+                            server.CopyTo(".\\rob").From(".\\brandy");
                         });
                 });
         }

@@ -64,7 +64,10 @@
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoCopyTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoRenameTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\RenameOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisProtoTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisVersion.cs" />
     <Compile Include="Configuration\Dsl\Msmq\ProtoMsmqTask.cs" />
@@ -110,6 +113,8 @@
     <Compile Include="Configuration\Dsl\Files\FileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\SomeFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\WebFileActions.cs" />
+    <Compile Include="Tasks\Files\MultiCopyTask.cs" />
+    <Compile Include="Tasks\Files\RenameTask.cs" />
     <Compile Include="Tasks\Iis\BaseIisTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\Extension.cs" />
     <Compile Include="Tasks\Iis\Iis7Task.cs" />

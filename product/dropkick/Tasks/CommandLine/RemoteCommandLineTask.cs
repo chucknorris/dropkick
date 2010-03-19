@@ -84,7 +84,7 @@ namespace dropkick.Tasks.CommandLine
 
             var inParams = processClass.GetMethodParameters("Create");
 
-            inParams["CommandLine"] = Command;
+            inParams["CommandLine"] = Command + " " + Args;
 
             //if (this.WorkingDirectory != null)
             //    inParams["CurrentDirectory"] = this.WorkingDirectory;

@@ -12,11 +12,21 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
+    using System;
+
     public static class Extension
     {
+        public static CopyOptions Copy(this Server server, Action<FromOptions> a)
+        {
+            var proto = new ProtoCopyTask(server);
+            a(proto);
+            server.RegisterTask(proto);
+            return proto;
+        }
         public static CopyOptions CopyTo(this Server server, string targetPath)
         {
-            var proto = new ProtoCopyTask(server, targetPath);
+            var proto = new ProtoCopyTask(server);
+            proto.To(targetPath);
             server.RegisterTask(proto);
             return proto;
         }
