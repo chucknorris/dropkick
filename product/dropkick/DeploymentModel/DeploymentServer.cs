@@ -54,7 +54,7 @@ namespace dropkick.DeploymentModel
 
         public void AddTask(ProtoTask task)
         {
-            task.RegisterTasks()(this);
+            task.RegisterTasks(this);
         }
     }
 }

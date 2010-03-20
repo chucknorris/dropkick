@@ -12,7 +12,7 @@ namespace dropkick.Tasks
             inspector.Inspect(this);
         }
 
-        public abstract Action<TaskSite> RegisterTasks();
+        public abstract void RegisterTasks(TaskSite site);
         
     }
 }

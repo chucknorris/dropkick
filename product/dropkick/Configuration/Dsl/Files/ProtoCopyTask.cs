@@ -23,24 +23,18 @@ namespace dropkick.Configuration.Dsl.Files
         CopyOptions,
         FromOptions
     {
-        readonly Server _server;
-        string _to;
-        Action<FileActions> _followOn;
         readonly IList<string> _froms = new List<string>();
         readonly IList<ProtoRenameTask> _renameTasks = new List<ProtoRenameTask>();
+        readonly Server _server;
+        Action<FileActions> _followOn;
+        string _to;
 
         public ProtoCopyTask(Server server)
         {
             _server = server;
         }
 
-        public RenameOptions Include(string path)
-        {
-            _froms.Add(path);
-            var rn = new ProtoRenameTask(path);
-            _renameTasks.Add(rn);
-            return rn;
-        }
+        #region CopyOptions Members
 
         public CopyOptions From(string sourcePath)
         {
@@ -60,8 +54,21 @@ namespace dropkick.Configuration.Dsl.Files
             copyAction(new SomeFileActions(_server));
         }
 
+        #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        #region FromOptions Members
+
+        public RenameOptions Include(string path)
+        {
+            _froms.Add(path);
+            var rn = new ProtoRenameTask(path);
+            _renameTasks.Add(rn);
+            return rn;
+        }
+
+        #endregion
+
+        public override void RegisterTasks(TaskSite site)
         {
             var mt = new MultiCopyTask();
 
@@ -72,10 +79,8 @@ namespace dropkick.Configuration.Dsl.Files
             }
 
             //TODO: Add renames in here
-            return s =>
-                   {
-                       s.AddTask(mt);
-                   };
+
+            site.AddTask(mt);
         }
     }
 }

@@ -44,16 +44,14 @@ namespace dropkick.Configuration.Dsl.Msmq
 
         #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterTasks(TaskSite s)
         {
-            return s =>
-                   {
-                       s.AddTask(new MsmqTask()
-                                     {
-                                         QueueName = _queueName,
-                                         ServerName = s.Name
-                                     });
-                   };
+            s.AddTask(new MsmqTask()
+                      {
+                          QueueName = _queueName,
+                          ServerName = s.Name
+                      });
+
         }
     }
 }

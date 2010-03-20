@@ -63,28 +63,29 @@ namespace dropkick.Configuration.Dsl.Iis
 
         #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterTasks(TaskSite s)
         {
-            return s =>
-                   {
-                       if (Version == IisVersion.Six)
-                           s.AddTask(new Iis6Task()
-                                         {
-                                             PathOnServer = PathOnServer,
-                                             ServerName = s.Name,
-                                             VdirPath = VdirPath,
-                                             WebsiteName = WebsiteName
-                                         });
 
-                       if (Version == IisVersion.Seven)
-                           s.AddTask(new Iis7Task()
-                                         {
-                                             PathOnServer = PathOnServer,
-                                             ServerName = s.Name,
-                                             VdirPath = VdirPath,
-                                             WebsiteName = WebsiteName
-                                         });
-                   };
+            if (Version == IisVersion.Six)
+            {
+
+                s.AddTask(new Iis6Task()
+                          {
+                              PathOnServer = PathOnServer,
+                              ServerName = s.Name,
+                              VdirPath = VdirPath,
+                              WebsiteName = WebsiteName
+                          });
+                return;
+            }
+            s.AddTask(new Iis7Task()
+                      {
+                          PathOnServer = PathOnServer,
+                          ServerName = s.Name,
+                          VdirPath = VdirPath,
+                          WebsiteName = WebsiteName
+                      });
+
         }
     }
 }

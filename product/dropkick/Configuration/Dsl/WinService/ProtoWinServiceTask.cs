@@ -20,8 +20,8 @@ namespace dropkick.Configuration.Dsl.WinService
     public class ProtoWinServiceTask :
         WinServiceOptions
     {
-        readonly string _serviceName;
         readonly Server _server;
+        readonly string _serviceName;
 
         public ProtoWinServiceTask(Server server, string serviceName)
         {
@@ -67,12 +67,9 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = serviceName;
         }
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterTasks(TaskSite s)
         {
-            return s =>
-                   {
-                       s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
-                   };
+            s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
         }
     }
 
@@ -86,12 +83,9 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = serviceName;
         }
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterTasks(TaskSite s)
         {
-            return s =>
-                   {
-                       s.AddTask(new WinServiceStartTask(s.Name, _serviceName));
-                   };
+            s.AddTask(new WinServiceStartTask(s.Name, _serviceName));
         }
     }
 }

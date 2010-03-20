@@ -45,17 +45,14 @@ namespace dropkick.Configuration.Dsl.NetworkShare
 
         #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterTasks(TaskSite s)
         {
-            return s =>
-                   {
-                       s.AddTask(new FolderShareTask
-                                     {
-                                         PointingTo = _pointingTo,
-                                         Server = s.Name,
-                                         ShareName = _shareName
-                                     });
-                   };
+            s.AddTask(new FolderShareTask
+                      {
+                          PointingTo = _pointingTo,
+                          Server = s.Name,
+                          ShareName = _shareName
+                      });
         }
     }
 }

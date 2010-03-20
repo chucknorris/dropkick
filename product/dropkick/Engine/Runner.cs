@@ -22,10 +22,8 @@ namespace dropkick.Engine
 
 
 
-                var pathToSettingsFile = _path.Combine(newArgs.SettingsDirectory,
-                                              "{0}.settings".FormatWith(newArgs.Environment));
-                var pathToMapFile = _path.Combine(newArgs.SettingsDirectory,
-                                                 "{0}.servermaps".FormatWith(newArgs.Environment));
+                var pathToSettingsFile = _path.Combine(newArgs.SettingsDirectory, "{0}.settings".FormatWith(newArgs.Environment));
+                var pathToMapFile = _path.Combine(newArgs.SettingsDirectory, "{0}.servermaps".FormatWith(newArgs.Environment));
                 newArgs.ServerMappings.Merge(_serverParser.Parse(new System.IO.FileInfo(pathToMapFile)));
 
                 _log.Debug("*******SETTINGS*******");

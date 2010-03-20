@@ -12,13 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl
 {
-    using System;
     using DeploymentModel;
 
     public interface ProtoTask :
         DeploymentInspectorSite
     {
-        Action<TaskSite> RegisterTasks();
+        void RegisterTasks(TaskSite site);
     }
 
     public static class TaskHelpers

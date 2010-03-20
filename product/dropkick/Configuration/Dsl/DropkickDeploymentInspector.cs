@@ -76,7 +76,7 @@ namespace dropkick.Configuration.Dsl
             //TODO: hackish
             _currentRole.ForEachServer(server =>
             {
-                protoTask.RegisterTasks()(server);
+                protoTask.RegisterTasks(server);
             });
 
             return true;

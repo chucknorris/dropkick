@@ -29,15 +29,12 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         public string OutputSql { get; set; }
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterTasks(TaskSite s)
         {
-            return s =>
-                   {
-                       s.AddTask(new OutputSqlTask(s.Name, _databaseName)
-                                     {
-                                         OutputSql = OutputSql
-                                     });
-                   };
+            s.AddTask(new OutputSqlTask(s.Name, _databaseName)
+                      {
+                          OutputSql = OutputSql
+                      });
         }
     }
 }
