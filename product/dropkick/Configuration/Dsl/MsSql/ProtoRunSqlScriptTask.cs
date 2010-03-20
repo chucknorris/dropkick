@@ -28,7 +28,7 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         public string ScriptToRun { get; set; }
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new RunSqlScriptTask(s.Name, _databaseName)
                       {

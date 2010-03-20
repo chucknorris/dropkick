@@ -53,7 +53,7 @@ namespace dropkick.Configuration.Dsl.CommandLine
 
         #endregion
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             if (s.IsLocal)
             {

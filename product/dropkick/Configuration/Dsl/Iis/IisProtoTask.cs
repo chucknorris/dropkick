@@ -22,12 +22,8 @@ namespace dropkick.Configuration.Dsl.Iis
         IisSiteOptions,
         IisVirtualDirectoryOptions
     {
-        readonly ProtoServer _protoServer;
-
-        public IisProtoTask(ProtoServer protoServer, string websiteName)
+        public IisProtoTask(string websiteName)
         {
-            _protoServer = protoServer;
-            _protoServer.RegisterProtoTask(this);
             WebsiteName = websiteName;
         }
 
@@ -62,7 +58,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         #endregion
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             if (Version == IisVersion.Six)
             {

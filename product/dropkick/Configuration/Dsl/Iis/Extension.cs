@@ -16,18 +16,24 @@ namespace dropkick.Configuration.Dsl.Iis
     {
         public static IisSiteOptions Iis6Site(this ProtoServer protoServer, string websiteName)
         {
-            return new IisProtoTask(protoServer, websiteName)
-                   {
-                       Version = IisVersion.Six
-                   };
+            var task = new IisProtoTask(websiteName)
+                       {
+                           Version = IisVersion.Six
+                       };
+            protoServer.RegisterProtoTask(task);
+            return task;
         }
 
         public static IisSiteOptions Iis7Site(this ProtoServer protoServer, string websiteName)
         {
-            return new IisProtoTask(protoServer, websiteName)
-                   {
-                       Version = IisVersion.Seven
-                   };
+            var task = new IisProtoTask(websiteName)
+                       {
+                           Version = IisVersion.Seven
+                       };
+            protoServer.RegisterProtoTask(task);
+            return task;
+
+
         }
     }
 }

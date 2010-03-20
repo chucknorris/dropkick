@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.MsSql
 {
-    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.MsSql;
@@ -29,7 +28,7 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         public string OutputSql { get; set; }
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new OutputSqlTask(s.Name, _databaseName)
                       {

@@ -10,25 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Files
+namespace dropkick.DeploymentModel
 {
-    public class AppFileActions :
-        FileAction
+    public interface PhysicalServer
     {
-        #region FileAction Members
-
-        public FileAction ReplaceIdentityTokensWithPrompt()
-        {
-            //replace {{username}} and {{password}}?
-            return this;
-        }
-
-        public FileAction EncryptIdentity()
-        {
-            //get DPAPI code from work.
-            return this;
-        }
-
-        #endregion
+        string Name { get; }
+        bool IsLocal { get; }
+        void AddTask(Task task);
     }
 }

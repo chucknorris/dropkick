@@ -74,9 +74,9 @@ namespace dropkick.Configuration.Dsl
         public bool Look(ProtoTask protoTask)
         {
             //TODO: hackish
-            _currentRole.ForEachServer(server =>
+            _currentRole.ForEachServerMapped(server =>
             {
-                protoTask.RegisterTasks(server);
+                protoTask.RegisterRealTasks(server);
             });
 
             return true;

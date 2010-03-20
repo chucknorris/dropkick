@@ -17,7 +17,7 @@ namespace dropkick.DeploymentModel
     using Configuration.Dsl;
 
     public class DeploymentServer :
-        TaskSite
+        PhysicalServer
     {
         //because tasks need to be customized per server
         readonly IList<DeploymentDetail> _details;
@@ -33,7 +33,7 @@ namespace dropkick.DeploymentModel
             get { return _details.Count; }
         }
 
-        #region TaskSite Members
+        #region PhysicalServer Members
 
         public string Name { get; private set; }
 
@@ -67,7 +67,7 @@ namespace dropkick.DeploymentModel
 
         public void AddTask(ProtoTask task)
         {
-            task.RegisterTasks(this);
+            task.RegisterRealTasks(this);
         }
     }
 }

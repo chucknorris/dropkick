@@ -45,7 +45,7 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         #endregion
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new RunSqlScriptTask(s.Name, _databaseName)
                       {

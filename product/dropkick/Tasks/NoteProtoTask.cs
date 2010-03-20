@@ -24,7 +24,7 @@ namespace dropkick.Tasks
 
         public string Message { get; set; }
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new NoteTask(Message));
         }

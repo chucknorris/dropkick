@@ -47,13 +47,13 @@ namespace dropkick.tests.Configuration.Dsl
         [Test]
         public void DbServersShouldHaveOneTask()
         {
-            Plan.GetRole("Db").ForEachServer(s=> Assert.AreEqual(1, s.DetailCount));
+            Plan.GetRole("Db").ForEachServerMapped(s=> Assert.AreEqual(1, s.DetailCount));
         }
 
         [Test]
         public void WebServersShouldHaveOneTask()
         {
-            Plan.GetRole("Web").ForEachServer(s => Assert.AreEqual(1, s.DetailCount));
+            Plan.GetRole("Web").ForEachServerMapped(s => Assert.AreEqual(1, s.DetailCount));
         }
     }
 }

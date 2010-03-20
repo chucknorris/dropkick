@@ -37,7 +37,7 @@ namespace dropkick.Configuration.Dsl
         {
             foreach (var task in _tasks)
             {
-                task.RegisterTasks(server);
+                task.RegisterRealTasks(server);
             }
         }
 

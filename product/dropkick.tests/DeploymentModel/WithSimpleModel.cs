@@ -21,10 +21,10 @@ namespace dropkick.tests.DeploymentModel
             var webRole = new DeploymentRole("Web");
             webRole.AddServer(new DeploymentServer("SrvWeb1"));
             webRole.AddServer(new DeploymentServer("SrvWeb2"));
-            webRole.ForEachServer(s=>s.AddDetail(detail));
+            webRole.ForEachServerMapped(s=>s.AddDetail(detail));
             var dbRole = new DeploymentRole("Db");
             dbRole.AddServer("SrvDb");
-            dbRole.ForEachServer(s => s.AddDetail(detail));
+            dbRole.ForEachServerMapped(s => s.AddDetail(detail));
             Plan = new DeploymentPlan();
             Plan.AddRole(webRole);
             Plan.AddRole(dbRole);

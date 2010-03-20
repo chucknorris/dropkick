@@ -18,8 +18,7 @@ namespace dropkick.tests.TestObjects
             {
                 DeploymentStepsFor(Web, server =>
                 {
-                    server.ShareFolder("bob").PointingTo(@"E:\Tools")
-                        .CreateIfNotExist();
+                    server.ShareFolder("bob").PointingTo(@"E:\Tools");
 
                     server.CreateDSN("NAME").ForDatabase("Enterprise");
 
@@ -28,8 +27,7 @@ namespace dropkick.tests.TestObjects
                         .ExecutableIsLocatedAt("");
 
                     server.Msmq()
-                        .PrivateQueueNamed("bob")
-                        .CreateIfItDoesntExist();
+                        .PrivateQueueNamed("bob");
 
                     server.CopyTo(@"E:\FHLBApplications\atlas")
                         .From(@"\\someserver\bob\bill");

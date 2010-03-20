@@ -37,7 +37,7 @@ namespace dropkick.Configuration.Dsl.Dsn
 
         #endregion
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new DsnTask(s.Name, _dsnName, DsnAction.AddSystemDsn, DsnDriver.Sql(), _databaseName));
         }

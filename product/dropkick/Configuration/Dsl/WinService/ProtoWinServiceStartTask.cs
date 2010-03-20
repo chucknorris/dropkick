@@ -10,12 +10,25 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.DeploymentModel
+namespace dropkick.Configuration.Dsl.WinService
 {
-    public interface TaskSite
+    using DeploymentModel;
+    using Tasks;
+    using Tasks.WinService;
+
+    public class ProtoWinServiceStartTask :
+        BaseTask
     {
-        string Name { get; }
-        bool IsLocal { get; }
-        void AddTask(Task task);
+        readonly string _serviceName;
+
+        public ProtoWinServiceStartTask(string serviceName)
+        {
+            _serviceName = serviceName;
+        }
+
+        public override void RegisterRealTasks(PhysicalServer s)
+        {
+            s.AddTask(new WinServiceStartTask(s.Name, _serviceName));
+        }
     }
 }

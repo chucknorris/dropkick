@@ -13,9 +13,6 @@
 namespace dropkick.Configuration.Dsl.WinService
 {
     using System;
-    using DeploymentModel;
-    using Tasks;
-    using Tasks.WinService;
 
     public class ProtoWinServiceTask :
         WinServiceOptions
@@ -38,7 +35,7 @@ namespace dropkick.Configuration.Dsl.WinService
             //child task
             registerAdditionalActions(_protoServer);
 
-
+            
             _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName));
 
             return this;
@@ -55,37 +52,5 @@ namespace dropkick.Configuration.Dsl.WinService
         }
 
         #endregion
-    }
-
-    public class ProtoWinServiceStopTask :
-        BaseTask
-    {
-        readonly string _serviceName;
-
-        public ProtoWinServiceStopTask(string serviceName)
-        {
-            _serviceName = serviceName;
-        }
-
-        public override void RegisterTasks(TaskSite s)
-        {
-            s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
-        }
-    }
-
-    public class ProtoWinServiceStartTask :
-        BaseTask
-    {
-        readonly string _serviceName;
-
-        public ProtoWinServiceStartTask(string serviceName)
-        {
-            _serviceName = serviceName;
-        }
-
-        public override void RegisterTasks(TaskSite s)
-        {
-            s.AddTask(new WinServiceStartTask(s.Name, _serviceName));
-        }
     }
 }

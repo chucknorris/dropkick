@@ -10,25 +10,25 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Files
+namespace dropkick.Configuration.Dsl.WinService
 {
-    public class AppFileActions :
-        FileAction
+    using DeploymentModel;
+    using Tasks;
+    using Tasks.WinService;
+
+    public class ProtoWinServiceStopTask :
+        BaseTask
     {
-        #region FileAction Members
+        readonly string _serviceName;
 
-        public FileAction ReplaceIdentityTokensWithPrompt()
+        public ProtoWinServiceStopTask(string serviceName)
         {
-            //replace {{username}} and {{password}}?
-            return this;
+            _serviceName = serviceName;
         }
 
-        public FileAction EncryptIdentity()
+        public override void RegisterRealTasks(PhysicalServer s)
         {
-            //get DPAPI code from work.
-            return this;
+            s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
         }
-
-        #endregion
     }
 }

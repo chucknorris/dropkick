@@ -59,7 +59,7 @@ namespace dropkick.DeploymentModel
             {
                 Console.WriteLine("  {0}", role.Name);
 
-                role.ForEachServer(s =>
+                role.ForEachServerMapped(s =>
                 {
                     Console.WriteLine("    {0}", s.Name);
                     s.ForEachDetail(d =>

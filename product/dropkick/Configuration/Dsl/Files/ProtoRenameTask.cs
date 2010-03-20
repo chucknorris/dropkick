@@ -37,7 +37,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         #endregion
 
-        public override void RegisterTasks(TaskSite s)
+        public override void RegisterRealTasks(PhysicalServer s)
         {
             throw new NotImplementedException();
         }

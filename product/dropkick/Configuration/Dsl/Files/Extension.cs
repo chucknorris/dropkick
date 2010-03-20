@@ -18,14 +18,14 @@ namespace dropkick.Configuration.Dsl.Files
     {
         public static CopyOptions Copy(this ProtoServer protoServer, Action<FromOptions> a)
         {
-            var proto = new ProtoCopyTask(protoServer);
+            var proto = new ProtoCopyTask();
             a(proto);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }
         public static CopyOptions CopyTo(this ProtoServer protoServer, string targetPath)
         {
-            var proto = new ProtoCopyTask(protoServer);
+            var proto = new ProtoCopyTask();
             proto.To(targetPath);
             protoServer.RegisterProtoTask(proto);
             return proto;

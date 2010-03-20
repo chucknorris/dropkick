@@ -78,8 +78,10 @@
     <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
     <Compile Include="Configuration\Dsl\PrototypicalServer.cs" />
     <Compile Include="Configuration\Dsl\ProtoServer.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStopTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
-    <Compile Include="DeploymentModel\TaskSite.cs" />
+    <Compile Include="DeploymentModel\PhysicalServer.cs" />
     <Compile Include="Engine\DeploymentFinders\MultipleFinder.cs" />
     <Compile Include="Engine\RoleToServerMap.cs" />
     <Compile Include="DeploymentModel\DeploymentServer.cs" />
