@@ -19,11 +19,11 @@ namespace dropkick.Configuration.Dsl.Files
     public class WebFileActions :
         FileAction
     {
-        readonly Server _server;
+        readonly ProtoServer _protoServer;
 
-        public WebFileActions(Server server)
+        public WebFileActions(ProtoServer protoServer)
         {
-            _server = server;
+            _protoServer = protoServer;
         }
 
         #region FileAction Members
@@ -41,7 +41,7 @@ namespace dropkick.Configuration.Dsl.Files
             string winDir = Environment.GetEnvironmentVariable("WINDIR");
             task.ExecutableIsLocatedAt(Path.Combine(winDir, @"Microsoft.NET\Framework\v2.0.50727"));
 
-            _server.RegisterTask(task);
+            _protoServer.RegisterProtoTask(task);
 
             return this;
         }

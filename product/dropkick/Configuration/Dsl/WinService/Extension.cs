@@ -14,9 +14,9 @@ namespace dropkick.Configuration.Dsl.WinService
 {
     public static class Extension
     {
-        public static WinServiceOptions WinService(this Server server, string serviceName)
+        public static WinServiceOptions WinService(this ProtoServer protoServer, string serviceName)
         {
-            return new ProtoWinServiceTask(server, serviceName);
+            return new ProtoWinServiceTask(protoServer, serviceName);
         }
     }
 }

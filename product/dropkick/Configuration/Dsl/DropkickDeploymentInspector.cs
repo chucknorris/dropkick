@@ -65,7 +65,7 @@ namespace dropkick.Configuration.Dsl
             return true;
         }
 
-        public bool Look(Server server)
+        public bool Look(ProtoServer protoServer)
         {
             //TODO: implement
             return true;

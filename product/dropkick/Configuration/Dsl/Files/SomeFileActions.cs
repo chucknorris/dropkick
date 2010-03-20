@@ -15,23 +15,23 @@ namespace dropkick.Configuration.Dsl.Files
     public class SomeFileActions :
         FileActions
     {
-        readonly Server _server;
+        readonly ProtoServer _protoServer;
 
-        public SomeFileActions(Server server)
+        public SomeFileActions(ProtoServer protoServer)
         {
-            _server = server;
+            _protoServer = protoServer;
         }
 
         #region FileActions Members
 
         public FileAction WebConfig
         {
-            get { return new WebFileActions(_server); }
+            get { return new WebFileActions(_protoServer); }
         }
 
         public FileAction AppConfig
         {
-            get { return new AppFileActions(_server); }
+            get { return new AppFileActions(_protoServer); }
         }
 
         #endregion

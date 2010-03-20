@@ -14,11 +14,11 @@ namespace dropkick.Configuration.Dsl.MsSql
 {
     public static class Extension
     {
-        public static SqlOptions SqlInstance(this Server server, string instanceName)
+        public static SqlOptions SqlInstance(this ProtoServer protoServer, string instanceName)
         {
             var proto = new ProtoMsSqlTask();
             proto.InstanceName = instanceName;
-            server.RegisterTask(proto);
+            protoServer.RegisterProtoTask(proto);
             return proto;
         }
     }

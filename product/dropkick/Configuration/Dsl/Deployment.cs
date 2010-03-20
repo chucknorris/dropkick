@@ -1,3 +1,15 @@
+// Copyright 2007-2008 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl
 {
     using System;
@@ -17,34 +29,52 @@ namespace dropkick.Configuration.Dsl
     {
         readonly Dictionary<string, ServerRole> _roles = new Dictionary<string, ServerRole>();
         Action<SETTINGS> _definition;
+        public SETTINGS Settings { get; private set; }
 
 
         //this has replaced the static constructor
+
+        #region Deployment Members
+
         public void Initialize(object settings)
         {
             InitializeParts();
             VerifyDeploymentConfiguration();
 
-            Settings = (SETTINGS)settings;
+            Settings = (SETTINGS) settings;
             _definition(Settings);
         }
+
+        public void InspectWith(DeploymentInspector inspector)
+        {
+            inspector.Inspect(this, () =>
+            {
+                foreach (ServerRole role in _roles.Values)
+                {
+                    role.InspectWith(inspector);
+                }
+            });
+        }
+
+        #endregion
 
         void InitializeParts()
         {
             Type machineType = typeof(Inheritor);
 
-            foreach(PropertyInfo propertyInfo in machineType.GetProperties(BindingFlags.Static | BindingFlags.Public))
+            foreach (PropertyInfo propertyInfo in machineType.GetProperties(BindingFlags.Static | BindingFlags.Public))
             {
-                if(IsNotARole(propertyInfo)) continue;
+                if (IsNotARole(propertyInfo)) continue;
 
                 ServerRole role = SetPropertyValue(propertyInfo, x => new ServerRole(x.Name));
 
                 _roles.Add(role.Name, role);
             }
         }
+
         void VerifyDeploymentConfiguration()
         {
-            if(_roles.Count == 0)
+            if (_roles.Count == 0)
                 throw new DeploymentConfigurationException("A deployment must have at least one role to be valid.");
         }
 
@@ -55,7 +85,7 @@ namespace dropkick.Configuration.Dsl
         }
 
         //needs to be renamed
-        protected void DeploymentStepsFor(Role inputRole, Action<Server> action)
+        protected void DeploymentStepsFor(Role inputRole, Action<ProtoServer> action)
         {
             var role = ServerRole.GetRole(inputRole);
             role.BindAction(action);
@@ -76,19 +106,5 @@ namespace dropkick.Configuration.Dsl
         {
             return !(propertyInfo.PropertyType == typeof(ServerRole) || propertyInfo.PropertyType == typeof(Role));
         }
-
-        public void InspectWith(DeploymentInspector inspector)
-        {
-            inspector.Inspect(this, () =>
-            {
-                foreach (ServerRole role in _roles.Values)
-                {
-                    role.InspectWith(inspector);
-                }
-            });
-        }
-
-        public SETTINGS Settings { get; private set; }
-
     }
 }

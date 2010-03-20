@@ -15,15 +15,8 @@ namespace dropkick.Configuration.Dsl
     using System.Collections.Generic;
     using DeploymentModel;
 
-    public interface Server :
-        DeploymentInspectorSite
-    {
-        void MapTo(DeploymentServer server);
-        void RegisterTask(ProtoTask protoTask);
-    }
-
     public class PrototypicalServer :
-        Server
+        ProtoServer
     {
         readonly IList<ProtoTask> _tasks = new List<ProtoTask>();
 
@@ -48,7 +41,7 @@ namespace dropkick.Configuration.Dsl
             }
         }
 
-        public void RegisterTask(ProtoTask protoTask)
+        public void RegisterProtoTask(ProtoTask protoTask)
         {
             _tasks.Add(protoTask);
         }

@@ -15,11 +15,11 @@ namespace dropkick.Configuration.Dsl.Files
     public class AppFileActions :
         FileAction
     {
-        Server _server;
+        ProtoServer _protoServer;
 
-        public AppFileActions(Server server)
+        public AppFileActions(ProtoServer protoServer)
         {
-            _server = server;
+            _protoServer = protoServer;
         }
 
         #region FileAction Members

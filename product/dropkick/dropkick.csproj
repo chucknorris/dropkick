@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -76,7 +76,8 @@
     <Compile Include="Configuration\Dsl\MsSql\ProtoRunSqlScriptTask.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\ProtoFolderShareTask.cs" />
     <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
-    <Compile Include="Configuration\Dsl\Server.cs" />
+    <Compile Include="Configuration\Dsl\PrototypicalServer.cs" />
+    <Compile Include="Configuration\Dsl\ProtoServer.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
     <Compile Include="DeploymentModel\TaskSite.cs" />
     <Compile Include="Engine\DeploymentFinders\MultipleFinder.cs" />

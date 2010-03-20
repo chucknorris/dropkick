@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
-    using System;
     using System.IO;
     using DeploymentModel;
     using Tasks;
@@ -23,12 +22,12 @@ namespace dropkick.Configuration.Dsl.Iis
         IisSiteOptions,
         IisVirtualDirectoryOptions
     {
-        readonly Server _server;
+        readonly ProtoServer _protoServer;
 
-        public IisProtoTask(Server server, string websiteName)
+        public IisProtoTask(ProtoServer protoServer, string websiteName)
         {
-            _server = server;
-            _server.RegisterTask(this);
+            _protoServer = protoServer;
+            _protoServer.RegisterProtoTask(this);
             WebsiteName = websiteName;
         }
 
@@ -65,11 +64,9 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterTasks(TaskSite s)
         {
-
             if (Version == IisVersion.Six)
             {
-
-                s.AddTask(new Iis6Task()
+                s.AddTask(new Iis6Task
                           {
                               PathOnServer = PathOnServer,
                               ServerName = s.Name,
@@ -78,14 +75,13 @@ namespace dropkick.Configuration.Dsl.Iis
                           });
                 return;
             }
-            s.AddTask(new Iis7Task()
+            s.AddTask(new Iis7Task
                       {
                           PathOnServer = PathOnServer,
                           ServerName = s.Name,
                           VdirPath = VdirPath,
                           WebsiteName = WebsiteName
                       });
-
         }
     }
 }

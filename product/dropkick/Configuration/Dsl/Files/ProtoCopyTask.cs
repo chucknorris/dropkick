@@ -25,13 +25,13 @@ namespace dropkick.Configuration.Dsl.Files
     {
         readonly IList<string> _froms = new List<string>();
         readonly IList<ProtoRenameTask> _renameTasks = new List<ProtoRenameTask>();
-        readonly Server _server;
+        readonly ProtoServer _protoServer;
         Action<FileActions> _followOn;
         string _to;
 
-        public ProtoCopyTask(Server server)
+        public ProtoCopyTask(ProtoServer protoServer)
         {
-            _server = server;
+            _protoServer = protoServer;
         }
 
         #region CopyOptions Members
@@ -51,7 +51,7 @@ namespace dropkick.Configuration.Dsl.Files
         public void With(Action<FileActions> copyAction)
         {
             _followOn = copyAction;
-            copyAction(new SomeFileActions(_server));
+            copyAction(new SomeFileActions(_protoServer));
         }
 
         #endregion

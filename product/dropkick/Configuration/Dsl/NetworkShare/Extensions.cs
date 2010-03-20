@@ -14,10 +14,10 @@ namespace dropkick.Configuration.Dsl.NetworkShare
 {
     public static class Extensions
     {
-        public static FolderShareOptions ShareFolder(this Server server, string name)
+        public static FolderShareOptions ShareFolder(this ProtoServer protoServer, string name)
         {
             var proto = new ProtoFolderShareTask(name);
-            server.RegisterTask(proto);
+            protoServer.RegisterProtoTask(proto);
             return proto;
         }
     }
