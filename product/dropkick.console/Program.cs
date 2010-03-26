@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.console
 {
+    using System;
     using System.IO;
     using System.Linq;
     using Engine;
@@ -21,7 +22,8 @@ namespace dropkick.console
     {
         static void Main(string[] args)
         {
-            XmlConfigurator.Configure(new FileInfo("dk.log4net.xml"));
+            var logpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dk.log4net.xml");
+            XmlConfigurator.Configure(new FileInfo(logpath));
 
             // commands 
             //   verify
