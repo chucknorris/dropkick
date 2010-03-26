@@ -16,17 +16,15 @@ namespace dropkick.Configuration.Dsl.Files
 
     public static class Extension
     {
-        public static CopyOptions Copy(this ProtoServer protoServer, Action<FromOptions> a)
+        public static CopyOptions CopyDirectory(this ProtoServer protoServer, string from)
         {
-            var proto = new ProtoCopyTask();
-            a(proto);
-            protoServer.RegisterProtoTask(proto);
-            return proto;
+            return CopyDirectory(protoServer, o => o.Include(from));
         }
-        public static CopyOptions CopyTo(this ProtoServer protoServer, string targetPath)
+
+        public static CopyOptions CopyDirectory(this ProtoServer protoServer, Action<FromOptions> a)
         {
-            var proto = new ProtoCopyTask();
-            proto.To(targetPath);
+            var proto = new ProtoCopyDirectoryTask();
+            a(proto);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }

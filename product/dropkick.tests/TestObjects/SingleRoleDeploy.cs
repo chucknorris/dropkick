@@ -24,8 +24,8 @@ namespace dropkick.tests.TestObjects
             Define(settings =>
                    DeploymentStepsFor(Web, server =>
                    {
-                       server.CopyTo(@".\bill")
-                           .From(@".\bob");
+                       server.CopyDirectory(@".\bob")
+                         .To(@".\bill");
 
                        server.Msmq()
                            .PrivateQueueNamed("mt_timeout");

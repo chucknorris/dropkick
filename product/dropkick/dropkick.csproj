@@ -65,7 +65,7 @@
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
-    <Compile Include="Configuration\Dsl\Files\ProtoCopyTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoCopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoRenameTask.cs" />
     <Compile Include="Configuration\Dsl\Files\RenameOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisProtoTask.cs" />
@@ -111,13 +111,12 @@
     <Compile Include="Configuration\Dsl\Dsn\Extension.cs" />
     <Compile Include="Configuration\Dsl\Files\AppFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\CopyOptions.cs" />
-    <Compile Include="Tasks\Files\CopyTask.cs" />
+    <Compile Include="Tasks\Files\CopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\Extension.cs" />
     <Compile Include="Configuration\Dsl\Files\FileAction.cs" />
     <Compile Include="Configuration\Dsl\Files\FileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\SomeFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\WebFileActions.cs" />
-    <Compile Include="Tasks\Files\MultiCopyTask.cs" />
     <Compile Include="Tasks\Files\RenameTask.cs" />
     <Compile Include="Tasks\Iis\BaseIisTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\Extension.cs" />
