@@ -17,10 +17,11 @@ namespace dropkick.Engine.DeploymentFinders
 
         public Deployment Find(string assemblyName)
         {
-            
             //check that it is an assembly
-            
-            Assembly asm = Assembly.LoadFile(FindFile(assemblyName));
+
+            var path = FindFile(assemblyName);
+
+            Assembly asm = Assembly.LoadFile(path);
             IEnumerable<Type> tt = asm.GetTypes().Where(t => typeof(Deployment).IsAssignableFrom(t));
 
             return new TypeWasSpecifiedAssumingItHasADefaultConstructor().Find(tt.First());
@@ -28,9 +29,12 @@ namespace dropkick.Engine.DeploymentFinders
 
         string FindFile(string file)
         {
-            var p = Path.Combine(Environment.CurrentDirectory, file);
-            if(!File.Exists(p)) throw new FileNotFoundException("Couldn't Find File",p);
-            _log.DebugFormat("PATH: '{0}'", p);
+            var p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
+            _log.DebugFormat("Looking for deployment dll '{0}' at '{1}'", file, p);
+            
+            if(!File.Exists(p))
+                throw new FileNotFoundException("Couldn't Find File",p);
+            
             return p;
         }
 
