@@ -10,16 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Notes
+namespace dropkick.DeploymentModel
 {
-    using Tasks;
-
-    public static class Extension
+    public interface PhysicalServer
     {
-        public static void Note(this ProtoServer protoServer, string note)
-        {
-            var proto = new NoteProtoTask(note);
-            protoServer.RegisterProtoTask(proto);
-        }
+        string Name { get; }
+        bool IsLocal { get; }
+        void AddTask(Task task);
     }
 }

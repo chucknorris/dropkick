@@ -35,7 +35,7 @@ namespace dropkick.DeploymentModel
         }
 
 
-        public void ForEachServer(Action<DeploymentServer> detailAction)
+        public void ForEachServerMapped(Action<DeploymentServer> detailAction)
         {
             foreach (var server in _servers)
             {

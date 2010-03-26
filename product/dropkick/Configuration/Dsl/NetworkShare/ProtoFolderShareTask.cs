@@ -21,7 +21,6 @@ namespace dropkick.Configuration.Dsl.NetworkShare
         BaseTask,
         FolderShareOptions
     {
-        bool _createIfNotExist;
         string _pointingTo;
         readonly string _shareName;
 
@@ -38,24 +37,16 @@ namespace dropkick.Configuration.Dsl.NetworkShare
             return this;
         }
 
-        public void CreateIfNotExist()
-        {
-            _createIfNotExist = true;
-        }
-
         #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterRealTasks(PhysicalServer s)
         {
-            return s =>
-                   {
-                       s.AddTask(new FolderShareTask
-                                     {
-                                         PointingTo = _pointingTo,
-                                         Server = s.Name,
-                                         ShareName = _shareName
-                                     });
-                   };
+            s.AddTask(new FolderShareTask
+                      {
+                          PointingTo = _pointingTo,
+                          Server = s.Name,
+                          ShareName = _shareName
+                      });
         }
     }
 }

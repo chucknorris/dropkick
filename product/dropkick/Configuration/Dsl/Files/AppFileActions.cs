@@ -15,13 +15,6 @@ namespace dropkick.Configuration.Dsl.Files
     public class AppFileActions :
         FileAction
     {
-        Server _server;
-
-        public AppFileActions(Server server)
-        {
-            _server = server;
-        }
-
         #region FileAction Members
 
         public FileAction ReplaceIdentityTokensWithPrompt()

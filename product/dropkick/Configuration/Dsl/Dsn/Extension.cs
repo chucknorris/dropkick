@@ -14,10 +14,10 @@ namespace dropkick.Configuration.Dsl.Dsn
 {
     public static class Extension
     {
-        public static DsnOptions CreateDSN(this Server server, string dsnName)
+        public static DsnOptions CreateDSN(this ProtoServer protoServer, string dsnName)
         {
             var proto = new ProtoDsnTask(dsnName);
-            server.RegisterTask(proto);
+            protoServer.RegisterProtoTask(proto);
             return proto;
         }
     }

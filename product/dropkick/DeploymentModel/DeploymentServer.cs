@@ -1,3 +1,15 @@
+// Copyright 2007-2008 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.DeploymentModel
 {
     using System;
@@ -5,7 +17,7 @@ namespace dropkick.DeploymentModel
     using Configuration.Dsl;
 
     public class DeploymentServer :
-        TaskSite
+        PhysicalServer
     {
         //because tasks need to be customized per server
         readonly IList<DeploymentDetail> _details;
@@ -16,8 +28,28 @@ namespace dropkick.DeploymentModel
             _details = new List<DeploymentDetail>();
         }
 
+        public int DetailCount
+        {
+            get { return _details.Count; }
+        }
+
+        #region PhysicalServer Members
+
         public string Name { get; private set; }
 
+
+        public bool IsLocal
+        {
+            get { return Environment.MachineName == Name; }
+        }
+
+
+        public void AddTask(Task task)
+        {
+            _details.Add(task.ToDetail(this));
+        }
+
+        #endregion
 
         public void AddDetail(DeploymentDetail detail)
         {
@@ -33,28 +65,9 @@ namespace dropkick.DeploymentModel
             }
         }
 
-        public bool IsLocal
-        {
-            get
-            {
-                return System.Environment.MachineName == Name;
-            }
-        }
-
-        public int DetailCount
-        {
-            get { return _details.Count; }
-        }
-
-
-        public void AddTask(Task task)
-        {
-            _details.Add(task.ToDetail(this));
-        }
-
         public void AddTask(ProtoTask task)
         {
-            task.RegisterTasks()(this);
+            task.RegisterRealTasks(this);
         }
     }
 }

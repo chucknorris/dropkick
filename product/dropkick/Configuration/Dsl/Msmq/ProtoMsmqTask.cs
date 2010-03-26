@@ -12,48 +12,33 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Msmq
 {
-    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.Msmq;
 
     public class ProtoMsmqTask :
         BaseTask,
-        MsmqOptions,
-        QueueOptions
+        MsmqOptions
     {
-        bool _createIfItDoesNotExist;
         string _queueName;
 
         #region MsmqOptions Members
 
-        public QueueOptions PrivateQueueNamed(string name)
+        public void PrivateQueueNamed(string name)
         {
             _queueName = name;
-            return this;
         }
 
         #endregion
 
-        #region QueueOptions Members
-
-        public void CreateIfItDoesntExist()
+        public override void RegisterRealTasks(PhysicalServer s)
         {
-            _createIfItDoesNotExist = true;
-        }
+            s.AddTask(new MsmqTask
+                      {
+                          QueueName = _queueName,
+                          ServerName = s.Name
+                      });
 
-        #endregion
-
-        public override Action<TaskSite> RegisterTasks()
-        {
-            return s =>
-                   {
-                       s.AddTask(new MsmqTask()
-                                     {
-                                         QueueName = _queueName,
-                                         ServerName = s.Name
-                                     });
-                   };
         }
     }
 }

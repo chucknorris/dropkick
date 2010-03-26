@@ -14,20 +14,26 @@ namespace dropkick.Configuration.Dsl.Iis
 {
     public static class Extension //ProtoTaskBuilder
     {
-        public static IisSiteOptions Iis6Site(this Server server, string websiteName)
+        public static IisSiteOptions Iis6Site(this ProtoServer protoServer, string websiteName)
         {
-            return new IisProtoTask(server, websiteName)
-                   {
-                       Version = IisVersion.Six
-                   };
+            var task = new IisProtoTask(websiteName)
+                       {
+                           Version = IisVersion.Six
+                       };
+            protoServer.RegisterProtoTask(task);
+            return task;
         }
 
-        public static IisSiteOptions Iis7Site(this Server server, string websiteName)
+        public static IisSiteOptions Iis7Site(this ProtoServer protoServer, string websiteName)
         {
-            return new IisProtoTask(server, websiteName)
-                   {
-                       Version = IisVersion.Seven
-                   };
+            var task = new IisProtoTask(websiteName)
+                       {
+                           Version = IisVersion.Seven
+                       };
+            protoServer.RegisterProtoTask(task);
+            return task;
+
+
         }
     }
 }

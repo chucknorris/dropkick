@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -65,7 +65,7 @@
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
-    <Compile Include="Configuration\Dsl\Files\ProtoCopyTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoCopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoRenameTask.cs" />
     <Compile Include="Configuration\Dsl\Files\RenameOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisProtoTask.cs" />
@@ -76,9 +76,12 @@
     <Compile Include="Configuration\Dsl\MsSql\ProtoRunSqlScriptTask.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\ProtoFolderShareTask.cs" />
     <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
-    <Compile Include="Configuration\Dsl\Server.cs" />
+    <Compile Include="Configuration\Dsl\PrototypicalServer.cs" />
+    <Compile Include="Configuration\Dsl\ProtoServer.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStopTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
-    <Compile Include="DeploymentModel\TaskSite.cs" />
+    <Compile Include="DeploymentModel\PhysicalServer.cs" />
     <Compile Include="Engine\DeploymentFinders\MultipleFinder.cs" />
     <Compile Include="Engine\RoleToServerMap.cs" />
     <Compile Include="DeploymentModel\DeploymentServer.cs" />
@@ -108,13 +111,12 @@
     <Compile Include="Configuration\Dsl\Dsn\Extension.cs" />
     <Compile Include="Configuration\Dsl\Files\AppFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\CopyOptions.cs" />
-    <Compile Include="Tasks\Files\CopyTask.cs" />
+    <Compile Include="Tasks\Files\CopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\Extension.cs" />
     <Compile Include="Configuration\Dsl\Files\FileAction.cs" />
     <Compile Include="Configuration\Dsl\Files\FileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\SomeFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\WebFileActions.cs" />
-    <Compile Include="Tasks\Files\MultiCopyTask.cs" />
     <Compile Include="Tasks\Files\RenameTask.cs" />
     <Compile Include="Tasks\Iis\BaseIisTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\Extension.cs" />

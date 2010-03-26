@@ -10,16 +10,25 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Notes
+namespace dropkick.Configuration.Dsl.WinService
 {
+    using DeploymentModel;
     using Tasks;
+    using Tasks.WinService;
 
-    public static class Extension
+    public class ProtoWinServiceStopTask :
+        BaseTask
     {
-        public static void Note(this ProtoServer protoServer, string note)
+        readonly string _serviceName;
+
+        public ProtoWinServiceStopTask(string serviceName)
         {
-            var proto = new NoteProtoTask(note);
-            protoServer.RegisterProtoTask(proto);
+            _serviceName = serviceName;
+        }
+
+        public override void RegisterRealTasks(PhysicalServer s)
+        {
+            s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
         }
     }
 }

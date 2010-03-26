@@ -12,35 +12,20 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
-    using System;
     using System.Collections.Generic;
     using DeploymentModel;
     using Tasks;
     using Tasks.Files;
 
-    public class ProtoCopyTask :
+    public class ProtoCopyDirectoryTask :
         BaseTask,
         CopyOptions,
         FromOptions
     {
-        readonly Server _server;
-        string _to;
-        Action<FileActions> _followOn;
         readonly IList<string> _froms = new List<string>();
-        readonly IList<ProtoRenameTask> _renameTasks = new List<ProtoRenameTask>();
+        string _to;
 
-        public ProtoCopyTask(Server server)
-        {
-            _server = server;
-        }
-
-        public RenameOptions Include(string path)
-        {
-            _froms.Add(path);
-            var rn = new ProtoRenameTask(path);
-            _renameTasks.Add(rn);
-            return rn;
-        }
+        #region CopyOptions Members
 
         public CopyOptions From(string sourcePath)
         {
@@ -54,28 +39,24 @@ namespace dropkick.Configuration.Dsl.Files
             return this;
         }
 
-        public void With(Action<FileActions> copyAction)
+        #endregion
+
+        #region FromOptions Members
+
+        public void Include(string path)
         {
-            _followOn = copyAction;
-            copyAction(new SomeFileActions(_server));
+            _froms.Add(path);
         }
 
+        #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterRealTasks(PhysicalServer site)
         {
-            var mt = new MultiCopyTask();
-
             foreach (var f in _froms)
             {
-                var o = new CopyTask(f, _to);
-                mt.Add(o);
+                var o = new CopyDirectoryTask(f, _to);
+                site.AddTask(o);
             }
-
-            //TODO: Add renames in here
-            return s =>
-                   {
-                       s.AddTask(mt);
-                   };
         }
     }
 }

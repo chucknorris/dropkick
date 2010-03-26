@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
-    using System;
     using System.IO;
     using DeploymentModel;
     using Tasks;
@@ -23,12 +22,8 @@ namespace dropkick.Configuration.Dsl.Iis
         IisSiteOptions,
         IisVirtualDirectoryOptions
     {
-        readonly Server _server;
-
-        public IisProtoTask(Server server, string websiteName)
+        public IisProtoTask(string websiteName)
         {
-            _server = server;
-            _server.RegisterTask(this);
             WebsiteName = websiteName;
         }
 
@@ -63,28 +58,26 @@ namespace dropkick.Configuration.Dsl.Iis
 
         #endregion
 
-        public override Action<TaskSite> RegisterTasks()
+        public override void RegisterRealTasks(PhysicalServer s)
         {
-            return s =>
-                   {
-                       if (Version == IisVersion.Six)
-                           s.AddTask(new Iis6Task()
-                                         {
-                                             PathOnServer = PathOnServer,
-                                             ServerName = s.Name,
-                                             VdirPath = VdirPath,
-                                             WebsiteName = WebsiteName
-                                         });
-
-                       if (Version == IisVersion.Seven)
-                           s.AddTask(new Iis7Task()
-                                         {
-                                             PathOnServer = PathOnServer,
-                                             ServerName = s.Name,
-                                             VdirPath = VdirPath,
-                                             WebsiteName = WebsiteName
-                                         });
-                   };
+            if (Version == IisVersion.Six)
+            {
+                s.AddTask(new Iis6Task
+                          {
+                              PathOnServer = PathOnServer,
+                              ServerName = s.Name,
+                              VdirPath = VdirPath,
+                              WebsiteName = WebsiteName
+                          });
+                return;
+            }
+            s.AddTask(new Iis7Task
+                      {
+                          PathOnServer = PathOnServer,
+                          ServerName = s.Name,
+                          VdirPath = VdirPath,
+                          WebsiteName = WebsiteName
+                      });
         }
     }
 }

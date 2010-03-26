@@ -13,85 +13,44 @@
 namespace dropkick.Configuration.Dsl.WinService
 {
     using System;
-    using DeploymentModel;
-    using Tasks;
-    using Tasks.WinService;
 
     public class ProtoWinServiceTask :
         WinServiceOptions
     {
+        readonly ProtoServer _protoServer;
         readonly string _serviceName;
-        readonly Server _server;
 
-        public ProtoWinServiceTask(Server server, string serviceName)
+        public ProtoWinServiceTask(ProtoServer protoServer, string serviceName)
         {
-            _server = server;
+            _protoServer = protoServer;
             _serviceName = serviceName;
         }
 
         #region WinServiceOptions Members
 
-        public WinServiceOptions Do(Action<Server> registerAdditionalActions)
+        public WinServiceOptions Do(Action<ProtoServer> registerAdditionalActions)
         {
-            _server.RegisterTask(new ProtoWinServiceStopTask(_serviceName));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName));
 
             //child task
-            registerAdditionalActions(_server);
+            registerAdditionalActions(_protoServer);
 
-
-            _server.RegisterTask(new ProtoWinServiceStartTask(_serviceName));
+            
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName));
 
             return this;
         }
 
         public void Start()
         {
-            _server.RegisterTask(new ProtoWinServiceStartTask(_serviceName));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName));
         }
 
         public void Stop()
         {
-            _server.RegisterTask(new ProtoWinServiceStopTask(_serviceName));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName));
         }
 
         #endregion
-    }
-
-    public class ProtoWinServiceStopTask :
-        BaseTask
-    {
-        readonly string _serviceName;
-
-        public ProtoWinServiceStopTask(string serviceName)
-        {
-            _serviceName = serviceName;
-        }
-
-        public override Action<TaskSite> RegisterTasks()
-        {
-            return s =>
-                   {
-                       s.AddTask(new WinServiceStopTask(s.Name, _serviceName));
-                   };
-        }
-    }
-
-    public class ProtoWinServiceStartTask :
-        BaseTask
-    {
-        readonly string _serviceName;
-
-        public ProtoWinServiceStartTask(string serviceName)
-        {
-            _serviceName = serviceName;
-        }
-
-        public override Action<TaskSite> RegisterTasks()
-        {
-            return s =>
-                   {
-                       s.AddTask(new WinServiceStartTask(s.Name, _serviceName));
-                   };
-        }
     }
 }

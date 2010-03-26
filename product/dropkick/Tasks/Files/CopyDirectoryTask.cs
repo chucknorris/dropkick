@@ -5,13 +5,13 @@ namespace dropkick.Tasks.Files
     using DeploymentModel;
     using Exceptions;
 
-    public class CopyTask :
+    public class CopyDirectoryTask :
         Task
     {
         private string _from;
         private string _to;
 
-        public CopyTask(string @from, string to)
+        public CopyDirectoryTask(string @from, string to)
         {
             _from = from;
             _to = to;
@@ -87,7 +87,7 @@ namespace dropkick.Tasks.Files
                     }
                     catch (Exception)
                     {
-                        result.AddAlert("CopyTask: Can't read file '{0}'");
+                        result.AddAlert("CopyDirectoryTask: Can't read file '{0}'");
                     }
                     finally
                     {
@@ -108,10 +108,11 @@ namespace dropkick.Tasks.Files
             try
             {
                 Path.GetFullPath(_to);
+                //TODO: add directory test
             }
             catch (Exception ex)
             {
-                throw new DeploymentException("'{0}' is not an acceptable path".FormatWith(_to));
+                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
             }
         }
 

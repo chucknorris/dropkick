@@ -10,22 +10,41 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Tasks
+namespace dropkick.Configuration.Dsl
 {
-    using Configuration.Dsl;
+    using System.Collections.Generic;
     using DeploymentModel;
 
-    public abstract class BaseTask :
-        ProtoTask
+    public class PrototypicalServer :
+        ProtoServer
     {
-        #region ProtoTask Members
+        readonly IList<ProtoTask> _tasks = new List<ProtoTask>();
+
+        #region Server Members
 
         public void InspectWith(DeploymentInspector inspector)
         {
-            inspector.Inspect(this);
+            inspector.Inspect(this, () =>
+            {
+                foreach (ProtoTask task in _tasks)
+                {
+                    task.InspectWith(inspector);
+                }
+            });
         }
 
-        public abstract void RegisterRealTasks(PhysicalServer site);
+        public void MapTo(DeploymentServer server)
+        {
+            foreach (var task in _tasks)
+            {
+                task.RegisterRealTasks(server);
+            }
+        }
+
+        public void RegisterProtoTask(ProtoTask protoTask)
+        {
+            _tasks.Add(protoTask);
+        }
 
         #endregion
     }

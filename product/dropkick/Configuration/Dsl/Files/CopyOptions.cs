@@ -12,12 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
-    using System;
-
     public interface CopyOptions
     {
-        CopyOptions From(string sourcePath);
         CopyOptions To(string destinationPath);
-        void With(Action<FileActions> copyAction);
     }
 }
