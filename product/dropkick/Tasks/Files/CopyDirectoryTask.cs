@@ -4,17 +4,21 @@ namespace dropkick.Tasks.Files
     using System.IO;
     using DeploymentModel;
     using Exceptions;
+    using log4net;
 
     public class CopyDirectoryTask :
         Task
     {
         private string _from;
         private string _to;
+        readonly DestinationCleanOptions _options;
+        ILog _log = LogManager.GetLogger(typeof (CopyDirectoryTask));
 
-        public CopyDirectoryTask(string @from, string to)
+        public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options)
         {
             _from = from;
             _to = to;
+            _options = options;
         }
 
 
@@ -34,29 +38,16 @@ namespace dropkick.Tasks.Files
             _from = Path.GetFullPath(_from);
             _to = Path.GetFullPath(_to);
 
-            //todo: verify that from exists
-            if (!Directory.Exists(_to))
-            {
-                Directory.CreateDirectory(_to);
-            }
+            if (_options == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
 
-            if (Directory.Exists(_from))
-            {
-                foreach (string file in Directory.GetFiles(_from))
-                {
-                    //need to support recursion
-                    string fileName = Path.GetFileName(file);
-                    File.Copy(file, Path.Combine(_to, fileName));
-                    //log file was copied / event?
-                }
+            CopyDirectory(new DirectoryInfo(_from), new DirectoryInfo(_to) );
 
-                //what do you want to do if the directory DOESN'T exist?
-            }
-
-            result.AddGood("Copied stuff");
+            result.AddGood(Name);
 
             return result;
         }
+
+
 
         public DeploymentResult VerifyCanRun()
         {
@@ -72,6 +63,9 @@ namespace dropkick.Tasks.Files
             if (!Directory.Exists(_to))
                 result.AddAlert(string.Format("'{0}' doesn't exist and will be created", _to));
 
+            if(_options == DestinationCleanOptions.Delete)
+                result.AddAlert("The files and directories in '{0}' will be deleted before deploying", _to);
+
             if (Directory.Exists(_from))
             {
                 result.AddGood(string.Format("'{0}' exists", _from));
@@ -83,7 +77,7 @@ namespace dropkick.Tasks.Files
                     try
                     {
                         fs = File.Open(file, FileMode.Open, FileAccess.Read);
-                        result.AddGood(string.Format("Going to copy '{0}' to '{1}'", file, _to));
+                        _log.DebugFormat("Going to copy '{0}' to '{1}'", file, _to);
                     }
                     catch (Exception)
                     {
@@ -116,5 +110,42 @@ namespace dropkick.Tasks.Files
             }
         }
 
+        void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
+        {
+            if(!destination.Exists)
+            {
+                destination.Create();
+            }
+
+            // Copy all files.
+            FileInfo[] files = source.GetFiles();
+            foreach (FileInfo file in files)
+            {
+                var fileDestination = Path.Combine(destination.FullName,
+                                                   file.Name);
+                file.CopyTo(fileDestination);
+                _log.DebugFormat("Copy file '{0}' to '{1}'", file.FullName, fileDestination);
+            }
+
+            // Process subdirectories.
+            DirectoryInfo[] dirs = source.GetDirectories();
+            foreach (DirectoryInfo dir in dirs)
+            {
+                // Get destination directory.
+                string destinationDir = Path.Combine(destination.FullName, dir.Name);
+
+                // Call CopyDirectory() recursively.
+                CopyDirectory(dir, new DirectoryInfo(destinationDir));
+            }
+        }
+
+        void DeleteDestinationFirst(DirectoryInfo directory, DeploymentResult result)
+        {
+            if(directory.Exists)
+            {
+                directory.Delete(true);
+                result.AddGood("'{0}' was successfully deleted");
+            }
+        }
     }
 }
