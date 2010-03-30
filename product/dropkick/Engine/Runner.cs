@@ -1,10 +1,12 @@
 namespace dropkick.Engine
 {
     using System;
+    using System.IO;
     using DeploymentFinders;
     using FileSystem;
     using log4net;
     using Settings;
+    using Path=dropkick.FileSystem.Path;
 
     public static class Runner
     {
@@ -24,15 +26,21 @@ namespace dropkick.Engine
 
                 var pathToSettingsFile = _path.Combine(newArgs.SettingsDirectory, "{0}.settings".FormatWith(newArgs.Environment));
                 var pathToMapFile = _path.Combine(newArgs.SettingsDirectory, "{0}.servermaps".FormatWith(newArgs.Environment));
-                newArgs.ServerMappings.Merge(_serverParser.Parse(new System.IO.FileInfo(pathToMapFile)));
+                if(!File.Exists(pathToMapFile))
+                {
+                    _log.FatalFormat("Cannot find the server maps for the environment '{0}' at '{1}'", newArgs.Environment, pathToMapFile);
+                    return;
+                }
+
+                newArgs.ServerMappings.Merge(_serverParser.Parse(new FileInfo(pathToMapFile)));
 
                 _log.Debug("*******SETTINGS*******");
                 _log.InfoFormat("Command: {0}", newArgs.Command);
                 _log.InfoFormat("Deployment: {0}", newArgs.Deployment);
                 _log.InfoFormat("Environment: {0}", newArgs.Environment);
                 _log.InfoFormat("Role: {0}", newArgs.Role);
-                _log.InfoFormat("ServerMappings: {0}", newArgs.ServerMappings);
-                _log.InfoFormat("Settings Path: {0}", pathToSettingsFile);
+                DisplayServerMappingsForEnvironment(newArgs.ServerMappings);
+                VerifyPathToSettingsFile(pathToSettingsFile);
                 _log.Debug("*******SETTINGS*******");
 
                 Console.WriteLine("Press enter to kick it out there");
@@ -50,6 +58,28 @@ namespace dropkick.Engine
                 _log.Debug(commandLine);
                 _log.Error(ex);
             }
+        }
+
+        static void DisplayServerMappingsForEnvironment(RoleToServerMap mappings)
+        {
+            _log.Info("ServerMappings");
+            foreach (var role in mappings.Roles())
+            {
+                _log.InfoFormat("  '{0}'", role);
+
+                foreach (var server in mappings.GetServers(role))
+                {
+                    _log.InfoFormat("    '{0}'", server.Name);
+                }
+            }
+        }
+
+        static void VerifyPathToSettingsFile(string pathToSettingsFile)
+        {
+            if(File.Exists(pathToSettingsFile))
+                _log.InfoFormat("Settings Path: {0}", pathToSettingsFile);
+            else
+                _log.ErrorFormat("Settings Path: {0}", pathToSettingsFile);
         }
     }
 }

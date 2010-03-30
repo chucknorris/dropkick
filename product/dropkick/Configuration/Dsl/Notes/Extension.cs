@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Notes
 {
+    using System;
     using Tasks;
 
     public static class Extension
@@ -19,6 +20,12 @@ namespace dropkick.Configuration.Dsl.Notes
         public static void Note(this ProtoServer protoServer, string note)
         {
             var proto = new NoteProtoTask(note);
+            protoServer.RegisterProtoTask(proto);
+        }
+
+        public static void Wait(this ProtoServer protoServer, TimeSpan span)
+        {
+            var proto = new WaitProtoTask(span);
             protoServer.RegisterProtoTask(proto);
         }
     }

@@ -16,6 +16,7 @@ namespace dropkick.Tasks.Iis
     using DeploymentModel;
     using log4net;
     using Microsoft.Web.Administration;
+    using System.Linq;
 
     //http://blogs.msdn.com/carlosag/archive/2006/04/17/MicrosoftWebAdministration.aspx
     public class Iis7Task :
@@ -27,6 +28,7 @@ namespace dropkick.Tasks.Iis
         {
             get { return 7; }
         }
+
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -48,6 +50,8 @@ namespace dropkick.Tasks.Iis
 
             var iisManager = ServerManager.OpenRemote(ServerName);
 
+            BuildApplicationPool(iisManager, result);
+
             if (DoesSiteExist())
             {
                 result.AddGood("'{0}' site exists", WebsiteName);
@@ -65,6 +69,14 @@ namespace dropkick.Tasks.Iis
             iisManager.CommitChanges();
 
             return result;
+        }
+
+        void BuildApplicationPool(ServerManager iisManager, DeploymentResult result)
+        {
+            if (string.IsNullOrEmpty(AppPoolName))
+            {
+                CreateAppPool(AppPoolName, iisManager, result);
+            }
         }
 
         void CreateVirtualDirectory(Site site)
@@ -88,7 +100,10 @@ namespace dropkick.Tasks.Iis
                 _logger.Info("Application was not found, creating.");
                 //create it
                 _logger.Debug(PathOnServer);
-                site.Applications.Add(appPath, PathOnServer.FullName);
+                var app = site.Applications.Add(appPath, PathOnServer.FullName);
+                
+                if(AppPoolName != null)
+                    app.ApplicationPoolName = AppPoolName;
             }
         }
 
@@ -126,11 +141,6 @@ namespace dropkick.Tasks.Iis
             return false;
         }
 
-        public void CreateIfItDoesntExist()
-        {
-            ShouldCreate = true;
-        }
-
         public Site GetSite(ServerManager iisManager, string name)
         {
             foreach (var site in iisManager.Sites)
@@ -141,7 +151,20 @@ namespace dropkick.Tasks.Iis
                 }
             }
 
-            throw new Exception("cant find site");
+            throw new Exception("cant find site '{0}'".FormatWith(name));
+        }
+
+        public void CreateAppPool(string name, ServerManager mgr, DeploymentResult result)
+        {
+            if (mgr.ApplicationPools.Any(x => x.Name == name))
+            {
+                result.AddAlert("Found the AppPool '{0}'", name);
+                return;
+            }
+            result.AddAlert("Didn't find the AppPool '{0}' creating.", name);    
+
+            mgr.ApplicationPools.Add(name);
+            result.AddGood("Created app pool '{0}'", name);
         }
     }
 }

@@ -19,12 +19,12 @@ namespace dropkick.Tasks.Iis
     public abstract class BaseIisTask :
         Task
     {
-        public bool ShouldCreate { get; protected set; }
         public string WebsiteName { get; set; }
         public string VdirPath { get; set; }
         public DirectoryInfo PathOnServer { get; set; }
         public string ServerName { get; set; }
         public abstract int VersionNumber { get; }
+        public string AppPoolName { get; set; }
 
         #region Task Members
 
@@ -64,17 +64,13 @@ namespace dropkick.Tasks.Iis
                 else
                 {
                     result.AddAlert("Couldn't find VDir '{0}'", VdirPath);
-
-                    if (ShouldCreate)
-                        result.AddAlert("The VDir '{0}' will be created", VdirPath);
+                    result.AddAlert("The VDir '{0}' will be created", VdirPath);
                 }
             }
             else
             {
                 result.AddAlert("Couldn't find Website '{0}'", WebsiteName);
-
-                if (ShouldCreate)
-                    result.AddAlert("Website '{0}' and VDir '{1}' will be created", WebsiteName, VdirPath);
+                result.AddAlert("Website '{0}' and VDir '{1}' will be created", WebsiteName, VdirPath);
             }
         }
     }

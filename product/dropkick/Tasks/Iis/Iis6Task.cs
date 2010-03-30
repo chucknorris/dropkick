@@ -98,11 +98,6 @@ namespace dropkick.Tasks.Iis
             vdir.Invoke("AppCreate2", 0);
         }
 
-        public void CreateIfItDoesntExist()
-        {
-            ShouldCreate = true;
-        }
-
         private void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {
             int shouldBe5 = Environment.OSVersion.Version.Major;
@@ -134,5 +129,7 @@ namespace dropkick.Tasks.Iis
 
             throw new Exception("could find your website");
         }
+
+
     }
 }

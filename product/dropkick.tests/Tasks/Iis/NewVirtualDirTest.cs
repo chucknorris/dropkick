@@ -3,6 +3,7 @@ namespace dropkick.tests.Tasks.Iis
     using System;
     using System.IO;
     using dropkick.Tasks.Iis;
+    using Microsoft.Web.Administration;
     using NUnit.Framework;
 
     [TestFixture]
@@ -27,6 +28,14 @@ namespace dropkick.tests.Tasks.Iis
             {
                 Console.WriteLine(item.Message);
             }
+        }
+
+        [Test, Explicit]
+        public void Create_An_AppPool()
+        {
+            var iis = ServerManager.OpenRemote("SrvTestWeb01");
+            iis.ApplicationPools.Add("CUE");
+            iis.CommitChanges();
         }
     }
 }

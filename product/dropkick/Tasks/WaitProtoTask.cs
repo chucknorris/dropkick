@@ -10,14 +10,24 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.WinService
+namespace dropkick.Tasks
 {
     using System;
+    using DeploymentModel;
 
-    public interface WinServiceOptions
+    public class WaitProtoTask :
+        BaseTask
     {
-        void Start();
-        void Stop();
-        WinServiceOptions Do(Action<ProtoServer> registerAdditionalActions);
+        public WaitProtoTask(TimeSpan span)
+        {
+            WaitTime = span;
+        }
+
+        public TimeSpan WaitTime { get; set; }
+
+        public override void RegisterRealTasks(PhysicalServer s)
+        {
+            s.AddTask(new WaitTask(WaitTime));
+        }
     }
 }

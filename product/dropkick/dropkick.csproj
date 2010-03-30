@@ -42,6 +42,7 @@
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Microsoft.Web.Administration.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -104,6 +105,8 @@
     <Compile Include="Configuration\Dsl\DeploymentInspector.cs" />
     <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
+    <Compile Include="Tasks\WaitTask.cs" />
+    <Compile Include="Tasks\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
     <Compile Include="Tasks\Dsn\DsnDriver.cs" />
     <Compile Include="Configuration\Dsl\Dsn\DsnOptions.cs" />

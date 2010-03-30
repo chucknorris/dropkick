@@ -45,5 +45,10 @@ namespace dropkick.Engine
                 }
             }
         }
+
+        public ICollection<string> Roles()
+        {
+            return _mappings.Keys;
+        }
     }
 }
