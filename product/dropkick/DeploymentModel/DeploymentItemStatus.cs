@@ -4,6 +4,7 @@ namespace dropkick.DeploymentModel
     {
         Good,
         Alert,
-        Error
+        Error,
+        Note
     }
 }

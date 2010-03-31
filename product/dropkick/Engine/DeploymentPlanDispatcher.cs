@@ -16,11 +16,13 @@ namespace dropkick.Engine
     using System.Collections.Generic;
     using Configuration.Dsl;
     using DeploymentModel;
+    using log4net;
 
     public static class DeploymentPlanDispatcher
     {
-        static readonly IDictionary<DeploymentCommands, Action<DeploymentPlan>> _actions = new Dictionary<DeploymentCommands, Action<DeploymentPlan>>();
+        static readonly IDictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>> _actions = new Dictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>>();
         static readonly DropkickDeploymentInspector _inspector = new DropkickDeploymentInspector();
+        static readonly ILog _log = LogManager.GetLogger(typeof (DeploymentPlanDispatcher));
 
         static DeploymentPlanDispatcher()
         {
@@ -34,7 +36,17 @@ namespace dropkick.Engine
         {
             var plan = _inspector.GetPlan(deployment, args.ServerMappings);
 
-            _actions[args.Command](plan);
+            var results = _actions[args.Command](plan);
+
+            DisplayResults(results);
+        }
+
+        static void DisplayResults(DeploymentResult results)
+        {
+            foreach (var result in results)
+            {
+                _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
+            }
         }
     }
 }

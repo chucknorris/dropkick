@@ -29,7 +29,7 @@ namespace dropkick.DeploymentModel
             AddItem(DeploymentItemStatus.Good, message);
         }
 
-        public void AddGood(string messageFormat, params string[] args)
+        public void AddGood(string messageFormat, params object[] args)
         {
             AddItem(DeploymentItemStatus.Good, string.Format(messageFormat, args));
         }
@@ -39,9 +39,19 @@ namespace dropkick.DeploymentModel
             AddItem(DeploymentItemStatus.Alert, message);
         }
 
-        public void AddAlert(string messageFormat, params string[] args)
+        public void AddAlert(string messageFormat, params object[] args)
         {
             AddItem(DeploymentItemStatus.Alert, string.Format(messageFormat, args));
+        }
+
+        public void AddNote(string message)
+        {
+            AddItem(DeploymentItemStatus.Note, message);
+        }
+
+        public void AddNote(string messageFormat, params object[] args)
+        {
+            AddItem(DeploymentItemStatus.Note, string.Format(messageFormat, args));
         }
 
         public void AddError(string message)

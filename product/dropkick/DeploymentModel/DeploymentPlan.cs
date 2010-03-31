@@ -36,8 +36,8 @@ namespace dropkick.DeploymentModel
                     //stop. report verify error.
                     return o;
                 }
-                var oo = d.Execute();
 
+                var oo = d.Execute();
                 return o.MergedWith(oo);
             });
         }
@@ -52,24 +52,24 @@ namespace dropkick.DeploymentModel
 
         DeploymentResult Ex(Func<DeploymentDetail, DeploymentResult> action)
         {
-            Console.WriteLine(Name);
             var result = new DeploymentResult();
+            result.AddNote(Name);
 
             foreach (var role in _roles)
             {
-                Console.WriteLine("  {0}", role.Name);
+                result.AddNote("  {0}", role.Name);
 
                 role.ForEachServerMapped(s =>
                 {
-                    Console.WriteLine("    {0}", s.Name);
+                    result.AddNote("    {0}", s.Name);
                     s.ForEachDetail(d =>
                     {
-                        Console.WriteLine("      {0}", d.Name);
+                        result.AddNote("      {0}", d.Name);
                         var r = action(d);
                         result.MergedWith(r);
                         foreach (var item in r.Results)
                         {
-                            Console.WriteLine("      [{0}] {1}", item.Status, item.Message);
+                            result.AddNote("      [{0}] {1}", item.Status, item.Message);
                         }
                     });
                 });

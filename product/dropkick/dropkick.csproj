@@ -79,6 +79,9 @@
     <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
     <Compile Include="Configuration\Dsl\PrototypicalServer.cs" />
     <Compile Include="Configuration\Dsl\ProtoServer.cs" />
+    <Compile Include="Configuration\Dsl\RoundhousE\Extension.cs" />
+    <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEOptions.cs" />
+    <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEProtoTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStopTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Configuration\Dsl\DeploymentInspector.cs" />
     <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
     <Compile Include="Tasks\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
