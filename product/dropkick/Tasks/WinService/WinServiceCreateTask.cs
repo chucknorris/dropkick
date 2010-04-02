@@ -16,6 +16,8 @@ namespace dropkick.Tasks.WinService
             get { return "Installing service '{0}' on '{1}'".FormatWith(ServiceName, MachineName); }
         }
 
+        //TODO: PROMPT FOR USER NAME AND PASSWORD
+
         public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();

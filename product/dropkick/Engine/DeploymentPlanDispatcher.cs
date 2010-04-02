@@ -36,6 +36,8 @@ namespace dropkick.Engine
         {
             var plan = _inspector.GetPlan(deployment, args.ServerMappings);
 
+            //HOW TO PLUG IN   args.Role
+            //TODO: should be able to block here
             var results = _actions[args.Command](plan);
 
             DisplayResults(results);

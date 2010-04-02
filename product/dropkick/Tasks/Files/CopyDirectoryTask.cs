@@ -13,6 +13,7 @@ namespace dropkick.Tasks.Files
         private string _to;
         readonly DestinationCleanOptions _options;
         ILog _log = LogManager.GetLogger(typeof (CopyDirectoryTask));
+        ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
 
         public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options)
         {
@@ -125,6 +126,7 @@ namespace dropkick.Tasks.Files
                                                    file.Name);
                 file.CopyTo(fileDestination);
                 _log.DebugFormat("Copy file '{0}' to '{1}'", file.FullName, fileDestination);
+                _fileLog.Info(fileDestination); //log where files are copied for tripwire
             }
 
             // Process subdirectories.
