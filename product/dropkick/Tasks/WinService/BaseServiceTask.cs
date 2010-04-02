@@ -1,7 +1,6 @@
 namespace dropkick.Tasks.WinService
 {
     using System.Threading;
-    using Configuration.Dsl;
     using DeploymentModel;
 
 

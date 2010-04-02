@@ -18,6 +18,8 @@ namespace dropkick.Configuration.Dsl.WinService
     {
         void Start();
         void Stop();
+        WinServiceCreateOptions Create();
+        void Delete();
         WinServiceOptions Do(Action<ProtoServer> registerAdditionalActions);
     }
 }

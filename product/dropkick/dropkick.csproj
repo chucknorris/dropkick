@@ -82,6 +82,8 @@
     <Compile Include="Configuration\Dsl\RoundhousE\Extension.cs" />
     <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEOptions.cs" />
     <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceCreateTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceDeleteTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStopTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
@@ -152,6 +154,8 @@
     <Compile Include="DeploymentModel\Task.cs" />
     <Compile Include="Tasks\WinService\BaseServiceTask.cs" />
     <Compile Include="Tasks\NestedTask.cs" />
+    <Compile Include="Tasks\WinService\WinServiceCreateTask.cs" />
+    <Compile Include="Tasks\WinService\WinServiceDeleteTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceStartTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceStopTask.cs" />
     <Compile Include="Engine\DeploymentFinders\AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass.cs" />
@@ -168,6 +172,12 @@
     <Compile Include="Engine\Runner.cs" />
     <Compile Include="Configuration\Dsl\ProtoTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wmi\ErrorControl.cs" />
+    <Compile Include="Wmi\ServiceReturnCode.cs" />
+    <Compile Include="Wmi\ServiceStartMode.cs" />
+    <Compile Include="Wmi\ServiceType.cs" />
+    <Compile Include="Wmi\WmiHelper.cs" />
+    <Compile Include="Wmi\WmiService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
