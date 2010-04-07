@@ -14,7 +14,7 @@ namespace dropkick.Wmi
                                                string serviceLocation, ServiceStartMode startMode, string userName,
                                                string password, string[] dependencies)
         {
-            if (userName.IndexOf('\\') < 0)
+            if (userName != null && userName.IndexOf('\\') < 0)
             {
                 userName = ".\\" + userName;
             }

@@ -29,7 +29,7 @@ namespace dropkick.Tasks.WinService
         {
             var result = new DeploymentResult();
 
-            var returnCode = WmiService.Create(MachineName, ServiceName, ServiceDescription, ServiceLocation, StartMode, UserName, Password, Dependencies);
+            var returnCode = WmiService.Create(MachineName, ServiceName, ServiceName, ServiceLocation, StartMode, UserName, Password, Dependencies);
 
             return result;
         }
@@ -39,6 +39,5 @@ namespace dropkick.Tasks.WinService
         public string UserName { get; set; }
         public ServiceStartMode StartMode { get; set; }
         public string ServiceLocation { get; set; }
-        public string ServiceDescription { get; set; }
     }
 }

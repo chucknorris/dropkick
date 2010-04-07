@@ -49,7 +49,7 @@ namespace dropkick.Configuration.Dsl.WinService
                                  Dependencies = _dependencies.ToArray(),
                                  //UserName = _userName,
                                  //Password = _password,
-                                 ServiceDescription =  _description,
+                                 //ServiceDescription =  _description, no place to put this currently
                                  ServiceLocation =  _installPath,
                                  StartMode =  _startMode
                              });

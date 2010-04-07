@@ -23,15 +23,11 @@ namespace dropkick.Tasks.WinService
 
             VerifyInAdministratorRole(result);
 
-            try
+            if (ServiceExists())
             {
-                using (var c = new ServiceController(ServiceName, MachineName))
-                {
-                    ServiceControllerStatus currentStatus = c.Status;
-                    result.AddGood(string.Format("Found service '{0}' it is '{1}'", ServiceName, currentStatus));
-                }
+                result.AddGood(string.Format("Found service '{0}'", ServiceName));
             }
-            catch (Exception)
+            else
             {
                 result.AddAlert(string.Format("Can't find service '{0}'", ServiceName));
             }
@@ -43,13 +39,19 @@ namespace dropkick.Tasks.WinService
         {
             var result = new DeploymentResult();
 
-            using (var c = new ServiceController(ServiceName, MachineName))
+            if (ServiceExists())
             {
-                c.Start();
-                c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5));
+                using (var c = new ServiceController(ServiceName, MachineName))
+                {
+                    c.Start();
+                    c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5));
+                }
+                result.AddGood("Started the service '{0}'", ServiceName);
             }
-
-            result.AddGood("Started the service");
+            else
+            {
+                result.AddAlert("Service '{0}' does not exist", ServiceName);
+            }
 
             return result;
         }

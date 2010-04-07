@@ -1,5 +1,7 @@
 namespace dropkick.Tasks.WinService
 {
+    using System;
+    using System.ServiceProcess;
     using System.Threading;
     using DeploymentModel;
 
@@ -32,6 +34,21 @@ namespace dropkick.Tasks.WinService
             else
             {
                 result.AddGood("You are in the 'Administrator' role");
+            }
+        }
+        protected bool ServiceExists()
+        {
+            try
+            {
+                using (var c = new ServiceController(ServiceName, MachineName))
+                {
+                    ServiceControllerStatus currentStatus = c.Status;
+                    return true;
+                }
+            }
+            catch (Exception)
+            {
+                return false;
             }
         }
     }

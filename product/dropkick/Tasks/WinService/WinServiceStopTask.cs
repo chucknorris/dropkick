@@ -23,15 +23,11 @@ namespace dropkick.Tasks.WinService
 
             VerifyInAdministratorRole(result);
 
-            try
+            if (ServiceExists())
             {
-                using (var c = new ServiceController(ServiceName, MachineName))
-                {
-                    ServiceControllerStatus currentStatus = c.Status;
-                    result.AddGood(string.Format("Found service '{0}' it is '{1}'", ServiceName, currentStatus));
-                }
+                result.AddGood(string.Format("Found service '{0}'", ServiceName));
             }
-            catch (Exception)
+            else
             {
                 result.AddAlert(string.Format("Can't find service '{0}'", ServiceName));
             }
@@ -41,14 +37,24 @@ namespace dropkick.Tasks.WinService
 
         public override DeploymentResult Execute()
         {
-            using (var c = new ServiceController(ServiceName, MachineName))
+            var result = new DeploymentResult();
+
+            if (ServiceExists())
             {
-                if (c.CanStop)
-                    c.Stop();
-                c.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5));
+                using (var c = new ServiceController(ServiceName, MachineName))
+                {
+                    if (c.CanStop)
+                        c.Stop();
+                    c.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5));
+                }
+                result.AddGood("Stopped Service '{0}'", ServiceName);
+            }
+            else
+            {
+                result.AddAlert("Service '{0}' does not exist and could not be stopped", ServiceName);
             }
 
-            return new DeploymentResult();
+            return result;
         }
     }
 }
