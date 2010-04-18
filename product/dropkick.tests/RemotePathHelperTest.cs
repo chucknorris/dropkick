@@ -15,5 +15,13 @@ namespace dropkick.tests
             Assert.AreEqual(expected, actual);
 
         }
+
+        [Test]
+        public void StringFormatTest()
+        {
+            var expected = "1234 ";
+            var actual = string.Format("{0,-5}", "1234");
+            Assert.AreEqual(expected, actual);
+        }
     }
 }

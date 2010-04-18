@@ -12,10 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
+    using System;
     using System.Collections.Generic;
     using DeploymentModel;
     using Tasks;
     using Tasks.Files;
+    using tests;
 
     public class ProtoCopyDirectoryTask :
         BaseTask,
@@ -24,6 +26,7 @@ namespace dropkick.Configuration.Dsl.Files
     {
         readonly IList<string> _froms = new List<string>();
         string _to;
+        DestinationCleanOptions _options = DestinationCleanOptions.None;
 
         #region CopyOptions Members
 
@@ -39,6 +42,11 @@ namespace dropkick.Configuration.Dsl.Files
             return this;
         }
 
+        public void DeleteDestinationBeforeDeploying()
+        {
+            _options = DestinationCleanOptions.Delete;
+        }
+
         #endregion
 
         #region FromOptions Members
@@ -52,9 +60,13 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            var to = _to;
+            if(!site.IsLocal)
+                to = RemotePathHelper.Convert(site.Name, to);
+
             foreach (var f in _froms)
             {
-                var o = new CopyDirectoryTask(f, _to);
+                var o = new CopyDirectoryTask(f, to, _options);
                 site.AddTask(o);
             }
         }

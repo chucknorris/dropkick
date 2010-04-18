@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
+    using System;
     using System.IO;
     using DeploymentModel;
     using Tasks;
@@ -32,6 +33,7 @@ namespace dropkick.Configuration.Dsl.Iis
         public string VdirPath { get; set; }
         public IisVersion Version { get; set; }
         public DirectoryInfo PathOnServer { get; set; }
+        protected string AppPoolName { get; set; }
 
         #region IisSiteOptions Members
 
@@ -56,6 +58,12 @@ namespace dropkick.Configuration.Dsl.Iis
             return this;
         }
 
+        public IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName)
+        {
+            AppPoolName = appPoolName;
+            return this;
+        }
+
         #endregion
 
         public override void RegisterRealTasks(PhysicalServer s)
@@ -67,7 +75,8 @@ namespace dropkick.Configuration.Dsl.Iis
                               PathOnServer = PathOnServer,
                               ServerName = s.Name,
                               VdirPath = VdirPath,
-                              WebsiteName = WebsiteName
+                              WebsiteName = WebsiteName,
+                              AppPoolName = AppPoolName
                           });
                 return;
             }
@@ -76,7 +85,8 @@ namespace dropkick.Configuration.Dsl.Iis
                           PathOnServer = PathOnServer,
                           ServerName = s.Name,
                           VdirPath = VdirPath,
-                          WebsiteName = WebsiteName
+                          WebsiteName = WebsiteName,
+                          AppPoolName = AppPoolName
                       });
         }
     }

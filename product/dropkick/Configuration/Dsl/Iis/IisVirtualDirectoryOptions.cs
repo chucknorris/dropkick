@@ -15,6 +15,6 @@ namespace dropkick.Configuration.Dsl.Iis
     public interface IisVirtualDirectoryOptions
     {
         IisVirtualDirectoryOptions SetPathTo(string path);
-        void CreateIfItDoesntExist();
+        IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName);
     }
 }

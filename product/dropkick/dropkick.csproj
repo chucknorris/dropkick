@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -42,6 +42,7 @@
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Microsoft.Web.Administration.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -78,6 +79,11 @@
     <Compile Include="Configuration\Dsl\Notes\Extension.cs" />
     <Compile Include="Configuration\Dsl\PrototypicalServer.cs" />
     <Compile Include="Configuration\Dsl\ProtoServer.cs" />
+    <Compile Include="Configuration\Dsl\RoundhousE\Extension.cs" />
+    <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEOptions.cs" />
+    <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceCreateTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceDeleteTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStopTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceTask.cs" />
@@ -104,6 +110,9 @@
     <Compile Include="Configuration\Dsl\DeploymentInspector.cs" />
     <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
+    <Compile Include="Tasks\WaitTask.cs" />
+    <Compile Include="Tasks\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
     <Compile Include="Tasks\Dsn\DsnDriver.cs" />
     <Compile Include="Configuration\Dsl\Dsn\DsnOptions.cs" />
@@ -111,6 +120,7 @@
     <Compile Include="Configuration\Dsl\Dsn\Extension.cs" />
     <Compile Include="Configuration\Dsl\Files\AppFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\CopyOptions.cs" />
+    <Compile Include="Tasks\Files\DestinationCleanOptions.cs" />
     <Compile Include="Tasks\Files\CopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\Extension.cs" />
     <Compile Include="Configuration\Dsl\Files\FileAction.cs" />
@@ -144,6 +154,8 @@
     <Compile Include="DeploymentModel\Task.cs" />
     <Compile Include="Tasks\WinService\BaseServiceTask.cs" />
     <Compile Include="Tasks\NestedTask.cs" />
+    <Compile Include="Tasks\WinService\WinServiceCreateTask.cs" />
+    <Compile Include="Tasks\WinService\WinServiceDeleteTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceStartTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceStopTask.cs" />
     <Compile Include="Engine\DeploymentFinders\AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass.cs" />
@@ -160,6 +172,12 @@
     <Compile Include="Engine\Runner.cs" />
     <Compile Include="Configuration\Dsl\ProtoTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Wmi\ErrorControl.cs" />
+    <Compile Include="Wmi\ServiceReturnCode.cs" />
+    <Compile Include="Wmi\ServiceStartMode.cs" />
+    <Compile Include="Wmi\ServiceType.cs" />
+    <Compile Include="Wmi\WmiHelper.cs" />
+    <Compile Include="Wmi\WmiService.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

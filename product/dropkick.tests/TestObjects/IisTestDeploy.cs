@@ -11,12 +11,10 @@ namespace dropkick.tests.TestObjects
             Define(settings => DeploymentStepsFor(Web, server =>
             {
                 server.Iis7Site("Default Web Site")
-                    .VirtualDirectory("dk_test")
-                    .CreateIfItDoesntExist();
+                    .VirtualDirectory("dk_test");
 
                 server.Iis7Site("Default Web Site")
-                    .VirtualDirectory("fp")
-                    .CreateIfItDoesntExist();
+                    .VirtualDirectory("fp");
             }));
         }
 

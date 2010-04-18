@@ -15,6 +15,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.Msmq;
     using dropkick.Configuration.Dsl.WinService;
+    using Wmi;
 
     public class WinServiceTestDeploy :
         Deployment<WinServiceTestDeploy, object>
@@ -23,11 +24,16 @@ namespace dropkick.tests.TestObjects
         {
             //this is just a means to check the nested closure would work, not that one would actually do this
             Define(settings =>
-            {
-                DeploymentStepsFor(Web, server => server.WinService("MSMQ").Do(s => s
-                                                                                        .Msmq()
-                                                                                        .PrivateQueueNamed("dru")));
-            });
+                   DeploymentStepsFor(Web, server =>
+                                           {
+                                               server.WinService("MSMQ").Do(s => s.Msmq().PrivateQueueNamed("dru"));
+
+                                               server.WinService("FHLB").Delete();
+                                               server.WinService("FHLB").Create()
+                                                   .WithDescription("")
+                                                   .WithServicePath("E:\\myservice")
+                                                   .WithStartMode(ServiceStartMode.Automatic);
+                                           }));
         }
 
         public static Role Web { get; set; }

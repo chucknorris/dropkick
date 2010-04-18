@@ -29,7 +29,7 @@ namespace dropkick.Engine.DeploymentFinders
 
         string FindFile(string file)
         {
-            var p = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, file);
+            var p = Path.Combine(Environment.CurrentDirectory, file);
             _log.DebugFormat("Looking for deployment dll '{0}' at '{1}'", file, p);
             
             if(!File.Exists(p))

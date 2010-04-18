@@ -12,8 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Engine
 {
+    using FileSystem;
+
     public class DeploymentArguments
     {
+        static readonly Path _path = new DotNetPath();
+
         public DeploymentArguments()
         {
             Command = DeploymentCommands.Trace;
@@ -29,5 +33,20 @@ namespace dropkick.Engine
         public DeploymentCommands Command { get; set; }
         public RoleToServerMap ServerMappings { get; private set; }
         public string SettingsDirectory { get; set;}
+        public string PathToSettingsFile
+        {
+            get
+            {
+                return _path.Combine(SettingsDirectory, "{0}.settings".FormatWith(Environment));
+            }
+        }
+
+        public string PathToServerMapsFile
+        {
+            get
+            {
+                return _path.Combine(SettingsDirectory, "{0}.servermaps".FormatWith(Environment));
+            }
+        }
     }
 }

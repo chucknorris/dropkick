@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Engine
 {
+    using System;
     using System.Collections.Generic;
     using DeploymentModel;
     using Magnum.Collections;
@@ -22,7 +23,7 @@ namespace dropkick.Engine
 
         public RoleToServerMap()
         {
-            _mappings = new MultiDictionary<string, DeploymentServer>(false);
+            _mappings = new MultiDictionary<string, DeploymentServer>(false, StringComparer.InvariantCultureIgnoreCase);
         }
 
         public void AddMap(string roleName, string serverName)
@@ -44,6 +45,11 @@ namespace dropkick.Engine
                     _mappings[mapping.Key].Add(server);
                 }
             }
+        }
+
+        public ICollection<string> Roles()
+        {
+            return _mappings.Keys;
         }
     }
 }
