@@ -38,7 +38,7 @@ namespace dropkick.tests.DeploymentModel
         public void TryWeb()
         {
             var dep = new TwoRoleDeploy();
-            dep.Initialize(new object());
+            dep.Initialize(new object(), "test");
             var maps = new RoleToServerMap();
             maps.AddMap("WEB", "BOB");
 

@@ -9,7 +9,7 @@ namespace dropkick.tests.TestObjects
     {
         public MsmqTestDeploy()
         {
-            Define(settings =>
+            Define((settings, environment) =>
                    DeploymentStepsFor(Web, server => server.Msmq()
                                                       .PrivateQueueNamed("dk_test"))
                 );

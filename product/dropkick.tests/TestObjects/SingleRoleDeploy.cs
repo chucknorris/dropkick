@@ -21,7 +21,7 @@ namespace dropkick.tests.TestObjects
     {
         public SingleRoleDeploy()
         {
-            Define(settings =>
+            Define((settings, environment) =>
                    DeploymentStepsFor(Web, server =>
                    {
                        server.CopyDirectory(@".\bob")
