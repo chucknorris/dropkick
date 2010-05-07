@@ -67,6 +67,7 @@
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoCopyDirectoryTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoCopyFileTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoRenameTask.cs" />
     <Compile Include="Configuration\Dsl\Files\RenameOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisProtoTask.cs" />
@@ -110,6 +111,7 @@
     <Compile Include="Configuration\Dsl\DeploymentInspector.cs" />
     <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
+    <Compile Include="Tasks\Files\CopyFileTask.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
     <Compile Include="Tasks\WaitProtoTask.cs" />

@@ -27,6 +27,9 @@ namespace dropkick.tests.TestObjects
                        server.CopyDirectory(@".\bob")
                          .To(@".\bill");
 
+                       server.CopyFile(@".\{0}.web.config".FormatWith(environment))
+                           .To("web.config");
+
                        server.Msmq()
                            .PrivateQueueNamed("mt_timeout");
                    })
