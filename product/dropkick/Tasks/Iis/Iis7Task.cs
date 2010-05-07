@@ -36,8 +36,6 @@ namespace dropkick.Tasks.Iis
 
             CheckVersionOfWindowsAndIis(result);
 
-            CheckServerName(result);
-
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
 
@@ -73,7 +71,7 @@ namespace dropkick.Tasks.Iis
 
         void BuildApplicationPool(ServerManager iisManager, DeploymentResult result)
         {
-            if (string.IsNullOrEmpty(AppPoolName))
+            if (!string.IsNullOrEmpty(AppPoolName))
             {
                 CreateAppPool(AppPoolName, iisManager, result);
             }

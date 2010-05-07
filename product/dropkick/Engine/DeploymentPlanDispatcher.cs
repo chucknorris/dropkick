@@ -47,7 +47,17 @@ namespace dropkick.Engine
         {
             foreach (var result in results)
             {
-                _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
+                if(result.Status == DeploymentItemStatus.Error)
+                    _log.ErrorFormat("[{0,-5}] {1}", result.Status, result.Message);
+                
+                if(result.Status == DeploymentItemStatus.Alert)
+                    _log.WarnFormat("[{0,-5}] {1}", result.Status, result.Message);
+
+                if (result.Status == DeploymentItemStatus.Good)
+                    _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
+
+                if(result.Status == DeploymentItemStatus.Note)
+                    _log.DebugFormat("[{0,-5}] {1}", result.Status, result.Message);
             }
         }
     }

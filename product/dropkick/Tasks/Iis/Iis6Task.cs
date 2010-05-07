@@ -18,8 +18,6 @@ namespace dropkick.Tasks.Iis
 
             CheckVersionOfWindowsAndIis(result);
 
-            CheckServerName(result);
-
             CheckForSiteAndVDirExistance(DoesSiteExist, DoesVirtualDirectoryExist, result);
 
             return result;

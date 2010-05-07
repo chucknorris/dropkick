@@ -42,15 +42,6 @@ namespace dropkick.Tasks.Iis
 
         #endregion
 
-        public void CheckServerName(DeploymentResult result)
-        {
-            if (!Environment.MachineName.Equals(ServerName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                result.AddAlert("You are not on the right server [On: '{0}' - Target: '{1}']", Environment.MachineName,
-                                ServerName);
-            }
-        }
-
         public void CheckForSiteAndVDirExistance(Func<bool> website, Func<bool> vdir, DeploymentResult result)
         {
             if (website())

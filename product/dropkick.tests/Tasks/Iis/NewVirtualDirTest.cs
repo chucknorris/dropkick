@@ -12,16 +12,14 @@ namespace dropkick.tests.Tasks.Iis
         [Test,Explicit]
         public void Create_A_VirtualDiretory()
         {
-            if(Directory.Exists(".\\bob"))
-                Directory.Delete(".\\bob", true);
-
-            Directory.CreateDirectory(".\\bob");
             var task = new Iis7Task
                        {
-                           PathOnServer = new DirectoryInfo(".\\dk_test"),
-                           ServerName = Environment.MachineName,
-                           VdirPath = "dk_test",
-                           WebsiteName = "Default Web Site"
+                           PathOnServer = new DirectoryInfo("E:\\FHLBApp\\FHLBank.Security.Web"),
+                           ServerName = "SrvTestWeb01",
+                           VdirPath = "FHLBSecurity",
+                           WebsiteName = "FHLB",
+                           AppPoolName = "FHLBSecurity"
+
                        };
             var output = task.Execute();
             foreach (var item in output.Results)
@@ -34,7 +32,8 @@ namespace dropkick.tests.Tasks.Iis
         public void Create_An_AppPool()
         {
             var iis = ServerManager.OpenRemote("SrvTestWeb01");
-            iis.ApplicationPools.Add("CUE");
+            iis.ApplicationPools.Add("MATTYB");
+            
             iis.CommitChanges();
         }
     }
