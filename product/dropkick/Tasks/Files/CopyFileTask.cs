@@ -2,6 +2,7 @@ namespace dropkick.Tasks.Files
 {
     using System;
     using System.IO;
+    using Configuration.Dsl.CommandLine;
     using DeploymentModel;
     using Exceptions;
     using log4net;

@@ -6,6 +6,7 @@ namespace dropkick.Prompting
     public interface PromptService
     {
         T Prompt<T>() where T : new();
+        string Prompt(string nameToDisplay);
     }
 
     public class ConsolePromptService :
@@ -19,12 +20,17 @@ namespace dropkick.Prompting
             var t = typeof (T);
             foreach(var p in t.GetProperties())
             {
-                Console.WriteLine("{0}:", p.Name);
-                var capturedValue = Console.ReadLine();
+                var capturedValue = Prompt(p.Name);
                 new FastProperty<T>(p).Set(output, capturedValue);
             }
 
             return output;
+        }
+        public string Prompt(string nameToDisplay)
+        {
+            Console.WriteLine("{0}:", nameToDisplay);
+            var capturedValue = Console.ReadLine();
+            return capturedValue;
         }
     }
 }

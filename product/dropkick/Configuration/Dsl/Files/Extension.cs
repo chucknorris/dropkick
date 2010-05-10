@@ -13,6 +13,7 @@
 namespace dropkick.Configuration.Dsl.Files
 {
     using System;
+    using FileSystem;
 
     public static class Extension
     {
@@ -34,6 +35,18 @@ namespace dropkick.Configuration.Dsl.Files
             a(proto);
             protoServer.RegisterProtoTask(proto);
             return proto;
+        }
+
+        public static void EncryptWebConfig(this ProtoServer protoServer, string file)
+        {
+            var proto = new ProtoEncryptWebConfigTask(new DotNetPath(), file);
+            protoServer.RegisterProtoTask(proto);
+        }
+
+        public static void EncryptAppConfig(this ProtoServer protoServer, string file)
+        {
+            var proto = new ProtoEncryptAppConfigTask(new DotNetPath(), file);
+            protoServer.RegisterProtoTask(proto);
         }
     }
 }

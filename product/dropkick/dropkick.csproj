@@ -68,6 +68,7 @@
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoCopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoCopyFileTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoEncryptWebConfigTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoRenameTask.cs" />
     <Compile Include="Configuration\Dsl\Files\RenameOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisProtoTask.cs" />
@@ -121,15 +122,10 @@
     <Compile Include="Configuration\Dsl\Dsn\DsnOptions.cs" />
     <Compile Include="Tasks\Dsn\DsnTask.cs" />
     <Compile Include="Configuration\Dsl\Dsn\Extension.cs" />
-    <Compile Include="Configuration\Dsl\Files\AppFileActions.cs" />
     <Compile Include="Configuration\Dsl\Files\CopyOptions.cs" />
     <Compile Include="Tasks\Files\DestinationCleanOptions.cs" />
     <Compile Include="Tasks\Files\CopyDirectoryTask.cs" />
     <Compile Include="Configuration\Dsl\Files\Extension.cs" />
-    <Compile Include="Configuration\Dsl\Files\FileAction.cs" />
-    <Compile Include="Configuration\Dsl\Files\FileActions.cs" />
-    <Compile Include="Configuration\Dsl\Files\SomeFileActions.cs" />
-    <Compile Include="Configuration\Dsl\Files\WebFileActions.cs" />
     <Compile Include="Tasks\Files\RenameTask.cs" />
     <Compile Include="Tasks\Iis\BaseIisTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\Extension.cs" />
