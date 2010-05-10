@@ -1,6 +1,5 @@
 namespace dropkick.Configuration.Dsl.WinService
 {
-    using System;
     using System.Collections.Generic;
     using DeploymentModel;
     using Tasks;
@@ -42,13 +41,20 @@ namespace dropkick.Configuration.Dsl.WinService
             return this;
         }
 
+        public WinServiceCreateOptions WithCredentials(string username, string password)
+        {
+            _userName = username;
+            _password = password;
+            return this;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
             site.AddTask(new WinServiceCreateTask(site.Name, _serviceName)
                              {
                                  Dependencies = _dependencies.ToArray(),
-                                 //UserName = _userName,
-                                 //Password = _password,
+                                 UserName = _userName,
+                                 Password = _password,
                                  //ServiceDescription =  _description, no place to put this currently
                                  ServiceLocation =  _installPath,
                                  StartMode =  _startMode
@@ -61,5 +67,6 @@ namespace dropkick.Configuration.Dsl.WinService
         WinServiceCreateOptions WithDescription(string description);
         WinServiceCreateOptions WithServicePath(string path);
         WinServiceCreateOptions WithStartMode(ServiceStartMode mode);
+        WinServiceCreateOptions WithCredentials(string username, string password);
     }
 }

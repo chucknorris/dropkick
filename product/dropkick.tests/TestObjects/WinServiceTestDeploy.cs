@@ -32,6 +32,7 @@ namespace dropkick.tests.TestObjects
                                                server.WinService("FHLB").Create()
                                                    .WithDescription("")
                                                    .WithServicePath("E:\\myservice")
+                                                   .WithCredentials("matt","rocks")
                                                    .WithStartMode(ServiceStartMode.Automatic);
                                            }));
         }
