@@ -101,6 +101,7 @@
     <Compile Include="DeploymentModel\DeploymentItemStatus.cs" />
     <Compile Include="FileSystem\Path.cs" />
     <Compile Include="FileSystem\RemotePathHelper.cs" />
+    <Compile Include="Prompting\PromptService.cs" />
     <Compile Include="Settings\ServerMapParser.cs" />
     <Compile Include="Settings\SettingsParser.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
