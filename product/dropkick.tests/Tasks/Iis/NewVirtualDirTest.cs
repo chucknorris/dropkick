@@ -1,7 +1,6 @@
 namespace dropkick.tests.Tasks.Iis
 {
     using System;
-    using System.IO;
     using dropkick.Tasks.Iis;
     using Microsoft.Web.Administration;
     using NUnit.Framework;

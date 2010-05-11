@@ -29,7 +29,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         }
 
-        public FileCopyOptions To(string destinationPath)
+        public FileCopyOptions ToDirectory(string destinationPath)
         {
             _to = destinationPath;
             return this;

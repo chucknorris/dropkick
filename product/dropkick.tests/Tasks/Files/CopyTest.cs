@@ -45,13 +45,20 @@ namespace dropkick.tests.Tasks.Files
         string _dest = ".\\test\\dest";
 
         [Test]
-        public void Copy()
+        public void CopyDirectory()
         {
             var t = new CopyDirectoryTask(_source, _dest, DestinationCleanOptions.None);
             t.Execute();
 
             string s = File.ReadAllText(Path.Combine(_dest, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
+        }
+
+        [Test]
+        public void CopyFile()
+        {
+            var t = new CopyFileTask("D:\\dru", "D:\\bob");
+            t.Execute();
         }
     }
 }

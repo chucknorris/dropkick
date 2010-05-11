@@ -20,6 +20,6 @@ namespace dropkick.Configuration.Dsl.Files
 
     public interface FileCopyOptions
     {
-        FileCopyOptions To(string destinationPath);
+        FileCopyOptions ToDirectory(string destinationPath);
     }
 }

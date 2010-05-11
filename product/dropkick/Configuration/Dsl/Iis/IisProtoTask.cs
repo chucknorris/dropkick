@@ -12,12 +12,9 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
-    using System;
-    using System.IO;
     using DeploymentModel;
     using Tasks;
     using Tasks.Iis;
-    using tests;
 
     public class IisProtoTask :
         BaseTask,

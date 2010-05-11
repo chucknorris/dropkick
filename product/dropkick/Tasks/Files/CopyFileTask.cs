@@ -2,7 +2,7 @@ namespace dropkick.Tasks.Files
 {
     using System;
     using System.IO;
-    using Configuration.Dsl.CommandLine;
+    using System.Text.RegularExpressions;
     using DeploymentModel;
     using Exceptions;
     using log4net;
@@ -12,8 +12,8 @@ namespace dropkick.Tasks.Files
     {
         private string _from;
         private string _to;
-        ILog _log = LogManager.GetLogger(typeof(CopyFileTask));
-        ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
+        readonly ILog _log = LogManager.GetLogger(typeof(CopyFileTask));
+        readonly ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
 
         public CopyFileTask(string @from, string to)
         {
@@ -32,14 +32,14 @@ namespace dropkick.Tasks.Files
         {
             var result = new DeploymentResult();
 
-            ValidatePath(result, _to);
-            ValidatePath(result, _from);
+            ValidateIsFile(result, _from);
+            ValidateIsDirectory(result, _to);
 
             _from = Path.GetFullPath(_from);
             _to = Path.GetFullPath(_to);
 
 
-            CopyFile(new FileInfo(_from), new FileInfo(_to));
+            CopyFile(new FileInfo(_from), new DirectoryInfo(_to));
 
             result.AddGood(Name);
 
@@ -52,8 +52,9 @@ namespace dropkick.Tasks.Files
         {
             var result = new DeploymentResult();
 
-            ValidatePath(result, _to);
-            ValidatePath(result, _from);
+            //TODO: make this not puke
+            ValidateIsDirectory(result, _to);
+            ValidateIsFile(result, _from);
 
             _from = Path.GetFullPath(_from);
             _to = Path.GetFullPath(_to);
@@ -71,12 +72,14 @@ namespace dropkick.Tasks.Files
             return result;
         }
 
-        void ValidatePath(DeploymentResult result, string path)
+        static readonly Regex _naiveFileRegex = new Regex(@".*\..+");
+        void ValidateIsFile(DeploymentResult result, string path)
         {
             try
             {
                 Path.GetFullPath(_to);
-                //TODO: add directory test
+                if(!_naiveFileRegex.IsMatch(path))
+                    throw new Exception("bob");
             }
             catch (Exception ex)
             {
@@ -84,7 +87,21 @@ namespace dropkick.Tasks.Files
             }
         }
 
-        void CopyFile(FileInfo source, FileInfo destination)
+        void ValidateIsDirectory(DeploymentResult result, string path)
+        {
+            try
+            {
+                Path.GetFullPath(_to);
+                if (_naiveFileRegex.IsMatch(path))
+                    throw new Exception("bob");
+            }
+            catch (Exception ex)
+            {
+                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
+            }
+        }
+
+        void CopyFile(FileInfo source, DirectoryInfo destination)
         {
             if (!destination.Exists)
             {
