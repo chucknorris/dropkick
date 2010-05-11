@@ -10,36 +10,44 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
 namespace dropkick.Configuration.Dsl.Files
 {
-    using System;
     using DeploymentModel;
     using Tasks;
+    using FileSystem;
+    using Tasks.Files;
 
     public class ProtoRenameTask :
         BaseTask,
         RenameOptions
     {
-        string _target;
+        readonly string _from;
         string _to;
 
         public ProtoRenameTask(string target)
         {
-            _target = target;
+            _from = target;
         }
 
         #region RenameOptions Members
 
-        public void Rename(string name)
+        public void To(string name)
         {
             _to = name;
         }
 
         #endregion
 
-        public override void RegisterRealTasks(PhysicalServer s)
+        public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var to = _to;
+            if (!site.IsLocal)
+                to = RemotePathHelper.Convert(site.Name, to);
+
+            var o = new RenameTask(_from, to, new DotNetPath());
+            site.AddTask(o);
+
         }
     }
 }

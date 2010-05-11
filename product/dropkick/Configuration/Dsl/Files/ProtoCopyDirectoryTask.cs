@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,12 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
-    using System;
     using System.Collections.Generic;
     using DeploymentModel;
+    using FileSystem;
     using Tasks;
     using Tasks.Files;
-    using tests;
 
     public class ProtoCopyDirectoryTask :
         BaseTask,
@@ -25,16 +24,10 @@ namespace dropkick.Configuration.Dsl.Files
         FromOptions
     {
         readonly IList<string> _froms = new List<string>();
-        string _to;
         DestinationCleanOptions _options = DestinationCleanOptions.None;
+        string _to;
 
         #region CopyOptions Members
-
-        public CopyOptions From(string sourcePath)
-        {
-            _froms.Add(sourcePath);
-            return this;
-        }
 
         public CopyOptions To(string destinationPath)
         {
@@ -58,10 +51,16 @@ namespace dropkick.Configuration.Dsl.Files
 
         #endregion
 
+        public CopyOptions From(string sourcePath)
+        {
+            _froms.Add(sourcePath);
+            return this;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var to = _to;
-            if(!site.IsLocal)
+            string to = _to;
+            if (!site.IsLocal)
                 to = RemotePathHelper.Convert(site.Name, to);
 
             foreach (var f in _froms)

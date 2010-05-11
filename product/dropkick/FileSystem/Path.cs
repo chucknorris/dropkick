@@ -10,11 +10,18 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System;
+using System.IO;
+
 namespace dropkick.FileSystem
 {
     public interface Path
     {
         string Combine(string root, string ex);
+        string GetFullPath(string path);
+        bool IsFile(string path);
+        bool IsDirectory(string path);
+
     }
 
     public class DotNetPath :
@@ -25,6 +32,23 @@ namespace dropkick.FileSystem
         public string Combine(string root, string ex)
         {
             return System.IO.Path.Combine(root, ex);
+        }
+
+        public string GetFullPath(string path)
+        {
+            return System.IO.Path.GetFullPath(path);
+        }
+
+        public bool IsFile(string path)
+        {
+            var fi = new FileInfo(GetFullPath(path));
+            return !((fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory);
+        }
+
+        public bool IsDirectory(string path)
+        {
+            var di = new DirectoryInfo(GetFullPath(path));
+            return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
         #endregion

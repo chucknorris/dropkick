@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,7 +14,9 @@ namespace dropkick.tests.Tasks.Files
 {
     using System.IO;
     using dropkick.Tasks.Files;
+    using FileSystem;
     using NUnit.Framework;
+    using Path=System.IO.Path;
 
     [TestFixture]
     public class CopyTest
@@ -57,7 +59,7 @@ namespace dropkick.tests.Tasks.Files
         [Test]
         public void CopyFile()
         {
-            var t = new CopyFileTask("D:\\dru", "D:\\bob");
+            var t = new CopyFileTask("D:\\dru", "D:\\bob", new DotNetPath());
             t.Execute();
         }
     }

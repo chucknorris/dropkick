@@ -1,27 +1,40 @@
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Files
 {
-    using System;
     using System.IO;
-    using System.Text.RegularExpressions;
     using DeploymentModel;
     using Exceptions;
     using log4net;
+    using Path=dropkick.FileSystem.Path;
 
     public class CopyFileTask :
         Task
     {
-        private string _from;
-        private string _to;
-        readonly ILog _log = LogManager.GetLogger(typeof(CopyFileTask));
         readonly ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
+        readonly ILog _log = LogManager.GetLogger(typeof (CopyFileTask));
+        readonly Path _path;
+        string _from;
+        string _to;
 
-        public CopyFileTask(string @from, string to)
+        public CopyFileTask(string @from, string to, Path path)
         {
             _from = from;
             _to = to;
+            _path = path;
         }
 
-
+        #region Task Members
 
         public string Name
         {
@@ -35,8 +48,8 @@ namespace dropkick.Tasks.Files
             ValidateIsFile(result, _from);
             ValidateIsDirectory(result, _to);
 
-            _from = Path.GetFullPath(_from);
-            _to = Path.GetFullPath(_to);
+            _from = _path.GetFullPath(_from);
+            _to = _path.GetFullPath(_to);
 
 
             CopyFile(new FileInfo(_from), new DirectoryInfo(_to));
@@ -47,17 +60,15 @@ namespace dropkick.Tasks.Files
         }
 
 
-
         public DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
-            //TODO: make this not puke
             ValidateIsDirectory(result, _to);
             ValidateIsFile(result, _from);
 
-            _from = Path.GetFullPath(_from);
-            _to = Path.GetFullPath(_to);
+            _from = _path.GetFullPath(_from);
+            _to = _path.GetFullPath(_to);
 
 
             if (File.Exists(_from))
@@ -72,33 +83,18 @@ namespace dropkick.Tasks.Files
             return result;
         }
 
-        static readonly Regex _naiveFileRegex = new Regex(@".*\..+");
+        #endregion
+
         void ValidateIsFile(DeploymentResult result, string path)
         {
-            try
-            {
-                Path.GetFullPath(_to);
-                if(!_naiveFileRegex.IsMatch(path))
-                    throw new Exception("bob");
-            }
-            catch (Exception ex)
-            {
+            if (!_path.IsFile(path))
                 throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
-            }
         }
 
         void ValidateIsDirectory(DeploymentResult result, string path)
         {
-            try
-            {
-                Path.GetFullPath(_to);
-                if (_naiveFileRegex.IsMatch(path))
-                    throw new Exception("bob");
-            }
-            catch (Exception ex)
-            {
+            if (!_path.IsDirectory(path))
                 throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
-            }
         }
 
         void CopyFile(FileInfo source, DirectoryInfo destination)
@@ -108,14 +104,12 @@ namespace dropkick.Tasks.Files
                 destination.Create();
             }
 
-            // Copy all files.
-            
-            var fileDestination = Path.Combine(destination.FullName,
-                                               destination.Name);
+            // Copy file.
+            string fileDestination = _path.Combine(destination.FullName, source.Name);
+
             source.CopyTo(fileDestination);
             _log.DebugFormat("Copy file '{0}' to '{1}'", source.FullName, fileDestination);
             _fileLog.Info(fileDestination); //log where files are copied for tripwire
-            
         }
     }
 }

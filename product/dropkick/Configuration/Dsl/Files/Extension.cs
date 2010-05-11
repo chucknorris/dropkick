@@ -48,5 +48,11 @@ namespace dropkick.Configuration.Dsl.Files
             var proto = new ProtoEncryptAppConfigTask(new DotNetPath(), file);
             protoServer.RegisterProtoTask(proto);
         }
+
+        public static void RenameFile(this ProtoServer protoServer, string file)
+        {
+            var proto = new ProtoRenameTask(file);
+            protoServer.RegisterProtoTask(proto);
+        }
     }
 }
