@@ -17,6 +17,7 @@ namespace dropkick.Configuration.Dsl.Iis
     using DeploymentModel;
     using Tasks;
     using Tasks.Iis;
+    using tests;
 
     public class IisProtoTask :
         BaseTask,
@@ -32,7 +33,7 @@ namespace dropkick.Configuration.Dsl.Iis
         public string WebsiteName { get; set; }
         public string VdirPath { get; set; }
         public IisVersion Version { get; set; }
-        public DirectoryInfo PathOnServer { get; set; }
+        public string PathOnServer { get; set; }
         protected string AppPoolName { get; set; }
 
         #region IisSiteOptions Members
@@ -54,7 +55,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public IisVirtualDirectoryOptions SetPathTo(string path)
         {
-            PathOnServer = new DirectoryInfo(path);
+            PathOnServer = path;
             return this;
         }
 

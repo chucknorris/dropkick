@@ -29,7 +29,7 @@ namespace dropkick.Tasks.Iis
                 GetOrMakeNode(WebsiteName, VdirPath, "IIsWebVirtualDir");
             vdir.RefreshCache();
 
-            vdir.Properties["Path"].Value = PathOnServer.FullName;
+            vdir.Properties["Path"].Value = PathOnServer;
             CreateApplication(vdir);
             SetIisProperties(vdir);
 
@@ -110,19 +110,22 @@ namespace dropkick.Tasks.Iis
 
         private int ConvertSiteNameToSiteNumber(string name)
         {
-            var e = new DirectoryEntry("IIS://localhost/W3SVC");
-            e.RefreshCache();
-            foreach (DirectoryEntry entry in e.Children)
+            using (var e = new DirectoryEntry("IIS://localhost/W3SVC"))
             {
-                if (entry.SchemaClassName != "IIsWebServer")
+                e.RefreshCache();
+                foreach (DirectoryEntry entry in e.Children)
                 {
+                    if (entry.SchemaClassName != "IIsWebServer")
+                    {
+                        entry.Close();
+                        continue;
+                    }
+
+                    string x = entry.Name;
                     entry.Close();
-                    continue;
+                    return int.Parse(x);
                 }
 
-                string x = entry.Name;
-                entry.Close();
-                return int.Parse(x);
             }
 
             throw new Exception("could find your website");

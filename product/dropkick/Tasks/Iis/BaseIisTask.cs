@@ -13,7 +13,6 @@
 namespace dropkick.Tasks.Iis
 {
     using System;
-    using System.IO;
     using DeploymentModel;
 
     public abstract class BaseIisTask :
@@ -21,7 +20,7 @@ namespace dropkick.Tasks.Iis
     {
         public string WebsiteName { get; set; }
         public string VdirPath { get; set; }
-        public DirectoryInfo PathOnServer { get; set; }
+        public string PathOnServer { get; set; }
         public string ServerName { get; set; }
         public abstract int VersionNumber { get; }
         public string AppPoolName { get; set; }

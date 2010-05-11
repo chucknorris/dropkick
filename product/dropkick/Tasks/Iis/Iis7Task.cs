@@ -98,7 +98,7 @@ namespace dropkick.Tasks.Iis
                 _logger.Info("Application was not found, creating.");
                 //create it
                 _logger.Debug(PathOnServer);
-                var app = site.Applications.Add(appPath, PathOnServer.FullName);
+                var app = site.Applications.Add(appPath, PathOnServer);
                 
                 if(AppPoolName != null)
                     app.ApplicationPoolName = AppPoolName;

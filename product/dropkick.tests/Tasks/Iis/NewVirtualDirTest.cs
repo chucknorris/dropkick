@@ -14,7 +14,7 @@ namespace dropkick.tests.Tasks.Iis
         {
             var task = new Iis7Task
                        {
-                           PathOnServer = new DirectoryInfo("E:\\FHLBApp\\FHLBank.Security.Web"),
+                           PathOnServer = "E:\\FHLBApp\\FHLBank.Security.Web",
                            ServerName = "SrvTestWeb01",
                            VdirPath = "FHLBSecurity",
                            WebsiteName = "FHLB",
