@@ -16,7 +16,7 @@ namespace dropkick.Tasks.Files
     using DeploymentModel;
     using Exceptions;
     using log4net;
-    using Path=dropkick.FileSystem.Path;
+    using Path = FileSystem.Path;
 
     public class CopyFileTask :
         Task
@@ -34,7 +34,6 @@ namespace dropkick.Tasks.Files
             _path = path;
         }
 
-        #region Task Members
 
         public string Name
         {
@@ -83,8 +82,6 @@ namespace dropkick.Tasks.Files
             return result;
         }
 
-        #endregion
-
         void ValidateIsFile(DeploymentResult result, string path)
         {
             if (!_path.IsFile(path))
@@ -105,7 +102,7 @@ namespace dropkick.Tasks.Files
             }
 
             // Copy file.
-            string fileDestination = _path.Combine(destination.FullName, source.Name);
+            var fileDestination = _path.Combine(destination.FullName, source.Name);
 
             source.CopyTo(fileDestination);
             _log.DebugFormat("Copy file '{0}' to '{1}'", source.FullName, fileDestination);

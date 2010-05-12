@@ -16,5 +16,6 @@ namespace dropkick.Configuration.Dsl.Iis
     {
         IisVirtualDirectoryOptions SetPathTo(string path);
         IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName);
+        IisVirtualDirectoryOptions UseClassicPipeline();
     }
 }

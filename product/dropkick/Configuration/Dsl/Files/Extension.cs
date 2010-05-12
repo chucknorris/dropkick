@@ -49,10 +49,11 @@ namespace dropkick.Configuration.Dsl.Files
             protoServer.RegisterProtoTask(proto);
         }
 
-        public static void RenameFile(this ProtoServer protoServer, string file)
+        public static RenameOptions RenameFile(this ProtoServer protoServer, string file)
         {
             var proto = new ProtoRenameTask(file);
             protoServer.RegisterProtoTask(proto);
+            return proto;
         }
     }
 }
