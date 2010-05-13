@@ -83,7 +83,7 @@ namespace dropkick.Tasks.Iis
 
         void CreateVirtualDirectory(Site site, ServerManager mgr)
         {
-            Magnum.Guard.Against.Null(site, "The site argument is null and should not be");
+            Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VdirPath;
 
             Application appToAdd = null;

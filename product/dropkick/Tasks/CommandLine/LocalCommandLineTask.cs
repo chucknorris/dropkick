@@ -16,7 +16,7 @@ namespace dropkick.Tasks.CommandLine
     using System.Diagnostics;
     using System.IO;
     using DeploymentModel;
-    using Magnum.DateTimeExtensions;
+    using Magnum.Extensions;
 
     public class LocalCommandLineTask :
         Task
