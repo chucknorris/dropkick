@@ -21,6 +21,22 @@ namespace dropkick.tests.DeploymentModel
     public class Should_be_able_to_execute_only_one_part
     {
         [Test]
+        public void TryAll()
+        {
+            var dep = new TwoRoleDeploy();
+            dep.Initialize(new object(), "TEST");
+
+            var maps = new RoleToServerMap();
+            maps.AddMap("DB", "BOB");
+
+            var ins = new DropkickDeploymentInspector(maps);
+
+            var plan = ins.GetPlan(dep);
+
+            Assert.AreEqual(2, plan.RoleCount);
+        }
+
+        [Test]
         public void TryDb()
         {
             var dep = new TwoRoleDeploy();

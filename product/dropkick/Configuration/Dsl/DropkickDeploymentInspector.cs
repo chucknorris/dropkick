@@ -61,7 +61,7 @@ namespace dropkick.Configuration.Dsl
 
         public bool Look(Role role)
         {
-            if(!_rolesOfInterest.Contains(role.Name))
+            if(ShouldNotProcessRole(role.Name))
                 return false;
 
             _currentRole = _plan.AddRole(role.Name);
@@ -95,6 +95,13 @@ namespace dropkick.Configuration.Dsl
             deployment.InspectWith(this);
 
             return _plan;
+        }
+
+        bool ShouldNotProcessRole(string role)
+        {
+            if(_rolesOfInterest.Count == 0) return false;
+
+            return !_rolesOfInterest.Contains(role);
         }
 
         public void RolesToGet(params string[] roles)

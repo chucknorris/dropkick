@@ -40,7 +40,7 @@ namespace dropkick.Engine
             arguments.SettingsDirectory = config;
 
             var roles = commandLineElements.GetDefinition("roles", "ALL");
-            arguments.Role = roles);
+            arguments.Role = roles;
         }
 
         static IEnumerable<ICommandLineElement> P(string commandLine)
