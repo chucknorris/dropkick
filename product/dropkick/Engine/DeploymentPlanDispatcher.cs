@@ -35,6 +35,8 @@ namespace dropkick.Engine
         public static void KickItOutThereAlready(Deployment deployment, DeploymentArguments args)
         {
             _inspector = new DropkickDeploymentInspector(args.ServerMappings);
+            _inspector.RolesToGet(args.Role.Split(','));
+
             var plan = _inspector.GetPlan(deployment);
 
             //HOW TO PLUG IN   args.Role
