@@ -57,7 +57,7 @@ namespace dropkick.Engine
 
         static void DisplayServerMappingsForEnvironment(RoleToServerMap mappings)
         {
-            _log.Info("ServerMappings");
+            _log.Info("Server Mappings");
             foreach (var role in mappings.Roles())
             {
                 _log.InfoFormat("  '{0}'", role);
