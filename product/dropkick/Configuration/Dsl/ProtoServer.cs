@@ -12,16 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl
 {
-    using System;
     using DeploymentModel;
-    using Security;
 
     public interface ProtoServer :
         DeploymentInspectorSite
     {
         void MapTo(DeploymentServer server);
         void RegisterProtoTask(ProtoTask protoTask);
-        void CreateALoginFor(string account);
-        void ForDatabase(string database, Action<DatabaseSecurity> action);
     }
 }

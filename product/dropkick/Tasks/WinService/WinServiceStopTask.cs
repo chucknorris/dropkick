@@ -1,8 +1,10 @@
 namespace dropkick.Tasks.WinService
 {
     using System;
+    using System.Linq;
     using System.ServiceProcess;
     using DeploymentModel;
+    using Magnum.Extensions;
 
 
     public class WinServiceStopTask :
@@ -44,8 +46,14 @@ namespace dropkick.Tasks.WinService
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
                     if (c.CanStop)
+                    {
+                        var pid = GetProcessId(ServiceName);
+
                         c.Stop();
-                    c.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5));
+                        c.WaitForStatus(ServiceControllerStatus.Stopped, 10.Seconds());
+                        
+                        WaitForProcessToDie(pid);
+                    }
                 }
                 result.AddGood("Stopped Service '{0}'", ServiceName);
             }
@@ -55,6 +63,21 @@ namespace dropkick.Tasks.WinService
             }
 
             return result;
+        }
+
+        public void WaitForProcessToDie(int pid)
+        {
+            var timeout = DateTime.Now.AddMinutes(5);
+            while(DateTime.Now < timeout)
+            {
+                var process = System.Diagnostics.Process.GetProcesses(MachineName);
+                var p = process.Where(x => x.Id == pid);
+                if(p.Count() == 0)
+                {
+                    return;
+                }
+            }
+            throw new Exception("Service has not died yet!");
         }
     }
 }

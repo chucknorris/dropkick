@@ -42,8 +42,8 @@ namespace dropkick.tests.TestObjects
                                                           });
 
                                                           //is this necessary?
-                                                          s.CreateALoginFor(settings.AppAccount);
-                                                          s.ForDatabase(settings.Database, d =>
+                                                          o.CreateALoginFor(settings.AppAccount);
+                                                          o.ForDatabase(settings.Database, d =>
                                                           {
                                                               d.CreateUserFor(settings.AppAccount)
                                                                   .PutInRole(settings.AppRole);
