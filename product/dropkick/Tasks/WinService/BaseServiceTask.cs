@@ -59,7 +59,9 @@ namespace dropkick.Tasks.WinService
         protected int GetProcessId(string serviceName)
         {
             string query = string.Format("SELECT ProcessId FROM Win32_Service WHERE Name='{0}'", serviceName);
-            var searcher = new ManagementObjectSearcher(query);
+            var scope = new ManagementScope("\\\\{0}\\root\\CIMV2".FormatWith(MachineName));
+            var oquery = new ObjectQuery(query);
+            var searcher = new ManagementObjectSearcher(scope, oquery);
             int processId = -1;
             foreach (ManagementObject obj in searcher.Get())
             {
