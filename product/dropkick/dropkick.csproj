@@ -84,6 +84,7 @@
     <Compile Include="Configuration\Dsl\RoundhousE\Extension.cs" />
     <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEOptions.cs" />
     <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Extension.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceCreateTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceDeleteTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
@@ -177,6 +178,9 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\Security\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
