@@ -10,18 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl
+namespace dropkick.Configuration.Dsl.Security
 {
-    using System;
-    using DeploymentModel;
-    using Security;
-
-    public interface ProtoServer :
-        DeploymentInspectorSite
+    public interface FileSecurityConfig
     {
-        void MapTo(DeploymentServer server);
-        void RegisterProtoTask(ProtoTask protoTask);
-        void CreateALoginFor(string account);
-        void ForDatabase(string database, Action<DatabaseSecurity> action);
+        void Clear();
+        void GrantRead(string group);
+        void GrantReadWrite(string group);
     }
 }

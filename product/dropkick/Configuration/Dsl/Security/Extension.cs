@@ -16,34 +16,9 @@ namespace dropkick.Configuration.Dsl.Security
 
     public static class Extension
     {
-        public static void Security(this ProtoServer server, Action<X> configureSecurity)
+        public static void Security(this ProtoServer server, Action<SecurityOptions> configureSecurity)
         {
             
         }
-    }
-
-    public interface X
-    {
-        void LocalPolicy(Action<LocalPolicyConfig> func);
-        void ForPath(string path, Action<FileSecurityConfig> action);
-        void ForQueue(string queue, Action<QueueSecurityConfig> action);
-    }
-
-    public interface QueueSecurityConfig
-    {
-        void GrantRead(string group);
-        void GrantReadWrite(string group);
-    }
-
-    public interface FileSecurityConfig
-    {
-        void Clear();
-        void GrantRead(string group);
-        void GrantReadWrite(string group);
-    }
-
-    public interface LocalPolicyConfig
-    {
-        void LogOnAsService(string accountName);
     }
 }

@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.tests.TestObjects
 {
-    using System;
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.Security;
 
@@ -41,6 +40,16 @@ namespace dropkick.tests.TestObjects
                                                               q.GrantRead(settings.TheRest);
                                                               q.GrantReadWrite(settings.AppAccount);
                                                           });
+
+                                                          //is this necessary?
+                                                          s.CreateALoginFor(settings.AppAccount);
+                                                          s.ForDatabase(settings.Database, d =>
+                                                          {
+                                                              d.CreateUserFor(settings.AppAccount)
+                                                                  .PutInRole(settings.AppRole);
+
+                                                              d.GrantXxxToAllTables(settings.AppRole);
+                                                          });
                                                       });
 
                                        });
@@ -58,5 +67,8 @@ namespace dropkick.tests.TestObjects
         public string UserGroupB { get; set; }
         public string Queue { get; set; }
         public string TheRest { get; set; }
+        public string Database { get; set; }
+
+        public string AppRole { get; set; }
     }
 }
