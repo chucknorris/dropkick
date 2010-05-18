@@ -57,10 +57,10 @@ namespace dropkick.Tasks.WinService
         {
             var result = new DeploymentResult();
 
-            if (UserName.IsNotEmpty())
+            if (!UserName.IsNotEmpty())
                 UserName = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(ServiceName));
 
-            if (Password.IsNotEmpty())
+            if (!Password.IsNotEmpty())
                 UserName = _prompt.Prompt("Win Service '{0}' Password".FormatWith(ServiceName));
 
             ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceName, ServiceLocation,
