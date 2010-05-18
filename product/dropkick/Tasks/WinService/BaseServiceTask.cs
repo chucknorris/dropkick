@@ -1,6 +1,9 @@
 namespace dropkick.Tasks.WinService
 {
     using System;
+    using System.ComponentModel;
+    using System.Diagnostics;
+    using System.Management;
     using System.ServiceProcess;
     using System.Threading;
     using DeploymentModel;
@@ -35,7 +38,8 @@ namespace dropkick.Tasks.WinService
             {
                 result.AddGood("You are in the 'Administrator' role");
             }
-        }
+        }
+
         protected bool ServiceExists()
         {
             try
@@ -50,6 +54,20 @@ namespace dropkick.Tasks.WinService
             {
                 return false;
             }
+        }
+
+        protected int GetProcessId(string serviceName)
+        {
+            string query = string.Format("SELECT ProcessId FROM Win32_Service WHERE Name='{0}'", serviceName);
+            var scope = new ManagementScope("\\\\{0}\\root\\CIMV2".FormatWith(MachineName));
+            var oquery = new ObjectQuery(query);
+            var searcher = new ManagementObjectSearcher(scope, oquery);
+            int processId = -1;
+            foreach (ManagementObject obj in searcher.Get())
+            {
+                processId = Convert.ToInt32((uint) obj["ProcessId"]);
+            }
+            return processId;
         }
     }
 }

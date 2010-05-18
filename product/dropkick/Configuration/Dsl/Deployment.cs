@@ -108,5 +108,14 @@ namespace dropkick.Configuration.Dsl
         {
             return !(propertyInfo.PropertyType == typeof(ServerRole) || propertyInfo.PropertyType == typeof(Role));
         }
+
+
+        public ICollection<ServerRole> GetRoles
+        {
+            get
+            {
+                return _roles.Values;
+            }
+        }
     }
 }

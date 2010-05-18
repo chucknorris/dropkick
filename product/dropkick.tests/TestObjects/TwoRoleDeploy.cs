@@ -30,7 +30,14 @@ namespace dropkick.tests.TestObjects
                         o.Include("..\\settings\\web.test.config"); //.Rename("web.config");
                     }).To("E:\\FHLBApps\\CUE");
                 });
-                DeploymentStepsFor(Db, server => server.CopyDirectory(o => o.Include("..\\FHLBank.Cue.Website")).To("E:\\FHLBApps\\CUE"));
+
+                DeploymentStepsFor(Db, server =>
+                                       {
+                                           server.CopyDirectory(o =>
+                                                                {
+                                                                    o.Include("..\\FHLBank.Cue.Website");
+                                                                }).To("E:\\FHLBApps\\CUE");
+                                       });
             });
         }
 

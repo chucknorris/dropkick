@@ -38,11 +38,14 @@ namespace dropkick.Engine
 
             var config = commandLineElements.GetDefinition("settings", ".\\settings");
             arguments.SettingsDirectory = config;
+
+            var roles = commandLineElements.GetDefinition("roles", "ALL");
+            arguments.Role = roles;
         }
 
         static IEnumerable<ICommandLineElement> P(string commandLine)
         {
-            var parser = new Magnum.CommandLineParser.MonadicCommandLineParser();
+            var parser = new MonadicCommandLineParser();
 
             return parser.Parse(commandLine);
         }

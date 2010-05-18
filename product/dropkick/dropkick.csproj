@@ -63,6 +63,7 @@
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\DatabaseSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
@@ -84,6 +85,12 @@
     <Compile Include="Configuration\Dsl\RoundhousE\Extension.cs" />
     <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEOptions.cs" />
     <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Security\FileSecurityConfig.cs" />
+    <Compile Include="Configuration\Dsl\Security\LocalPolicyConfig.cs" />
+    <Compile Include="Configuration\Dsl\Security\QueueSecurityConfig.cs" />
+    <Compile Include="Configuration\Dsl\Security\SecurityOptions.cs" />
+    <Compile Include="Configuration\Dsl\Security\UserOptions.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceCreateTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceDeleteTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
@@ -177,6 +184,9 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\Security\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
