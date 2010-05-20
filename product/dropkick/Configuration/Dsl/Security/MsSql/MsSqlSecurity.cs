@@ -15,7 +15,8 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
     public interface MsSqlSecurity
     {
         MsSqlUserOptions CreateUserFor(string account);
-        void GrantXxxToAllTables(string role);
+        void GrantReadToAllTables(string role);
+        void GrantWriteToAllTables(string role);
         void CreateALoginFor(string account);
     }
 }

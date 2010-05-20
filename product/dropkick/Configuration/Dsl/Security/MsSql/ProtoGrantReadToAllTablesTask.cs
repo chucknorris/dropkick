@@ -16,28 +16,21 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
     using DeploymentModel;
     using Tasks;
 
-    public class ProtoCreateUserTask :
-        BaseTask,
-        MsSqlUserOptions
+    public class ProtoGrantReadToAllTablesTask :
+        BaseTask
     {
-        readonly string _account;
         readonly string _database;
-        string _role;
+        readonly string _role;
 
-        public ProtoCreateUserTask(string database, string account)
+        public ProtoGrantReadToAllTablesTask(string database, string role)
         {
             _database = database;
-            _account = account;
+            _role = role;
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
             throw new NotImplementedException();
-        }
-
-        public void PutInRole(string role)
-        {
-            _role = role;
         }
     }
 }

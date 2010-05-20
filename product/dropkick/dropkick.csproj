@@ -98,7 +98,10 @@
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathClearTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoCreateLoginTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoCreateUserTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantReadToAllTablesTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ProtoSecurityOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfig.cs" />
     <Compile Include="Configuration\Dsl\Security\SecurityOptions.cs" />

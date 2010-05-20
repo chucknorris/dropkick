@@ -10,11 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security
+namespace dropkick.Configuration.Dsl.Security.MsSql
 {
-    using System;
-    using MsSql;
-
     public class MsSqlSecurityConfiguration :
         MsSqlSecurity
     {
@@ -27,24 +24,29 @@ namespace dropkick.Configuration.Dsl.Security
             _database = database;
         }
 
-        #region MsSqlSecurity Members
-
         public MsSqlUserOptions CreateUserFor(string account)
         {
             var proto = new ProtoCreateUserTask(_database, account);
             _server.RegisterProtoTask(proto);
+            return proto;
         }
 
-        public void GrantXxxToAllTables(string role)
+        public void GrantReadToAllTables(string role)
         {
-            throw new NotImplementedException();
+            var proto = new ProtoGrantReadToAllTablesTask(_database, role);
+            _server.RegisterProtoTask(proto);
+        }
+
+        public void GrantWriteToAllTables(string role)
+        {
+            var proto = new ProtoGrantWriteToAllTablesTask(_database, role);
+            _server.RegisterProtoTask(proto);
         }
 
         public void CreateALoginFor(string account)
         {
-            throw new NotImplementedException();
+            var proto = new ProtoCreateLoginTask(_database, account);
+            _server.RegisterProtoTask(proto);
         }
-
-        #endregion
     }
 }

@@ -27,7 +27,7 @@ namespace dropkick.tests.TestObjects
                     int i = 0; //stop bothering me R#
                     DeploymentStepsFor(File, s =>
                     {
-                        s.Note("stop bothering me R#");
+                        int ii = 0; //stop bothering me R#
                         s.Security(o =>
                         {
                             o.LocalPolicy(p => p.LogOnAsService(settings.AppAccount));
@@ -49,7 +49,8 @@ namespace dropkick.tests.TestObjects
                                 d.CreateUserFor(settings.AppAccount)
                                     .PutInRole(settings.AppRole);
 
-                                d.GrantXxxToAllTables(settings.AppRole);
+                                d.GrantReadToAllTables(settings.AppRole);
+                                d.GrantWriteToAllTables(settings.AppRole);
                             });
                         });
 
