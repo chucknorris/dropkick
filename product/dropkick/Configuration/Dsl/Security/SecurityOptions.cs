@@ -13,6 +13,7 @@
 namespace dropkick.Configuration.Dsl.Security
 {
     using System;
+    using ACL;
 
     public interface SecurityOptions
     {
