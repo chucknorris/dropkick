@@ -63,6 +63,9 @@
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\ACL\ProtoQueueReadTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\ACL\ProtoQueueReadWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\ACL\QueueSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\DatabaseSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
@@ -192,6 +195,10 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Configuration\Dsl\Security\Msmq\" />
+    <Folder Include="Configuration\Dsl\Security\MsSql\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

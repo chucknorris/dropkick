@@ -12,35 +12,29 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.ACL
 {
-    public class PathSecurityConfiguration :
-        FileSecurityConfig
+    public class QueueSecurityConfiguration :
+        QueueSecurityConfig
     {
-        readonly string _path;
+        readonly string _queue;
         readonly ProtoServer _server;
 
-        public PathSecurityConfiguration(ProtoServer server, string path)
+        public QueueSecurityConfiguration(ProtoServer server, string queue)
         {
             _server = server;
-            _path = path;
+            _queue = queue;
         }
 
-        #region FileSecurityConfig Members
-
-        public void Clear()
-        {
-            var proto = new ProtoPathClearTask(_path);
-            _server.RegisterProtoTask(proto);
-        }
+        #region QueueSecurityConfig Members
 
         public void GrantRead(string group)
         {
-            var proto = new ProtoPathGrantReadTask(_path, group);
+            var proto = new ProtoQueueReadTask(_queue, group);
             _server.RegisterProtoTask(proto);
         }
 
         public void GrantReadWrite(string group)
         {
-            var proto = new ProtoPathGrantReadWriteTask(_path, group);
+            var proto = new ProtoQueueReadTask(_queue, group);
             _server.RegisterProtoTask(proto);
         }
 
