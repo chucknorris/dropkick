@@ -66,7 +66,7 @@
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
-    <Compile Include="Configuration\Dsl\Security\DatabaseSecurity.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\DatabaseSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
@@ -98,9 +98,9 @@
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ProtoSecurityOptions.cs" />
-    <Compile Include="Configuration\Dsl\Security\QueueSecurityConfig.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfig.cs" />
     <Compile Include="Configuration\Dsl\Security\SecurityOptions.cs" />
-    <Compile Include="Configuration\Dsl\Security\UserOptions.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\UserOptions.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceCreateTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceDeleteTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
@@ -195,9 +195,6 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Configuration\Dsl\Security\MsSql\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
