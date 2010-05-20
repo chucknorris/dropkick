@@ -14,8 +14,10 @@ namespace dropkick.DeploymentModel
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using Configuration.Dsl;
 
+    [DebuggerDisplay("Deploy Server: {Name}")]
     public class DeploymentServer :
         PhysicalServer
     {

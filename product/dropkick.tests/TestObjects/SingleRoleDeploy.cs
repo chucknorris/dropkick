@@ -21,11 +21,14 @@ namespace dropkick.tests.TestObjects
     {
         public SingleRoleDeploy()
         {
-            Define(settings =>
+            Define((settings, environment) =>
                    DeploymentStepsFor(Web, server =>
                    {
                        server.CopyDirectory(@".\bob")
                          .To(@".\bill");
+
+                       server.CopyFile(@".\{0}.web.config".FormatWith(environment))
+                           .ToDirectory("web.config");
 
                        server.Msmq()
                            .PrivateQueueNamed("mt_timeout");

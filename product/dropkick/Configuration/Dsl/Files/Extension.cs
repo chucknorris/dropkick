@@ -13,9 +13,17 @@
 namespace dropkick.Configuration.Dsl.Files
 {
     using System;
+    using FileSystem;
 
     public static class Extension
     {
+
+        public static FileCopyOptions CopyFile(this ProtoServer protoServer, string from)
+        {
+            var proto = new ProtoCopyFileTask(from);
+            protoServer.RegisterProtoTask(proto);
+            return proto;
+        }
         public static CopyOptions CopyDirectory(this ProtoServer protoServer, string from)
         {
             return CopyDirectory(protoServer, o => o.Include(from));
@@ -25,6 +33,25 @@ namespace dropkick.Configuration.Dsl.Files
         {
             var proto = new ProtoCopyDirectoryTask();
             a(proto);
+            protoServer.RegisterProtoTask(proto);
+            return proto;
+        }
+
+        public static void EncryptWebConfig(this ProtoServer protoServer, string file)
+        {
+            var proto = new ProtoEncryptWebConfigTask(new DotNetPath(), file);
+            protoServer.RegisterProtoTask(proto);
+        }
+
+        public static void EncryptAppConfig(this ProtoServer protoServer, string file)
+        {
+            var proto = new ProtoEncryptAppConfigTask(new DotNetPath(), file);
+            protoServer.RegisterProtoTask(proto);
+        }
+
+        public static RenameOptions RenameFile(this ProtoServer protoServer, string file)
+        {
+            var proto = new ProtoRenameTask(file);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }

@@ -57,19 +57,19 @@ namespace dropkick.DeploymentModel
 
             foreach (var role in _roles)
             {
-                result.AddNote("  {0}", role.Name);
+                result.AddNote(role.Name);
 
                 role.ForEachServerMapped(s =>
                 {
-                    result.AddNote("    {0}", s.Name);
+                    result.AddNote(s.Name);
                     s.ForEachDetail(d =>
                     {
-                        result.AddNote("      {0}", d.Name);
+                        result.AddNote(d.Name);
                         var r = action(d);
                         result.MergedWith(r);
                         foreach (var item in r.Results)
                         {
-                            result.AddNote("      [{0}] {1}", item.Status, item.Message);
+                            result.Add(item);
                         }
                     });
                 });

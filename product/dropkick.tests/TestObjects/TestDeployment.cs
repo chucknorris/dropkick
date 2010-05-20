@@ -14,7 +14,7 @@ namespace dropkick.tests.TestObjects
     {
         public TestDeployment()
         {
-            Define(settings =>
+            Define((settings, environment) =>
             {
                 DeploymentStepsFor(Web, server =>
                 {

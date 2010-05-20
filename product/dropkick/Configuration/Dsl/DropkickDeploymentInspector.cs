@@ -12,9 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl
 {
+    using System;
+    using System.Collections.Generic;
     using DeploymentModel;
     using Engine;
     using Magnum.Reflection;
+    using Magnum.Extensions;
 
     public class DropkickDeploymentInspector :
         ReflectiveVisitorBase<DropkickDeploymentInspector>,
@@ -22,11 +25,14 @@ namespace dropkick.Configuration.Dsl
     {
         readonly DeploymentPlan _plan = new DeploymentPlan();
         DeploymentRole _currentRole; //TODO: seems hackish
-        RoleToServerMap _serverMappings;
+        readonly RoleToServerMap _serverMappings;
+        readonly HashSet<string> _rolesOfInterest = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
-        public DropkickDeploymentInspector() :
+
+        public DropkickDeploymentInspector(RoleToServerMap maps) :
             base("Look")
         {
+            _serverMappings = maps;
         }
 
         #region DeploymentInspector Members
@@ -55,6 +61,9 @@ namespace dropkick.Configuration.Dsl
 
         public bool Look(Role role)
         {
+            if(ShouldNotProcessRole(role.Name))
+                return false;
+
             _currentRole = _plan.AddRole(role.Name);
 
             foreach (var serverName in _serverMappings.GetServers(role.Name))
@@ -67,7 +76,6 @@ namespace dropkick.Configuration.Dsl
 
         public bool Look(ProtoServer protoServer)
         {
-            //TODO: implement
             return true;
         }
 
@@ -82,13 +90,23 @@ namespace dropkick.Configuration.Dsl
             return true;
         }
 
-        public DeploymentPlan GetPlan(Deployment deployment, RoleToServerMap serverMappings)
+        public DeploymentPlan GetPlan(Deployment deployment)
         {
-            _serverMappings = serverMappings;
-
             deployment.InspectWith(this);
 
             return _plan;
+        }
+
+        bool ShouldNotProcessRole(string role)
+        {
+            if(_rolesOfInterest.Count == 0) return false;
+
+            return !_rolesOfInterest.Contains(role);
+        }
+
+        public void RolesToGet(params string[] roles)
+        {
+            roles.Each(r => _rolesOfInterest.Add(r));
         }
     }
 }

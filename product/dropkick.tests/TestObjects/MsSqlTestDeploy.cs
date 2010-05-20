@@ -20,7 +20,7 @@ namespace dropkick.tests.TestObjects
     {
         public MsSqlTestDeploy()
         {
-            Define(settings =>
+            Define((settings, environment) =>
                    DeploymentStepsFor(Web, server =>
                    {
                        server.SqlInstance(".")

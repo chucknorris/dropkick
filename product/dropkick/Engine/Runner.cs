@@ -42,7 +42,9 @@ namespace dropkick.Engine
                 var deployment = _finder.Find(newArgs.Deployment);
                 var settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
                 var settings = _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile));
-                deployment.Initialize(settings);
+                
+                deployment.Initialize(settings, newArgs.Environment);
+                
                 DeploymentPlanDispatcher.KickItOutThereAlready(deployment, newArgs);
 
             }
@@ -55,7 +57,7 @@ namespace dropkick.Engine
 
         static void DisplayServerMappingsForEnvironment(RoleToServerMap mappings)
         {
-            _log.Info("ServerMappings");
+            _log.Info("Server Mappings");
             foreach (var role in mappings.Roles())
             {
                 _log.InfoFormat("  '{0}'", role);

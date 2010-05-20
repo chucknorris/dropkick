@@ -1,10 +1,20 @@
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.MsSql
 {
-    using System;
     using System.Data;
     using System.IO;
     using DeploymentModel;
-
 
     public class RunSqlScriptTask :
         BaseSqlTask
@@ -17,7 +27,8 @@ namespace dropkick.Tasks.MsSql
         {
             get
             {
-                return string.Format("Run SqlScritp '{0}' on server '{1}\\{2}' for database '{3}'", ScriptToRun, ServerName, InstanceName,
+                return string.Format("Run SqlScritp '{0}' on server '{1}\\{2}' for database '{3}'", ScriptToRun,
+                                     ServerName, InstanceName,
                                      DatabaseName);
             }
         }
@@ -32,7 +43,7 @@ namespace dropkick.Tasks.MsSql
         {
             var result = new DeploymentResult();
 
-            base.TestConnectivity(result);
+            TestConnectivity(result);
 
 
             if (ScriptToRun != null)
@@ -61,7 +72,7 @@ namespace dropkick.Tasks.MsSql
             return new DeploymentResult();
         }
 
-        private void ExecuteSqlWithNoReturn(string sql)
+        void ExecuteSqlWithNoReturn(string sql)
         {
             using (IDbConnection conn = GetConnection())
             {

@@ -21,7 +21,7 @@ namespace dropkick.Engine
     public static class DeploymentPlanDispatcher
     {
         static readonly IDictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>> _actions = new Dictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>>();
-        static readonly DropkickDeploymentInspector _inspector = new DropkickDeploymentInspector();
+        static DropkickDeploymentInspector _inspector;
         static readonly ILog _log = LogManager.GetLogger(typeof (DeploymentPlanDispatcher));
 
         static DeploymentPlanDispatcher()
@@ -34,7 +34,12 @@ namespace dropkick.Engine
 
         public static void KickItOutThereAlready(Deployment deployment, DeploymentArguments args)
         {
-            var plan = _inspector.GetPlan(deployment, args.ServerMappings);
+            _inspector = new DropkickDeploymentInspector(args.ServerMappings);
+
+            if(args.Role != "ALL")
+                _inspector.RolesToGet(args.Role.Split(','));
+
+            var plan = _inspector.GetPlan(deployment);
 
             //HOW TO PLUG IN   args.Role
             //TODO: should be able to block here
@@ -47,7 +52,17 @@ namespace dropkick.Engine
         {
             foreach (var result in results)
             {
-                _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
+                if(result.Status == DeploymentItemStatus.Error)
+                    _log.ErrorFormat("[{0,-5}] {1}", result.Status, result.Message);
+                
+                if(result.Status == DeploymentItemStatus.Alert)
+                    _log.WarnFormat("[{0,-5}] {1}", result.Status, result.Message);
+
+                if (result.Status == DeploymentItemStatus.Good)
+                    _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
+
+                if(result.Status == DeploymentItemStatus.Note)
+                    _log.DebugFormat("[{0,-5}] {1}", result.Status, result.Message);
             }
         }
     }

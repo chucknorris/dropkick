@@ -23,7 +23,7 @@ namespace dropkick.tests.TestObjects
         public WinServiceTestDeploy()
         {
             //this is just a means to check the nested closure would work, not that one would actually do this
-            Define(settings =>
+            Define((settings, environment) =>
                    DeploymentStepsFor(Web, server =>
                                            {
                                                server.WinService("MSMQ").Do(s => s.Msmq().PrivateQueueNamed("dru"));
@@ -32,6 +32,7 @@ namespace dropkick.tests.TestObjects
                                                server.WinService("FHLB").Create()
                                                    .WithDescription("")
                                                    .WithServicePath("E:\\myservice")
+                                                   .WithCredentials("matt","rocks")
                                                    .WithStartMode(ServiceStartMode.Automatic);
                                            }));
         }

@@ -1,9 +1,24 @@
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.WinService
 {
     using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
     using System.ServiceProcess;
     using DeploymentModel;
-
+    using Magnum.Extensions;
 
     public class WinServiceStopTask :
         BaseServiceTask
@@ -44,8 +59,14 @@ namespace dropkick.Tasks.WinService
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
                     if (c.CanStop)
+                    {
+                        int pid = GetProcessId(ServiceName);
+
                         c.Stop();
-                    c.WaitForStatus(ServiceControllerStatus.Stopped, TimeSpan.FromSeconds(5));
+                        c.WaitForStatus(ServiceControllerStatus.Stopped, 10.Seconds());
+
+                        WaitForProcessToDie(pid);
+                    }
                 }
                 result.AddGood("Stopped Service '{0}'", ServiceName);
             }
@@ -55,6 +76,21 @@ namespace dropkick.Tasks.WinService
             }
 
             return result;
+        }
+
+        public void WaitForProcessToDie(int pid)
+        {
+            DateTime timeout = DateTime.Now.AddMinutes(5);
+            while (DateTime.Now < timeout)
+            {
+                Process[] process = Process.GetProcesses(MachineName);
+                IEnumerable<Process> p = process.Where(x => x.Id == pid);
+                if (p.Count() == 0)
+                {
+                    return;
+                }
+            }
+            throw new Exception("Service has not died yet!");
         }
     }
 }

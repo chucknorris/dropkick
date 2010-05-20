@@ -8,10 +8,11 @@ namespace dropkick.tests.TestObjects
     {
         public IisTestDeploy()
         {
-            Define(settings => DeploymentStepsFor(Web, server =>
+            Define((settings, environment) => DeploymentStepsFor(Web, server =>
             {
                 server.Iis7Site("Default Web Site")
-                    .VirtualDirectory("dk_test");
+                    .VirtualDirectory("dk_test")
+                    .UseClassicPipeline();
 
                 server.Iis7Site("Default Web Site")
                     .VirtualDirectory("fp");

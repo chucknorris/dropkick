@@ -8,7 +8,7 @@ namespace dropkick.tests.TestObjects
     {
         public RoundhousETestDeploy()
         {
-            Define(settings => DeploymentStepsFor(Db, server =>
+            Define((settings, environment) => DeploymentStepsFor(Db, server =>
             {
                 server.RoundhousE()
                     .Environment("TEST")

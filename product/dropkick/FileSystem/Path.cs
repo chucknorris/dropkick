@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -15,18 +15,8 @@ namespace dropkick.FileSystem
     public interface Path
     {
         string Combine(string root, string ex);
-    }
-
-    public class DotNetPath :
-        Path
-    {
-        #region Path Members
-
-        public string Combine(string root, string ex)
-        {
-            return System.IO.Path.Combine(root, ex);
-        }
-
-        #endregion
+        string GetFullPath(string path);
+        bool IsFile(string path);
+        bool IsDirectory(string path);
     }
 }

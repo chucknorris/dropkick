@@ -1,3 +1,5 @@
+using dropkick.FileSystem;
+
 namespace dropkick.tests
 {
     using NUnit.Framework;

@@ -1,3 +1,15 @@
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.tests.Configuration.Dsl
 {
     using dropkick.DeploymentModel;
@@ -11,31 +23,7 @@ namespace dropkick.tests.Configuration.Dsl
         public override void BecauseOf()
         {
             //TODO: not a fan of Inspector.GetPlan - but do I really need to wrap it?
-            Plan = Inspector.GetPlan(Deployment, Map);
-        }
-
-        [Test]
-        public void PlanShouldNotBeNull()
-        {
-            Assert.IsNotNull(Plan);
-        }
-
-        [Test]
-        public void PlanShouldHaveTwoRoles()
-        {
-            Assert.AreEqual(2, Plan.RoleCount, "Roles should be 2");
-        }
-
-        [Test]
-        public void WebShouldHaveTwoServers()
-        {
-            Assert.AreEqual(2, Plan.GetRole("Web").ServerCount);
-        }
-
-        [Test]
-        public void DbShouldHaveOneServer()
-        {
-            Assert.AreEqual(1, Plan.GetRole("Db").ServerCount);
+            Plan = Inspector.GetPlan(Deployment);
         }
 
         [Test]
@@ -47,13 +35,37 @@ namespace dropkick.tests.Configuration.Dsl
         [Test]
         public void DbServersShouldHaveOneTask()
         {
-            Plan.GetRole("Db").ForEachServerMapped(s=> Assert.AreEqual(1, s.DetailCount));
+            Plan.GetRole("Db").ForEachServerMapped(s => Assert.AreEqual(1, s.DetailCount));
+        }
+
+        [Test]
+        public void DbShouldHaveOneServer()
+        {
+            Assert.AreEqual(1, Plan.GetRole("Db").ServerCount);
+        }
+
+        [Test]
+        public void PlanShouldHaveTwoRoles()
+        {
+            Assert.AreEqual(2, Plan.RoleCount, "Roles should be 2");
+        }
+
+        [Test]
+        public void PlanShouldNotBeNull()
+        {
+            Assert.IsNotNull(Plan);
         }
 
         [Test]
         public void WebServersShouldHaveOneTask()
         {
             Plan.GetRole("Web").ForEachServerMapped(s => Assert.AreEqual(1, s.DetailCount));
+        }
+
+        [Test]
+        public void WebShouldHaveTwoServers()
+        {
+            Assert.AreEqual(2, Plan.GetRole("Web").ServerCount);
         }
     }
 }

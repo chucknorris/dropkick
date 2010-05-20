@@ -21,15 +21,34 @@ namespace dropkick.tests.DeploymentModel
     public class Should_be_able_to_execute_only_one_part
     {
         [Test]
+        public void TryAll()
+        {
+            var dep = new TwoRoleDeploy();
+            dep.Initialize(new object(), "TEST");
+
+            var maps = new RoleToServerMap();
+            maps.AddMap("DB", "BOB");
+
+            var ins = new DropkickDeploymentInspector(maps);
+
+            var plan = ins.GetPlan(dep);
+
+            Assert.AreEqual(2, plan.RoleCount);
+        }
+
+        [Test]
         public void TryDb()
         {
             var dep = new TwoRoleDeploy();
+            dep.Initialize(new object(), "TEST");
+
             var maps = new RoleToServerMap();
-            maps.AddMap("WEB", "BOB");
+            maps.AddMap("DB","BOB");
 
-            var ins = new DropkickDeploymentInspector();
-
-            var plan = ins.GetPlan(dep, maps);
+            var ins = new DropkickDeploymentInspector(maps);
+            ins.RolesToGet("Db");
+            
+            var plan = ins.GetPlan(dep);
 
             Assert.AreEqual(1, plan.RoleCount);
         }
@@ -38,14 +57,17 @@ namespace dropkick.tests.DeploymentModel
         public void TryWeb()
         {
             var dep = new TwoRoleDeploy();
-            dep.Initialize(new object());
+            dep.Initialize(new object(), "test");
+
             var maps = new RoleToServerMap();
-            maps.AddMap("WEB", "BOB");
 
-            var ins = new DropkickDeploymentInspector();
+            var ins = new DropkickDeploymentInspector(maps);
 
-            var plan = ins.GetPlan(dep, maps);
+            ins.RolesToGet("Web");
 
+            //how to set the roles 
+            var plan = ins.GetPlan(dep);
+            
             Assert.AreEqual(1, plan.RoleCount);
         }
     }

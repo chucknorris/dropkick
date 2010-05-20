@@ -23,6 +23,7 @@ namespace dropkick.Tasks.Iis
         BaseIisTask
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof (Iis7Task));
+        public bool UseClassicPipeline { get; set; }
 
         public override int VersionNumber
         {
@@ -36,10 +37,11 @@ namespace dropkick.Tasks.Iis
 
             CheckVersionOfWindowsAndIis(result);
 
-            CheckServerName(result);
-
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
+            
+            if (UseClassicPipeline)
+                result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
 
             return result;
         }
@@ -60,7 +62,7 @@ namespace dropkick.Tasks.Iis
                 if (!DoesVirtualDirectoryExist(site))
                 {
                     result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
-                    CreateVirtualDirectory(site);
+                    CreateVirtualDirectory(site, iisManager);
                     result.AddGood("'{0}' was created", VdirPath);
                 }
             }
@@ -73,15 +75,15 @@ namespace dropkick.Tasks.Iis
 
         void BuildApplicationPool(ServerManager iisManager, DeploymentResult result)
         {
-            if (string.IsNullOrEmpty(AppPoolName))
+            if (!string.IsNullOrEmpty(AppPoolName))
             {
                 CreateAppPool(AppPoolName, iisManager, result);
             }
         }
 
-        void CreateVirtualDirectory(Site site)
+        void CreateVirtualDirectory(Site site, ServerManager mgr)
         {
-            Magnum.Guard.Against.Null(site, "The site argument is null and should not be");
+            Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VdirPath;
 
             Application appToAdd = null;
@@ -100,11 +102,22 @@ namespace dropkick.Tasks.Iis
                 _logger.Info("Application was not found, creating.");
                 //create it
                 _logger.Debug(PathOnServer);
-                var app = site.Applications.Add(appPath, PathOnServer.FullName);
+                var app = site.Applications.Add(appPath, PathOnServer);
                 
                 if(AppPoolName != null)
                     app.ApplicationPoolName = AppPoolName;
             }
+
+            if(UseClassicPipeline)
+            {
+                if(appToAdd == null) return;
+                //TODO: ideally we wouldn't jack with the default pool either
+
+                var poolName = appToAdd.ApplicationPoolName;
+                var pool = mgr.ApplicationPools[poolName];
+                pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
+            }
+                
         }
 
 

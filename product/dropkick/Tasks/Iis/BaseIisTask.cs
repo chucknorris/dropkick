@@ -13,7 +13,6 @@
 namespace dropkick.Tasks.Iis
 {
     using System;
-    using System.IO;
     using DeploymentModel;
 
     public abstract class BaseIisTask :
@@ -21,7 +20,7 @@ namespace dropkick.Tasks.Iis
     {
         public string WebsiteName { get; set; }
         public string VdirPath { get; set; }
-        public DirectoryInfo PathOnServer { get; set; }
+        public string PathOnServer { get; set; }
         public string ServerName { get; set; }
         public abstract int VersionNumber { get; }
         public string AppPoolName { get; set; }
@@ -41,15 +40,6 @@ namespace dropkick.Tasks.Iis
         public abstract DeploymentResult Execute();
 
         #endregion
-
-        public void CheckServerName(DeploymentResult result)
-        {
-            if (!Environment.MachineName.Equals(ServerName, StringComparison.InvariantCultureIgnoreCase))
-            {
-                result.AddAlert("You are not on the right server [On: '{0}' - Target: '{1}']", Environment.MachineName,
-                                ServerName);
-            }
-        }
 
         public void CheckForSiteAndVDirExistance(Func<bool> website, Func<bool> vdir, DeploymentResult result)
         {
