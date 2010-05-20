@@ -13,8 +13,8 @@
 namespace dropkick.Configuration.Dsl.Security.ACL
 {
     using System;
-    using dropkick.DeploymentModel;
-    using dropkick.Tasks;
+    using DeploymentModel;
+    using Tasks;
 
     public class ProtoPathGrantReadWriteTask :
         BaseTask

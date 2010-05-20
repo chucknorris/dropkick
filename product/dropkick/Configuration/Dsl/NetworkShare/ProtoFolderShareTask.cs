@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NetworkShare
 {
-    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.NetworkShare;
@@ -21,8 +20,8 @@ namespace dropkick.Configuration.Dsl.NetworkShare
         BaseTask,
         FolderShareOptions
     {
-        string _pointingTo;
         readonly string _shareName;
+        string _pointingTo;
 
         public ProtoFolderShareTask(string shareName)
         {
@@ -42,11 +41,11 @@ namespace dropkick.Configuration.Dsl.NetworkShare
         public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new FolderShareTask
-                      {
-                          PointingTo = _pointingTo,
-                          Server = s.Name,
-                          ShareName = _shareName
-                      });
+                          {
+                              PointingTo = _pointingTo,
+                              Server = s.Name,
+                              ShareName = _shareName
+                          });
         }
     }
 }

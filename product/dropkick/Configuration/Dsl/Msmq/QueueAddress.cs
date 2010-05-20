@@ -21,7 +21,7 @@ namespace dropkick.Dsl.Msmq
     /// <remarks>Ripped out of MassTransit</remarks>
     public class QueueAddress
     {
-        const string _localhost = "localhost";
+        const string LOCALHOST = "localhost";
 
         static QueueAddress()
         {
@@ -91,7 +91,7 @@ namespace dropkick.Dsl.Msmq
         {
             string hostName = uri.Host;
             return string.Compare(hostName, ".") == 0 ||
-                   string.Compare(hostName, _localhost, true) == 0 ||
+                   string.Compare(hostName, LOCALHOST, true) == 0 ||
                    string.Compare(uri.Host, LocalMachineName, true) == 0;
         }
 

@@ -14,6 +14,7 @@ namespace dropkick.tests.TestObjects
 {
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.Security;
+    using dropkick.Configuration.Dsl.Notes;
 
     public class SecurityDeployment :
         Deployment<SecurityDeployment, SecuritySettings>
@@ -23,8 +24,10 @@ namespace dropkick.tests.TestObjects
             Define(
                 (settings, environment) =>
                 {
+                    int i = 0; //stop bothering me R#
                     DeploymentStepsFor(File, s =>
                     {
+                        s.Note("stop bothering me R#");
                         s.Security(o =>
                         {
                             o.LocalPolicy(p => p.LogOnAsService(settings.AppAccount));
@@ -40,10 +43,9 @@ namespace dropkick.tests.TestObjects
                                 q.GrantReadWrite(settings.AppAccount);
                             });
 
-                            //is this necessary?
-                            o.CreateALoginFor(settings.AppAccount);
-                            o.ForDatabase(settings.Database, d =>
+                            o.ForSqlServer(settings.Database, d =>
                             {
+                                d.CreateALoginFor(settings.AppAccount);
                                 d.CreateUserFor(settings.AppAccount)
                                     .PutInRole(settings.AppRole);
 

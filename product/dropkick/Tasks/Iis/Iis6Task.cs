@@ -31,7 +31,6 @@ namespace dropkick.Tasks.Iis
 
             vdir.Properties["Path"].Value = PathOnServer;
             CreateApplication(vdir);
-            SetIisProperties(vdir);
 
             vdir.CommitChanges();
             vdir.Close();
@@ -87,28 +86,24 @@ namespace dropkick.Tasks.Iis
             return child;
         }
 
-        private void SetIisProperties(DirectoryEntry vdir)
-        {
-        }
-
-        private void CreateApplication(DirectoryEntry vdir)
+        static void CreateApplication(DirectoryEntry vdir)
         {
             vdir.Invoke("AppCreate2", 0);
         }
 
-        private void CheckVersionOfWindowsAndIis(DeploymentResult result)
+        static void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {
             int shouldBe5 = Environment.OSVersion.Version.Major;
             if (shouldBe5 != 5)
                 result.AddAlert("This machine does not have IIS6 on it");
         }
 
-        private string BuildIisPath(int siteNumber, string vDirPath)
+        static string BuildIisPath(int siteNumber, string vDirPath)
         {
             return string.Format("IIS://localhost/w3svc/{0}/Root/{1}", siteNumber, vDirPath);
         }
 
-        private int ConvertSiteNameToSiteNumber(string name)
+        static int ConvertSiteNameToSiteNumber(string name)
         {
             using (var e = new DirectoryEntry("IIS://localhost/W3SVC"))
             {

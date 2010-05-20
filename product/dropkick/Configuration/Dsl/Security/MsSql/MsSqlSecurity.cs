@@ -10,11 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security
+namespace dropkick.Configuration.Dsl.Security.MsSql
 {
-    public interface DatabaseSecurity
+    public interface MsSqlSecurity
     {
-        UserOptions CreateUserFor(string account);
+        MsSqlUserOptions CreateUserFor(string account);
         void GrantXxxToAllTables(string role);
+        void CreateALoginFor(string account);
     }
 }

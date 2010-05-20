@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,8 +12,25 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security
 {
-    public interface UserOptions
+    using System;
+    using DeploymentModel;
+    using Tasks;
+
+    public class ProtoCreateUserTask :
+        BaseTask
     {
-        void PutInRole(string role);
+        readonly string _account;
+        readonly string _database;
+
+        public ProtoCreateUserTask(string database, string account)
+        {
+            _database = database;
+            _account = account;
+        }
+
+        public override void RegisterRealTasks(PhysicalServer site)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

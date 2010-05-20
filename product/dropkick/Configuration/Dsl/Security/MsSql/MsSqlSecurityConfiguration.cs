@@ -13,43 +13,38 @@
 namespace dropkick.Configuration.Dsl.Security
 {
     using System;
-    using ACL;
     using MsSql;
 
-    public class ProtoSecurityOptions :
-        SecurityOptions
+    public class MsSqlSecurityConfiguration :
+        MsSqlSecurity
     {
+        readonly string _database;
         readonly ProtoServer _server;
 
-        public ProtoSecurityOptions(ProtoServer server)
+        public MsSqlSecurityConfiguration(ProtoServer server, string database)
         {
             _server = server;
+            _database = database;
         }
 
+        #region MsSqlSecurity Members
 
-        public void LocalPolicy(Action<LocalPolicyConfig> func)
+        public MsSqlUserOptions CreateUserFor(string account)
         {
-            LocalPolicyConfig lpc = new ProtoLocalPolicy(_server);
-            func(lpc);
+            var proto = new ProtoCreateUserTask(_database, account);
+            _server.RegisterProtoTask(proto);
         }
 
-        public void ForPath(string path, Action<FileSecurityConfig> action)
+        public void GrantXxxToAllTables(string role)
         {
-            var psc = new PathSecurityConfiguration(_server, path);
-            action(psc);
+            throw new NotImplementedException();
         }
 
-        public void ForQueue(string queue, Action<QueueSecurityConfig> action)
+        public void CreateALoginFor(string account)
         {
-            var qsc = new QueueSecurityConfiguration(_server, queue);
-            action(qsc);
+            throw new NotImplementedException();
         }
 
-        public void ForSqlServer(string database, Action<MsSqlSecurity> action)
-        {
-            var mssqlsc = new MsSqlSecurityConfiguration(_server, database);
-            action(mssqlsc);
-        }
-
+        #endregion
     }
 }

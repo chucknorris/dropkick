@@ -12,6 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security
 {
+    using LocalPolicy;
+
     public class ProtoLocalPolicy :
         LocalPolicyConfig
     {

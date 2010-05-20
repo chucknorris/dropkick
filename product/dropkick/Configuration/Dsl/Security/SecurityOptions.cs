@@ -14,13 +14,13 @@ namespace dropkick.Configuration.Dsl.Security
 {
     using System;
     using ACL;
+    using MsSql;
 
     public interface SecurityOptions
     {
         void LocalPolicy(Action<LocalPolicyConfig> func);
         void ForPath(string path, Action<FileSecurityConfig> action);
         void ForQueue(string queue, Action<QueueSecurityConfig> action);
-        void CreateALoginFor(string account);
-        void ForDatabase(string database, Action<DatabaseSecurity> action);
+        void ForSqlServer(string database, Action<MsSqlSecurity> action);
     }
 }

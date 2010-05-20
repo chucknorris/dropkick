@@ -66,7 +66,8 @@
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
-    <Compile Include="Configuration\Dsl\Security\MsSql\DatabaseSecurity.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
@@ -97,10 +98,11 @@
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathClearTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoCreateUserTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ProtoSecurityOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfig.cs" />
     <Compile Include="Configuration\Dsl\Security\SecurityOptions.cs" />
-    <Compile Include="Configuration\Dsl\Security\MsSql\UserOptions.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlUserOptions.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceCreateTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceDeleteTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\ProtoWinServiceStartTask.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="DeploymentModel\DeploymentItem.cs" />
     <Compile Include="DeploymentModel\DeploymentResult.cs" />
     <Compile Include="DeploymentModel\DeploymentItemStatus.cs" />
+    <Compile Include="FileSystem\DotNetPath.cs" />
     <Compile Include="FileSystem\Path.cs" />
     <Compile Include="FileSystem\RemotePathHelper.cs" />
     <Compile Include="Prompting\PromptService.cs" />

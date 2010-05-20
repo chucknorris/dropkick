@@ -26,7 +26,7 @@ namespace dropkick.Configuration.Dsl
         readonly DeploymentPlan _plan = new DeploymentPlan();
         DeploymentRole _currentRole; //TODO: seems hackish
         readonly RoleToServerMap _serverMappings;
-        HashSet<string> _rolesOfInterest = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
+        readonly HashSet<string> _rolesOfInterest = new HashSet<string>(StringComparer.InvariantCultureIgnoreCase);
 
 
         public DropkickDeploymentInspector(RoleToServerMap maps) :

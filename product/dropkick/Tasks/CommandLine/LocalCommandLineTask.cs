@@ -101,7 +101,7 @@ namespace dropkick.Tasks.CommandLine
             return result;
         }
 
-        bool IsTheExeInThisDirectory(string dir, string command)
+        static bool IsTheExeInThisDirectory(string dir, string command)
         {
             if (!Directory.Exists(dir))
             {
