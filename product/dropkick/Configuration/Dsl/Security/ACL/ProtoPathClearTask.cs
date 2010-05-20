@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,14 +13,22 @@
 namespace dropkick.Configuration.Dsl.Security
 {
     using System;
+    using DeploymentModel;
+    using Tasks;
 
-    public static class Extension
+    public class ProtoPathClearTask :
+        BaseTask
     {
-        public static void Security(this ProtoServer server, Action<SecurityOptions> configureSecurity)
+        string _path;
+
+        public ProtoPathClearTask(string path)
         {
-            var so = new ProtoSecurityOptions(server);
-            configureSecurity(so);
-            //register is done inside of PSO
+            _path = path;
+        }
+
+        public override void RegisterRealTasks(PhysicalServer site)
+        {
+            throw new NotImplementedException();
         }
     }
 }

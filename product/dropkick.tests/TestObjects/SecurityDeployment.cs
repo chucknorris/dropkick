@@ -23,36 +23,35 @@ namespace dropkick.tests.TestObjects
             Define(
                 (settings, environment) =>
                 {
-                    DeploymentStepsFor(File,
-                                       s =>
-                                       {
-                                           s.Security(o =>
-                                                      {
-                                                          o.LocalPolicy(p => p.LogOnAsService(settings.AppAccount));
-                                                          o.ForPath(settings.InstallPath, p =>
-                                                          {
-                                                              p.Clear();
-                                                              p.GrantRead(settings.UserGroupA);
-                                                              p.GrantReadWrite(settings.UserGroupB);
-                                                          });
-                                                          o.ForQueue(settings.Queue, q =>
-                                                          {
-                                                              q.GrantRead(settings.TheRest);
-                                                              q.GrantReadWrite(settings.AppAccount);
-                                                          });
+                    DeploymentStepsFor(File, s =>
+                    {
+                        s.Security(o =>
+                        {
+                            o.LocalPolicy(p => p.LogOnAsService(settings.AppAccount));
+                            o.ForPath(settings.InstallPath, p =>
+                            {
+                                p.Clear();
+                                p.GrantRead(settings.UserGroupA);
+                                p.GrantReadWrite(settings.UserGroupB);
+                            });
+                            o.ForQueue(settings.Queue, q =>
+                            {
+                                q.GrantRead(settings.TheRest);
+                                q.GrantReadWrite(settings.AppAccount);
+                            });
 
-                                                          //is this necessary?
-                                                          o.CreateALoginFor(settings.AppAccount);
-                                                          o.ForDatabase(settings.Database, d =>
-                                                          {
-                                                              d.CreateUserFor(settings.AppAccount)
-                                                                  .PutInRole(settings.AppRole);
+                            //is this necessary?
+                            o.CreateALoginFor(settings.AppAccount);
+                            o.ForDatabase(settings.Database, d =>
+                            {
+                                d.CreateUserFor(settings.AppAccount)
+                                    .PutInRole(settings.AppRole);
 
-                                                              d.GrantXxxToAllTables(settings.AppRole);
-                                                          });
-                                                      });
+                                d.GrantXxxToAllTables(settings.AppRole);
+                            });
+                        });
 
-                                       });
+                    });
                 });
         }
 

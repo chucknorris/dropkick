@@ -78,6 +78,7 @@
     <Compile Include="Tasks\Files\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
+    <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />
