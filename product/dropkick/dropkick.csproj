@@ -154,7 +154,7 @@
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\Msmq\WellKnownRoles.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
-    <Compile Include="Tasks\WaitProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Notes\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
     <Compile Include="Tasks\Dsn\DsnDriver.cs" />
     <Compile Include="Configuration\Dsl\Dsn\DsnOptions.cs" />
@@ -185,12 +185,11 @@
     <Compile Include="Configuration\Dsl\NetworkShare\Extensions.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\FolderShareOptions.cs" />
     <Compile Include="Tasks\NetworkShare\FolderShareTask.cs" />
-    <Compile Include="Tasks\NoteProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Notes\NoteProtoTask.cs" />
     <Compile Include="Tasks\NoteTask.cs" />
     <Compile Include="Configuration\Dsl\Role.cs" />
     <Compile Include="DeploymentModel\Task.cs" />
     <Compile Include="Tasks\WinService\BaseServiceTask.cs" />
-    <Compile Include="Tasks\NestedTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceCreateTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceDeleteTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceStartTask.cs" />
