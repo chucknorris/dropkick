@@ -66,8 +66,10 @@
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
-    <Compile Include="Configuration\Dsl\Security\MsSql\GrantReadToAllTablesTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\MsSql\GrantWriteToAllTablesTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\CreateUserTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantReadToAllTablesTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
@@ -213,9 +215,6 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Tasks\Security\MsSql\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

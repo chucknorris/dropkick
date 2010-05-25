@@ -35,6 +35,8 @@ namespace dropkick.Tasks.Security.Acl
 
         public DeploymentResult Execute()
         {
+            var result = new DeploymentResult();
+
             DirectorySecurity security = Directory.GetAccessControl(_path);
 
 
@@ -47,6 +49,8 @@ namespace dropkick.Tasks.Security.Acl
             security.AddAccessRule(rule);
 
             Directory.SetAccessControl(_path, security);
+
+            return result;
         }
     }
 }
