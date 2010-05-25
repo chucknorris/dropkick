@@ -138,7 +138,17 @@
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
     <Compile Include="Tasks\Files\CopyFileTask.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
-    <Compile Include="Tasks\Security\LogOnAsAServiceTask.cs" />
+    <Compile Include="Tasks\Security\Acl\ClearAclsTask.cs" />
+    <Compile Include="Tasks\Security\Acl\GrantReadTask.cs" />
+    <Compile Include="Tasks\Security\Acl\GrantReadWriteTask.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LogOnAsAServiceTask.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LsaSecurity.cs" />
+    <Compile Include="Tasks\Security\Msmq\CreateQueueTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\DeleteQueueTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
+    <Compile Include="Tasks\Security\Msmq\WellKnownRoles.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
     <Compile Include="Tasks\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
@@ -201,6 +211,9 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Tasks\Security\MsSql\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

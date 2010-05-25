@@ -15,6 +15,7 @@ namespace dropkick.Configuration.Dsl.Security.LocalPolicy
     using dropkick.DeploymentModel;
     using dropkick.Tasks;
     using dropkick.Tasks.Security;
+    using Tasks.Security.LocalPolicy;
 
     public class ProtoLogOnAsAServiceTask :
         BaseTask
