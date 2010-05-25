@@ -18,7 +18,7 @@ namespace dropkick.Configuration.Dsl.CommandLine
     using Tasks.CommandLine;
 
     public class ProtoCommandLineTask :
-        BaseTask,
+        BaseProtoTask,
         CommandLineOptions
     {
         readonly string _command = "";

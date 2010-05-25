@@ -19,7 +19,7 @@ namespace dropkick.Configuration.Dsl.Files
     using Tasks.Files;
 
     public class ProtoRenameTask :
-        BaseTask,
+        BaseProtoTask,
         RenameOptions
     {
         readonly string _from;

@@ -12,12 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.MsSql
 {
-    using System;
     using DeploymentModel;
     using Tasks;
 
     public class ProtoGrantWriteToAllTablesTask :
-        BaseTask
+        BaseProtoTask
     {
         public ProtoGrantWriteToAllTablesTask(string database, string role)
         {
@@ -25,7 +24,8 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var task = new GrantWriteToAllTablesTask();
+            site.AddTask(task);
         }
     }
 }

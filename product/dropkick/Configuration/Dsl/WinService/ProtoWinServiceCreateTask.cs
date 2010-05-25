@@ -19,7 +19,7 @@ namespace dropkick.Configuration.Dsl.WinService
     using Wmi;
 
     public class ProtoWinServiceCreateTask :
-        BaseTask,
+        BaseProtoTask,
         WinServiceCreateOptions
     {
         readonly List<string> _dependencies = new List<string>();

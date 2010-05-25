@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Iis
     using Tasks.Iis;
 
     public class IisProtoTask :
-        BaseTask,
+        BaseProtoTask,
         IisSiteOptions,
         IisVirtualDirectoryOptions
     {

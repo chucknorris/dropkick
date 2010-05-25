@@ -66,6 +66,8 @@
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\GrantReadToAllTablesTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\GrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
@@ -128,7 +130,7 @@
     <Compile Include="Prompting\PromptService.cs" />
     <Compile Include="Settings\ServerMapParser.cs" />
     <Compile Include="Settings\SettingsParser.cs" />
-    <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\BaseProtoTask.cs" />
     <Compile Include="Tasks\CommandLine\LocalCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\Extension.cs" />
     <Compile Include="Configuration\Dsl\Deployment.cs" />

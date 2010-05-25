@@ -16,7 +16,7 @@ namespace dropkick.Tasks
     using DeploymentModel;
 
     public class WaitProtoTask :
-        BaseTask
+        BaseProtoTask
     {
         public WaitProtoTask(TimeSpan span)
         {

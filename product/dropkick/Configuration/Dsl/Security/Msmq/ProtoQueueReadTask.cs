@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
     using dropkick.Tasks.Security.Msmq;
 
     public class ProtoQueueReadTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _group;
         readonly string _queue;

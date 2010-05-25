@@ -18,7 +18,7 @@ namespace dropkick.Configuration.Dsl.Files
     using Tasks.Files;
 
     public class ProtoCopyFileTask :
-        BaseTask,
+        BaseProtoTask,
         FileCopyOptions
     {
         readonly string _from;

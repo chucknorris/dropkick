@@ -12,13 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.LocalPolicy
 {
-    using dropkick.DeploymentModel;
-    using dropkick.Tasks;
-    using dropkick.Tasks.Security;
+    using DeploymentModel;
+    using Tasks;
     using Tasks.Security.LocalPolicy;
 
     public class ProtoLogOnAsAServiceTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _userAccount;
 

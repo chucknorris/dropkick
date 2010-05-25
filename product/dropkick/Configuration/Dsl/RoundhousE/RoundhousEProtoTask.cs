@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
     using Tasks.CommandLine;
 
     public class RoundhousEProtoTask :
-        BaseTask,
+        BaseProtoTask,
         RoundhousEOptions
     {
         public RoundhousEProtoTask()

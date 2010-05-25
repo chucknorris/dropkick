@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Security.ACL
     using Tasks;
 
     public class ProtoPathGrantReadWriteTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _group;
         string _path;

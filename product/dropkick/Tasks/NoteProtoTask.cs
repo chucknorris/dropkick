@@ -15,7 +15,7 @@ namespace dropkick.Tasks
     using DeploymentModel;
 
     public class NoteProtoTask :
-        BaseTask
+        BaseProtoTask
     {
         public NoteProtoTask(string message)
         {

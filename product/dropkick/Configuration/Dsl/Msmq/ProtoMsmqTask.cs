@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Msmq
     using Tasks.Msmq;
 
     public class ProtoMsmqTask :
-        BaseTask,
+        BaseProtoTask,
         MsmqOptions
     {
         string _queueName;
