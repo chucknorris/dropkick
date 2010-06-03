@@ -19,7 +19,7 @@ namespace dropkick.Configuration.Dsl.Files
     using Tasks;
 
     public class ProtoEncryptWebConfigTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly Path _path;
         readonly string _where;
@@ -43,7 +43,7 @@ namespace dropkick.Configuration.Dsl.Files
     }
 
     public class ProtoEncryptAppConfigTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly Path _path;
         readonly string _where;

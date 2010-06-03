@@ -10,27 +10,27 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security.MsSql
+namespace dropkick.Tasks.Security.MsSql
 {
+    using System;
     using DeploymentModel;
-    using Tasks;
 
-    public class ProtoGrantReadToAllTablesTask :
-        BaseProtoTask
+    public class CreateLoginTask :
+        Task
     {
-        readonly string _database;
-        readonly string _role;
-
-        public ProtoGrantReadToAllTablesTask(string database, string role)
+        public string Name
         {
-            _database = database;
-            _role = role;
+            get { throw new NotImplementedException(); }
         }
 
-        public override void RegisterRealTasks(PhysicalServer site)
+        public DeploymentResult VerifyCanRun()
         {
-            var task = new GrantReadToAllTablesTask();
-            site.AddTask(task);
+            throw new NotImplementedException();
+        }
+
+        public DeploymentResult Execute()
+        {
+            throw new NotImplementedException();
         }
     }
 }

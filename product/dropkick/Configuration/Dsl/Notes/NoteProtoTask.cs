@@ -12,21 +12,21 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks
 {
-    using Configuration.Dsl;
     using DeploymentModel;
 
-    public abstract class BaseTask :
-        ProtoTask
+    public class NoteProtoTask :
+        BaseProtoTask
     {
-        #region ProtoTask Members
-
-        public void InspectWith(DeploymentInspector inspector)
+        public NoteProtoTask(string message)
         {
-            inspector.Inspect(this);
+            Message = message;
         }
 
-        public abstract void RegisterRealTasks(PhysicalServer site);
+        public string Message { get; set; }
 
-        #endregion
+        public override void RegisterRealTasks(PhysicalServer s)
+        {
+            s.AddTask(new NoteTask(Message));
+        }
     }
 }

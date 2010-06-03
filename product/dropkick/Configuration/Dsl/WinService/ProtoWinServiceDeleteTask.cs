@@ -5,7 +5,7 @@ namespace dropkick.Configuration.Dsl.WinService
     using Tasks.WinService;
 
     public class ProtoWinServiceDeleteTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _serviceName;
 

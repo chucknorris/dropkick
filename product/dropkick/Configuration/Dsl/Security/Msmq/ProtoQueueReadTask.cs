@@ -10,14 +10,14 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security.ACL
+namespace dropkick.Configuration.Dsl.Security.Msmq
 {
-    using System;
-    using DeploymentModel;
-    using Tasks;
+    using dropkick.DeploymentModel;
+    using dropkick.Tasks;
+    using dropkick.Tasks.Security.Msmq;
 
     public class ProtoQueueReadTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _group;
         readonly string _queue;
@@ -30,7 +30,8 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var task = new MsmqGrantReadTask(_queue, _group);
+            site.AddTask(task);
         }
     }
 }
