@@ -14,7 +14,6 @@ namespace dropkick.tests.TestObjects
 {
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.Security;
-    using dropkick.Configuration.Dsl.Notes;
 
     public class SecurityDeployment :
         Deployment<SecurityDeployment, SecuritySettings>
@@ -49,8 +48,8 @@ namespace dropkick.tests.TestObjects
                                 d.CreateUserFor(settings.AppAccount)
                                     .PutInRole(settings.AppRole);
 
-                                d.GrantReadToAllTables(settings.AppRole);
-                                d.GrantWriteToAllTables(settings.AppRole);
+                                d.GrantDataReader(settings.AppRole);
+                                d.GrantDataWriter(settings.AppRole);
                             });
                         });
 

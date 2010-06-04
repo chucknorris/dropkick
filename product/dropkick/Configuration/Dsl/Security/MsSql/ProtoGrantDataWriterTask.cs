@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,13 +12,21 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.MsSql
 {
-    public interface MsSqlSecurity
+    using System;
+    using DeploymentModel;
+    using Tasks;
+
+    public class ProtoGrantDataWriterTask :
+        BaseProtoTask
     {
-        MsSqlUserOptions CreateUserFor(string account);
-        void GrantReadToAllTables(string role);
-        void GrantWriteToAllTables(string role);
-        void CreateALoginFor(string account);
-        void GrantDataReader(string role);
-        void GrantDataWriter(string role);
+        public ProtoGrantDataWriterTask(string role)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void RegisterRealTasks(PhysicalServer site)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

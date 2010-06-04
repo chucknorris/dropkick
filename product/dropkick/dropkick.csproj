@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -67,6 +67,8 @@
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataReaderTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateUserTask.cs" />
     <Compile Include="Tasks\Security\MsSql\GrantReadToAllTablesTask.cs" />

@@ -48,5 +48,17 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
             var proto = new ProtoCreateLoginTask(_database, account);
             _server.RegisterProtoTask(proto);
         }
+
+        public void GrantDataReader(string role)
+        {
+            var proto = new ProtoGrantDataReaderTask(role);
+            _server.RegisterProtoTask(proto);
+        }
+
+        public void GrantDataWriter(string role)
+        {
+            var proto = new ProtoGrantDataWriterTask(role);
+            _server.RegisterProtoTask(proto);
+        }
     }
 }
