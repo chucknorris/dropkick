@@ -16,21 +16,35 @@ namespace dropkick.Tasks.Security.MsSql
     using DeploymentModel;
 
     public class CreateUserTask :
-        Task
+        BaseSecuritySqlTask
     {
-        public string Name
+        readonly string _role;
+
+        public CreateUserTask(string serverName, string databaseName, string role) : base(serverName, databaseName)
+        {
+            _role = role;
+        }
+
+        public override string Name
         {
             get { throw new NotImplementedException(); }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
             throw new NotImplementedException();
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            if(!DoesRoleExist(_role))
+            {
+                //execute role
+            }
+
+            return result;
         }
     }
 }

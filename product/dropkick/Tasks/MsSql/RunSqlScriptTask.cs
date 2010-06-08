@@ -71,19 +71,5 @@ namespace dropkick.Tasks.MsSql
 
             return new DeploymentResult();
         }
-
-        void ExecuteSqlWithNoReturn(string sql)
-        {
-            using (IDbConnection conn = GetConnection())
-            {
-                conn.Open();
-                using (IDbCommand cmd = conn.CreateCommand())
-                {
-                    cmd.CommandText = sql;
-                    cmd.CommandType = CommandType.Text;
-                    cmd.ExecuteNonQuery();
-                }
-            }
-        }
     }
 }

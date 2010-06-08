@@ -10,27 +10,48 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security.MsSql
+namespace dropkick.Tasks.Security.MsSql
 {
-    using System;
     using DeploymentModel;
+    using Tasks.MsSql;
 
     public class GrantWriteToAllTablesTask :
-        Task
+        BaseSecuritySqlTask
     {
-        public string Name
+        readonly string _role;
+
+        public GrantWriteToAllTablesTask(string server, string database, string role) : base(server, database)
         {
-            get { throw new NotImplementedException(); }
+            _role = role;
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override string Name
         {
-            throw new NotImplementedException();
+            get { return "Grant 'Write to All Tables' in database '{0}' to '{1}'".FormatWith(DatabaseName, _role); }
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+            TestConnectivity(result);
+            return result;
+        }
+
+        public override DeploymentResult Execute()
+        {
+            var result = new DeploymentResult();
+
+            //how to push this down?
+            string sql = @"SELECT [Name] FROM sys.objects WHERE type in (N'U',N'V')";
+            var objects = ExecuteSqlWithListReturn<string>(sql);
+
+            //add logging
+            foreach (var o in objects)
+            {
+                GrantSelect(o, _role);
+            }
+
+            return result;
         }
     }
 }

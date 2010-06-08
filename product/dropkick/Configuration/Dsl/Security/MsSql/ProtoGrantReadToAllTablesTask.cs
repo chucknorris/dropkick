@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
 {
     using DeploymentModel;
     using Tasks;
+    using Tasks.Security.MsSql;
 
     public class ProtoGrantReadToAllTablesTask :
         BaseProtoTask
@@ -29,7 +30,7 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new GrantReadToAllTablesTask();
+            var task = new GrantReadToAllTablesTask(site.Name, _database, _role);
             site.AddTask(task);
         }
     }
