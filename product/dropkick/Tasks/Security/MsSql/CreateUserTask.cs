@@ -12,36 +12,61 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.MsSql
 {
-    using System;
     using DeploymentModel;
 
     public class CreateUserTask :
         BaseSecuritySqlTask
     {
-        readonly string _role;
+        readonly string _user;
+        readonly string _login;
+        readonly string _defaultSchema;
 
-        public CreateUserTask(string serverName, string databaseName, string role) : base(serverName, databaseName)
+        public CreateUserTask(string serverName, string databaseName, string user)
+            : this(serverName, databaseName, user, user)
         {
-            _role = role;
+        }
+
+        public CreateUserTask(string serverName, string databaseName, string user, string login)
+            : this(serverName, databaseName, user, login, "dbo")
+        {
+        }
+
+        public CreateUserTask(string serverName, string databaseName, string user, string login, string defaultSchema)
+            : base(serverName, databaseName)
+        {
+            _user = user;
+            _login = login;
+            _defaultSchema = defaultSchema;
         }
 
         public override string Name
         {
-            get { throw new NotImplementedException(); }
+            get { return "Creating User '{0}' in database '{1}'".FormatWith(_user, DatabaseName); }
         }
 
         public override DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            TestConnectivity(result);
+
+            if (!DoesUserExist(_user))
+            {
+                result.AddAlert("User not found. going to add");
+            }
+
+            return result;
         }
 
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
 
-            if(!DoesRoleExist(_role))
+            if (!DoesUserExist(_user))
             {
-                //execute role
+                var sql = @"CREATE USER [{0}] FOR LOGIN [{1}] WITH DEFAULT_SCHEMA=[{2}]"
+                    .FormatWith(_user, _login, _defaultSchema);
+                ExecuteSqlWithNoReturn(sql);
             }
 
             return result;

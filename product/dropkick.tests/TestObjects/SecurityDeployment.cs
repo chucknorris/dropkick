@@ -20,8 +20,7 @@ namespace dropkick.tests.TestObjects
     {
         public SecurityDeployment()
         {
-            Define(
-                (settings, environment) =>
+            Define((settings, environment) =>
                 {
                     int i = 0; //stop bothering me R#
                     DeploymentStepsFor(File, s =>

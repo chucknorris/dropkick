@@ -15,18 +15,24 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
     using System;
     using DeploymentModel;
     using Tasks;
+    using Tasks.Security.MsSql;
 
     public class ProtoGrantDataWriterTask :
         BaseProtoTask
     {
-        public ProtoGrantDataWriterTask(string role)
+        readonly string _database;
+        readonly string _role;
+
+        public ProtoGrantDataWriterTask(string database, string role)
         {
-            throw new NotImplementedException();
+            _database = database;
+            _role = role;
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var task = new GrantDataWriterTask(site.Name, _database, _role);
+            site.AddTask(task);
         }
     }
 }

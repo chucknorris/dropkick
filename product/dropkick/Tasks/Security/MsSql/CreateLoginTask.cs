@@ -16,21 +16,42 @@ namespace dropkick.Tasks.Security.MsSql
     using DeploymentModel;
 
     public class CreateLoginTask :
-        Task
+        BaseSecuritySqlTask
     {
-        public string Name
+        readonly string _login;
+        readonly string _defaultLanguage;
+
+        public CreateLoginTask(string serverName, string databaseName, string login) : this(serverName, databaseName, login, "us_english")
+        {
+
+        }
+
+        public CreateLoginTask(string serverName, string databaseName, string login, string defaultLanguage) : base(serverName, databaseName)
+        {
+            _login = login;
+            _defaultLanguage = defaultLanguage;
+        }
+
+        public override string Name
         {
             get { throw new NotImplementedException(); }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
             throw new NotImplementedException();
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            var sql = @"CREATE LOGIN [{0}] FROM WINDOWS WITH DEFAULT_DATABASE=[{1}], DEFAULT_LANGUAGE=[{2}]"
+                .FormatWith(_login, DatabaseName, _defaultLanguage);
+
+            ExecuteSqlWithNoReturn(sql);
+
+            return result;
         }
     }
 }

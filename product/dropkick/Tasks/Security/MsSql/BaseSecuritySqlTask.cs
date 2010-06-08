@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.MsSql
 {
+    using System;
     using Tasks.MsSql;
 
     public abstract class BaseSecuritySqlTask :
@@ -49,6 +50,12 @@ namespace dropkick.Tasks.Security.MsSql
         public bool DoesRoleExist(string role)
         {
             var sql = @"SELECT '1' from sys.database_principals where name = N'{0}' AND type = 'R'";
+            var o = ExecuteSqlWithOneReturn<bool>(sql);
+            return o;
+        }
+        public bool DoesUserExist(string user)
+        {
+            var sql = @"SELECT '1' from sys.database_principals where name = N'{0}' AND type = 'U'";
             var o = ExecuteSqlWithOneReturn<bool>(sql);
             return o;
         }

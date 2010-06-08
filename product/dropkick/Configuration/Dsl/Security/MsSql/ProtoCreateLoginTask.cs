@@ -19,18 +19,19 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
     public class ProtoCreateLoginTask :
         BaseProtoTask
     {
-        readonly string _account;
         readonly string _database;
+        readonly string _login;
+        readonly string _defaultDatabase;
 
-        public ProtoCreateLoginTask(string database, string account)
+        public ProtoCreateLoginTask(string database, string login)
         {
             _database = database;
-            _account = account;
+            _login = login;
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new CreateLoginTask();
+            var task = new CreateLoginTask(site.Name, _database, _login);
             site.AddTask(task);
         }
     }

@@ -51,13 +51,13 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
 
         public void GrantDataReader(string role)
         {
-            var proto = new ProtoGrantDataReaderTask(role);
+            var proto = new ProtoGrantDataReaderTask(_database, role);
             _server.RegisterProtoTask(proto);
         }
 
         public void GrantDataWriter(string role)
         {
-            var proto = new ProtoGrantDataWriterTask(role);
+            var proto = new ProtoGrantDataWriterTask(_database, role);
             _server.RegisterProtoTask(proto);
         }
     }

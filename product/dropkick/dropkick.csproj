@@ -74,6 +74,8 @@
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateRoleTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateUserTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantDataReaderTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantDataWriterTask.cs" />
     <Compile Include="Tasks\Security\MsSql\GrantReadToAllTablesTask.cs" />
     <Compile Include="Tasks\Security\MsSql\GrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
