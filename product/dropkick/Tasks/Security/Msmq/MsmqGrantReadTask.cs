@@ -12,12 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Msmq
 {
-    using System;
     using System.Messaging;
     using DeploymentModel;
 
     public class MsmqGrantReadTask :
-        Task
+        BaseTask
     {
         readonly string _group;
         readonly string _queueName;
@@ -28,19 +27,21 @@ namespace dropkick.Tasks.Security.Msmq
             _group = group;
         }
 
-        #region Task Members
-
-        public string Name
+        public override string Name
         {
             get { return "Grant read to '{0}'".FormatWith(_group); }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            VerifyInAdministratorRole(result);
+
+            return result;
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
             var q = new MessageQueue(_queueName);
@@ -48,7 +49,5 @@ namespace dropkick.Tasks.Security.Msmq
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
             return result;
         }
-
-        #endregion
     }
 }

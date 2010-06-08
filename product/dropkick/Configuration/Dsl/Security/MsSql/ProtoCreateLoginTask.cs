@@ -21,7 +21,6 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
     {
         readonly string _database;
         readonly string _login;
-        readonly string _defaultDatabase;
 
         public ProtoCreateLoginTask(string database, string login)
         {

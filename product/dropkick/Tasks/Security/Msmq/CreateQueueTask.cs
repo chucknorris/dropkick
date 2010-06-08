@@ -12,12 +12,11 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Msmq
 {
-    using System;
     using System.Messaging;
     using DeploymentModel;
 
     public class CreateQueueTask :
-        Task
+        BaseTask
     {
         readonly string _queueName;
         readonly bool _transactional;
@@ -28,21 +27,26 @@ namespace dropkick.Tasks.Security.Msmq
             _transactional = transactional;
         }
 
-        public string Name
+        public override string Name
         {
             get { return "Create queue"; }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+            
+            VerifyInAdministratorRole(result);
+
+            return result;
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
 
             MessageQueue q = MessageQueue.Create(_queueName, _transactional);
+            result.AddGood("Created the queue");
 
             return result;
         }
