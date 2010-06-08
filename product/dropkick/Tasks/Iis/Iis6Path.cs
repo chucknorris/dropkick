@@ -20,7 +20,7 @@
             VDirName = vDirName;
         }
 
-        public Iis6Path(string webSiteName, string serverName)
+        public Iis6Path(string serverName, string webSiteName)
         {
             WebsiteName = webSiteName;
             ServerName = serverName;
