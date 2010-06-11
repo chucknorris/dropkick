@@ -44,10 +44,10 @@ namespace dropkick.Tasks.WinService
         {
             var result = new DeploymentResult();
 
-            if (!UserName.ShouldPrompt())
+            if (UserName.ShouldPrompt())
                 result.AddAlert("We are going to prompt for a username.");
 
-            if (!Password.ShouldPrompt())
+            if (Password.ShouldPrompt())
                 result.AddAlert("We are going to prompt for a password.");
 
             return result;
