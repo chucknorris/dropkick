@@ -75,6 +75,7 @@
     <Compile Include="RemotePathHelperTest.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="Tasks\Console\RemoteTest.cs" />
+    <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="Tasks\Files\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
@@ -84,7 +85,7 @@
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />
     <Compile Include="Tasks\Dsn\CreatingDsns.cs" />
-    <Compile Include="Tasks\Files\CopyTest.cs" />
+    <Compile Include="Tasks\Files\CopyDirectoryTest.cs" />
     <Compile Include="Tasks\Msmq\MsmqTest.cs" />
     <Compile Include="Tasks\MsSql\OutputSqlTest.cs" />
     <Compile Include="Tasks\MsSql\RunSqlScriptTaskTest.cs" />

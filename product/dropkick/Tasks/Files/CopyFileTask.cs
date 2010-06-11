@@ -14,8 +14,8 @@ namespace dropkick.Tasks.Files
 {
     using System.IO;
     using DeploymentModel;
-    using Exceptions;
     using log4net;
+    using Magnum.Extensions;
     using Path = FileSystem.Path;
 
     public class CopyFileTask :
@@ -26,11 +26,13 @@ namespace dropkick.Tasks.Files
         readonly Path _path;
         string _from;
         string _to;
+        readonly string _newFileName;
 
-        public CopyFileTask(string @from, string to, Path path)
+        public CopyFileTask(string @from, string to, string newFileName, Path path)
         {
             _from = from;
             _to = to;
+            _newFileName = newFileName;
             _path = path;
         }
 
@@ -40,72 +42,100 @@ namespace dropkick.Tasks.Files
             get { return string.Format("Copy '{0}' to '{1}'", _from, _to); }
         }
 
-        public DeploymentResult Execute()
+        public DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
-
-            ValidateIsFile(result, _from);
-            ValidateIsDirectory(result, _to);
 
             _from = _path.GetFullPath(_from);
             _to = _path.GetFullPath(_to);
 
-
-            CopyFile(new FileInfo(_from), new DirectoryInfo(_to));
+            ValidatePaths(result);
 
             result.AddGood(Name);
 
             return result;
         }
 
-
-        public DeploymentResult VerifyCanRun()
+        public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-
-            ValidateIsDirectory(result, _to);
-            ValidateIsFile(result, _from);
 
             _from = _path.GetFullPath(_from);
             _to = _path.GetFullPath(_to);
 
+            ValidatePaths(result);
 
-            if (File.Exists(_from))
-            {
-                result.AddGood(string.Format("'{0}' exists", _from));
-            }
-            else
-            {
-                result.AddError(string.Format("'{0}' doesn't exist", _from));
-            }
+            CopyFile(result);
+
+            result.AddGood(Name);
 
             return result;
         }
 
+        void ValidatePaths(DeploymentResult result)
+        {
+            ValidateIsFile(result, _from);
+
+            if (_newFileName.IsNotEmpty())
+            {
+                ValidateIsFile(result, _path.Combine(_to,_newFileName));
+            }
+            else
+            {
+                ValidateIsDirectory(result, _to);
+            }
+        }
+
         void ValidateIsFile(DeploymentResult result, string path)
         {
+            if (!(new FileInfo(_path.GetFullPath(path)).Exists))
+                result.AddAlert("'{0}' does not exist.".FormatWith(path));
+
             if (!_path.IsFile(path))
-                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
+                result.AddError("'{0}' is not a file.".FormatWith(path));
         }
 
         void ValidateIsDirectory(DeploymentResult result, string path)
         {
+            if (!(new DirectoryInfo(_path.GetFullPath(path)).Exists))
+                result.AddAlert("'{0}' does not exist and will be created.".FormatWith(path));
+
             if (!_path.IsDirectory(path))
-                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
+                result.AddError("'{0}' is not a directory.".FormatWith(path));
         }
 
-        void CopyFile(FileInfo source, DirectoryInfo destination)
+        void CopyFile(DeploymentResult result)
+        {
+            if (_newFileName.IsNotEmpty())
+                CopyFileToFile(result, new FileInfo(_from), new FileInfo(_path.Combine(_to,_newFileName)));
+            else
+                CopyFileToDirectory(result, new FileInfo(_from), new DirectoryInfo(_to));
+        }
+
+        void CopyFileToFile(DeploymentResult result, FileInfo source, FileInfo destination)
+        {
+            if (destination.Exists)
+                result.AddAlert("'{0}' exists, copy will overwrite the existing file.".FormatWith(destination.FullName));
+
+            // Copy file.
+            source.CopyTo(destination.FullName, true);
+            _log.DebugFormat(Name);
+            _fileLog.Info(destination.FullName); //log where files are copied for tripwire
+        }
+
+        void CopyFileToDirectory(DeploymentResult result, FileInfo source, DirectoryInfo destination)
         {
             if (!destination.Exists)
-            {
                 destination.Create();
-            }
 
             // Copy file.
             var fileDestination = _path.Combine(destination.FullName, source.Name);
 
-            source.CopyTo(fileDestination);
-            _log.DebugFormat("Copy file '{0}' to '{1}'", source.FullName, fileDestination);
+            if (_path.IsFile(fileDestination))
+                result.AddAlert("'{0}' exists, copy will overwrite the existing file.".FormatWith(fileDestination));
+
+            source.CopyTo(fileDestination, true);
+            _log.DebugFormat(Name);
             _fileLog.Info(fileDestination); //log where files are copied for tripwire
         }
     }
