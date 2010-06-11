@@ -21,5 +21,6 @@ namespace dropkick.Configuration.Dsl.Files
     public interface FileCopyOptions
     {
         FileCopyOptions ToDirectory(string destinationPath);
+        FileCopyOptions RenameTo(string newFileName);
     }
 }

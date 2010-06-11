@@ -23,6 +23,7 @@ namespace dropkick.Configuration.Dsl.Files
     {
         readonly string _from;
         string _to;
+        string _newFileName;
 
         public ProtoCopyFileTask(string @from)
         {
@@ -37,6 +38,12 @@ namespace dropkick.Configuration.Dsl.Files
             return this;
         }
 
+        public FileCopyOptions RenameTo(string newFileName)
+        {
+            _newFileName = newFileName;
+            return this;
+        }
+
         #endregion
 
         public override void RegisterRealTasks(PhysicalServer site)
@@ -46,7 +53,7 @@ namespace dropkick.Configuration.Dsl.Files
                 to = RemotePathHelper.Convert(site.Name, to);
 
 
-            var o = new CopyFileTask(_from, to, new DotNetPath());
+            var o = new CopyFileTask(_from, to, _newFileName, new DotNetPath());
             site.AddTask(o);
         }
     }
