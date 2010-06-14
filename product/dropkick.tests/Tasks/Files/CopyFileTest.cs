@@ -9,20 +9,21 @@
     [TestFixture]
     public class CopyFileTest
     {
-        DotNetPath _path = new DotNetPath();
-        string _baseDir = @".\CopyFileTests";
-        string _sourceDirectory = @".\CopyFileTests\source";
-        string _destinationDirectory = @".\CopyFileTests\dest";
+        readonly DotNetPath _path = new DotNetPath();
+        //const string BaseDir = @".\CopyFileTests";
+        const string BaseDir = @"\\srvtestweb01\e$\CopyFileTests";
+        readonly string _sourceDirectory = @"{0}\source".FormatWith(BaseDir);
+        readonly string _destinationDirectory = @"{0}\dest".FormatWith(BaseDir);
 
         #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
-            if (Directory.Exists(_baseDir))
-                Directory.Delete(_baseDir, true);
+            if (Directory.Exists(BaseDir))
+                Directory.Delete(BaseDir, true);
 
-            Directory.CreateDirectory(_baseDir);
+            Directory.CreateDirectory(BaseDir);
             Directory.CreateDirectory(_sourceDirectory);
             File.WriteAllLines(_path.Combine(_sourceDirectory, "test.txt"), new[] { "the test" });
             Directory.CreateDirectory(_destinationDirectory);
@@ -31,7 +32,7 @@
         [TearDown]
         public void TearDown()
         {
-            Directory.Delete(_baseDir,true);
+            Directory.Delete(BaseDir,true);
         }
 
         #endregion
@@ -50,7 +51,7 @@
         }
 
         [Test]
-        public void CopyFileToFile()
+        public void CopyFileToFileWithSameName()
         {
             var file = _path.Combine(_sourceDirectory, "test.txt");
             var t = new CopyFileTask(file, _destinationDirectory, "test.txt", new DotNetPath());
@@ -68,6 +69,19 @@
             t.Execute();
 
             var s = File.ReadAllText(_path.Combine(_destinationDirectory, "newtest.txt"));
+            Assert.AreEqual("the test\r\n", s);
+        }
+
+        [Test]
+        public void CopyFileToFileWithSameNameAndOverwrite()
+        {
+            File.WriteAllLines(_path.Combine(_destinationDirectory, "test.txt"), new[] { "bad file" });
+
+            var file = _path.Combine(_sourceDirectory, "test.txt");
+            var t = new CopyFileTask(file, _destinationDirectory, "test.txt", new DotNetPath());
+            t.Execute();
+
+            var s = File.ReadAllText(_path.Combine(_destinationDirectory, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
         }
 

@@ -159,7 +159,7 @@ namespace dropkick.Tasks.Files
             if (directory.Exists)
             {
                 directory.Delete(true);
-                result.AddGood("'{0}' was successfully deleted");
+                result.AddGood("'{0}' was successfully deleted".FormatWith(directory.FullName));
             }
         }
     }

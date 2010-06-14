@@ -75,15 +75,7 @@ namespace dropkick.Tasks.Files
         void ValidatePaths(DeploymentResult result)
         {
             ValidateIsFile(result, _from);
-
-            if (_newFileName.IsNotEmpty())
-            {
-                ValidateIsFile(result, _path.Combine(_to,_newFileName));
-            }
-            else
-            {
-                ValidateIsDirectory(result, _to);
-            }
+            ValidateIsDirectory(result, _to);
         }
 
         void ValidateIsFile(DeploymentResult result, string path)
