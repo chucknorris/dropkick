@@ -14,7 +14,6 @@ namespace dropkick.Tasks.Security.LocalPolicy
 {
     using System;
     using DeploymentModel;
-    using Willys.LsaSecurity;
 
     public class LogOnAsAServiceTask :
         Task

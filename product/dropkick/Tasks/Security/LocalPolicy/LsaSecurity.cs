@@ -1,14 +1,10 @@
 //http://www.hightechtalks.com/csharp/lsa-functions-276626.html
-namespace Willys.LsaSecurity
+namespace dropkick.Tasks.Security.LocalPolicy
 {
     using System;
     using System.Runtime.InteropServices;
     using System.Security;
-    using System.Management;
-    using System.Runtime.CompilerServices;
     using System.ComponentModel;
-
-    using LSA_HANDLE = System.IntPtr;
 
     [StructLayout(LayoutKind.Sequential)]
     struct LSA_OBJECT_ATTRIBUTES
@@ -42,7 +38,7 @@ namespace Willys.LsaSecurity
         [DllImport("advapi32", CharSet = CharSet.Unicode, SetLastError = true),
         SuppressUnmanagedCodeSecurityAttribute]
         internal static extern uint LsaAddAccountRights(
-        LSA_HANDLE PolicyHandle,
+        IntPtr PolicyHandle,
         IntPtr pSID,
         LSA_UNICODE_STRING[] UserRights,
         int CountOfRights
@@ -51,7 +47,7 @@ namespace Willys.LsaSecurity
         [DllImport("advapi32", CharSet = CharSet.Unicode, SetLastError = true),
         SuppressUnmanagedCodeSecurityAttribute]
         internal static extern int LsaLookupNames2(
-        LSA_HANDLE PolicyHandle,
+        IntPtr PolicyHandle,
         uint Flags,
         uint Count,
         LSA_UNICODE_STRING[] Names,

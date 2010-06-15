@@ -71,6 +71,7 @@
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\Security\Acl\BaseGrantPermissionTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateRoleTask.cs" />
