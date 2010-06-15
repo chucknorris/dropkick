@@ -14,6 +14,8 @@ namespace dropkick.Configuration.Dsl.Security
 {
     using System;
     using ACL;
+    using LocalPolicy;
+    using Msmq;
     using MsSql;
 
     public interface SecurityOptions

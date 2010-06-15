@@ -12,11 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
+    using System.Security.AccessControl;
+
     public interface Path
     {
         string Combine(string root, string ex);
         string GetFullPath(string path);
         bool IsFile(string path);
         bool IsDirectory(string path);
+        void SetTargetSecurity(string target, string group, FileSystemRights permission);
+
     }
 }

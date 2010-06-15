@@ -13,6 +13,7 @@
 namespace dropkick.FileSystem
 {
     using System.IO;
+    using System.Security.AccessControl;
 
     public class DotNetPath :
         Path
@@ -39,6 +40,22 @@ namespace dropkick.FileSystem
         {
             var di = new DirectoryInfo(GetFullPath(path));
             return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+        }
+
+        public void SetTargetSecurity(string target, string group, FileSystemRights permission)
+        {
+            var oldSecurity = Directory.GetAccessControl(target);
+            var newSecurity = new DirectorySecurity();
+
+            newSecurity.SetSecurityDescriptorBinaryForm(oldSecurity.GetSecurityDescriptorBinaryForm());
+
+            newSecurity.AddAccessRule(new FileSystemAccessRule(group,
+                                                               permission,
+                                                               InheritanceFlags.ContainerInherit |
+                                                               InheritanceFlags.ObjectInherit,
+                                                               PropagationFlags.InheritOnly,
+                                                               AccessControlType.Allow));
+            Directory.SetAccessControl(target, newSecurity);
         }
 
         #endregion

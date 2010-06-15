@@ -10,8 +10,8 @@
     public class CopyFileTest
     {
         readonly DotNetPath _path = new DotNetPath();
-        //const string BaseDir = @".\CopyFileTests";
-        const string BaseDir = @"\\srvtestweb01\e$\CopyFileTests";
+        const string BaseDir = @".\CopyFileTests";
+        //const string BaseDir = @"\\srvtestweb01\e$\CopyFileTests";
         readonly string _sourceDirectory = @"{0}\source".FormatWith(BaseDir);
         readonly string _destinationDirectory = @"{0}\dest".FormatWith(BaseDir);
 
