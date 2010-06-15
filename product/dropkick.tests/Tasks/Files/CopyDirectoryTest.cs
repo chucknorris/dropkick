@@ -18,35 +18,37 @@ namespace dropkick.tests.Tasks.Files
     using dropkick.Tasks.Files;
     using FileSystem;
     using NUnit.Framework;
-    using Path=System.IO.Path;
 
     [TestFixture]
-    public class CopyTest
+    public class CopyDirectoryTest
     {
         #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
-            if (Directory.Exists(_path))
-                Directory.Delete(_path, true);
+            if (Directory.Exists(_baseDir))
+                Directory.Delete(_baseDir, true);
 
-            Directory.CreateDirectory(_path);
+            Directory.CreateDirectory(_baseDir);
             Directory.CreateDirectory(_source);
-            File.WriteAllLines(Path.Combine(_source, "test.txt"), new[] {"the test"});
+            File.WriteAllLines(_path.Combine(_source, "test.txt"), new[] {"the test"});
             Directory.CreateDirectory(_dest);
         }
 
         [TearDown]
         public void TearDown()
         {
+            Directory.Delete(_baseDir, true);
         }
 
         #endregion
 
-        string _path = ".\\test";
-        string _source = ".\\test\\source";
-        string _dest = ".\\test\\dest";
+        readonly DotNetPath _path = new DotNetPath();
+
+        string _baseDir = @".\CopyDirectoryTests";
+        string _source = @".\CopyDirectoryTests\source";
+        string _dest = @".\CopyDirectoryTests\dest";
 
         [Test]
         public void CopyDirectory()
@@ -54,15 +56,9 @@ namespace dropkick.tests.Tasks.Files
             var t = new CopyDirectoryTask(_source, _dest, DestinationCleanOptions.None);
             t.Execute();
 
-            string s = File.ReadAllText(Path.Combine(_dest, "test.txt"));
+            var s = File.ReadAllText(_path.Combine(_dest, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
         }
 
-        [Test]
-        public void CopyFile()
-        {
-            var t = new CopyFileTask("D:\\dru", "D:\\bob", new DotNetPath());
-            t.Execute();
-        }
     }
 }

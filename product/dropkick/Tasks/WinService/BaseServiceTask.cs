@@ -15,11 +15,9 @@ namespace dropkick.Tasks.WinService
     using System;
     using System.Management;
     using System.ServiceProcess;
-    using System.Threading;
-    using DeploymentModel;
 
     public abstract class BaseServiceTask :
-        Task
+        BaseTask
     {
         protected BaseServiceTask(string machineName, string serviceName)
         {
@@ -30,26 +28,6 @@ namespace dropkick.Tasks.WinService
         public string MachineName { get; set; }
         public string ServiceName { get; set; }
 
-        #region Task Members
-
-        public abstract string Name { get; }
-
-        public abstract DeploymentResult VerifyCanRun();
-        public abstract DeploymentResult Execute();
-
-        #endregion
-
-        protected void VerifyInAdministratorRole(DeploymentResult result)
-        {
-            if (Thread.CurrentPrincipal.IsInRole("Administrator"))
-            {
-                result.AddAlert("You are not in the 'Administrator' role. You will not be able to start/stop services");
-            }
-            else
-            {
-                result.AddGood("You are in the 'Administrator' role");
-            }
-        }
 
         protected bool ServiceExists()
         {

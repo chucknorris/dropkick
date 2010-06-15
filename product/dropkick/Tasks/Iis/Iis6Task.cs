@@ -18,15 +18,14 @@ namespace dropkick.Tasks.Iis
 
             CheckVersionOfWindowsAndIis(result);
 
-            CheckForSiteAndVDirExistance(DoesSiteExist, DoesVirtualDirectoryExist, result);
+            CheckForSiteAndVDirExistance(new Iis6Path(ServerName, WebsiteName).DoesSiteExist, DoesVirtualDirectoryExist, result);
 
             return result;
         }
 
         public override DeploymentResult Execute()
         {
-            DirectoryEntry vdir =
-                GetOrMakeNode(WebsiteName, VdirPath, "IIsWebVirtualDir");
+            var vdir = CreateVDirNode(WebsiteName, VdirPath, "IIsWebVirtualDir");
             vdir.RefreshCache();
 
             vdir.Properties["Path"].Value = PathOnServer;
@@ -38,23 +37,14 @@ namespace dropkick.Tasks.Iis
             return new DeploymentResult();
         }
 
-
-        public bool DoesSiteExist()
+        bool DoesVirtualDirectoryExist()
         {
-            return ConvertSiteNameToSiteNumber(WebsiteName) > 0;
-        }
-
-
-        protected bool DoesVirtualDirectoryExist()
-        {
-            int siteNumber = ConvertSiteNameToSiteNumber(WebsiteName);
-            string path = BuildIisPath(siteNumber, VdirPath);
-            var entry = new DirectoryEntry(path);
+            var entry = new Iis6Path(ServerName, WebsiteName, VdirPath).ToDirectoryEntry();
 
             try
             {
                 //trigger the *private* entry.Bind() method
-                object adsobject = entry.NativeObject;
+                var adsobject = entry.NativeObject;
                 return true;
             }
             catch
@@ -67,19 +57,17 @@ namespace dropkick.Tasks.Iis
             }
         }
 
-        private DirectoryEntry GetOrMakeNode(string basePath, string relPath, string schemaClassName)
+        DirectoryEntry CreateVDirNode(string siteName, string vDirName, string schemaClassName)
         {
-            //            var vr = new IISVirtualRoot();
-            //            string error;
-            //            vr.Create("IIS://localhost/W3svc/1/Root", @"C:\bob", "dk_test", out error);
-
             if (DoesVirtualDirectoryExist())
             {
-                return new DirectoryEntry(basePath + relPath);
+                return new Iis6Path(ServerName, siteName, vDirName).ToDirectoryEntry();
             }
-            var parent = new DirectoryEntry(basePath);
+
+            var path = new Iis6Path(ServerName, siteName);
+            var parent = path.ToDirectoryEntry();
             parent.RefreshCache();
-            DirectoryEntry child = parent.Children.Add(relPath.Trim('/'), schemaClassName);
+            var child = parent.Children.Add(vDirName.Trim('/'), schemaClassName);
             child.CommitChanges();
             parent.CommitChanges();
             parent.Close();
@@ -93,39 +81,9 @@ namespace dropkick.Tasks.Iis
 
         static void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {
-            int shouldBe5 = Environment.OSVersion.Version.Major;
+            var shouldBe5 = Environment.OSVersion.Version.Major;
             if (shouldBe5 != 5)
                 result.AddAlert("This machine does not have IIS6 on it");
         }
-
-        static string BuildIisPath(int siteNumber, string vDirPath)
-        {
-            return string.Format("IIS://localhost/w3svc/{0}/Root/{1}", siteNumber, vDirPath);
-        }
-
-        static int ConvertSiteNameToSiteNumber(string name)
-        {
-            using (var e = new DirectoryEntry("IIS://localhost/W3SVC"))
-            {
-                e.RefreshCache();
-                foreach (DirectoryEntry entry in e.Children)
-                {
-                    if (entry.SchemaClassName != "IIsWebServer")
-                    {
-                        entry.Close();
-                        continue;
-                    }
-
-                    string x = entry.Name;
-                    entry.Close();
-                    return int.Parse(x);
-                }
-
-            }
-
-            throw new Exception("could find your website");
-        }
-
-
     }
 }

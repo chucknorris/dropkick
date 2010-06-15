@@ -10,7 +10,7 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security.ACL
+namespace dropkick.Configuration.Dsl.Security.Msmq
 {
     public class QueueSecurityConfiguration :
         QueueSecurityConfig
@@ -23,9 +23,7 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             _server = server;
             _queue = queue;
         }
-
-        #region QueueSecurityConfig Members
-
+              
         public void GrantRead(string group)
         {
             var proto = new ProtoQueueReadTask(_queue, group);
@@ -37,7 +35,5 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             var proto = new ProtoQueueReadTask(_queue, group);
             _server.RegisterProtoTask(proto);
         }
-
-        #endregion
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,21 +12,26 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks
 {
-    using Configuration.Dsl;
+    using System.Threading;
     using DeploymentModel;
 
     public abstract class BaseTask :
-        ProtoTask
+        Task
     {
-        #region ProtoTask Members
+        public abstract string Name { get; }
+        public abstract DeploymentResult VerifyCanRun();
+        public abstract DeploymentResult Execute();
 
-        public void InspectWith(DeploymentInspector inspector)
+        protected void VerifyInAdministratorRole(DeploymentResult result)
         {
-            inspector.Inspect(this);
+            if (Thread.CurrentPrincipal.IsInRole("Administrator"))
+            {
+                result.AddAlert("You are not in the 'Administrator' role. You will not be able to start/stop services");
+            }
+            else
+            {
+                result.AddGood("You are in the 'Administrator' role");
+            }
         }
-
-        public abstract void RegisterRealTasks(PhysicalServer site);
-
-        #endregion
     }
 }

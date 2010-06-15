@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -54,6 +54,7 @@
     <Reference Include="System.Messaging" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
@@ -66,6 +67,18 @@
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataReaderTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
+    <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\CreateRoleTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\CreateUserTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantDataReaderTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantDataWriterTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantReadToAllTablesTask.cs" />
+    <Compile Include="Tasks\Security\MsSql\GrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurity.cs" />
     <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
@@ -128,7 +141,7 @@
     <Compile Include="Prompting\PromptService.cs" />
     <Compile Include="Settings\ServerMapParser.cs" />
     <Compile Include="Settings\SettingsParser.cs" />
-    <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\BaseProtoTask.cs" />
     <Compile Include="Tasks\CommandLine\LocalCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\Extension.cs" />
     <Compile Include="Configuration\Dsl\Deployment.cs" />
@@ -137,10 +150,23 @@
     <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
     <Compile Include="Tasks\Files\CopyFileTask.cs" />
+    <Compile Include="Tasks\Reports\ReportingService.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
-    <Compile Include="Tasks\Security\LogOnAsAServiceTask.cs" />
+    <Compile Include="Tasks\Security\Acl\ClearAclsTask.cs" />
+    <Compile Include="Tasks\Security\Acl\GrantReadTask.cs" />
+    <Compile Include="Tasks\Security\Acl\GrantReadWriteTask.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LogOnAsAServiceTask.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LsaSecurity.cs" />
+    <Compile Include="Tasks\Security\Msmq\CreateQueueTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\DeleteQueueTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
+    <Compile Include="Tasks\Security\WellKnownRoles.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
-    <Compile Include="Tasks\WaitProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Notes\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
     <Compile Include="Tasks\Dsn\DsnDriver.cs" />
     <Compile Include="Configuration\Dsl\Dsn\DsnOptions.cs" />
@@ -171,12 +197,12 @@
     <Compile Include="Configuration\Dsl\NetworkShare\Extensions.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\FolderShareOptions.cs" />
     <Compile Include="Tasks\NetworkShare\FolderShareTask.cs" />
-    <Compile Include="Tasks\NoteProtoTask.cs" />
+    <Compile Include="Configuration\Dsl\Notes\NoteProtoTask.cs" />
     <Compile Include="Tasks\NoteTask.cs" />
     <Compile Include="Configuration\Dsl\Role.cs" />
     <Compile Include="DeploymentModel\Task.cs" />
     <Compile Include="Tasks\WinService\BaseServiceTask.cs" />
-    <Compile Include="Tasks\NestedTask.cs" />
+    <Compile Include="Prompting\Extension.cs" />
     <Compile Include="Tasks\WinService\WinServiceCreateTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceDeleteTask.cs" />
     <Compile Include="Tasks\WinService\WinServiceStartTask.cs" />

@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.Security
 {
     using System;
     using ACL;
+    using Msmq;
     using MsSql;
 
     public class ProtoSecurityOptions :

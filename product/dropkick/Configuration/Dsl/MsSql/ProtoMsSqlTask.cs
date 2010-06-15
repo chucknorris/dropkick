@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.MsSql
     using Tasks.MsSql;
 
     public class ProtoMsSqlTask :
-        BaseTask,
+        BaseProtoTask,
         DatabaseOptions,
         SqlOptions
     {

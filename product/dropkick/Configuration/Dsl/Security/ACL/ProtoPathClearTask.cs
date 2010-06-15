@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Security.ACL
     using Tasks;
 
     public class ProtoPathClearTask :
-        BaseTask
+        BaseProtoTask
     {
         string _path;
 

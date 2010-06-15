@@ -10,50 +10,47 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Tasks
+namespace dropkick.Tasks.Security.Msmq
 {
-    using System.Collections.Generic;
+    using System;
+    using System.Messaging;
     using DeploymentModel;
 
-    public class NestedTask :
+    public class SetSensibleMsmqDefaults :
         Task
     {
-        readonly IList<Task> _tasks = new List<Task>();
+        readonly string _path;
+
+        public SetSensibleMsmqDefaults(string path)
+        {
+            _path = path;
+        }
 
         #region Task Members
 
         public string Name
         {
-            get { return "NESTED TASK"; }
+            get { return "stuff"; }
         }
 
         public DeploymentResult VerifyCanRun()
         {
-            var result = new DeploymentResult();
-            foreach (var task in _tasks)
-            {
-                DeploymentResult r = task.VerifyCanRun();
-                result = result.MergedWith(r);
-            }
-            return result;
+            throw new NotImplementedException();
         }
 
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            foreach (var task in _tasks)
-            {
-                DeploymentResult r = task.Execute();
-                result = result.MergedWith(r);
-            }
+
+            var q = new MessageQueue(_path);
+            q.SetPermissions(WellKnownRoles.Administrators, MessageQueueAccessRights.FullControl, AccessControlEntryType.Allow);
+            q.SetPermissions(WellKnownRoles.CurrentUser, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
+            q.SetPermissions(WellKnownRoles.Everyone, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
+            q.SetPermissions(WellKnownRoles.Anonymous, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
+
             return result;
         }
 
         #endregion
-
-        public void AddTask(Task task)
-        {
-            _tasks.Add(task);
-        }
     }
 }

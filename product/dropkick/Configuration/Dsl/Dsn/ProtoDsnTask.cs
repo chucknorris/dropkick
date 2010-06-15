@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Dsn
     using Tasks.Dsn;
 
     public class ProtoDsnTask :
-        BaseTask,
+        BaseProtoTask,
         DsnOptions
     {
         readonly string _dsnName;

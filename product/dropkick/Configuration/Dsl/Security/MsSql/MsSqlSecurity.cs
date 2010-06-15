@@ -18,5 +18,7 @@ namespace dropkick.Configuration.Dsl.Security.MsSql
         void GrantReadToAllTables(string role);
         void GrantWriteToAllTables(string role);
         void CreateALoginFor(string account);
+        void GrantDataReader(string role);
+        void GrantDataWriter(string role);
     }
 }

@@ -19,7 +19,7 @@ namespace dropkick.Configuration.Dsl.Files
     using Tasks.Files;
 
     public class ProtoRenameTask :
-        BaseTask,
+        BaseProtoTask,
         RenameOptions
     {
         readonly string _from;
@@ -41,11 +41,16 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            var from = _from;
             var to = _to;
-            if (!site.IsLocal)
-                to = RemotePathHelper.Convert(site.Name, to);
 
-            var o = new RenameTask(_from, to, new DotNetPath());
+            if (!site.IsLocal)
+            {
+                from = RemotePathHelper.Convert(site.Name, from);
+                to = RemotePathHelper.Convert(site.Name, to);
+            }
+
+            var o = new RenameTask(from, to, new DotNetPath());
             site.AddTask(o);
 
         }

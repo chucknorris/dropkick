@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.NetworkShare
     using Tasks.NetworkShare;
 
     public class ProtoFolderShareTask :
-        BaseTask,
+        BaseProtoTask,
         FolderShareOptions
     {
         readonly string _shareName;

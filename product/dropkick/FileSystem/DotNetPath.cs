@@ -32,7 +32,7 @@ namespace dropkick.FileSystem
         public bool IsFile(string path)
         {
             var fi = new FileInfo(GetFullPath(path));
-            return !((fi.Attributes & FileAttributes.Directory) == FileAttributes.Directory);
+            return (fi.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
         }
 
         public bool IsDirectory(string path)

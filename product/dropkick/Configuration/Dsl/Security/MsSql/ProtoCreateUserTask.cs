@@ -12,27 +12,28 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.MsSql
 {
-    using System;
     using DeploymentModel;
     using Tasks;
+    using Tasks.Security.MsSql;
 
     public class ProtoCreateUserTask :
-        BaseTask,
+        BaseProtoTask,
         MsSqlUserOptions
     {
-        readonly string _account;
+        readonly string _user;
         readonly string _database;
         string _role;
 
-        public ProtoCreateUserTask(string database, string account)
+        public ProtoCreateUserTask(string database, string user)
         {
             _database = database;
-            _account = account;
+            _user = user;
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var task = new CreateUserTask(site.Name, _database, _user);
+            site.AddTask(task);
         }
 
         public void PutInRole(string role)

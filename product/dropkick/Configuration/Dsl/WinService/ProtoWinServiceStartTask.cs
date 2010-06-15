@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.WinService
     using Tasks.WinService;
 
     public class ProtoWinServiceStartTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _serviceName;
 

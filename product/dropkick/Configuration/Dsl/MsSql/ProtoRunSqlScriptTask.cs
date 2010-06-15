@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.MsSql
     using Tasks.MsSql;
 
     public class ProtoRunSqlScriptTask :
-        BaseTask
+        BaseProtoTask
     {
         readonly string _databaseName;
 

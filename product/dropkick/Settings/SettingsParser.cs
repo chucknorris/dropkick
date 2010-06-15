@@ -57,7 +57,7 @@ namespace dropkick.Settings
             {
                 PropertyInfo pi = type.GetProperty(argument.Key);
                 var fp = new FastProperty(pi);
-                fp.Set(result, argument.Value);
+                fp.Set(result, Convert.ChangeType(argument.Value, pi.PropertyType));
             }
         }
     }

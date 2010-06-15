@@ -12,22 +12,21 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks
 {
-    using System;
+    using Configuration.Dsl;
     using DeploymentModel;
 
-    public class WaitProtoTask :
-        BaseTask
+    public abstract class BaseProtoTask :
+        ProtoTask
     {
-        public WaitProtoTask(TimeSpan span)
+        #region ProtoTask Members
+
+        public void InspectWith(DeploymentInspector inspector)
         {
-            WaitTime = span;
+            inspector.Inspect(this);
         }
 
-        public TimeSpan WaitTime { get; set; }
+        public abstract void RegisterRealTasks(PhysicalServer site);
 
-        public override void RegisterRealTasks(PhysicalServer s)
-        {
-            s.AddTask(new WaitTask(WaitTime));
-        }
+        #endregion
     }
 }
