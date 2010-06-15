@@ -20,7 +20,7 @@ namespace dropkick.FileSystem
         string GetFullPath(string path);
         bool IsFile(string path);
         bool IsDirectory(string path);
-        void SetTargetSecurity(string target, string group, FileSystemRights permission);
+        bool SetTargetSecurity(string target, string group, FileSystemRights permission);
 
     }
 }

@@ -40,7 +40,7 @@ namespace dropkick.Tasks.Security.Acl
 
             _target = _path.GetFullPath(_target);
 
-            if (!_path.IsDirectory(_target) || !_path.IsFile(_target))
+            if (!_path.IsDirectory(_target) && !_path.IsFile(_target))
                 result.AddAlert("'{0}' does not exist.".FormatWith(_target));
 
             return result;
@@ -49,17 +49,12 @@ namespace dropkick.Tasks.Security.Acl
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
+            result.AddNote(Name);
 
             _target = _path.GetFullPath(_target);
 
-            if (_path.IsDirectory(_target) || _path.IsFile(_target))
-            {
-                _path.SetTargetSecurity(_target, _group, FileSystemRights.Modify);
-                result.AddGood(Name);
-            }
-            else
-                result.AddAlert("'{0}' does not exist.".FormatWith(_target));
-
+            if (!_path.SetTargetSecurity(_target, _group, FileSystemRights.Modify))
+                result.AddAlert("Could not apply Modify permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
 
             return result;
         }

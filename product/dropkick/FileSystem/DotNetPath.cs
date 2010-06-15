@@ -42,20 +42,41 @@ namespace dropkick.FileSystem
             return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
-        public void SetTargetSecurity(string target, string group, FileSystemRights permission)
+        public bool SetTargetSecurity(string target, string group, FileSystemRights permission)
         {
+            if (!IsDirectory(target) && !IsFile(target))
+                return false;
+
             var oldSecurity = Directory.GetAccessControl(target);
             var newSecurity = new DirectorySecurity();
 
             newSecurity.SetSecurityDescriptorBinaryForm(oldSecurity.GetSecurityDescriptorBinaryForm());
 
-            newSecurity.AddAccessRule(new FileSystemAccessRule(group,
-                                                               permission,
-                                                               InheritanceFlags.ContainerInherit |
-                                                               InheritanceFlags.ObjectInherit,
-                                                               PropagationFlags.InheritOnly,
-                                                               AccessControlType.Allow));
+            var accessRule = new FileSystemAccessRule(group,
+                                                      permission,
+                                                      InheritanceFlags.None,
+                                                      PropagationFlags.NoPropagateInherit,
+                                                      AccessControlType.Allow);
+            bool result;
+            newSecurity.ModifyAccessRule(AccessControlModification.Set, accessRule, out result);
+
+            if (!result)
+                return false;
+
+            accessRule = new FileSystemAccessRule(group, 
+                                                  permission,
+                                                  InheritanceFlags.ContainerInherit | 
+                                                  InheritanceFlags.ObjectInherit,
+                                                  PropagationFlags.InheritOnly, 
+                                                  AccessControlType.Allow);
+
+            result = false;
+            newSecurity.ModifyAccessRule(AccessControlModification.Add, accessRule, out result);
+            if (!result)
+                return false;
+
             Directory.SetAccessControl(target, newSecurity);
+            return true;
         }
 
         #endregion
