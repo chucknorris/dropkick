@@ -117,8 +117,7 @@
   
   <target name="shorten_hash">
     <echo message="Shortening the length of the version hash '${version.hash}' to 8 digits." />
-    <property name="hash.start.index" value="${string::get-length(version.hash) - 8}" />
-    <property name="version.hash" value="${string::substring(version.hash,hash.start.index,8)}" if="${string::get-length(version.hash) > 8}" />
+    <property name="version.hash" value="${string::substring(version.hash,0,8)}" if="${string::get-length(version.hash) > 8}" />
     <echo message="The hash is now: ${version.hash}." />
   </target>
   
