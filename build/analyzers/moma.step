@@ -24,7 +24,7 @@
   <property name="file.moma_results" value="${project.name}.MoMAReport.html" />
   <property name="file.moma.submit_results" value="${project.name}.MoMAReport.xml" />
   <property name="file.moma_log" value="${project.name}.moma.log" />
-  <property name="args.moma" value="--nogui --out ${dirs.moma_results}\${file.moma_results}" />
+  <property name="args.moma" value="--nogui --out &quot;${dirs.moma_results}\${file.moma_results}&quot;" />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}\${file.current.no_extension}.pre.step" />
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}\${file.current.no_extension}.post.step" />
   <property name="file.custom.step.replace" value="${dirs.build_scripts_custom}\${file.current.no_extension}.replace.step" />

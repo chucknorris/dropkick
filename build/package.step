@@ -148,6 +148,13 @@
         <include name="**/*.*" />
       </fileset>
     </copy>
+    
+    <echo message="Packaging output fileserver items to ${dirs.drop}\FileServer."/>
+     <copy todir="${dirs.drop}\FileServer">
+      <fileset basedir="${dirs.build}\${folder.app.drop}\FileServer">
+        <include name="**/**" />
+      </fileset>
+    </copy>
   </target>
 
   <target name="environment_files">

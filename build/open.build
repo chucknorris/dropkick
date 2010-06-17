@@ -14,6 +14,8 @@
   <property name="solution.path" value="${path::get-full-path(dirs.solution)}\${project.name}.sln" />
   <property name="solution.path.full" value="${path::get-full-path(solution.path)}" />
   <property name="app.visual_studio" value="${environment::get-folder-path('ProgramFiles')}\Common Files\Microsoft Shared\MSEnv\VSLauncher.exe" />
+  <property name="file.uppercut.assembly" value="uppercut.tasks.dll" />
+  <property name="path.uppercut.assembly" value="${dirs.current}\${file.uppercut.assembly}" />
   <property name="allow.powershell.unrestricted" value="false" overwrite="false" />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}\${file.current.no_extension}.pre.build" />
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}\${file.current.no_extension}.post.build" />
@@ -83,7 +85,7 @@
   </target>
 
   <target name="load_uppercut_assemblies">
-    <loadtasks assembly="${file.uppercut.assembly}" if="${file::exists(file.uppercut.assembly)}" />
+    <loadtasks assembly="${path.uppercut.assembly}" if="${file::exists(path.uppercut.assembly)}" />
   </target>
 
   <target name="allow_powershell_unrestricted">

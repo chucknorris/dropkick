@@ -10,6 +10,7 @@ NDependOut
 *.user 
 *.csproj.user
 *.resharper.user
+*.ReSharper.user
 *.resharper
 *.cache
 *~

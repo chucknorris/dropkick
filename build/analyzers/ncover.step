@@ -18,6 +18,7 @@
   <property name="dirs.build_artifacts" value="${path::get-full-path(dirs.build)}\${folder.build_artifacts}" />
   <property name="project.name" value="__SOLUTION_NAME_WITHOUT_SLN_EXTENSION__" overwrite="false" />
   <property name="test.framework" value="mbunit" overwrite="false" />
+  <property name="microsoft.framework" value="net-3.5" overwrite="false" />
   <property name="number.satisfactory_coverage" value="85" overwrite="false" />
   <property name="fail.if_ncover_fails" value="false" overwrite="false" />
   <property name="folder.references" value="lib" overwrite="false" />
@@ -32,8 +33,8 @@
   <property name="file.html.code_coverage_results" value="${project.name}.CodeCoverageSummary-results.html" />
   <property name="tests.excluded_categories.comma_separated" value="Database,Integration,Slow,NotWorking" overwrite="false" />
   <property name="test.args" value="" />
-  <property name="test.args" value="/rt:Text /rnf:mbUnit /rf:${dirs.ncover_results} /ec:${tests.excluded_categories.comma_separated}" if="${test.framework=='mbunit2'}" />
-  <property name="test.args" value="/xml:${dirs.ncover_results}\nunit-results.xml /nologo /exclude:${tests.excluded_categories.comma_separated}" if="${test.framework=='nunit'}" />
+  <property name="test.args" value="/rt:Text /rnf:mbUnit /rf:&quot;${dirs.ncover_results}&quot; /ec:${tests.excluded_categories.comma_separated}" if="${test.framework=='mbunit2'}" />
+  <property name="test.args" value="/xml:&quot;${dirs.ncover_results}\nunit-results.xml&quot; /nologo /framework=${microsoft.framework} /exclude:${tests.excluded_categories.comma_separated}" if="${test.framework=='nunit'}" />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}\${file.current.no_extension}.pre.step" />
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}\${file.current.no_extension}.post.step" />
   <property name="file.custom.step.replace" value="${dirs.build_scripts_custom}\${file.current.no_extension}.replace.step" />

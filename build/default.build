@@ -20,9 +20,11 @@
   <property name="source_control_type" value="svn" overwrite="false" />
   <property name="version.uppercut" value="0" />
   <property name="version.revision" value="0" />
+  <property name="version.hash" value="${version.revision}" overwrite="false" />
   <property name="version.build" value="0" />
   <property name="allow.powershell.unrestricted" value="false" overwrite="false" />
-  <property name="file.uppercut.assembly" value="uppercut.exe" />
+  <property name="file.uppercut.assembly" value="uppercut.tasks.dll" />
+  <property name="path.uppercut.assembly" value="${dirs.current}\${file.uppercut.assembly}" />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}\${file.current.no_extension}.pre.build" />
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}\${file.current.no_extension}.post.build" />
   <property name="file.custom.step.replace" value="${dirs.build_scripts_custom}\${file.current.no_extension}.replace.build" />
@@ -94,14 +96,18 @@
   </target>
 
   <target name="get_revision">
-    <nant buildfile="${dirs.current}\versioners\svn.step" inheritall="true" if="${source_control_type=='svn'}" />
-    <nant buildfile="${dirs.current}\versioners\tfs.step" inheritall="true" if="${source_control_type=='tfs'}" />
-    <nant buildfile="${dirs.current}\versioners\git.step" inheritall="true" if="${source_control_type=='git'}" />
+    <nant buildfile="${dirs.current}\versioners\svn.step" inheritall="true" if="${source_control_type=='svn'}" failonerror="false" />
+    <nant buildfile="${dirs.current}\versioners\tfs.step" inheritall="true" if="${source_control_type=='tfs'}" failonerror="false" />
+    <nant buildfile="${dirs.current}\versioners\git.step" inheritall="true" if="${source_control_type=='git'}" failonerror="false" />
+    <nant buildfile="${dirs.current}\versioners\hg.step" inheritall="true" if="${source_control_type=='hg'}" failonerror="false" />
     <!--<nant buildfile="${dirs.current}\versioners\vault.step" inheritall="true" if="${source_control_type=='vault'}" />-->
     <!--<nant buildfile="${dirs.current}\versioners\vss.step" inheritall="true" if="${source_control_type=='vss'}" />-->
 
     <property name="version.revision" value="${environment::get-variable('uc.app.revision')}" if="${environment::variable-exists('uc.app.revision')}" />
-    <echo message="Using revision number: ${version.revision}." />
+    <property name="version.revision" value="${environment::get-variable('BUILD_VCS_NUMBER')}" if="${version.revision == '0' and environment::variable-exists('BUILD_VCS_NUMBER')}" />
+    <property name="version.hash" value="${environment::get-variable('uc.app.revision.hash')}" if="${environment::variable-exists('uc.app.revision.hash')}" />
+    <property name="version.hash" value="${version.revision}" if="${version.hash == '0'}" />
+    <echo message="Using revision number: ${version.revision} and hash: ${version.hash}." />
   </target>
 
   <target name="get_build_number">
@@ -141,7 +147,7 @@
   </target>
 
   <target name="load_uppercut_assemblies">
-    <loadtasks assembly="${file.uppercut.assembly}" if="${file::exists(file.uppercut.assembly)}" />
+    <loadtasks assembly="${path.uppercut.assembly}" if="${file::exists(path.uppercut.assembly)}" />
   </target>
 
   <target name="allow_powershell_unrestricted">

@@ -17,7 +17,8 @@
   <property name="app.ilmerge" value="${dirs.ilmerge.folder}\ILMerge.exe" overwrite="false"  />
   <property name="dirs.merge.log" value="${dirs.drop}\build_artifacts\ilmerge" />
   <property name="log.merge" value="ilmerge.log" />
-  <property name="file.uppercut.assembly" value="uppercut.exe" />
+  <property name="file.uppercut.assembly" value="uppercut.tasks.dll" />
+  <property name="path.uppercut.assembly" value="${dirs.current}\${file.uppercut.assembly}" />
 
   <property name="dirs.merge.from" value="${dirs.drop}\${folder.app.drop}" overwrite="false" />
   <property name="dirs.merge.to" value="${dirs.drop}\merge" overwrite="false" />
@@ -155,7 +156,7 @@
   </target>
 
   <target name="load_uppercut_assemblies">
-    <loadtasks assembly="${file.uppercut.assembly}" if="${file::exists(file.uppercut.assembly)}" />
+    <loadtasks assembly="${path.uppercut.assembly}" if="${file::exists(path.uppercut.assembly)}" />
   </target>
 
   <target name="allow_powershell_unrestricted">

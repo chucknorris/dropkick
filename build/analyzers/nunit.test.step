@@ -14,31 +14,26 @@
   <property name="dirs.build" value="${dirs.current}\${path.to.toplevel}\${folder.code_build}" />
   <property name="folder.app.drop" value="${project.name}" overwrite="false" />
   <property name="dirs.build.code" value="${dirs.build}\${folder.app.drop}" overwrite="false" />
+  <property name="folder.references" value="lib" overwrite="false" />
+  <property name="dirs.lib" value="${dirs.current}\${path.to.toplevel}\${folder.references}" overwrite="false" />
+  <property name="microsoft.framework" value="net-3.5" overwrite="false" />
   <property name="folder.build_artifacts" value="build_artifacts" overwrite="false" />
   <property name="dirs.build_artifacts" value="${path::get-full-path(dirs.build)}\${folder.build_artifacts}" />
   <property name="dirs.test_results" value="${dirs.build_artifacts}\nunit" overwrite="false" />
   <property name="file.test_results" value="index" overwrite="false" />
+  <property name="tests.excluded_categories.comma_separated" value="Database,Integration,Slow,NotWorking,Ignore,database,integration,slow,notworking,ignore" overwrite="false" />
+  <property name="test.args" value="/xml=&quot;${dirs.test_results}\nunit-results.xml&quot; /nologo /framework=${microsoft.framework}" />
+  <property name="test.args.exclude" value="/exclude=&quot;${tests.excluded_categories.comma_separated}&quot;" />
+  <property name="app.nunit.console" value="${path::get-full-path(dirs.lib)}\NUnit\nunit-console.exe" overwrite="false" />
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}\${file.current.no_extension}.pre.step" />
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}\${file.current.no_extension}.post.step" />
   <property name="file.custom.step.replace" value="${dirs.build_scripts_custom}\${file.current.no_extension}.replace.step" />
   <property name="is.replaced" value="false" />
-
-  <assemblyfileset id="assemblies.assemblyfileset.testing" basedir="${dirs.build.code}\" >
-    <exclude name="*Database*dll" />
-    <exclude name="*.Integration*dll" />
-    <exclude name="TestFu.dll" />
-    <include name="*Test*dll" />
-    <include name="*.Spec*dll" />
-  </assemblyfileset>
-
-  <assemblyfileset id="assemblies.assemblyfileset.testing.all" basedir="${dirs.build.code}\" >
-    <exclude name="TestFu.dll" />
-    <include name="*Test*dll" />
-    <include name="*.Spec*dll" />
-  </assemblyfileset>
-
+ 
   <target name="go" depends="run_tasks" />
 
+  <target name="run_all_tests" depends="prepare, set_nunit_failure_mode, get_test_dlls_all, run_tests, generate_report" description="Like go but runs all tests" />
+  
   <target name="run_tasks">
     <echo message="Running ${project::get-name()} tasks." />
     <call target="prepare" if="${target::exists('prepare')}" />
@@ -49,7 +44,7 @@
   </target>
 
   <target name="run_normal_tasks"
-          depends="set_nunit_failure_mode, run_tests, generate_report"
+          depends="set_nunit_failure_mode, get_test_dlls, run_tests, generate_report"
           description="Testing with NUnit." />
 
   <target name="custom_tasks_before">
@@ -87,46 +82,61 @@
     <property name="nant.onfailure" value="generate_report" />
   </target>
 
+  <target name="get_test_dlls">
+    <echo message="Getting test dlls based on name in directory ${path::get-full-path(dirs.build.code)}." />
+    <property name="dll.names" value="" />
+    <foreach item="File" property="dll.filename">
+      <in>
+        <items>
+          <exclude name="${dirs.build.code}\*Database*dll" />
+          <exclude name="${dirs.build.code}\*.Integration*dll" />
+          <exclude name="${dirs.build.code}\TestFu.dll" />
+          <include name="${dirs.build.code}\*Test*dll" />
+          <include name="${dirs.build.code}\*Spec*dll" />
+        </items>
+      </in>
+      <do>
+        <property name="dll.names" value="${dll.names + ' ' + path::get-file-name(dll.filename)}" />
+      </do>
+    </foreach>
+
+    <property name="dlls.test" value="${dll.names}" />
+    <echo message="Running NCover against these test dlls - ${dlls.test}." />
+
+    <property name="args.test_runner" value="${dlls.test} ${test.args} ${test.args.exclude}" />
+  </target>
+  
+  <target name="get_test_dlls_all">
+    <echo message="Getting all test dlls (including integration tests) based on name in directory ${path::get-full-path(dirs.build.code)}." />
+    <property name="dll.names" value="" />
+    <foreach item="File" property="dll.filename">
+      <in>
+        <items>
+          <exclude name="${dirs.build.code}\TestFu.dll" />
+          <include name="${dirs.build.code}\*Test*dll" />
+          <include name="${dirs.build.code}\*Spec*dll" />
+        </items>
+      </in>
+      <do>
+        <property name="dll.names" value="${dll.names + ' ' + path::get-file-name(dll.filename)}" />
+      </do>
+    </foreach>
+
+    <property name="dlls.test" value="${dll.names}" />
+    <echo message="Running NCover against these test dlls - ${dlls.test}." />
+
+    <property name="args.test_runner" value="${dlls.test} ${test.args}" />
+  </target>
+  
   <target name="run_tests" depends="prepare" description="Running Unit Tests">
     <echo message="Running tests using NUnit and putting results in ${dirs.test_results}."/>
-    <nunit2
-        haltonfailure="false"
-        failonerror="true"
-        >
-      <formatter type="Xml" usefile="true" extension=".xml" outputdir="${dirs.test_results}" />
-      <formatter type="Plain" usefile="true" extension=".txt" outputdir="${dirs.test_results}" />
-      <test>
-        <assemblies refid="assemblies.assemblyfileset.testing" />
-        <categories>
-          <exclude name="Database" />
-          <exclude name="Integration" />
-          <exclude name="Slow" />
-          <exclude name="NotWorking" />
-          <exclude name="Ignore" />
-          <exclude name="database" />
-          <exclude name="integration" />
-          <exclude name="slow" />
-          <exclude name="notworking" />
-          <exclude name="ignore" />
-        </categories>
-      </test>
-    </nunit2>
-  </target>
 
-  <target name="run_all_tests" depends="prepare, set_nunit_failure_mode, run_all_nunit_tests, generate_report" description="Like go but runs all tests" />
-
-  <target name="run_all_nunit_tests" depends="prepare, set_nunit_failure_mode" description="Running All Unit Tests">
-    <echo message="Running all tests (including integration tests) using NUnit and putting results in ${dirs.test_results}."/>
-    <nunit2
-        haltonfailure="false"
-        failonerror="true"
-        >
-      <formatter type="Xml" usefile="true" extension=".xml" outputdir="${dirs.test_results}" />
-      <formatter type="Plain" usefile="true" extension=".txt" outputdir="${dirs.test_results}" />
-      <test>
-        <assemblies refid="assemblies.assemblyfileset.testing.all" />
-      </test>
-    </nunit2>
+    <exec 
+        program="${app.nunit.console}" 
+        workingdir="${dirs.build.code}"
+        failonerror="true">
+      <arg value="${args.test_runner}" />
+    </exec>
   </target>
 
   <target name="generate_report">
