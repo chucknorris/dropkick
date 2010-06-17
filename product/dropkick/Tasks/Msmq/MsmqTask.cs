@@ -11,19 +11,15 @@ namespace dropkick.Tasks.Msmq
     public class MsmqTask :
         Task
     {
-        private bool _createIfNoExst;
-        private string _queueName;
+        private bool _createIfNoExist;
         private string _serverName;
+        public bool PrivateQueue;
 
-        public string QueueName
-        {
-            get { return _queueName; }
-            set { _queueName = value; }
-        }
+        public string QueueName { get; set; }
 
         public string QueuePath
         {
-            get { return new QueueAddress(string.Format("msmq://{0}/{1}", ServerName, QueueName)).FormatName; }
+            get { return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName); }
         }
 
         public string ServerName
@@ -32,11 +28,9 @@ namespace dropkick.Tasks.Msmq
             set { _serverName = value.Equals(".") ? Environment.MachineName : value; }
         }
 
-
-
         public string Name
         {
-            get { return string.Format("MsmqTask for server '{0}' and private queue named '{1}'", _serverName, _queueName); }
+            get { return string.Format("MsmqTask for server '{0}' and private queue named '{1}'", ServerName, QueueName); }
         }
 
         public DeploymentResult VerifyCanRun()
@@ -45,22 +39,22 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-            if (Environment.MachineName.Equals(_serverName))
+            if (Environment.MachineName.EqualsIgnoreCase(ServerName))
             {
-                //if(MessageQueue.Exists(path))
+                //if (MessageQueue.Exists(QueuePath))
                 //{
                 //    result.AddGood("'{0}' does exist");
                 //}
                 //else
                 //{
-                //    result.AddAlert(string.Format("'{0}' doesn't exist and will be created", _queueName));
+                //    result.AddAlert(string.Format("'{0}' doesn't exist and will be created.", QueuePath));
                 //}
-                result.AddAlert("I can't check queue exstance yet");
+                result.AddAlert("I can't check queue existance yet");
             }
             else
             {
                 result.AddAlert(string.Format("Cannot check for queue '{0}' on server '{1}' while on server '{2}'",
-                                              _queueName, _serverName, Environment.MachineName));
+                                              QueueName, ServerName, Environment.MachineName));
             }
 
 
@@ -69,12 +63,23 @@ namespace dropkick.Tasks.Msmq
 
         public DeploymentResult Execute()
         {
-            if (_serverName == Environment.MachineName)
+            var result = new DeploymentResult();
+
+            if (!ServerName.EqualsIgnoreCase(Environment.MachineName))
+                result.AddError("Cannot create a private queue on the remote machine '{0}' while on '{1}'.".FormatWith(ServerName, Environment.MachineName));
+            else
             {
-                MessageQueue.Create(QueuePath);
+                if (!MessageQueue.Exists(QueuePath))
+                {
+                    result.AddAlert("'{0}' does not exist and will be created.".FormatWith(QueuePath));
+                    MessageQueue.Create(QueuePath);
+                    result.AddGood("Created queue '{0}'".FormatWith(QueuePath));
+                }
+                else
+                    result.AddGood("'{0}' already exists.".FormatWith(QueuePath));
             }
 
-            return new DeploymentResult();
+            return result;
         }
 
 
@@ -92,7 +97,7 @@ namespace dropkick.Tasks.Msmq
 
         public void CreateIfItDoesNotExist()
         {
-            _createIfNoExst = true;
+            _createIfNoExist = true;
         }
     }
 }

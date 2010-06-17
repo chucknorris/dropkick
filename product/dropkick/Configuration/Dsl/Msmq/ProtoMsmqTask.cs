@@ -36,7 +36,8 @@ namespace dropkick.Configuration.Dsl.Msmq
             s.AddTask(new MsmqTask
                       {
                           QueueName = _queueName,
-                          ServerName = s.Name
+                          ServerName = s.Name,
+                          PrivateQueue = true
                       });
 
         }

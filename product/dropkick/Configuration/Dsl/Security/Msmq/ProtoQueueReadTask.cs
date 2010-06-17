@@ -30,7 +30,13 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new MsmqGrantReadTask(_queue, _group);
+            var task = new MsmqGrantReadTask
+            {
+                ServerName = site.Name,
+                QueueName = _queue,
+                Group = _group,
+                PrivateQueue = true
+            };
             site.AddTask(task);
         }
     }

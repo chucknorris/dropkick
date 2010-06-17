@@ -49,13 +49,13 @@ namespace dropkick.Tasks.Security.Acl
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            result.AddNote(Name);
 
             _target = _path.GetFullPath(_target);
 
             if (!_path.SetTargetSecurity(_target, _group, FileSystemRights.Modify))
                 result.AddAlert("Could not apply Modify permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
 
+            result.AddGood(Name);
             return result;
         }
 

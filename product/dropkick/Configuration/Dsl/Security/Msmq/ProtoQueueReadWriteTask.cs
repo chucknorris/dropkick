@@ -15,6 +15,7 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
     using System;
     using dropkick.DeploymentModel;
     using dropkick.Tasks;
+    using Tasks.Security.Msmq;
 
     public class ProtoQueueReadWriteTask :
         BaseProtoTask
@@ -30,7 +31,15 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var task = new MsmqGrantReadWriteTask
+                           {
+                               ServerName = site.Name,
+                               QueueName = _queue,
+                               Group = _group,
+                               PrivateQueue = true
+                           };
+
+            site.AddTask(task);
         }
     }
 }

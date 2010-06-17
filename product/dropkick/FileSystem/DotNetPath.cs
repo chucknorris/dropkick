@@ -42,6 +42,7 @@ namespace dropkick.FileSystem
             return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
         }
 
+        //http://www.west-wind.com/weblog/posts/4072.aspx
         public bool SetTargetSecurity(string target, string group, FileSystemRights permission)
         {
             if (!IsDirectory(target) && !IsFile(target))

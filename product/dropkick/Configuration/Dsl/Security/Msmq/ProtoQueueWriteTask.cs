@@ -13,35 +13,33 @@
 namespace dropkick.Configuration.Dsl.Security.Msmq
 {
     using System;
+    using dropkick.DeploymentModel;
+    using dropkick.Tasks;
+    using Tasks.Security.Msmq;
 
-    public class QueueSecurityConfiguration :
-        QueueSecurityConfig
+    public class ProtoQueueWriteTask :
+        BaseProtoTask
     {
+        readonly string _group;
         readonly string _queue;
-        readonly ProtoServer _server;
 
-        public QueueSecurityConfiguration(ProtoServer server, string queue)
+        public ProtoQueueWriteTask(string queue, string @group)
         {
-            _server = server;
             _queue = queue;
-        }
-              
-        public void GrantRead(string group)
-        {
-            var proto = new ProtoQueueReadTask(_queue, group);
-            _server.RegisterProtoTask(proto);
+            _group = group;
         }
 
-        public void GrantWrite(string group)
+        public override void RegisterRealTasks(PhysicalServer site)
         {
-            var proto = new ProtoQueueWriteTask(_queue, group);
-            _server.RegisterProtoTask(proto);
-        }
+            var task = new MsmqGrantWriteTask
+                           {
+                               ServerName = site.Name,
+                               QueueName = _queue,
+                               Group = _group,
+                               PrivateQueue = true
+                           };
 
-        public void GrantReadWrite(string group)
-        {
-            var proto = new ProtoQueueReadWriteTask(_queue, group);
-            _server.RegisterProtoTask(proto);
+            site.AddTask(task);
         }
     }
 }

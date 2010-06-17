@@ -15,6 +15,7 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
     public interface QueueSecurityConfig
     {
         void GrantRead(string group);
+        void GrantWrite(string group);
         void GrantReadWrite(string group);
     }
 }

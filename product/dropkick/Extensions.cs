@@ -24,6 +24,11 @@ namespace dropkick
             return string.Format(input, args);
         }
 
+        public static bool EqualsIgnoreCase(this string input, string other)
+        {
+            return input.Equals(other, StringComparison.InvariantCultureIgnoreCase);
+        }
+
         public static T ToEnum<T>(this string input)
         {
             return (T) Enum.Parse(typeof(T), input, true);

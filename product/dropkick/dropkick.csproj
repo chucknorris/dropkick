@@ -64,6 +64,7 @@
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
@@ -71,6 +72,7 @@
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateRoleTask.cs" />
@@ -162,7 +164,7 @@
     <Compile Include="Tasks\Security\Msmq\CreateQueueTask.cs" />
     <Compile Include="Tasks\Security\Msmq\DeleteQueueTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\WellKnownRoles.cs" />
     <Compile Include="Tasks\WaitTask.cs" />

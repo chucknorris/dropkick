@@ -50,13 +50,13 @@ namespace dropkick.Tasks.Security.Acl
         {
 
             var result = new DeploymentResult();
-            result.AddNote(Name);
 
             _target = _path.GetFullPath(_target);
 
             if (!_path.SetTargetSecurity(_target, _group, FileSystemRights.ReadAndExecute))
                 result.AddAlert("Could not apply Read permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
 
+            result.AddGood(Name);
             return result;
         }
     }

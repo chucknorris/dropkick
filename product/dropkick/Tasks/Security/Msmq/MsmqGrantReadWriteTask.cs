@@ -15,20 +15,20 @@ namespace dropkick.Tasks.Security.Msmq
     using System.Messaging;
     using DeploymentModel;
 
-    public class MsmqGrantReadTask :
+    public class MsmqGrantReadWriteTask :
         BaseTask
     {
         public string Group;
-        public string QueueName;
         public string ServerName;
+        public string QueueName;
         public bool PrivateQueue;
 
         public override string Name
         {
-            get { return "Grant read to '{0}'".FormatWith(Group); }
+            get { return "Grant read/write to '{0}' for queue '{1}'".FormatWith(Group, QueuePath); }
         }
 
-        string QueuePath { get { return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName); } }
+        string QueuePath {get{ return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName);}}
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -42,11 +42,16 @@ namespace dropkick.Tasks.Security.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var q = new MessageQueue(QueuePath);
-            q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
-            q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
 
-            result.AddGood("Successfully granted Read permissions to '{0}' for queue '{1}'".FormatWith(Group, QueuePath));
+            var q = new MessageQueue(QueuePath);
+            q.SetPermissions(Group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
+
+            result.AddGood("Successfully granted Read/Write permissions to '{0}' for queue '{1}'".FormatWith(Group, QueuePath));
+
             return result;
         }
     }
