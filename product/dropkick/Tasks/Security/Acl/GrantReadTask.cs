@@ -19,8 +19,8 @@ namespace dropkick.Tasks.Security.Acl
     public class GrantReadTask : Task
     {
         string _target;
-        string _group;
-        Path _path;
+        readonly string _group;
+        readonly Path _path;
         
         public GrantReadTask(string target, string @group, Path dnPath)
         {
@@ -53,8 +53,9 @@ namespace dropkick.Tasks.Security.Acl
 
             _target = _path.GetFullPath(_target);
 
-            if (!_path.SetTargetSecurity(_target, _group, FileSystemRights.ReadAndExecute))
-                result.AddAlert("Could not apply Read permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
+            //    result.AddAlert("Could not apply Read permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
+            _path.SetFileSystemRights(_target, _group, FileSystemRights.ReadAndExecute, result);
+            
 
             result.AddGood(Name);
             return result;

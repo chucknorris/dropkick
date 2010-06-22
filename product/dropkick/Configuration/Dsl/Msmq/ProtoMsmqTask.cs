@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.Msmq
 {
     using System;
     using DeploymentModel;
+    using dropkick.Dsl.Msmq;
     using Tasks;
     using Tasks.Msmq;
 
@@ -23,24 +24,15 @@ namespace dropkick.Configuration.Dsl.Msmq
     {
         string _queueName;
 
-        #region MsmqOptions Members
-
         public void PrivateQueueNamed(string name)
         {
             _queueName = name;
         }
 
-        #endregion
-
-        public override void RegisterRealTasks(PhysicalServer s)
+        public override void RegisterRealTasks(PhysicalServer server)
         {
-            s.AddTask(new MsmqTask
-                      {
-                          QueueName = _queueName,
-                          ServerName = s.Name,
-                          PrivateQueue = true
-                      });
-
+            var ub = new UriBuilder("msmq", server.Name) {Path = _queueName};
+            server.AddTask(new MsmqTask(server, new QueueAddress(ub.Uri)));
         }
     }
 }

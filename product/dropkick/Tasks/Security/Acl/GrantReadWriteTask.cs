@@ -16,11 +16,12 @@ namespace dropkick.Tasks.Security.Acl
     using DeploymentModel;
     using FileSystem;
 
-    public class GrantReadWriteTask : Task
+    public class GrantReadWriteTask : 
+        Task
     {
         string _target;
-        string _group;
-        Path _path;
+        readonly string _group;
+        readonly Path _path;
         
         public GrantReadWriteTask(string target, string @group, Path dnPath)
         {
@@ -52,10 +53,10 @@ namespace dropkick.Tasks.Security.Acl
 
             _target = _path.GetFullPath(_target);
 
-            if (!_path.SetTargetSecurity(_target, _group, FileSystemRights.Modify))
-                result.AddAlert("Could not apply Modify permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
-
-            result.AddGood(Name);
+            //TODO: Pass into the method
+            //result.AddAlert("Could not apply Modify permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
+            _path.SetFileSystemRights(_target, _group, FileSystemRights.Modify, result);
+                
             return result;
         }
 

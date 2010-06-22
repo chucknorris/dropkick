@@ -13,6 +13,7 @@
 namespace dropkick.FileSystem
 {
     using System.Security.AccessControl;
+    using DeploymentModel;
 
     public interface Path
     {
@@ -20,7 +21,7 @@ namespace dropkick.FileSystem
         string GetFullPath(string path);
         bool IsFile(string path);
         bool IsDirectory(string path);
-        bool SetTargetSecurity(string target, string group, FileSystemRights permission);
+        void SetFileSystemRights(string target, string group, FileSystemRights permission, DeploymentResult result);
 
     }
 }

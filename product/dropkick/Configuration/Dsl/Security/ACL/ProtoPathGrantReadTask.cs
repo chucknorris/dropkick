@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.ACL
 {
-    using System;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
@@ -22,7 +21,7 @@ namespace dropkick.Configuration.Dsl.Security.ACL
         BaseProtoTask
     {
         readonly string _group;
-        string _path;
+        readonly string _path;
 
         public ProtoPathGrantReadTask(string path, string group)
         {

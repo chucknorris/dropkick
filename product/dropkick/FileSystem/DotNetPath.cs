@@ -12,8 +12,10 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
+    using System;
     using System.IO;
     using System.Security.AccessControl;
+    using DeploymentModel;
 
     public class DotNetPath :
         Path
@@ -43,10 +45,10 @@ namespace dropkick.FileSystem
         }
 
         //http://www.west-wind.com/weblog/posts/4072.aspx
-        public bool SetTargetSecurity(string target, string group, FileSystemRights permission)
+        public void SetFileSystemRights(string target, string group, FileSystemRights permission, DeploymentResult r)
         {
             if (!IsDirectory(target) && !IsFile(target))
-                return false;
+                return;
 
             var oldSecurity = Directory.GetAccessControl(target);
             var newSecurity = new DirectorySecurity();
@@ -62,7 +64,7 @@ namespace dropkick.FileSystem
             newSecurity.ModifyAccessRule(AccessControlModification.Set, accessRule, out result);
 
             if (!result)
-                return false;
+                r.AddError("Something wrong happened");
 
             accessRule = new FileSystemAccessRule(group, 
                                                   permission,
@@ -74,10 +76,13 @@ namespace dropkick.FileSystem
             result = false;
             newSecurity.ModifyAccessRule(AccessControlModification.Add, accessRule, out result);
             if (!result)
-                return false;
+                r.AddError("Something wrong happened");
 
             Directory.SetAccessControl(target, newSecurity);
-            return true;
+            if(result)
+                r.AddGood("whoot");
+
+            if (!result) r.AddError("Something wrong happened");
         }
 
         #endregion
