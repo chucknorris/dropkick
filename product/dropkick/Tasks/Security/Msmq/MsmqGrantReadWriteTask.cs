@@ -43,7 +43,7 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-            var q = new MessageQueue(QueuePath);
+            var q = new MessageQueue(@"FormatName:DIRECT=OS:{0}".FormatWith(QueuePath));
             q.SetPermissions(Group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
             q.SetPermissions(Group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
             q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);

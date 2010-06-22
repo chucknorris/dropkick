@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Msmq
 {
+    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.Msmq;

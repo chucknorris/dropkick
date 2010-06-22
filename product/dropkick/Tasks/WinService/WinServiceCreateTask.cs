@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.WinService
 {
+    using System;
     using DeploymentModel;
     using Magnum.Extensions;
     using Prompting;
@@ -39,6 +40,7 @@ namespace dropkick.Tasks.WinService
         public string UserName { get; set; }
         public ServiceStartMode StartMode { get; set; }
         public string ServiceLocation { get; set; }
+        public string ServiceDescription { get; set; }
 
         public override DeploymentResult VerifyCanRun()
         {

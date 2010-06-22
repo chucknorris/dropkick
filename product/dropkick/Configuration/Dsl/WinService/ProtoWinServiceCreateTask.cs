@@ -62,6 +62,13 @@ namespace dropkick.Configuration.Dsl.WinService
             return this;
         }
 
+        public WinServiceCreateOptions AddDependency(string name)
+        {
+            if (!string.IsNullOrEmpty(name))
+                _dependencies.Add(name);
+            return this;
+        }
+
         #endregion
 
         public override void RegisterRealTasks(PhysicalServer site)
@@ -71,7 +78,7 @@ namespace dropkick.Configuration.Dsl.WinService
                                  Dependencies = _dependencies.ToArray(),
                                  UserName = _userName,
                                  Password = _password,
-                                 //ServiceDescription =  _description, no place to put this currently
+                                 ServiceDescription =  _description,
                                  ServiceLocation = _installPath,
                                  StartMode = _startMode
                              });
@@ -84,5 +91,6 @@ namespace dropkick.Configuration.Dsl.WinService
         WinServiceCreateOptions WithServicePath(string path);
         WinServiceCreateOptions WithStartMode(ServiceStartMode mode);
         WinServiceCreateOptions WithCredentials(string username, string password);
+        WinServiceCreateOptions AddDependency(string name);
     }
 }

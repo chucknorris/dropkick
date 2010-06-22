@@ -42,7 +42,7 @@ namespace dropkick.Tasks.Security.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var q = new MessageQueue(QueuePath);
+            var q = new MessageQueue(@"FormatName:DIRECT=OS:{0}".FormatWith(QueuePath));
             q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
             q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
 
