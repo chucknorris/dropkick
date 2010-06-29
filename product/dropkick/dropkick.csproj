@@ -64,6 +64,7 @@
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueWriteTask.cs" />

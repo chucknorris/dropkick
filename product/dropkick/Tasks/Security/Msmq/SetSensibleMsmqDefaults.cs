@@ -15,34 +15,40 @@ namespace dropkick.Tasks.Security.Msmq
     using System;
     using System.Messaging;
     using DeploymentModel;
+    using Dsl.Msmq;
 
     public class SetSensibleMsmqDefaults :
-        Task
+        BaseTask
     {
-        readonly string _path;
+        readonly QueueAddress Address;
 
-        public SetSensibleMsmqDefaults(string path)
+        public SetSensibleMsmqDefaults(QueueAddress path)
         {
-            _path = path;
+            Address = path;
         }
 
         #region Task Members
 
-        public string Name
+        public override string Name
         {
-            get { return "stuff"; }
+            get { return "Setting sensible defaults for queue '{0}'".FormatWith(Address.LocalName); }
         }
 
-        public DeploymentResult VerifyCanRun()
-        {
-            throw new NotImplementedException();
-        }
-
-        public DeploymentResult Execute()
+        public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
-            var q = new MessageQueue(_path);
+            VerifyInAdministratorRole(result);
+
+            result.AddGood(Name);
+            return result;
+        }
+
+        public override DeploymentResult Execute()
+        {
+            var result = new DeploymentResult();
+            
+            var q = new MessageQueue(Address.LocalName);
             q.SetPermissions(WellKnownRoles.Administrators, MessageQueueAccessRights.FullControl, AccessControlEntryType.Allow);
             q.SetPermissions(WellKnownRoles.CurrentUser, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
             q.SetPermissions(WellKnownRoles.Everyone, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);

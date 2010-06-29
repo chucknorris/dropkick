@@ -25,7 +25,13 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
             _server = server;
             _queue = queue;
         }
-              
+
+        public void SetSensibleMsmqDefaults()
+        {
+            var proto = new ProtoSetSensibleMsmqDefaults(_queue);
+            _server.RegisterProtoTask(proto);
+        }
+
         public void GrantRead(string group)
         {
             var proto = new ProtoQueueReadTask(_queue, group);
