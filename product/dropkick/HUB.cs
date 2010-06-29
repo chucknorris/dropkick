@@ -10,29 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Msmq
+namespace dropkick
 {
-    using System;
-    using DeploymentModel;
-    using dropkick.Dsl.Msmq;
-    using Tasks;
-    using Tasks.Msmq;
-
-    public class ProtoMsmqTask :
-        BaseProtoTask,
-        MsmqOptions
+    //TODO: YUCK!
+    public static class HUB
     {
-        string _queueName;
-
-        public void PrivateQueueNamed(string name)
-        {
-            _queueName = name;
-        }
-
-        public override void RegisterRealTasks(PhysicalServer server)
-        {
-            var ub = new UriBuilder("msmq", server.Name) {Path = _queueName};
-            server.AddTask(new MsmqTask(server, new QueueAddress(ub.Uri)));
-        }
+        public static object Settings { get; set; }
     }
 }

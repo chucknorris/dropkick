@@ -42,6 +42,7 @@ namespace dropkick.Configuration.Dsl
             VerifyDeploymentConfiguration();
 
             Settings = (SETTINGS) settings;
+            HUB.Settings = settings;
             _definition(Settings, environment);
         }
 

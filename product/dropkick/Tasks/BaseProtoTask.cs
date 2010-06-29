@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,11 +14,12 @@ namespace dropkick.Tasks
 {
     using Configuration.Dsl;
     using DeploymentModel;
+    using StringInterpolation;
 
     public abstract class BaseProtoTask :
         ProtoTask
     {
-        #region ProtoTask Members
+        readonly Interpolator _interpolator = new CaseInsensitiveInterpolator();
 
         public void InspectWith(DeploymentInspector inspector)
         {
@@ -27,6 +28,9 @@ namespace dropkick.Tasks
 
         public abstract void RegisterRealTasks(PhysicalServer site);
 
-        #endregion
+        public string ReplaceTokens(string input)
+        {
+            return _interpolator.ReplaceTokens(HUB.Settings, input);
+        }
     }
 }
