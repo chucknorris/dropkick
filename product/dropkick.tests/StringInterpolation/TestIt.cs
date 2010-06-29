@@ -13,7 +13,7 @@ namespace dropkick.tests.StringInterpolation
 
             var settings = new Bill() {Name = "dru"};
             var input = "hi {{Name}}";
-            var output = i.DoIt(settings, input);
+            var output = i.ReplaceTokens(settings, input);
 
             Assert.AreEqual("hi dru", output);
         }
@@ -25,7 +25,7 @@ namespace dropkick.tests.StringInterpolation
 
             var settings = new Bill() { Name = "dru" };
             var input = "hi {{name}}";
-            var output = i.DoIt(settings, input);
+            var output = i.ReplaceTokens(settings, input);
 
             Assert.AreEqual("hi dru", output);
         }
@@ -37,7 +37,7 @@ namespace dropkick.tests.StringInterpolation
 
             var settings = new Bill() { Name = "dru", Greeting="hi" };
             var input = "{{Greeting}} {{Name}}";
-            var output = i.DoIt(settings, input);
+            var output = i.ReplaceTokens(settings, input);
 
             Assert.AreEqual("hi dru", output);
         }

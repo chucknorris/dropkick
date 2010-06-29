@@ -23,7 +23,7 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public ProtoPathClearTask(string path)
         {
-            _path = path;
+            _path = ReplaceTokens(path);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)

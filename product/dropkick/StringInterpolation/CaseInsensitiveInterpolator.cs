@@ -24,13 +24,13 @@ namespace dropkick.StringInterpolation
         readonly Dictionary<Type, Dictionary<string, FastProperty>>  _properties = new Dictionary<Type, Dictionary<string, FastProperty>>();
 
 
-        public string DoIt<SETTINGS>(SETTINGS settings, string input)
+        public string ReplaceTokens(object settings, string input)
         {
-            PrepareDictionary<SETTINGS>();
+            PrepareDictionary(settings.GetType());
             string output = _pattern.Replace(input, m =>
             {
                 string key = m.Groups["key"].Value;
-                var pi = _properties[typeof(SETTINGS)][key];
+                var pi = _properties[settings.GetType()][key];
                 var value = (string) pi.Get(settings);
                 return value;
             });
@@ -38,13 +38,13 @@ namespace dropkick.StringInterpolation
             return output;
         }
 
-        void PrepareDictionary<T>()
+        void PrepareDictionary(Type settingsType)
         {
-            if(!_properties.ContainsKey(typeof(T)))
+            if (!_properties.ContainsKey(settingsType))
             {
                 var dict = new Dictionary<string, FastProperty>(StringComparer.InvariantCultureIgnoreCase);
-                _properties.Add(typeof(T), dict);
-                foreach (var propertyInfo in typeof(T).GetProperties())
+                _properties.Add(settingsType, dict);
+                foreach (var propertyInfo in settingsType.GetProperties())
                 {
                     dict.Add(propertyInfo.Name, new FastProperty(propertyInfo));
                 }

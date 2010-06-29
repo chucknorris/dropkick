@@ -25,9 +25,9 @@ namespace dropkick.Configuration.Dsl.Files
         string _to;
         string _newFileName;
 
-        public ProtoCopyFileTask(string @from)
+        public ProtoCopyFileTask(object settings, string @from)
         {
-            _from = from;
+            _from = ReplaceTokens(from);
         }
 
         #region FileCopyOptions Members

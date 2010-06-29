@@ -20,7 +20,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public static FileCopyOptions CopyFile(this ProtoServer protoServer, string from)
         {
-            var proto = new ProtoCopyFileTask(from);
+            var proto = new ProtoCopyFileTask(HUB.Settings, from);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }
