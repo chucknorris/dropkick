@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,23 +12,14 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.WinService
 {
-    using DeploymentModel;
-    using Tasks;
-    using Tasks.WinService;
+    using Wmi;
 
-    public class ProtoWinServiceDeleteTask :
-        BaseProtoTask
+    public interface WinServiceCreateOptions
     {
-        readonly string _serviceName;
-
-        public ProtoWinServiceDeleteTask(string serviceName)
-        {
-            _serviceName = ReplaceTokens(serviceName);
-        }
-
-        public override void RegisterRealTasks(PhysicalServer site)
-        {
-            site.AddTask(new WinServiceDeleteTask(site.Name, _serviceName));
-        }
+        WinServiceCreateOptions WithDescription(string description);
+        WinServiceCreateOptions WithServicePath(string path);
+        WinServiceCreateOptions WithStartMode(ServiceStartMode mode);
+        WinServiceCreateOptions WithCredentials(string username, string password);
+        WinServiceCreateOptions AddDependency(string name);
     }
 }
