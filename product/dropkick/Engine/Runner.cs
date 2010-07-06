@@ -2,9 +2,11 @@ namespace dropkick.Engine
 {
     using System;
     using System.IO;
+    using Configuration.Dsl;
     using DeploymentFinders;
     using log4net;
     using Settings;
+    using Magnum.Reflection;
 
     public static class Runner
     {
@@ -17,6 +19,7 @@ namespace dropkick.Engine
         {
             try
             {
+                //TODO: change this to the new magnum command line parser
                 var newArgs = DeploymentCommandLineParser.Parse(commandLine);
 
                 if(!File.Exists(newArgs.PathToServerMapsFile))
@@ -41,7 +44,11 @@ namespace dropkick.Engine
 
                 var deployment = _finder.Find(newArgs.Deployment);
                 var settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
-                var settings = _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile));
+                
+                //fast invoke had an object return
+                var settings = _parser.FastInvoke<SettingsParser, object>(new[] {settingsType}, "Parse", new FileInfo(newArgs.PathToSettingsFile), commandLine,
+                                   newArgs.Environment);
+                
                 
                 deployment.Initialize(settings, newArgs.Environment);
                 

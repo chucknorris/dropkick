@@ -20,11 +20,13 @@ namespace dropkick.Engine
 
         public DeploymentArguments()
         {
-            Command = DeploymentCommands.Trace;
+            Environment = "LOCAL";
             Role = "ALL";
+            Deployment = "SEARCH";
+            Command = DeploymentCommands.Trace;
             ServerMappings = new RoleToServerMap();
             SettingsDirectory = ".\\settings";
-            Deployment = "SEARCH";
+            
         }
 
         public string Environment { get; set; }

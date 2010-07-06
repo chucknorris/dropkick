@@ -27,11 +27,9 @@ namespace dropkick.Configuration.Dsl.Files
         DestinationCleanOptions _options = DestinationCleanOptions.None;
         string _to;
 
-        #region CopyOptions Members
-
         public CopyOptions To(string destinationPath)
         {
-            _to = destinationPath;
+            _to = ReplaceTokens(destinationPath);
             return this;
         }
 
@@ -40,20 +38,16 @@ namespace dropkick.Configuration.Dsl.Files
             _options = DestinationCleanOptions.Delete;
         }
 
-        #endregion
-
-        #region FromOptions Members
-
         public void Include(string path)
         {
-            _froms.Add(path);
+            var p = ReplaceTokens(path);
+            _froms.Add(p);
         }
-
-        #endregion
 
         public CopyOptions From(string sourcePath)
         {
-            _froms.Add(sourcePath);
+            var p = ReplaceTokens(sourcePath);
+            _froms.Add(p);
             return this;
         }
 

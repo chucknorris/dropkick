@@ -1,3 +1,15 @@
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Engine
 {
     using System.Collections.Generic;
@@ -8,38 +20,35 @@ namespace dropkick.Engine
     {
         public static DeploymentArguments Parse(string commandline)
         {
-            var result = new DeploymentArguments();
-
-            Set( result, P(commandline));
-
-            return result;
+            var binder = Magnum.Configuration.ConfigurationBinderFactory.New(x => x.AddCommandLine(commandline));
+            return binder.Bind<DeploymentArguments>();
         }
 
         static void Set(DeploymentArguments arguments, IEnumerable<ICommandLineElement> commandLineElements)
         {
-            var command = commandLineElements.Where(x => x is IArgumentElement)
+            string command = commandLineElements.Where(x => x is IArgumentElement)
                 .Select(x => (IArgumentElement) x)
                 .DefaultIfEmpty(new ArgumentElement("trace"))
-                .Select(x=>x.Id)
+                .Select(x => x.Id)
                 .SingleOrDefault();
 
             arguments.Command = command.ToEnum<DeploymentCommands>();
 
 
-            var deployment = commandLineElements.GetDefinition("deployment", "SEARCH");
+            string deployment = commandLineElements.GetDefinition("deployment", "SEARCH");
             arguments.Deployment = deployment;
 
 
-            var part = commandLineElements.GetDefinition("part", "ALL");
+            string part = commandLineElements.GetDefinition("part", "ALL");
             arguments.Role = part;
 
-            var enviro = commandLineElements.GetDefinition("environment", "LOCAL");
+            string enviro = commandLineElements.GetDefinition("environment", "LOCAL");
             arguments.Environment = enviro;
 
-            var config = commandLineElements.GetDefinition("settings", ".\\settings");
+            string config = commandLineElements.GetDefinition("settings", ".\\settings");
             arguments.SettingsDirectory = config;
 
-            var roles = commandLineElements.GetDefinition("roles", "ALL");
+            string roles = commandLineElements.GetDefinition("roles", "ALL");
             arguments.Role = roles;
         }
 

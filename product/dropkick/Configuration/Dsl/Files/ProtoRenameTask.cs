@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,12 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-
 namespace dropkick.Configuration.Dsl.Files
 {
     using DeploymentModel;
-    using Tasks;
     using FileSystem;
+    using Tasks;
     using Tasks.Files;
 
     public class ProtoRenameTask :
@@ -27,22 +26,18 @@ namespace dropkick.Configuration.Dsl.Files
 
         public ProtoRenameTask(string target)
         {
-            _from = target;
+            _from = ReplaceTokens(target);
         }
-
-        #region RenameOptions Members
 
         public void To(string name)
         {
-            _to = name;
+            _to = ReplaceTokens(name);
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var from = _from;
-            var to = _to;
+            string from = _from;
+            string to = _to;
 
             if (!site.IsLocal)
             {
@@ -52,7 +47,6 @@ namespace dropkick.Configuration.Dsl.Files
 
             var o = new RenameTask(from, to, new DotNetPath());
             site.AddTask(o);
-
         }
     }
 }

@@ -19,11 +19,11 @@ namespace dropkick.tests.Engine
     public class ExecutionArguments_Specs
     {
         const string _arguments = "verify -environment:staging -deployment:MyStuff.dll -part:WEB";
-
+        const string _null_commandline = "";
         [Test]
         public void Default_parts_should_be_ALL()
         {
-            var ea = DeploymentCommandLineParser.Parse("");
+            var ea = DeploymentCommandLineParser.Parse(_null_commandline);
 
             Assert.AreEqual(ea.Role, "ALL");
         }
@@ -31,8 +31,7 @@ namespace dropkick.tests.Engine
         [Test]
         public void Default_should_be_trace()
         {
-            var arguments = "";
-            var ea = DeploymentCommandLineParser.Parse(arguments);
+            var ea = DeploymentCommandLineParser.Parse(_null_commandline);
 
             Assert.AreEqual(ea.Command, DeploymentCommands.Trace);
         }

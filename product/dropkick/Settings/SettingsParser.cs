@@ -13,52 +13,41 @@
 namespace dropkick.Settings
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Reflection;
-    using Magnum.CommandLineParser;
+    using Magnum.Configuration;
     using Magnum.Reflection;
 
     public class SettingsParser
     {
-        readonly ICommandLineParser _parser = new MonadicCommandLineParser();
+        ConfigurationBinder _binder;
 
-        public T Parse<T>(string contents) where T : new()
+        public T Parse<T>(FileInfo file, string commandLine, string environment) where T : new()
         {
-            var result = new T();
-
-            IEnumerable<ICommandLineElement> po = _parser.Parse(contents);
-
-            Set(typeof (T), result, po);
-
-            return result;
-        }
-
-        public T Parse<T>(FileInfo file) where T : new()
-        {
-            return (T) Parse(typeof (T), file);
-        }
-
-        public object Parse(Type t, FileInfo file)
-        {
-            object result = FastActivator.Create(t);
-
-            string contents = File.ReadAllText(file.FullName);
-            IEnumerable<ICommandLineElement> po = _parser.Parse(contents);
-
-            Set(t, result, po);
-
-            return result;
-        }
-
-        void Set(Type type, object result, IEnumerable<ICommandLineElement> enumerable)
-        {
-            foreach (IDefinitionElement argument in enumerable)
+            _binder = ConfigurationBinderFactory.New(c =>
             {
-                PropertyInfo pi = type.GetProperty(argument.Key);
-                var fp = new FastProperty(pi);
-                fp.Set(result, Convert.ChangeType(argument.Value, pi.PropertyType));
-            }
+                //                c.AddJsonFile("global.conf");
+                //                c.AddJsonFile("{0}.conf".FormatWith(environment));
+                //                c.AddJsonFile(file.FullName);
+                c.AddCommandLine(commandLine);
+            });
+
+            var result = _binder.Bind<T>();
+            return result;
+        }
+
+        public object Parse(Type t, FileInfo file, string commandLine, string environment)
+        {
+            _binder = ConfigurationBinderFactory.New(c =>
+            {
+//                c.AddJsonFile("global.conf");
+//                c.AddJsonFile("{0}.conf".FormatWith(environment));
+//                c.AddJsonFile(file.FullName);
+                c.AddCommandLine(commandLine);
+            });
+
+            object result = _binder.FastInvoke<ConfigurationBinder, object>(new[] {t}, "Bind");
+
+            return result;
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -31,8 +31,6 @@ namespace dropkick.Configuration.Dsl.CommandLine
             _command = command;
         }
 
-        #region CommandLineOptions Members
-
         public CommandLineOptions Args(string args)
         {
             _args = args;
@@ -41,38 +39,35 @@ namespace dropkick.Configuration.Dsl.CommandLine
 
         public CommandLineOptions ExecutableIsLocatedAt(string path)
         {
-            _path = path;
+            _path = ReplaceTokens(path);
             return this;
         }
 
         public CommandLineOptions WorkingDirectory(string path)
         {
-            _workingDirectory = path;
+            _workingDirectory = ReplaceTokens(path);
             return this;
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
             if (s.IsLocal)
             {
                 s.AddTask(new LocalCommandLineTask(_command)
+                              {
+                                  Args = _args,
+                                  ExecutableIsLocatedAt = _path,
+                                  WorkingDirectory = _workingDirectory
+                              });
+                return;
+            }
+
+            s.AddTask(new RemoteCommandLineTask(_command)
                           {
                               Args = _args,
                               ExecutableIsLocatedAt = _path,
                               WorkingDirectory = _workingDirectory
                           });
-                return;
-            }
-
-            s.AddTask(new RemoteCommandLineTask(_command)
-                      {
-                          Args = _args,
-                          ExecutableIsLocatedAt = _path,
-                          WorkingDirectory = _workingDirectory
-                      });
-
         }
     }
 }

@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -13,18 +13,17 @@
 namespace dropkick.Configuration.Dsl.Files
 {
     using System;
-    using CommandLine;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
 
-    public class ProtoEncryptWebConfigTask :
+    public class ProtoEncryptAppConfigTask :
         BaseProtoTask
     {
         readonly Path _path;
         readonly string _where;
 
-        public ProtoEncryptWebConfigTask(Path path, string whereIsTheConfig)
+        public ProtoEncryptAppConfigTask(Path path, string whereIsTheConfig)
         {
             _where = ReplaceTokens(whereIsTheConfig);
             _path = path;
@@ -32,13 +31,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new ProtoCommandLineTask(@"aspnet_regiis");
-            task.Args(@" -pe ""connectionStrings"" -app ""/MachineDPAPI"" -prov ""DataProtectionConfigurationProvider""");
-            string winDir = Environment.GetEnvironmentVariable("WINDIR");
-            task.ExecutableIsLocatedAt(_path.Combine(winDir, @"Microsoft.NET\Framework\v2.0.50727"));
-            task.WorkingDirectory(_where);
-
-            task.RegisterRealTasks(site);
+            throw new NotImplementedException("fix this");
         }
     }
 }
