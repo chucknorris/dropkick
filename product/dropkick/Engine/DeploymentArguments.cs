@@ -20,11 +20,11 @@ namespace dropkick.Engine
 
         public DeploymentArguments()
         {
+            ServerMappings = new RoleToServerMap();
             Environment = "LOCAL";
             Role = "ALL";
             Deployment = "SEARCH";
             Command = DeploymentCommands.Trace;
-            ServerMappings = new RoleToServerMap();
             SettingsDirectory = ".\\settings";
             
         }
@@ -33,7 +33,7 @@ namespace dropkick.Engine
         public string Role { get; set; }
         public string Deployment { get; set; }
         public DeploymentCommands Command { get; set; }
-        public RoleToServerMap ServerMappings { get; private set; }
+        public RoleToServerMap ServerMappings { get; set; }
         public string SettingsDirectory { get; set;}
         public string PathToSettingsFile
         {

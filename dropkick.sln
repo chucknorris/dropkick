@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.tests", "product\dropkick.tests\dropkick.tests.csproj", "{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick", "product\dropkick\dropkick.csproj", "{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}"
