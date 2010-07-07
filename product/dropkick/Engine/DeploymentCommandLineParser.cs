@@ -18,10 +18,12 @@ namespace dropkick.Engine
 
     public static class DeploymentCommandLineParser
     {
+        //TODO: Switch to new Magnum Configuration stuff
         public static DeploymentArguments Parse(string commandline)
         {
-            var binder = Magnum.Configuration.ConfigurationBinderFactory.New(x => x.AddCommandLine(commandline));
-            return binder.Bind<DeploymentArguments>();
+            var args = new DeploymentArguments();
+            Set(args, P(commandline));
+            return args;
         }
 
         static void Set(DeploymentArguments arguments, IEnumerable<ICommandLineElement> commandLineElements)

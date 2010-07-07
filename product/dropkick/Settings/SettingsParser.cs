@@ -23,16 +23,7 @@ namespace dropkick.Settings
 
         public T Parse<T>(FileInfo file, string commandLine, string environment) where T : new()
         {
-            _binder = ConfigurationBinderFactory.New(c =>
-            {
-                //                c.AddJsonFile("global.conf");
-                //                c.AddJsonFile("{0}.conf".FormatWith(environment));
-                //                c.AddJsonFile(file.FullName);
-                c.AddCommandLine(commandLine);
-            });
-
-            var result = _binder.Bind<T>();
-            return result;
+            return (T)Parse(typeof (T), file, commandLine, environment);
         }
 
         public object Parse(Type t, FileInfo file, string commandLine, string environment)

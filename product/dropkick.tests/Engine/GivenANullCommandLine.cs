@@ -24,7 +24,7 @@ namespace dropkick.tests.Engine
         {
             var ea = DeploymentCommandLineParser.Parse(_null_commandline);
 
-            Assert.AreEqual(ea.Role, "ALL");
+            Assert.AreEqual("ALL", ea.Role);
         }
 
         [Test]
@@ -32,7 +32,7 @@ namespace dropkick.tests.Engine
         {
             var ea = DeploymentCommandLineParser.Parse(_null_commandline);
 
-            Assert.AreEqual(ea.Command, DeploymentCommands.Trace);
+            Assert.AreEqual(DeploymentCommands.Trace, ea.Command);
         }
 
 

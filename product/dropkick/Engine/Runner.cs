@@ -31,7 +31,6 @@ namespace dropkick.Engine
         {
             try
             {
-                //TODO: change this to the new magnum command line parser
                 DeploymentArguments newArgs = DeploymentCommandLineParser.Parse(commandLine);
 
                 if (!File.Exists(newArgs.PathToServerMapsFile))
@@ -57,7 +56,7 @@ namespace dropkick.Engine
                 Deployment deployment = _finder.Find(newArgs.Deployment);
                 Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-                //fast invoke had an object return
+                
                 object settings = _parser.FastInvoke<SettingsParser, object>(new[] {settingsType}, "Parse", new FileInfo(newArgs.PathToSettingsFile), commandLine,
                                                                              newArgs.Environment);
 
