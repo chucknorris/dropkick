@@ -21,31 +21,30 @@ namespace dropkick.Configuration.Dsl.Files
         BaseProtoTask,
         RenameOptions
     {
-        readonly string _from;
-        string _to;
+        readonly string _target;
+        string _newName;
 
         public ProtoRenameTask(string target)
         {
-            _from = ReplaceTokens(target);
+            _target = ReplaceTokens(target);
         }
 
         public void To(string name)
         {
-            _to = ReplaceTokens(name);
+            _newName = ReplaceTokens(name);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            string from = _from;
-            string to = _to;
+            string target = _target;
+            string newName = _newName;
 
             if (!site.IsLocal)
             {
-                from = RemotePathHelper.Convert(site.Name, from);
-                to = RemotePathHelper.Convert(site.Name, to);
+                target = RemotePathHelper.Convert(site.Name, target);
             }
 
-            var o = new RenameTask(from, to, new DotNetPath());
+            var o = new RenameTask(target, newName, new DotNetPath());
             site.AddTask(o);
         }
     }

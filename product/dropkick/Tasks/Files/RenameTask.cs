@@ -20,40 +20,37 @@ namespace dropkick.Tasks.Files
     public class RenameTask :
         Task
     {
-        string _from;
-        string _to;
+        string _target;
+        string _newName;
         readonly Path _path;
         readonly ILog _log = LogManager.GetLogger(typeof (CopyFileTask));
         readonly ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
 
-        public RenameTask(string from, string to, Path path)
+        public RenameTask(string target, string newName, Path path)
         {
-            _from = from;
-            _to = to;
+            _target = target;
+            _newName = newName;
             _path = path;
         }
 
         public string Name
         {
-            get { return @"Rename {0} to {1}.".FormatWith(_from, _to); }
+            get { return @"Rename '{0}' to '{1}'.".FormatWith(_target, _newName); }
         }
 
         public DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
-            ValidateFile(result, _from);
+            ValidateFile(result, _target);
 
-            _from = _path.GetFullPath(_from);
-            _to = _path.GetFullPath(_to);
-
-            if (File.Exists(_from))
+            if (File.Exists(_target))
             {
-                result.AddGood(string.Format("'{0}' exists", _from));
+                result.AddGood(string.Format("'{0}' exists", _target));
             }
             else
             {
-                result.AddError(string.Format("'{0}' doesn't exist", _from));
+                result.AddError(string.Format("'{0}' doesn't exist", _target));
             }
 
             return result;
@@ -63,13 +60,10 @@ namespace dropkick.Tasks.Files
         {
             var result = new DeploymentResult();
 
-            ValidateFile(result, _from);
-
-            _from = _path.GetFullPath(_from);
-            _to = _path.GetFullPath(_to);
+            ValidateFile(result, _target);
 
 
-            RenameFile(new FileInfo(_from), new FileInfo(_to));
+            RenameFile(new FileInfo(_target), new FileInfo(_newName));
 
             result.AddGood(Name);
 
@@ -91,7 +85,7 @@ namespace dropkick.Tasks.Files
         void ValidateFile(DeploymentResult result, string path)
         {
             if (!_path.IsFile(path))
-                result.AddError("'{0}' is not an acceptable path. Must be a file.".FormatWith(path));
+                result.AddError("'{0}' is not an acceptable path. It doesn't appear to be a file.".FormatWith(path));
         }
     }
 }
