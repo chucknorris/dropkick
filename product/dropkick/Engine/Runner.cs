@@ -39,7 +39,8 @@ namespace dropkick.Engine
                     return;
                 }
 
-                newArgs.ServerMappings.Merge(_serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile)));
+                var maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
+                newArgs.ServerMappings.Merge(maps);
 
                 _log.Info("*******SETTINGS*******");
                 _log.InfoFormat("Command: {0}", newArgs.Command);
@@ -56,9 +57,8 @@ namespace dropkick.Engine
                 Deployment deployment = _finder.Find(newArgs.Deployment);
                 Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-                
-                object settings = _parser.FastInvoke<SettingsParser, object>(new[] {settingsType}, "Parse", new FileInfo(newArgs.PathToSettingsFile), commandLine,
-                                                                             newArgs.Environment);
+                var settings = _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
+                              newArgs.Environment);
 
 
                 deployment.Initialize(settings, newArgs.Environment);

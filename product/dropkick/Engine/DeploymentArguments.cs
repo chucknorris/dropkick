@@ -39,7 +39,7 @@ namespace dropkick.Engine
         {
             get
             {
-                return _path.Combine(SettingsDirectory, "{0}.settings".FormatWith(Environment));
+                return _path.Combine(SettingsDirectory, "{0}.js".FormatWith(Environment));
             }
         }
 

@@ -16,6 +16,7 @@ namespace dropkick.Settings
     using System.IO;
     using Engine;
     using Magnum.CommandLineParser;
+    using Magnum.Configuration;
 
     public class ServerMapParser
     {
@@ -23,15 +24,26 @@ namespace dropkick.Settings
 
         public RoleToServerMap Parse(FileInfo file)
         {
-            string contents = File.ReadAllText(file.FullName);
-            IEnumerable<ICommandLineElement> output = _parser.Parse(contents);
+            var binder = ConfigurationBinderFactory.New(c =>
+            {
+                //c.AddJsonFile(file.FullName);
+                var content = File.ReadAllText(file.FullName);
+                c.AddJson(content);
+            });
+
+
+            var d = binder.GetAll();
 
             var result = new RoleToServerMap();
 
-            foreach (IDefinitionElement element in output)
+
+
+            foreach (var kvp in d)
             {
-                result.AddMap(element.Key, element.Value);
+                result.AddMap(kvp.Key, kvp.Value.ToString());
             }
+                
+           
 
             return result;
         }

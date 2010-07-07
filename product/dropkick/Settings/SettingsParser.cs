@@ -15,12 +15,9 @@ namespace dropkick.Settings
     using System;
     using System.IO;
     using Magnum.Configuration;
-    using Magnum.Reflection;
 
     public class SettingsParser
     {
-        ConfigurationBinder _binder;
-
         public T Parse<T>(FileInfo file, string commandLine, string environment) where T : new()
         {
             return (T)Parse(typeof (T), file, commandLine, environment);
@@ -28,15 +25,18 @@ namespace dropkick.Settings
 
         public object Parse(Type t, FileInfo file, string commandLine, string environment)
         {
-            _binder = ConfigurationBinderFactory.New(c =>
+            var binder = ConfigurationBinderFactory.New(c =>
             {
-//                c.AddJsonFile("global.conf");
-//                c.AddJsonFile("{0}.conf".FormatWith(environment));
-//                c.AddJsonFile(file.FullName);
-                c.AddCommandLine(commandLine);
+                //c.AddJsonFile("global.conf");
+                //c.AddJsonFile("{0}.conf".FormatWith(environment));
+                //c.AddJsonFile(file.FullName);
+                var content = File.ReadAllText(file.FullName);
+                c.AddJson(content);
+                //c.AddCommandLine(commandLine);
             });
 
-            object result = _binder.FastInvoke<ConfigurationBinder, object>(new[] {t}, "Bind");
+            
+            object result = binder.Bind(t);
 
             return result;
         }
