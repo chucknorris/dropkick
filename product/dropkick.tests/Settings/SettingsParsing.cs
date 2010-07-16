@@ -1,6 +1,8 @@
 namespace dropkick.tests.Settings
 {
+    using System.IO;
     using dropkick.Settings;
+    using Magnum.Reflection;
     using NUnit.Framework;
 
     [TestFixture]
@@ -9,15 +11,26 @@ namespace dropkick.tests.Settings
         [Test]
         public void ParseTheContentToObject()
         {
-            var xml = @"-Website:cue
--Database:cue_db
--YesNo:true";
+            var commandLine = @"-Website:cue -Database:cue_db -YesNo:true";
 
             var p = new SettingsParser();
-            var r = p.Parse<TestSettings>(xml);
+            var r = p.Parse<TestSettings>(new FileInfo("."), commandLine, "test");
 
             Assert.AreEqual("cue_db",r.Database);
             Assert.AreEqual("cue",r.Website);
+            Assert.IsTrue(r.YesNo);
+        }
+
+        [Test]
+        public void ViaFastInvoke()
+        {
+            var commandLine = @"-Website:cue -Database:cue_db -YesNo:true";
+
+            var p = new SettingsParser();
+            var r = (TestSettings)p.FastInvoke<SettingsParser, object>(new []{typeof(TestSettings)}, "Parse", new FileInfo("."), commandLine, "test");
+
+            Assert.AreEqual("cue_db", r.Database);
+            Assert.AreEqual("cue", r.Website);
             Assert.IsTrue(r.YesNo);
         }
     }

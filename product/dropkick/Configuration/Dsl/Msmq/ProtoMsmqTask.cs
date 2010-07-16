@@ -26,7 +26,7 @@ namespace dropkick.Configuration.Dsl.Msmq
 
         public void PrivateQueueNamed(string name)
         {
-            _queueName = name;
+            _queueName = ReplaceTokens(name);
         }
 
         public override void RegisterRealTasks(PhysicalServer server)

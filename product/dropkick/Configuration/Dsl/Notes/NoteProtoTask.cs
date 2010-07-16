@@ -20,10 +20,10 @@ namespace dropkick.Configuration.Dsl.Notes
     {
         public NoteProtoTask(string message)
         {
-            Message = message;
+            Message = ReplaceTokens(message);
         }
 
-        public string Message { get; set; }
+        public string Message { get; private set; }
 
         public override void RegisterRealTasks(PhysicalServer s)
         {

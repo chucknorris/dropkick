@@ -23,7 +23,7 @@ namespace dropkick.Configuration.Dsl.WinService
 
         public ProtoWinServiceStartTask(string serviceName)
         {
-            _serviceName = serviceName;
+            _serviceName = ReplaceTokens(serviceName);
         }
 
         public override void RegisterRealTasks(PhysicalServer s)

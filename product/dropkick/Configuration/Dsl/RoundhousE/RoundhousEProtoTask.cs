@@ -26,30 +26,28 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             InstanceName = ".";
         }
 
-        public string EnvironmentName { get; set; }
-        public string InstanceName { get; set; }
-        public string DatabaseName { get; set; }
-        public string SqlFilesLocation { get; set; }
-        public bool UseSimpleRestoreMode { get; set; }
-        public string DatabaseType { get; set; }
-
-        #region RoundhousEOptions Members
+        public string EnvironmentName { get; private set; }
+        public string InstanceName { get; private set; }
+        public string DatabaseName { get; private set; }
+        public string SqlFilesLocation { get; private set; }
+        public bool UseSimpleRestoreMode { get; private set; }
+        public string DatabaseType { get; private set; }
 
         public RoundhousEOptions Environment(string name)
         {
-            EnvironmentName = name;
+            EnvironmentName = ReplaceTokens(name);
             return this;
         }
 
         public RoundhousEOptions OnInstance(string name)
         {
-            InstanceName = name;
+            InstanceName = ReplaceTokens(name);
             return this;
         }
 
         public RoundhousEOptions OnDatabase(string name)
         {
-            DatabaseName = name;
+            DatabaseName = ReplaceTokens(name);
             return this;
         }
 
@@ -59,13 +57,17 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions UseMsSqlServer2008()
+        {
+            DatabaseType = "2008";
+            return this;
+        }
+
         public RoundhousEOptions WithRecoveryMode(string type)
         {
             UseSimpleRestoreMode = true;
             return this;
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer site)
         {

@@ -1,14 +1,28 @@
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Engine
 {
     using System;
     using System.IO;
+    using Configuration.Dsl;
     using DeploymentFinders;
     using log4net;
+    using Magnum.Reflection;
     using Settings;
 
     public static class Runner
     {
-        static readonly ILog _log = LogManager.GetLogger(typeof(Runner));
+        static readonly ILog _log = LogManager.GetLogger(typeof (Runner));
         static readonly SettingsParser _parser = new SettingsParser();
         static readonly ServerMapParser _serverParser = new ServerMapParser();
         static readonly MultipleFinder _finder = new MultipleFinder();
@@ -17,15 +31,16 @@ namespace dropkick.Engine
         {
             try
             {
-                var newArgs = DeploymentCommandLineParser.Parse(commandLine);
+                DeploymentArguments newArgs = DeploymentCommandLineParser.Parse(commandLine);
 
-                if(!File.Exists(newArgs.PathToServerMapsFile))
+                if (!File.Exists(newArgs.PathToServerMapsFile))
                 {
                     _log.FatalFormat("Cannot find the server maps for the environment '{0}' at '{1}'", newArgs.Environment, newArgs.PathToServerMapsFile);
                     return;
                 }
 
-                newArgs.ServerMappings.Merge(_serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile)));
+                var maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
+                newArgs.ServerMappings.Merge(maps);
 
                 _log.Info("*******SETTINGS*******");
                 _log.InfoFormat("Command: {0}", newArgs.Command);
@@ -39,14 +54,16 @@ namespace dropkick.Engine
                 Console.WriteLine("Press enter to kick it out there");
                 Console.ReadKey(true);
 
-                var deployment = _finder.Find(newArgs.Deployment);
-                var settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
-                var settings = _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile));
-                
-                deployment.Initialize(settings, newArgs.Environment);
-                
-                DeploymentPlanDispatcher.KickItOutThereAlready(deployment, newArgs);
+                Deployment deployment = _finder.Find(newArgs.Deployment);
+                Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
+                var settings = _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
+                              newArgs.Environment);
+
+
+                deployment.Initialize(settings, newArgs.Environment);
+
+                DeploymentPlanDispatcher.KickItOutThereAlready(deployment, newArgs);
             }
             catch (Exception ex)
             {
@@ -71,7 +88,7 @@ namespace dropkick.Engine
 
         static void VerifyPathToSettingsFile(string pathToSettingsFile)
         {
-            if(File.Exists(pathToSettingsFile))
+            if (File.Exists(pathToSettingsFile))
                 _log.InfoFormat("Settings Path: {0}", pathToSettingsFile);
             else
                 _log.ErrorFormat("Settings Path: {0}", pathToSettingsFile);

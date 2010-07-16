@@ -9,45 +9,77 @@ namespace dropkick.tests.Tasks.Files
     [TestFixture]
     public class RenameTest
     {
-        
+        string _sourceFile = ".\\stuff.txt";
+        string _renameTo = "notstuff.txt";
+        string _conflictFile = ".\\stuff2.txt";
+        string _doesntExist = ".\\noexist.txt";
+
+        [SetUp]
+        public void Setup()
+        {
+            File.WriteAllText(_sourceFile, "source");
+            File.WriteAllText(_conflictFile, "conflict");
+        }
+
+        [TearDown]
+        public void CleanUp()
+        {
+            
+                if (File.Exists(_sourceFile))
+                    File.Delete(_sourceFile);
+                if (File.Exists(_renameTo))
+                    File.Delete(_renameTo);
+                if (File.Exists(_conflictFile))
+                    File.Delete(_conflictFile);
+        }
+
+        [Test]
+        public void NameIsDescriptive()
+        {
+            var task = new RenameTask(_sourceFile, _renameTo, new DotNetPath());
+            Assert.AreEqual(@"Rename '.\stuff.txt' to 'notstuff.txt'.", task.Name);
+        }
+
         [Test]
         public void RenameFileWorks()
         {
-            try
-            {
-                File.Create(".\\stuff.txt").Dispose();
-                var task = new RenameTask(".\\stuff.txt", "notstuff.txt", new DotNetPath());
+           
+                var task = new RenameTask(_sourceFile, _renameTo, new DotNetPath());
                 task.Execute();
 
-                Assert.IsTrue(File.Exists(".\\notstuff.txt"));
-            }
-            finally
-            {
-                if (File.Exists(".\\stuff.txt"))
-                    File.Delete(".\\stuff.txt");
-                if (File.Exists(".\\notstuff.txt"))
-                    File.Delete(".\\notstuff.txt");
-            }
+                Assert.IsTrue(File.Exists(_renameTo));
+           
         }
 
         [Test]
         public void OriginalFileNoLongerExists()
         {
-            try
-            {
-                File.Create(".\\stuff.txt").Dispose();
-                var task = new RenameTask(".\\stuff.txt", "notstuff.txt", new DotNetPath());
-                task.Execute();
+            var task = new RenameTask(_sourceFile, _renameTo, new DotNetPath());
+            task.Execute();
 
-                Assert.IsFalse(File.Exists(".\\stuff.txt"));
-            }
-            finally
-            {
-                if (File.Exists(".\\stuff.txt"))
-                    File.Delete(".\\stuff.txt");
-                if (File.Exists(".\\notstuff.txt"))
-                    File.Delete(".\\notstuff.txt");
-            }
+            Assert.IsFalse(File.Exists(_sourceFile));
+        }
+
+        [Test]
+        public void RenameOnTopOfConflictingFile()
+        {
+            var task = new RenameTask(_sourceFile, _conflictFile, new DotNetPath());
+            task.Execute();
+        }
+
+        [Test]
+        public void NoExist()
+        {
+            var task = new RenameTask(_doesntExist, _renameTo, new DotNetPath());
+            var o = task.VerifyCanRun();
+            Assert.IsTrue(o.ContainsError());
+        }
+
+        [Test, Explicit]
+        public void TryIt()
+        {
+            var task = new RenameTask(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\des.exe", "hi.exe", new DotNetPath());
+            task.Execute();
         }
     }
 }

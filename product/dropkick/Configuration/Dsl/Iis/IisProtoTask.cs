@@ -34,21 +34,15 @@ namespace dropkick.Configuration.Dsl.Iis
         protected string AppPoolName { get; set; }
         public bool ClassicPipelineRequested { get; set; }
 
-        #region IisSiteOptions Members
-
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
-            VdirPath = name;
+            VdirPath = ReplaceTokens(name);
             return this;
         }
 
-        #endregion
-
-        #region IisVirtualDirectoryOptions Members
-
         public IisVirtualDirectoryOptions SetPathTo(string path)
         {
-            PathOnServer = path;
+            PathOnServer = ReplaceTokens(path);
             return this;
         }
 
@@ -60,11 +54,9 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName)
         {
-            AppPoolName = appPoolName;
+            AppPoolName = ReplaceTokens(appPoolName);
             return this;
         }
-
-        #endregion
 
         public void CreateIfItDoesntExist()
         {
@@ -92,7 +84,7 @@ namespace dropkick.Configuration.Dsl.Iis
                               VdirPath = VdirPath,
                               WebsiteName = WebsiteName,
                               AppPoolName = AppPoolName,
-                              UseClassicPipeline =  ClassicPipelineRequested
+                              UseClassicPipeline = ClassicPipelineRequested
                           });
         }
     }
