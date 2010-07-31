@@ -20,7 +20,7 @@ namespace dropkick.tests.TestObjects
     {
         public TwoRoleDeploy()
         {
-            Define((settings) =>
+            Define(settings =>
             {
                 DeploymentStepsFor(Web, server =>
                 {
@@ -32,12 +32,12 @@ namespace dropkick.tests.TestObjects
                 });
 
                 DeploymentStepsFor(Db, server =>
-                                       {
-                                           server.CopyDirectory(o =>
-                                                                {
-                                                                    o.Include("..\\FHLBank.Cue.Website");
-                                                                }).To("E:\\FHLBApps\\CUE");
-                                       });
+                {
+                    server.CopyDirectory(o =>
+                    {
+                        o.Include("..\\FHLBank.Cue.Website");
+                    }).To("E:\\FHLBApps\\CUE");
+                });
             });
         }
 

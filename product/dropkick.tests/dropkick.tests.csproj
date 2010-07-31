@@ -85,6 +85,7 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\Dsl\CheckingPlanBuildingLogic.cs" />
+    <Compile Include="Configuration\Dsl\CopyFilesProtoWithSettings.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
     <Compile Include="DeploymentModel\DeploymentPlanExecution.cs" />
