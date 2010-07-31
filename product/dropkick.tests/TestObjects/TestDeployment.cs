@@ -10,11 +10,11 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.WinService;
 
     public class TestDeployment :
-        Deployment<TestDeployment, object>
+        Deployment<TestDeployment, SampleConfiguration>
     {
         public TestDeployment()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
             {
                 DeploymentStepsFor(Web, server =>
                 {

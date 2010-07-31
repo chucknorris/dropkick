@@ -121,6 +121,7 @@
     <Compile Include="TestObjects\IisTestDeploy.cs" />
     <Compile Include="TestObjects\MsSqlTestDeploy.cs" />
     <Compile Include="TestObjects\MsmqTestDeploy.cs" />
+    <Compile Include="TestObjects\SampleConfiguration.cs" />
     <Compile Include="TestObjects\SecurityDeployment.cs" />
     <Compile Include="TestObjects\SingleRoleDeploy.cs" />
     <Compile Include="TestObjects\TwoRoleDeploy.cs" />

@@ -16,11 +16,11 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Msmq;
 
     public class MsmqTestDeploy :
-        Deployment<MsmqTestDeploy, object>
+        Deployment<MsmqTestDeploy, SampleConfiguration>
     {
         public MsmqTestDeploy()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
                    DeploymentStepsFor(Web, server => server.Msmq()
                                                          .PrivateQueueNamed("dk_test"))
                 );

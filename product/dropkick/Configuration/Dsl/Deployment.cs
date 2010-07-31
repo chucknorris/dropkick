@@ -20,15 +20,16 @@ namespace dropkick.Configuration.Dsl
     public interface Deployment :
         DeploymentInspectorSite
     {
-        void Initialize(object settings, string environment);
+        void Initialize(object settings);
     }
 
     public class Deployment<Inheritor, SETTINGS> :
         Deployment
         where Inheritor : Deployment<Inheritor, SETTINGS>, new()
+        where SETTINGS : DropkickConfiguration
     {
         readonly Dictionary<string, ServerRole> _roles = new Dictionary<string, ServerRole>();
-        Action<SETTINGS, string> _definition;
+        Action<SETTINGS> _definition;
         public SETTINGS Settings { get; private set; }
 
 
@@ -36,14 +37,14 @@ namespace dropkick.Configuration.Dsl
 
         #region Deployment Members
 
-        public void Initialize(object settings, string environment)
+        public void Initialize(object settings)
         {
             InitializeParts();
             VerifyDeploymentConfiguration();
 
             Settings = (SETTINGS) settings;
             HUB.Settings = settings;
-            _definition(Settings, environment);
+            _definition(Settings);
         }
 
         public string Environment { get; set; }
@@ -82,7 +83,7 @@ namespace dropkick.Configuration.Dsl
         }
 
         //initial setup to be called in the static constructor
-        protected void Define(Action<SETTINGS, string> definition)
+        protected void Define(Action<SETTINGS> definition)
         {
             _definition = definition;
         }

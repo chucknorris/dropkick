@@ -16,11 +16,11 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.MsSql;
 
     public class MsSqlTestDeploy :
-        Deployment<MsSqlTestDeploy, object>
+        Deployment<MsSqlTestDeploy, SampleConfiguration>
     {
         public MsSqlTestDeploy()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
                    DeploymentStepsFor(Web, server =>
                    {
                        server.SqlInstance(".")

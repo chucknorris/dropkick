@@ -16,11 +16,11 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Files;
 
     public class TwoRoleDeploy :
-        Deployment<TwoRoleDeploy, object>
+        Deployment<TwoRoleDeploy, SampleConfiguration>
     {
         public TwoRoleDeploy()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
             {
                 DeploymentStepsFor(Web, server =>
                 {
