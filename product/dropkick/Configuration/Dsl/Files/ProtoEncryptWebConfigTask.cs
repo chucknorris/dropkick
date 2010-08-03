@@ -26,7 +26,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public ProtoEncryptWebConfigTask(Path path, string whereIsTheConfig)
         {
-            _where = whereIsTheConfig;
+            _where = ReplaceTokens(whereIsTheConfig);
             _path = path;
         }
 
@@ -39,24 +39,6 @@ namespace dropkick.Configuration.Dsl.Files
             task.WorkingDirectory(_where);
 
             task.RegisterRealTasks(site);
-        }
-    }
-
-    public class ProtoEncryptAppConfigTask :
-        BaseProtoTask
-    {
-        readonly Path _path;
-        readonly string _where;
-
-        public ProtoEncryptAppConfigTask(Path path, string whereIsTheConfig)
-        {
-            _where = whereIsTheConfig;
-            _path = path;
-        }
-
-        public override void RegisterRealTasks(PhysicalServer site)
-        {
-            throw new NotImplementedException("fix this");
         }
     }
 }

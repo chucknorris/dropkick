@@ -16,13 +16,13 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.CommandLine;
 
     public class CommandTestDeploy :
-        Deployment<CommandTestDeploy, object>
+        Deployment<CommandTestDeploy, SampleConfiguration>
     {
         public static Role Web { get; set; }
 
         public CommandTestDeploy()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
                    DeploymentStepsFor(Web, server => 
                    { 
                        server.CommandLine("ipconfig");

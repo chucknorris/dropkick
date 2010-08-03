@@ -13,52 +13,32 @@
 namespace dropkick.Settings
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
-    using System.Reflection;
-    using Magnum.CommandLineParser;
-    using Magnum.Reflection;
+    using Magnum.Configuration;
 
     public class SettingsParser
     {
-        readonly ICommandLineParser _parser = new MonadicCommandLineParser();
-
-        public T Parse<T>(string contents) where T : new()
+        public T Parse<T>(FileInfo file, string commandLine, string environment) where T : new()
         {
-            var result = new T();
-
-            IEnumerable<ICommandLineElement> po = _parser.Parse(contents);
-
-            Set(typeof (T), result, po);
-
-            return result;
+            return (T)Parse(typeof (T), file, commandLine, environment);
         }
 
-        public T Parse<T>(FileInfo file) where T : new()
+        public object Parse(Type t, FileInfo file, string commandLine, string environment)
         {
-            return (T) Parse(typeof (T), file);
-        }
-
-        public object Parse(Type t, FileInfo file)
-        {
-            object result = FastActivator.Create(t);
-
-            string contents = File.ReadAllText(file.FullName);
-            IEnumerable<ICommandLineElement> po = _parser.Parse(contents);
-
-            Set(t, result, po);
-
-            return result;
-        }
-
-        void Set(Type type, object result, IEnumerable<ICommandLineElement> enumerable)
-        {
-            foreach (IDefinitionElement argument in enumerable)
+            var binder = ConfigurationBinderFactory.New(c =>
             {
-                PropertyInfo pi = type.GetProperty(argument.Key);
-                var fp = new FastProperty(pi);
-                fp.Set(result, Convert.ChangeType(argument.Value, pi.PropertyType));
-            }
+                //c.AddJsonFile("global.conf");
+                //c.AddJsonFile("{0}.conf".FormatWith(environment));
+                //c.AddJsonFile(file.FullName);
+                var content = File.ReadAllText(file.FullName);
+                c.AddJson(content);
+                //c.AddCommandLine(commandLine);
+            });
+
+            
+            object result = binder.Bind(t);
+
+            return result;
         }
     }
 }

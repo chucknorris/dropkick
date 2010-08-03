@@ -18,19 +18,17 @@ namespace dropkick.Tasks.Security.Msmq
     public class MsmqGrantWriteTask :
         BaseTask
     {
-        readonly string _group;
-        readonly string _queueName;
-
-        public MsmqGrantWriteTask(string @group, string queueName)
-        {
-            _group = group;
-            _queueName = queueName;
-        }
+        public string Group;
+        public string ServerName;
+        public string QueueName;
+        public bool PrivateQueue;
 
         public override string Name
         {
-            get { return "Grant write to '{0}'".FormatWith(_group); }
+            get { return "Grant write to '{0}'".FormatWith(Group); }
         }
+
+        string QueuePath { get { return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName); } }
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -44,8 +42,14 @@ namespace dropkick.Tasks.Security.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var q = new MessageQueue(_queueName);
-            //do stuff
+
+            var q = new MessageQueue(@"FormatName:DIRECT=OS:{0}".FormatWith(QueuePath));
+            q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
+
+            result.AddGood("Successfully granted write permissions to '{0}' for queue '{1}'".FormatWith(Group, QueuePath));
+
             return result;
         }
     }

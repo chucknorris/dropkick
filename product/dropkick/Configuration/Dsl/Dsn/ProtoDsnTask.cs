@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -25,17 +25,13 @@ namespace dropkick.Configuration.Dsl.Dsn
 
         public ProtoDsnTask(string dsnName)
         {
-            _dsnName = dsnName;
+            _dsnName = ReplaceTokens(dsnName);
         }
-
-        #region DsnOptions Members
 
         public void ForDatabase(string name)
         {
-            _databaseName = name;
+            _databaseName = ReplaceTokens(name);
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer s)
         {

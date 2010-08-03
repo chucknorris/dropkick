@@ -44,7 +44,7 @@ namespace dropkick.Tasks.WinService
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
                     c.Start();
-                    c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(5));
+                    c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
                 }
                 result.AddGood("Started the service '{0}'", ServiceName);
             }

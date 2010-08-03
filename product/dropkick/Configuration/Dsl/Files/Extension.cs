@@ -37,6 +37,12 @@ namespace dropkick.Configuration.Dsl.Files
             return proto;
         }
 
+        public static void CreateEmptyFolder(this ProtoServer protoServer, string folderName)
+        {
+            var task = new ProtoEmptyFolderTask(folderName);
+            protoServer.RegisterProtoTask(task);
+        }
+
         public static void EncryptWebConfig(this ProtoServer protoServer, string file)
         {
             var proto = new ProtoEncryptWebConfigTask(new DotNetPath(), file);

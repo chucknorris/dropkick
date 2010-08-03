@@ -25,18 +25,14 @@ namespace dropkick.Configuration.Dsl.NetworkShare
 
         public ProtoFolderShareTask(string shareName)
         {
-            _shareName = shareName;
+            _shareName = ReplaceTokens(shareName);
         }
-
-        #region FolderShareOptions Members
 
         public FolderShareOptions PointingTo(string path)
         {
-            _pointingTo = path;
+            _pointingTo = ReplaceTokens(path);
             return this;
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer s)
         {

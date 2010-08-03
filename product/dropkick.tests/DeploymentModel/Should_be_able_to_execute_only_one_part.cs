@@ -24,7 +24,7 @@ namespace dropkick.tests.DeploymentModel
         public void TryAll()
         {
             var dep = new TwoRoleDeploy();
-            dep.Initialize(new object(), "TEST");
+            dep.Initialize(new object());
 
             var maps = new RoleToServerMap();
             maps.AddMap("DB", "BOB");
@@ -40,7 +40,7 @@ namespace dropkick.tests.DeploymentModel
         public void TryDb()
         {
             var dep = new TwoRoleDeploy();
-            dep.Initialize(new object(), "TEST");
+            dep.Initialize(new object());
 
             var maps = new RoleToServerMap();
             maps.AddMap("DB","BOB");
@@ -57,7 +57,7 @@ namespace dropkick.tests.DeploymentModel
         public void TryWeb()
         {
             var dep = new TwoRoleDeploy();
-            dep.Initialize(new object(), "test");
+            dep.Initialize(new object());
 
             var maps = new RoleToServerMap();
 

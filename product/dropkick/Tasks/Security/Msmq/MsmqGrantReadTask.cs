@@ -18,19 +18,17 @@ namespace dropkick.Tasks.Security.Msmq
     public class MsmqGrantReadTask :
         BaseTask
     {
-        readonly string _group;
-        readonly string _queueName;
-
-        public MsmqGrantReadTask(string queueName, string @group)
-        {
-            _queueName = queueName;
-            _group = group;
-        }
+        public string Group;
+        public string QueueName;
+        public string ServerName;
+        public bool PrivateQueue;
 
         public override string Name
         {
-            get { return "Grant read to '{0}'".FormatWith(_group); }
+            get { return "Grant read to '{0}'".FormatWith(Group); }
         }
+
+        string QueuePath { get { return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName); } }
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -44,9 +42,11 @@ namespace dropkick.Tasks.Security.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var q = new MessageQueue(_queueName);
-            q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
-            q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+            var q = new MessageQueue(@"FormatName:DIRECT=OS:{0}".FormatWith(QueuePath));
+            q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
+            q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+
+            result.AddGood("Successfully granted Read permissions to '{0}' for queue '{1}'".FormatWith(Group, QueuePath));
             return result;
         }
     }

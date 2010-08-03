@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -26,32 +26,24 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         public string InstanceName { get; set; }
 
-        #region DatabaseOptions Members
-
         public void RunScript(string scriptFile)
         {
-            _scriptFile = scriptFile;
+            _scriptFile = ReplaceTokens(scriptFile);
         }
-
-        #endregion
-
-        #region SqlOptions Members
 
         public DatabaseOptions Database(string databaseName)
         {
-            _databaseName = databaseName;
+            _databaseName = ReplaceTokens(databaseName);
             return this;
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
             s.AddTask(new RunSqlScriptTask(s.Name, _databaseName)
-                      {
-                          ScriptToRun = _scriptFile,
-                          InstanceName = InstanceName
-                      });
+                          {
+                              ScriptToRun = _scriptFile,
+                              InstanceName = InstanceName
+                          });
         }
     }
 }

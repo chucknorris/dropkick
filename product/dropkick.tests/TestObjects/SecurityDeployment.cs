@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.tests.TestObjects
 {
+    using dropkick.Configuration;
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.Security;
 
@@ -20,7 +21,7 @@ namespace dropkick.tests.TestObjects
     {
         public SecurityDeployment()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
                 {
                     int i = 0; //stop bothering me R#
                     DeploymentStepsFor(File, s =>
@@ -59,7 +60,8 @@ namespace dropkick.tests.TestObjects
         public static Role File { get; set; }
     }
 
-    public class SecuritySettings
+    public class SecuritySettings :
+        DropkickConfiguration
     {
         public string AppAccount { get; set; }
         public string InstallPath { get; set; }

@@ -12,7 +12,10 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
+    using System;
     using System.IO;
+    using System.Security.AccessControl;
+    using DeploymentModel;
 
     public class DotNetPath :
         Path
@@ -39,6 +42,47 @@ namespace dropkick.FileSystem
         {
             var di = new DirectoryInfo(GetFullPath(path));
             return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+        }
+
+        //http://www.west-wind.com/weblog/posts/4072.aspx
+        public void SetFileSystemRights(string target, string group, FileSystemRights permission, DeploymentResult r)
+        {
+            if (!IsDirectory(target) && !IsFile(target))
+                return;
+
+            var oldSecurity = Directory.GetAccessControl(target);
+            var newSecurity = new DirectorySecurity();
+
+            newSecurity.SetSecurityDescriptorBinaryForm(oldSecurity.GetSecurityDescriptorBinaryForm());
+
+            var accessRule = new FileSystemAccessRule(group,
+                                                      permission,
+                                                      InheritanceFlags.None,
+                                                      PropagationFlags.NoPropagateInherit,
+                                                      AccessControlType.Allow);
+            bool result;
+            newSecurity.ModifyAccessRule(AccessControlModification.Set, accessRule, out result);
+
+            if (!result)
+                r.AddError("Something wrong happened");
+
+            accessRule = new FileSystemAccessRule(group, 
+                                                  permission,
+                                                  InheritanceFlags.ContainerInherit | 
+                                                  InheritanceFlags.ObjectInherit,
+                                                  PropagationFlags.InheritOnly, 
+                                                  AccessControlType.Allow);
+
+            result = false;
+            newSecurity.ModifyAccessRule(AccessControlModification.Add, accessRule, out result);
+            if (!result)
+                r.AddError("Something wrong happened");
+
+            Directory.SetAccessControl(target, newSecurity);
+            if(result)
+                r.AddGood("whoot");
+
+            if (!result) r.AddError("Something wrong happened");
         }
 
         #endregion

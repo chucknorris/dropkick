@@ -27,24 +27,20 @@ namespace dropkick.Configuration.Dsl.Files
 
         public ProtoCopyFileTask(string @from)
         {
-            _from = from;
+            _from = ReplaceTokens(from);
         }
-
-        #region FileCopyOptions Members
 
         public FileCopyOptions ToDirectory(string destinationPath)
         {
-            _to = destinationPath;
+            _to = ReplaceTokens(destinationPath);
             return this;
         }
 
         public FileCopyOptions RenameTo(string newFileName)
         {
-            _newFileName = newFileName;
+            _newFileName = ReplaceTokens(newFileName);
             return this;
         }
-
-        #endregion
 
         public override void RegisterRealTasks(PhysicalServer site)
         {

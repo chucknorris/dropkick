@@ -10,19 +10,20 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Tasks
+namespace dropkick.Configuration.Dsl.Notes
 {
     using DeploymentModel;
+    using Tasks;
 
     public class NoteProtoTask :
         BaseProtoTask
     {
         public NoteProtoTask(string message)
         {
-            Message = message;
+            Message = ReplaceTokens(message);
         }
 
-        public string Message { get; set; }
+        public string Message { get; private set; }
 
         public override void RegisterRealTasks(PhysicalServer s)
         {

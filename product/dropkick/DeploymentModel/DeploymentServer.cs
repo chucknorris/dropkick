@@ -42,7 +42,7 @@ namespace dropkick.DeploymentModel
 
         public bool IsLocal
         {
-            get { return Environment.MachineName == Name; }
+            get { return Environment.MachineName.EqualsIgnoreCase(Name); }
         }
 
 

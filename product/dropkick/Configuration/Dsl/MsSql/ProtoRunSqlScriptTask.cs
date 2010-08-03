@@ -23,7 +23,7 @@ namespace dropkick.Configuration.Dsl.MsSql
 
         public ProtoRunSqlScriptTask(string databaseName)
         {
-            _databaseName = databaseName;
+            _databaseName = ReplaceTokens(databaseName);
         }
 
         public string ScriptToRun { get; set; }

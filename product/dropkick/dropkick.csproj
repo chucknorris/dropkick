@@ -1,9 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -12,6 +12,26 @@
     <AssemblyName>dropkick</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <UpgradeBackupLocation>
+    </UpgradeBackupLocation>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +41,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,6 +50,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
@@ -62,8 +84,18 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
+    <Compile Include="Configuration\DropkickConfiguration.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
+    <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
+    <Compile Include="HUB.cs" />
+    <Compile Include="StringInterpolation\Interpolator.cs" />
+    <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
+    <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoEmptyFolderTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
@@ -71,6 +103,7 @@
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateRoleTask.cs" />
@@ -162,7 +195,7 @@
     <Compile Include="Tasks\Security\Msmq\CreateQueueTask.cs" />
     <Compile Include="Tasks\Security\Msmq\DeleteQueueTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\WellKnownRoles.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
@@ -227,6 +260,23 @@
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

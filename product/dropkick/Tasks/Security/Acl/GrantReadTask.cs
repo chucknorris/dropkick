@@ -12,44 +12,52 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Acl
 {
-    using System;
-    using System.IO;
     using System.Security.AccessControl;
     using DeploymentModel;
+    using FileSystem;
 
-    public class GrantReadTask :
-        Task
+    public class GrantReadTask : Task
     {
-        string _path;
-        string _group;
+        string _target;
+        readonly string _group;
+        readonly Path _path;
+        
+        public GrantReadTask(string target, string @group, Path dnPath)
+        {
+            _target = target;
+            _group = group;
+            _path = dnPath;
+        }
 
         public string Name
         {
-            get { return "grant read"; }
+            get { return "Grant Read permissions to '{0}' for path '{1}'".FormatWith(_group, _target); }
         }
 
         public DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            _target = _path.GetFullPath(_target);
+
+            if (!_path.IsDirectory(_target) && !_path.IsFile(_target))
+                result.AddAlert("'{0}' does not exist.".FormatWith(_target));
+
+            return result;
         }
 
         public DeploymentResult Execute()
         {
+
             var result = new DeploymentResult();
 
-            DirectorySecurity security = Directory.GetAccessControl(_path);
+            _target = _path.GetFullPath(_target);
 
+            //    result.AddAlert("Could not apply Read permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
+            _path.SetFileSystemRights(_target, _group, FileSystemRights.ReadAndExecute, result);
+            
 
-            var rule = new FileSystemAccessRule(_group,
-                                                FileSystemRights.ReadAndExecute,
-                                                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
-                                                PropagationFlags.InheritOnly,
-                                                AccessControlType.Allow);
-
-            security.AddAccessRule(rule); // won't remove inherited stuff
-
-            Directory.SetAccessControl(_path, security);
-
+            result.AddGood(Name);
             return result;
         }
     }

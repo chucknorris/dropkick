@@ -1,75 +1,77 @@
-using System.IO;
-using dropkick.FileSystem;
-using NUnit.Framework;
-
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.tests.Tasks.Files
 {
+    using System.IO;
+    using FileSystem;
+    using NUnit.Framework;
+
     [TestFixture]
     public class DotNetPathTests
     {
+        DotNetPath _path;
+
+        [SetUp]
+        public void Setup()
+        {
+            _path = new DotNetPath();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            if (Directory.Exists(".\\stuff"))
+                Directory.Delete(".\\stuff");
+        }
+
         [Test]
         public void DirectoryExists()
         {
-            var p = new DotNetPath();
-            try
-            {
-                Directory.CreateDirectory(".\\stuff");
-                Assert.IsTrue(p.IsDirectory(".\\stuff"));
-            }
-            finally
-            {
-                if(Directory.Exists(".\\stuff"))
-                   Directory.Delete(".\\stuff");
-            }
+            Directory.CreateDirectory(".\\stuff");
+            Assert.IsTrue(_path.IsDirectory(".\\stuff"));
         }
 
         [Test]
         public void IsDirectoryReturnsFalseForAFile()
         {
-            var p = new DotNetPath();
-            try
-            {
-                File.Create(".\\stuff.txt").Dispose();
-                Assert.IsFalse(p.IsDirectory(".\\stuff.txt"));
-            }
-            finally
-            {
-                if (File.Exists(".\\stuff.txt"))
-                    File.Delete(".\\stuff.txt");
-            }
-            
+            File.Create(".\\stuff.txt").Dispose();
+            Assert.IsFalse(_path.IsDirectory(".\\stuff.txt"));
         }
 
         [Test]
         public void FileExists()
         {
-            var p = new DotNetPath();
-            try
-            {
-                File.Create(".\\stuff.txt").Dispose();
-                Assert.IsTrue(p.IsFile(".\\stuff.txt"));
-            }
-            finally
-            {
-                if (File.Exists(".\\stuff.txt"))
-                    File.Delete(".\\stuff.txt");
-            }
+            File.Create(".\\stuff.txt").Dispose();
+            Assert.IsTrue(_path.IsFile(".\\stuff.txt"));
+        }
+
+        [Test, Explicit]
+        public void RemotepathIsFileTest()
+        {
+            Assert.IsTrue(_path.IsFile(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\des.exe"));
         }
 
         [Test]
         public void IsFileReturnsFalseForADirecroty()
         {
-            var p = new DotNetPath();
-            try
-            {
-                Directory.CreateDirectory(".\\stuff");
-                Assert.IsFalse (p.IsFile(".\\stuff"));
-            }
-            finally
-            {
-                if (Directory.Exists(".\\stuff"))
-                    Directory.Delete(".\\stuff");
-            }
+            Directory.CreateDirectory(".\\stuff");
+            Assert.IsFalse(_path.IsFile(".\\stuff"));
+        }
+
+        [Test]
+        public void RemoteFileTest()
+        {
+            Assert.IsTrue(File.Exists(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\FHLBank.BloombergIntegration.Host.exe.config"));
         }
     }
 }

@@ -38,7 +38,7 @@ namespace dropkick.DeploymentModel
                 }
 
                 var oo = d.Execute();
-                return o.MergedWith(oo);
+                return oo;
             });
         }
         public DeploymentResult Verify()

@@ -12,45 +12,53 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Acl
 {
-    using System;
-    using System.IO;
     using System.Security.AccessControl;
     using DeploymentModel;
+    using FileSystem;
 
-    public class GrantReadWriteTask :
+    public class GrantReadWriteTask : 
         Task
     {
-        string _path;
-        string _group;
+        string _target;
+        readonly string _group;
+        readonly Path _path;
+        
+        public GrantReadWriteTask(string target, string @group, Path dnPath)
+        {
+            _target = target;
+            _group = group;
+            _path = dnPath;
+        }
 
         public string Name
         {
-            get { return "grant read write"; }
+            get { return "Grant Read/Write permissions to '{0}' for path '{1}'".FormatWith(_group, _target); }
         }
 
         public DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            _target = _path.GetFullPath(_target);
+
+            if (!_path.IsDirectory(_target) && !_path.IsFile(_target))
+                result.AddAlert("'{0}' does not exist.".FormatWith(_target));
+
+            return result;
         }
 
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
 
-            DirectorySecurity security = Directory.GetAccessControl(_path);
+            _target = _path.GetFullPath(_target);
 
-
-            var rule = new FileSystemAccessRule(_group,
-                                                FileSystemRights.Modify,
-                                                InheritanceFlags.ContainerInherit | InheritanceFlags.ObjectInherit,
-                                                PropagationFlags.InheritOnly,
-                                                AccessControlType.Allow);
-
-            security.AddAccessRule(rule);
-
-            Directory.SetAccessControl(_path, security);
-
+            //TODO: Pass into the method
+            //result.AddAlert("Could not apply Modify permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
+            _path.SetFileSystemRights(_target, _group, FileSystemRights.Modify, result);
+                
             return result;
         }
+
     }
 }

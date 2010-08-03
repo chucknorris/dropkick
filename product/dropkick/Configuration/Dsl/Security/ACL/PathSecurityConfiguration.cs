@@ -24,8 +24,6 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             _path = path;
         }
 
-        #region FileSecurityConfig Members
-
         public void Clear()
         {
             var proto = new ProtoPathClearTask(_path);
@@ -43,7 +41,5 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             var proto = new ProtoPathGrantReadWriteTask(_path, group);
             _server.RegisterProtoTask(proto);
         }
-
-        #endregion
     }
 }

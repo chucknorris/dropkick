@@ -30,22 +30,20 @@ namespace dropkick.Configuration.Dsl.WinService
         ServiceStartMode _startMode;
         string _userName;
 
-        public ProtoWinServiceCreateTask(string privateName)
+        public ProtoWinServiceCreateTask(string serviceName)
         {
-            _serviceName = privateName;
+            _serviceName = ReplaceTokens(serviceName);
         }
-
-        #region WinServiceCreateOptions Members
 
         public WinServiceCreateOptions WithDescription(string description)
         {
-            _description = description;
+            _description = ReplaceTokens(description);
             return this;
         }
 
         public WinServiceCreateOptions WithServicePath(string path)
         {
-            _installPath = path;
+            _installPath = ReplaceTokens(path);
             return this;
         }
 
@@ -57,12 +55,18 @@ namespace dropkick.Configuration.Dsl.WinService
 
         public WinServiceCreateOptions WithCredentials(string username, string password)
         {
-            _userName = username;
-            _password = password;
+            _userName = ReplaceTokens(username);
+            _password = ReplaceTokens(password);
             return this;
         }
 
-        #endregion
+        public WinServiceCreateOptions AddDependency(string name)
+        {
+            var dependencyName = ReplaceTokens(name);
+            if (!string.IsNullOrEmpty(dependencyName))
+                _dependencies.Add(dependencyName);
+            return this;
+        }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
@@ -71,18 +75,10 @@ namespace dropkick.Configuration.Dsl.WinService
                                  Dependencies = _dependencies.ToArray(),
                                  UserName = _userName,
                                  Password = _password,
-                                 //ServiceDescription =  _description, no place to put this currently
+                                 ServiceDescription = _description,
                                  ServiceLocation = _installPath,
                                  StartMode = _startMode
                              });
         }
-    }
-
-    public interface WinServiceCreateOptions
-    {
-        WinServiceCreateOptions WithDescription(string description);
-        WinServiceCreateOptions WithServicePath(string path);
-        WinServiceCreateOptions WithStartMode(ServiceStartMode mode);
-        WinServiceCreateOptions WithCredentials(string username, string password);
     }
 }

@@ -14,7 +14,9 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 {
     using System;
     using DeploymentModel;
+    using FileSystem;
     using Tasks;
+    using Tasks.Security.Acl;
 
     public class ProtoPathGrantReadWriteTask :
         BaseProtoTask
@@ -30,7 +32,12 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var path = _path;
+            if (!site.IsLocal)
+                path = RemotePathHelper.Convert(site.Name, _path);
+
+            var task = new GrantReadWriteTask(path,_group,new DotNetPath());
+            site.AddTask(task);
         }
     }
 }
