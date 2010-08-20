@@ -84,6 +84,7 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
+    <Compile Include="Configuration\DropkickConfiguration.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />

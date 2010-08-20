@@ -18,12 +18,12 @@ namespace dropkick.tests.TestObjects
     using Wmi;
 
     public class WinServiceTestDeploy :
-        Deployment<WinServiceTestDeploy, object>
+        Deployment<WinServiceTestDeploy, SampleConfiguration>
     {
         public WinServiceTestDeploy()
         {
             //this is just a means to check the nested closure would work, not that one would actually do this
-            Define((settings, environment) =>
+            Define((settings) =>
                    DeploymentStepsFor(Web, server =>
                                            {
                                                server.WinService("MSMQ").Do(s => s.Msmq().PrivateQueueNamed("dru"));

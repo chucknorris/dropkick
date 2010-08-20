@@ -14,6 +14,7 @@ namespace dropkick.Engine
 {
     using System;
     using System.IO;
+    using Configuration;
     using Configuration.Dsl;
     using DeploymentFinders;
     using log4net;
@@ -57,11 +58,11 @@ namespace dropkick.Engine
                 Deployment deployment = _finder.Find(newArgs.Deployment);
                 Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-                var settings = _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
+                var settings = (DropkickConfiguration)_parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
                               newArgs.Environment);
 
-
-                deployment.Initialize(settings, newArgs.Environment);
+                settings.Environment = newArgs.Environment;
+                deployment.Initialize(settings);
 
                 DeploymentPlanDispatcher.KickItOutThereAlready(deployment, newArgs);
             }

@@ -17,17 +17,17 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Msmq;
 
     public class SingleRoleDeploy :
-        Deployment<SingleRoleDeploy, object>
+        Deployment<SingleRoleDeploy, SampleConfiguration>
     {
         public SingleRoleDeploy()
         {
-            Define((settings, environment) =>
+            Define((settings) =>
                    DeploymentStepsFor(Web, server =>
                    {
                        server.CopyDirectory(@".\bob")
                          .To(@".\bill");
 
-                       server.CopyFile(@".\{0}.web.config".FormatWith(environment))
+                       server.CopyFile(@".\{0}.web.config".FormatWith(settings.Environment))
                            .ToDirectory("web.config");
 
                        server.Msmq()

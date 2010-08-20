@@ -85,6 +85,7 @@
       <Link>SolutionVersion.cs</Link>
     </Compile>
     <Compile Include="Configuration\Dsl\CheckingPlanBuildingLogic.cs" />
+    <Compile Include="Configuration\Dsl\CopyFilesProtoWithSettings.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
     <Compile Include="DeploymentModel\DeploymentPlanExecution.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="TestObjects\IisTestDeploy.cs" />
     <Compile Include="TestObjects\MsSqlTestDeploy.cs" />
     <Compile Include="TestObjects\MsmqTestDeploy.cs" />
+    <Compile Include="TestObjects\SampleConfiguration.cs" />
     <Compile Include="TestObjects\SecurityDeployment.cs" />
     <Compile Include="TestObjects\SingleRoleDeploy.cs" />
     <Compile Include="TestObjects\TwoRoleDeploy.cs" />

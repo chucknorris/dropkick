@@ -10,24 +10,11 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.console
+namespace dropkick.tests.TestObjects
 {
-    using Configuration;
-    using Configuration.Dsl;
-    using Configuration.Dsl.Notes;
+    using dropkick.Configuration;
 
-    public class SmokeDeployment :
-        Deployment<SmokeDeployment, SmokeSettings>
-    {
-        public SmokeDeployment()
-        {
-            Define(settings => DeploymentStepsFor(One, server => server.Note("hi")));
-        }
-
-        public static Role One { get; set; }
-    }
-
-    public class SmokeSettings :
+    public class SampleConfiguration :
         DropkickConfiguration
     {
     }

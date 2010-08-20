@@ -4,11 +4,11 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Iis;
 
     public class IisTestDeploy :
-        Deployment<IisTestDeploy, object>
+        Deployment<IisTestDeploy, SampleConfiguration>
     {
         public IisTestDeploy()
         {
-            Define((settings, environment) => DeploymentStepsFor(Web, server =>
+            Define((settings) => DeploymentStepsFor(Web, server =>
             {
                 server.Iis7Site("Default Web Site")
                     .VirtualDirectory("dk_test")

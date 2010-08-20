@@ -16,11 +16,11 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.Files;
 
     public class TwoRoleDeploy :
-        Deployment<TwoRoleDeploy, object>
+        Deployment<TwoRoleDeploy, SampleConfiguration>
     {
         public TwoRoleDeploy()
         {
-            Define((settings, environment) =>
+            Define(settings =>
             {
                 DeploymentStepsFor(Web, server =>
                 {
@@ -32,12 +32,12 @@ namespace dropkick.tests.TestObjects
                 });
 
                 DeploymentStepsFor(Db, server =>
-                                       {
-                                           server.CopyDirectory(o =>
-                                                                {
-                                                                    o.Include("..\\FHLBank.Cue.Website");
-                                                                }).To("E:\\FHLBApps\\CUE");
-                                       });
+                {
+                    server.CopyDirectory(o =>
+                    {
+                        o.Include("..\\FHLBank.Cue.Website");
+                    }).To("E:\\FHLBApps\\CUE");
+                });
             });
         }
 
