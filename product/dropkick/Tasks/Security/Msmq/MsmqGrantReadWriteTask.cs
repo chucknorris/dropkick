@@ -20,39 +20,35 @@ namespace dropkick.Tasks.Security.Msmq
     public class MsmqGrantReadWriteTask :
         BaseTask
     {
-        private PhysicalServer _server;
         readonly string _group;
-        private QueueAddress Address { get; set; }
+        readonly QueueAddress _address;
 
-        public MsmqGrantReadWriteTask(PhysicalServer server, QueueAddress address, string group)
+        public MsmqGrantReadWriteTask(QueueAddress address, string group)
         {
-            _server = server;
             _group = group;
-            Address = address;
+            _address = address;
         }
 
         public MsmqGrantReadWriteTask(PhysicalServer server, string queueName, string group)
         {
-            _server = server;
             _group = group;
             var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
-            Address = new QueueAddress(ub.Uri);
+            _address = new QueueAddress(ub.Uri);
         }
 
         public override string Name
         {
-            get { return "Grant read/write to '{0}' for queue '{1}'".FormatWith(_group, Address.ActualUri); }
+            get { return "Grant read/write to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri); }
         }
 
         public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
-            if (_server.IsLocal)
+            if (_address.IsLocal)
                 VerifyInAdministratorRole(result);
             else
-                result.AddAlert(string.Format("Cannot check for queue '{0}' on server '{1}' while on server '{2}'",
-                                Address, _server.Name, Environment.MachineName));
+                result.AddAlert("Cannot administer the private remote queue '{0}' while on server '{1}'".FormatWith(_address, Environment.MachineName));
 
             return result;
         }
@@ -61,7 +57,7 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-            if (_server.IsLocal)
+            if (_address.IsLocal)
                 ProcessLocalQueue(result);
             else
                 ProcessRemoteQueue(result);
@@ -72,20 +68,19 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessLocalQueue(DeploymentResult result)
         {
-            var q = new MessageQueue(Address.FormatName);
+            var q = new MessageQueue(_address.FormatName);
             q.SetPermissions(_group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
             q.SetPermissions(_group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
             q.SetPermissions(_group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
 
-            result.AddGood("Successfully granted Read/Write permissions to '{0}' for queue '{1}'".FormatWith(_group, Address.ActualUri));
+            result.AddGood("Successfully granted Read/Write permissions to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri));
         }
 
         void ProcessRemoteQueue(DeploymentResult result)
         {
-            var message = "Cannot create a private queue on the remote machine '{0}' while on '{1}'."
-                .FormatWith(_server.Name, Environment.MachineName);
+            var message = "Cannot administer the private remote queue '{0}' while on server '{1}'.".FormatWith(_address, Environment.MachineName);
 
             result.AddError(message);
         }

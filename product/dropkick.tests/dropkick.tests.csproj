@@ -106,7 +106,10 @@
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\GrantReadWriteTest.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTest.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTest.cs" />
+    <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTest.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />

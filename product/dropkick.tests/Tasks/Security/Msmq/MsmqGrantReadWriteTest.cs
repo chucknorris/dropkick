@@ -3,14 +3,13 @@
 namespace dropkick.tests.Tasks.Security.Msmq
 {
     using System.Messaging;
-    using dropkick.DeploymentModel;
     using dropkick.Tasks.Security.Msmq;
     using Dsl.Msmq;
     using NUnit.Framework;
 
     [TestFixture]
     [Category("Integration")]
-    public class GrantReadWriteTest
+    public class MsmqGrantReadWriteTest
     {
         QueueAddress _address;
 
@@ -29,8 +28,7 @@ namespace dropkick.tests.Tasks.Security.Msmq
         [Test]
         public void Execute()
         {
-            var ps = new DeploymentServer(Environment.MachineName);
-            var t = new MsmqGrantReadWriteTask(ps, _address, @"Everyone");
+            var t = new MsmqGrantReadWriteTask(_address, @"Everyone");
             var r = t.Execute();
 
             Assert.IsFalse(r.ContainsError(), "Errors occured during permission setting.");

@@ -17,8 +17,7 @@
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var ub = new UriBuilder("msmq", site.Name);
-            ub.Path = _queue;
+            var ub = new UriBuilder("msmq", site.Name) { Path = _queue };
             site.AddTask(new SetSensibleMsmqDefaults(new QueueAddress(ub.Uri)));
 
         }

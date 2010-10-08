@@ -12,7 +12,9 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.Msmq
 {
+    using System;
     using dropkick.DeploymentModel;
+    using dropkick.Dsl.Msmq;
     using dropkick.Tasks;
     using Tasks.Security.Msmq;
 
@@ -30,13 +32,8 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new MsmqGrantWriteTask
-                           {
-                               ServerName = site.Name,
-                               QueueName = _queue,
-                               Group = _group,
-                               PrivateQueue = true
-                           };
+            var ub = new UriBuilder("msmq", site.Name) { Path = _queue };
+            var task = new MsmqGrantWriteTask(new QueueAddress(ub.Uri), _group);
 
             site.AddTask(task);
         }
