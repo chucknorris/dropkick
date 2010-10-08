@@ -12,7 +12,7 @@
 
         public ProtoSetSensibleMsmqDefaults(string queue)
         {
-            _queue = queue;
+            _queue = ReplaceTokens(queue);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)

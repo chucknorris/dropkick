@@ -12,26 +12,25 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.Msmq
 {
-    using System;
     using dropkick.DeploymentModel;
     using dropkick.Tasks;
     using Tasks.Security.Msmq;
 
-    public class ProtoQueueReadWriteTask :
+    public class ProtoMsmqGrantWriteTask :
         BaseProtoTask
     {
         readonly string _group;
         readonly string _queue;
 
-        public ProtoQueueReadWriteTask(string queue, string @group)
+        public ProtoMsmqGrantWriteTask(string queue, string @group)
         {
-            _queue = queue;
-            _group = group;
+            _queue = ReplaceTokens(queue);
+            _group = ReplaceTokens(group);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new MsmqGrantReadWriteTask
+            var task = new MsmqGrantWriteTask
                            {
                                ServerName = site.Name,
                                QueueName = _queue,

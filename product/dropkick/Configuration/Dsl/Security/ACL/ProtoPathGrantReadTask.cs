@@ -25,8 +25,8 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public ProtoPathGrantReadTask(string path, string group)
         {
-            _path = path;
-            _group = group;
+            _path = ReplaceTokens(path);
+            _group = ReplaceTokens(group);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
