@@ -12,29 +12,43 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Msmq
 {
+    using System;
     using System.Messaging;
     using DeploymentModel;
+    using Dsl.Msmq;
 
     public class MsmqGrantReadWriteTask :
         BaseTask
     {
-        public string Group;
-        public string ServerName;
-        public string QueueName;
-        public bool PrivateQueue;
+        readonly string _group;
+        readonly QueueAddress _address;
+
+        public MsmqGrantReadWriteTask(QueueAddress address, string group)
+        {
+            _group = group;
+            _address = address;
+        }
+
+        public MsmqGrantReadWriteTask(PhysicalServer server, string queueName, string group)
+        {
+            _group = group;
+            var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
+            _address = new QueueAddress(ub.Uri);
+        }
 
         public override string Name
         {
-            get { return "Grant read/write to '{0}' for queue '{1}'".FormatWith(Group, QueuePath); }
+            get { return "Grant read/write to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri); }
         }
-
-        string QueuePath {get{ return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName);}}
 
         public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
-            VerifyInAdministratorRole(result);
+            if (_address.IsLocal)
+                VerifyInAdministratorRole(result);
+            else
+                result.AddAlert("Cannot administer the private remote queue '{0}' while on server '{1}'".FormatWith(_address, Environment.MachineName));
 
             return result;
         }
@@ -43,16 +57,34 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-            var q = new MessageQueue(@"FormatName:DIRECT=OS:{0}".FormatWith(QueuePath));
-            q.SetPermissions(Group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(Group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
-            q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
-            q.SetPermissions(Group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
+            if (_address.IsLocal)
+                ProcessLocalQueue(result);
+            else
+                ProcessRemoteQueue(result);
 
-            result.AddGood("Successfully granted Read/Write permissions to '{0}' for queue '{1}'".FormatWith(Group, QueuePath));
 
             return result;
         }
+
+        void ProcessLocalQueue(DeploymentResult result)
+        {
+            var q = new MessageQueue(_address.FormatName);
+            q.SetPermissions(_group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
+            q.SetPermissions(_group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
+            q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+            q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
+            q.SetPermissions(_group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
+
+            result.AddGood("Successfully granted Read/Write permissions to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri));
+        }
+
+        void ProcessRemoteQueue(DeploymentResult result)
+        {
+            var message = "Cannot administer the private remote queue '{0}' while on server '{1}'.".FormatWith(_address, Environment.MachineName);
+
+            result.AddError(message);
+        }
+
+
     }
 }

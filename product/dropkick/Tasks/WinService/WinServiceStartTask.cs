@@ -3,12 +3,14 @@ namespace dropkick.Tasks.WinService
     using System;
     using System.ServiceProcess;
     using DeploymentModel;
+    using TimeoutException = System.ServiceProcess.TimeoutException;
 
 
     public class WinServiceStartTask :
         BaseServiceTask
     {
-        public WinServiceStartTask(string machineName, string serviceName) : base(machineName, serviceName)
+        public WinServiceStartTask(string machineName, string serviceName)
+            : base(machineName, serviceName)
         {
         }
 
@@ -44,7 +46,15 @@ namespace dropkick.Tasks.WinService
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
                     c.Start();
-                    c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                    try
+                    {
+                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                    }
+                    catch (TimeoutException ex)
+                    {
+                        result.AddAlert(
+                            "Service did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.");
+                    }
                 }
                 result.AddGood("Started the service '{0}'", ServiceName);
             }

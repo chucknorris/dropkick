@@ -13,8 +13,10 @@
 namespace dropkick.tests.Tasks.Msmq
 {
     using System;
+    using System.Messaging;
     using dropkick.DeploymentModel;
     using dropkick.Tasks.Msmq;
+    using Dsl.Msmq;
     using NUnit.Framework;
 
     [TestFixture]
@@ -22,19 +24,32 @@ namespace dropkick.tests.Tasks.Msmq
     public class MsmqTest
     {
         [Test]
-        public void Execute()
+        public void ExecuteLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
-            var t = new MsmqTask(ps, "dk_test");
-            t.Execute();
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var address = new QueueAddress(ub.Uri);
+
+            if (MessageQueue.Exists(address.LocalName))
+                MessageQueue.Delete(address.LocalName);
+
+            var t = new MsmqTask(ps, address);
+            var r = t.Execute();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create execution.");
+
         }
 
         [Test]
-        public void Verify()
+        public void VerifyLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
-            var t = new MsmqTask(ps, "dk_test");
-            DeploymentResult r = t.VerifyCanRun();
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var t = new MsmqTask(ps, new QueueAddress(ub.Uri));
+            var r = t.VerifyCanRun();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create verification.");
         }
+
     }
 }

@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.Msmq
 {
-    using System;
 
     public class QueueSecurityConfiguration :
         QueueSecurityConfig
@@ -25,22 +24,28 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
             _server = server;
             _queue = queue;
         }
-              
+
+        public void SetSensibleMsmqDefaults()
+        {
+            var proto = new ProtoSetSensibleMsmqDefaults(_queue);
+            _server.RegisterProtoTask(proto);
+        }
+
         public void GrantRead(string group)
         {
-            var proto = new ProtoQueueReadTask(_queue, group);
+            var proto = new ProtoMsmqGrantReadTask(_queue, group);
             _server.RegisterProtoTask(proto);
         }
 
         public void GrantWrite(string group)
         {
-            var proto = new ProtoQueueWriteTask(_queue, group);
+            var proto = new ProtoMsmqGrantWriteTask(_queue, group);
             _server.RegisterProtoTask(proto);
         }
 
         public void GrantReadWrite(string group)
         {
-            var proto = new ProtoQueueReadWriteTask(_queue, group);
+            var proto = new ProtoMsmqGrantReadWriteTask(_queue, group);
             _server.RegisterProtoTask(proto);
         }
     }

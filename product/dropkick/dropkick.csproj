@@ -93,11 +93,12 @@
     <Compile Include="HUB.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEmptyFolderTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueWriteTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantReadTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataReaderTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />

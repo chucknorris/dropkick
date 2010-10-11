@@ -14,30 +14,26 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
 {
     using System;
     using dropkick.DeploymentModel;
+    using dropkick.Dsl.Msmq;
     using dropkick.Tasks;
-    using Tasks.Security.Msmq;
+    using dropkick.Tasks.Security.Msmq;
 
-    public class ProtoQueueReadWriteTask :
+    public class ProtoMsmqGrantReadTask :
         BaseProtoTask
     {
         readonly string _group;
         readonly string _queue;
 
-        public ProtoQueueReadWriteTask(string queue, string @group)
+        public ProtoMsmqGrantReadTask(string queue, string @group)
         {
-            _queue = queue;
-            _group = group;
+            _queue = ReplaceTokens(queue);
+            _group = ReplaceTokens(group);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new MsmqGrantReadWriteTask
-                           {
-                               ServerName = site.Name,
-                               QueueName = _queue,
-                               Group = _group,
-                               PrivateQueue = true
-                           };
+            var ub = new UriBuilder("msmq", site.Name) { Path = _queue };
+            var task = new MsmqGrantReadTask(new QueueAddress(ub.Uri), _group);
 
             site.AddTask(task);
         }
