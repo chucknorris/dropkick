@@ -1,0 +1,115 @@
+<Configuration>
+  <SettingsComponent>
+    <string />
+    <integer />
+    <boolean>
+      <setting name="SolutionAnalysisEnabled">False</setting>
+    </boolean>
+  </SettingsComponent>
+  <RecentFiles>
+    <RecentFiles>
+      <File id="d:Miscellaneous Files/f:setup.exe.config/l:D!?Downloads?SQL Server 2008 R2?setup.exe.config" caret="0" fromTop="0" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:TestObjects/f:RoundhousETestDeploy.cs" caret="395" fromTop="12" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:Extension.cs" caret="858" fromTop="18" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/f:BaseProtoTask.cs" caret="904" fromTop="22" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEConfiguration.cs" caret="0" fromTop="0" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3040" fromTop="43" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEOptions.cs" caret="1289" fromTop="25" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:Msmq/f:MsmqTask.cs" caret="983" fromTop="17" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2384" fromTop="25" />
+    </RecentFiles>
+    <RecentEdits>
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEOptions.cs" caret="1165" fromTop="23" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEConfiguration.cs" caret="0" fromTop="8" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEConfiguration.cs" caret="0" fromTop="0" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3431" fromTop="44" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3431" fromTop="7" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3431" fromTop="19" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="2924" fromTop="10" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1368" fromTop="17" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1389" fromTop="17" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEOptions.cs" caret="1087" fromTop="21" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1017" fromTop="4" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="2352" fromTop="16" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="2180" fromTop="34" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1549" fromTop="9" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1945" fromTop="24" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEOptions.cs" caret="1289" fromTop="25" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1397" fromTop="18" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1139" fromTop="9" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="913" fromTop="15" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="1241" fromTop="23" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="1448" fromTop="27" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3040" fromTop="43" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="4096" fromTop="50" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="3254" fromTop="27" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="3383" fromTop="35" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="3862" fromTop="38" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2307" fromTop="26" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2090" fromTop="22" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="1699" fromTop="30" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="388" fromTop="16" />
+    </RecentEdits>
+  </RecentFiles>
+  <NAntValidationSettings>
+    <NAntPath value="" />
+  </NAntValidationSettings>
+  <UnitTestRunner>
+    <Providers />
+  </UnitTestRunner>
+  <UnitTestRunnerNUnit>
+    <NUnitInstallDir IsNull="False">
+    </NUnitInstallDir>
+    <UseAddins>Never</UseAddins>
+  </UnitTestRunnerNUnit>
+  <CompletionStatisticsManager>
+    <ItemStatistics item="Default">
+      <Item value="roundhouse" priority="0" />
+      <Item value="runners" priority="0" />
+      <Item value="var" priority="4" />
+      <Item value="new" priority="5" />
+      <Item value="null" priority="0" />
+      <Item value="public" priority="3" />
+      <Item value="class" priority="1" />
+      <Item value="RoundhousE" priority="0" />
+      <Item value="RoundhousEOptions`0" priority="7" />
+      <Item value="string" priority="5" />
+      <Item value="bool" priority="1" />
+      <Item value="interface" priority="0" />
+      <Item value="RoundhousEOptionsWithRestore`0" priority="1" />
+      <Item value="enum" priority="0" />
+      <Item value="useSimple" priority="0" />
+      <Item value="environment" priority="0" />
+      <Item value="_databaseType" priority="1" />
+      <Item value="type" priority="0" />
+      <Item value="return" priority="0" />
+      <Item value="this" priority="0" />
+      <Item value="_scriptsLocation" priority="3" />
+      <Item value="ReplaceTokens`0" priority="0" />
+      <Item value="folderPath" priority="0" />
+      <Item value="_instanceName" priority="2" />
+      <Item value="_databaseName" priority="2" />
+      <Item value="_environmentName" priority="1" />
+      <Item value="_useSimpleRestoreMode" priority="1" />
+      <Item value="false" priority="3" />
+      <Item value="build`0" priority="0" />
+      <Item value="DllFileVersionResolver`0" priority="0" />
+      <Item value="fsa" priority="0" />
+      <Item value="private" priority="0" />
+      <Item value="static" priority="0" />
+      <Item value="readonly" priority="0" />
+      <Item value="LogManager`0" priority="0" />
+      <Item value="typeof" priority="0" />
+      <Item value="RoundhousETask`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:System.String">
+      <Item value="FormatWith`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:roundhouse.infrastructure.filesystem.FileSystemAccess">
+      <Item value="combine_paths`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@log4net.LogManager">
+      <Item value="GetLogger`0" priority="0" />
+    </ItemStatistics>
+  </CompletionStatisticsManager>
+</Configuration>

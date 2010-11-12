@@ -10,6 +10,13 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System;
+using dropkick.Tasks.RoundhousE;
+using log4net;
+using Microsoft.Build.Framework;
+using roundhouse.infrastructure.app;
+using roundhouse.runners;
+
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
     using DeploymentModel;
@@ -22,63 +29,76 @@ namespace dropkick.Configuration.Dsl.RoundhousE
     {
         public RoundhousEProtoTask()
         {
-            SqlFilesLocation = ".\\database";
-            InstanceName = ".";
+            //TODO: get the defaults from global configuration
         }
 
-        public string EnvironmentName { get; private set; }
-        public string InstanceName { get; private set; }
-        public string DatabaseName { get; private set; }
-        public string SqlFilesLocation { get; private set; }
-        public bool UseSimpleRestoreMode { get; private set; }
-        public string DatabaseType { get; private set; }
+        private string _environmentName;
+        private string _instanceName;
+        private string _databaseName;
+        private string _scriptsLocation;
+        private bool _useSimpleRecoveryMode;
+        private string _databaseType;
 
-        public RoundhousEOptions Environment(string name)
+        public RoundhousEOptions ForDatabaseType(string type)
         {
-            EnvironmentName = ReplaceTokens(name);
+            _databaseType = ReplaceTokens(type);
             return this;
         }
 
         public RoundhousEOptions OnInstance(string name)
         {
-            InstanceName = ReplaceTokens(name);
+            _instanceName = ReplaceTokens(name);
             return this;
         }
 
         public RoundhousEOptions OnDatabase(string name)
         {
-            DatabaseName = ReplaceTokens(name);
+            _databaseName = ReplaceTokens(name);
             return this;
         }
 
-        public RoundhousEOptions UseMsSqlServer2005()
+        public RoundhousEOptions WithScriptsFolder(string scriptsLocation)
         {
-            DatabaseType = "2005";
+            _scriptsLocation = ReplaceTokens(scriptsLocation);
+        }
+
+        public RoundhousEOptions ForEnvironment(string environment)
+        {
+            _environmentName = ReplaceTokens(environment);
             return this;
         }
 
-        public RoundhousEOptions UseMsSqlServer2008()
+        public RoundhousEOptions UseSimpleRecoveryMode(bool useSimple)
         {
-            DatabaseType = "2008";
+            _useSimpleRecoveryMode = useSimple;
             return this;
         }
 
-        public RoundhousEOptions WithRecoveryMode(string type)
+        public RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore)
         {
-            UseSimpleRestoreMode = true;
-            return this;
+            throw new NotImplementedException();
+        }
+
+        public RoundhousEOptions RestoreDatabaseFrom(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public RoundhousEOptions WithRestoreOptions(string options)
+        {
+            throw new NotImplementedException();
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var rhtask = new LocalCommandLineTask(".\\roundhouse\\rh.exe");
+            var task = new RoundhousETask(_instanceName,_databaseName,_databaseType,_scriptsLocation,_environmentName,_useSimpleRecoveryMode);
+            //rhtask.Args = "/d={0} /f={1} /s={2} /env={3} /dt={4}".FormatWith(DatabaseName, SqlFilesLocation, site.Name,
+            //                                                                 EnvironmentName, DatabaseType);
+            //if (UseSimpleRestoreMode)
+            //    rhtask.Args += " /simple";
 
-            rhtask.Args = "/d={0} /f={1} /s={2} /env={3} /dt={4}".FormatWith(DatabaseName, SqlFilesLocation, site.Name,
-                                                                             EnvironmentName, DatabaseType);
-            if (UseSimpleRestoreMode)
-                rhtask.Args += " /simple";
-
-            site.AddTask(rhtask);
+            site.AddTask(task);
         }
     }
+
 }
