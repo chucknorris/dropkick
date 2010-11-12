@@ -1,31 +1,34 @@
-using log4net;
-using roundhouse.consoles;
-using roundhouse.infrastructure.app;
-using roundhouse.folders;
-using roundhouse.infrastructure.containers;
-using roundhouse.infrastructure.filesystem;
-using roundhouse.migrators;
-using roundhouse.resolvers;
-using roundhouse.runners;
-
+// Copyright 2007-2010 The Apache Software Foundation.
+// 
+// Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
+// this file except in compliance with the License. You may obtain a copy of the 
+// License at 
+// 
+//     http://www.apache.org/licenses/LICENSE-2.0 
+// 
+// Unless required by applicable law or agreed to in writing, software distributed 
+// under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
+// CONDITIONS OF ANY KIND, either express or implied. See the License for the 
+// specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.RoundhousE
 {
-    using System;
     using DeploymentModel;
+    using log4net;
 
     public class RoundhousETask :
         Task
     {
-        private static readonly log4net.ILog _logger = LogManager.GetLogger(typeof (RoundhousETask));
-        
-        private readonly string _instanceName;
-        private readonly string _databaseName;
-        private readonly string _databaseType;
-        private readonly string _scriptsLocation;
-        private readonly string _environmentName;
-        private readonly bool _useSimpleRecoveryMode;
+        static readonly ILog _logger = LogManager.GetLogger(typeof (RoundhousETask));
 
-        public RoundhousETask(string instanceName, string databaseName, string databaseType, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode)
+        readonly string _instanceName;
+        readonly string _databaseName;
+        readonly string _databaseType;
+        readonly string _scriptsLocation;
+        readonly string _environmentName;
+        readonly bool _useSimpleRecoveryMode;
+
+        public RoundhousETask(string instanceName, string databaseName, string databaseType, string scriptsLocation,
+                              string environmentName, bool useSimpleRecoveryMode)
         {
             _instanceName = instanceName;
             _databaseName = databaseName;
@@ -37,13 +40,20 @@ namespace dropkick.Tasks.RoundhousE
 
         public string Name
         {
-            get { return "Using RoundhousE to deploy the '{0}' database to '{1}' with scripts folder '{2}'.".FormatWith(_databaseName,_instanceName,_scriptsLocation); }
+            get
+            {
+                return
+                    "Using RoundhousE to deploy the '{0}' database to '{1}' with scripts folder '{2}'.".FormatWith(
+                        _databaseName, _instanceName, _scriptsLocation);
+            }
         }
 
         public DeploymentResult VerifyCanRun()
         {
             var results = new DeploymentResult();
 
+            //check you can connect to the _instancename
+            //check that the path _scriptsLocation exists
             results.AddNote("I don't know what to do here...");
 
             return results;
@@ -53,47 +63,12 @@ namespace dropkick.Tasks.RoundhousE
         {
             var results = new DeploymentResult();
 
-            var config = GetRoundhousEConfiguration();
-            ApplicationConfiguraton.set_defaults_if_properties_are_not_set(config);
-            ApplicationConfiguraton.build_the_container(config);
 
-            var runner = GetMigrationRunner(config);
-            runner.run();
+            RoundhousEClientApi.Run(_instanceName, _databaseName, _databaseType, _scriptsLocation, _environmentName,
+                                    _useSimpleRecoveryMode);
+
 
             return results;
         }
-
-        private ConfigurationPropertyHolder GetRoundhousEConfiguration()
-        {
-            var config = new ConsoleConfiguration(_logger);
-
-            config.DatabaseName = _databaseName;
-            config.ServerName = _instanceName;
-            config.DatabaseType = _databaseType;
-            config.SqlFilesDirectory = _scriptsLocation;
-            config.EnvironmentName = _environmentName;
-            config.RecoveryModeSimple = _useSimpleRecoveryMode;
-
-            config.Silent = true;
-            return config;
-        }
-
-
-        private IRunner GetMigrationRunner(ConfigurationPropertyHolder configuration)
-        {
-            return new RoundhouseMigrationRunner(
-                 configuration.RepositoryPath,
-                 Container.get_an_instance_of<roundhouse.environments.Environment>(),
-                 Container.get_an_instance_of<KnownFolders>(),
-                 Container.get_an_instance_of<FileSystemAccess>(),
-                 Container.get_an_instance_of<DatabaseMigrator>(),
-                 Container.get_an_instance_of<VersionResolver>(),
-                 configuration.Silent,
-                 configuration.Drop,
-                 configuration.DoNotCreateDatabase,
-                 configuration.WithTransaction,
-                 configuration.RecoveryModeSimple);
-        }
-
     }
 }
