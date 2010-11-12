@@ -66,6 +66,7 @@ namespace dropkick.Tasks.RoundhousE
         private ConfigurationPropertyHolder GetRoundhousEConfiguration()
         {
             var config = new ConsoleConfiguration(_logger);
+
             config.DatabaseName = _databaseName;
             config.ServerName = _instanceName;
             config.DatabaseType = _databaseType;
