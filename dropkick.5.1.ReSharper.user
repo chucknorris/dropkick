@@ -8,41 +8,38 @@
   </SettingsComponent>
   <RecentFiles>
     <RecentFiles>
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:Extension.cs" caret="858" fromTop="18" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEConfiguration.cs" caret="0" fromTop="0" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3040" fromTop="43" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEOptions.cs" caret="1289" fromTop="25" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:TestObjects/f:GenericDeploymentFinder.cs" caret="0" fromTop="0" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:TestObjects/f:CommandTestDeploy.cs" caret="0" fromTop="0" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:Msmq/f:MsmqTask.cs" caret="983" fromTop="17" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/f:BaseProtoTask.cs" caret="904" fromTop="22" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:Msmq/f:MsmqTest.cs" caret="890" fromTop="14" />
-      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:Files/f:CopyFileTest.cs" caret="1092" fromTop="19" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:RoundhousE/f:RoundhousETest.cs" caret="363" fromTop="15" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:TestObjects/f:SecurityDeployment.cs" caret="1719" fromTop="25" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:Security/d:Msmq/f:MsmqGrantWriteTest.cs" caret="0" fromTop="0" />
       <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:Security/f:LogOnAsServiceTask.cs" caret="0" fromTop="0" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Engine/f:Runner.cs" caret="1832" fromTop="11" />
       <File id="4F9DA31A-86EE-4CB1-BEB3-A00155CCB351/d:settings/f:local.servermaps" caret="8" fromTop="0" />
-      <File id="4F9DA31A-86EE-4CB1-BEB3-A00155CCB351/f:Program.cs" caret="1679" fromTop="22" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:MsSql/f:BaseSqlTask.cs" caret="0" fromTop="0" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousEClientApi.cs" caret="3739" fromTop="24" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="670" fromTop="0" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/f:HUB.cs" caret="0" fromTop="0" />
-      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:TestObjects/f:RoundhousETestDeploy.cs" caret="0" fromTop="0" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:TestObjects/f:RoundhousETestDeploy.cs" caret="166" fromTop="4" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1733" fromTop="24" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:FileSystem/f:DotNetPath.cs" caret="1990" fromTop="47" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Settings/f:SettingsParser.cs" caret="797" fromTop="19" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Settings/f:SettingsParsing.cs" caret="746" fromTop="21" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:MsSql/f:BaseSqlTask.cs" caret="1046" fromTop="0" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:MsSql/f:OutputSqlTask.cs" caret="951" fromTop="0" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:MsSql/f:RunSqlScriptTask.cs" caret="0" fromTop="0" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Prompting/f:PromptService.cs" caret="0" fromTop="0" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Prompting/f:Extension.cs" caret="331" fromTop="13" />
+      <File id="4F9DA31A-86EE-4CB1-BEB3-A00155CCB351/f:Program.cs" caret="816" fromTop="20" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:FileSystem/f:RemotePathHelper.cs" caret="1079" fromTop="27" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:DeploymentModel/f:DeploymentServer.cs" caret="1035" fromTop="24" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/f:BaseProtoTask.cs" caret="1207" fromTop="25" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:StringInterpolation/f:Interpolator.cs" caret="732" fromTop="15" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:Files/f:CopyFileTest.cs" caret="2670" fromTop="39" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:Files/f:ProtoCopyFileTask.cs" caret="1696" fromTop="32" />
     </RecentFiles>
     <RecentEdits>
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1549" fromTop="9" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1945" fromTop="24" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEOptions.cs" caret="1289" fromTop="25" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1397" fromTop="18" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1139" fromTop="9" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="23" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="27" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3040" fromTop="43" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="50" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="27" />
-      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="3" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="38" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="9" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="34" />
@@ -62,6 +59,17 @@
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="20" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="22" />
       <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Tasks/d:RoundhousE/f:RoundhousETask.cs" caret="2628" fromTop="72" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:FileSystem/f:DotNetPath.cs" caret="1462" fromTop="34" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:FileSystem/f:DotNetPath.cs" caret="1777" fromTop="40" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="3184" fromTop="91" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:RoundhousE/f:RoundhousEProtoTask.cs" caret="1733" fromTop="24" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Settings/f:SettingsParsing.cs" caret="564" fromTop="16" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Settings/f:SettingsParsing.cs" caret="377" fromTop="12" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:Files/f:ProtoCopyFileTask.cs" caret="1680" fromTop="40" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:FileSystem/f:RemotePathHelper.cs" caret="1079" fromTop="27" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:Files/f:ProtoCopyFileTask.cs" caret="1513" fromTop="29" />
+      <File id="34B12D58-36E5-4D51-A34E-C6E9FD53D70E/d:Configuration/d:Dsl/d:Files/f:ProtoCopyFileTask.cs" caret="1680" fromTop="33" />
+      <File id="05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B/d:Tasks/d:Files/f:CopyFileTest.cs" caret="2599" fromTop="36" />
     </RecentEdits>
   </RecentFiles>
   <NAntValidationSettings>
@@ -79,8 +87,8 @@
     <ItemStatistics item="Default">
       <Item value="roundhouse" priority="0" />
       <Item value="runners" priority="0" />
-      <Item value="var" priority="7" />
-      <Item value="new" priority="7" />
+      <Item value="var" priority="8" />
+      <Item value="new" priority="10" />
       <Item value="null" priority="0" />
       <Item value="public" priority="6" />
       <Item value="class" priority="1" />
@@ -95,8 +103,8 @@
       <Item value="environment" priority="0" />
       <Item value="_databaseType" priority="4" />
       <Item value="type" priority="0" />
-      <Item value="return" priority="3" />
-      <Item value="this" priority="0" />
+      <Item value="return" priority="5" />
+      <Item value="this" priority="1" />
       <Item value="_scriptsLocation" priority="5" />
       <Item value="ReplaceTokens`0" priority="0" />
       <Item value="folderPath" priority="0" />
@@ -132,9 +140,22 @@
       <Item value="Test" priority="0" />
       <Item value="void" priority="1" />
       <Item value="RoundhousEClientApi`0" priority="0" />
+      <Item value="try" priority="0" />
+      <Item value="throw" priority="0" />
+      <Item value="DeploymentException" priority="0" />
+      <Item value="File`0" priority="0" />
+      <Item value="Path`0" priority="1" />
+      <Item value="System" priority="0" />
+      <Item value="IO" priority="0" />
+      <Item value="RemotePathHelper`0" priority="0" />
+      <Item value="path" priority="0" />
+      <Item value="HUB`0" priority="0" />
+      <Item value="object" priority="0" />
+      <Item value="proto" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:System.String">
-      <Item value="FormatWith`0" priority="0" />
+      <Item value="FormatWith`0" priority="1" />
+      <Item value="StartsWith`0" priority="0" />
     </ItemStatistics>
     <ItemStatistics item="Qualified:roundhouse.infrastructure.filesystem.FileSystemAccess">
       <Item value="combine_paths`0" priority="0" />
@@ -165,6 +186,15 @@
     </ItemStatistics>
     <ItemStatistics item="Qualified:@dropkick.Tasks.RoundhousE.RoundhousEClientApi">
       <Item value="Run`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@System.IO.File">
+      <Item value="WriteAllText`0" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:@dropkick.HUB">
+      <Item value="Settings" priority="0" />
+    </ItemStatistics>
+    <ItemStatistics item="Qualified:dropkick.Configuration.Dsl.Files.ProtoCopyFileTask">
+      <Item value="ToDirectory`0" priority="0" />
     </ItemStatistics>
   </CompletionStatisticsManager>
 </Configuration>
