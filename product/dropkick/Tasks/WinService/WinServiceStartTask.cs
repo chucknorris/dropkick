@@ -54,6 +54,7 @@ namespace dropkick.Tasks.WinService
                     {
                         result.AddAlert(
                             "Service did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.");
+                        return result;
                     }
                 }
                 result.AddGood("Started the service '{0}'", ServiceName);

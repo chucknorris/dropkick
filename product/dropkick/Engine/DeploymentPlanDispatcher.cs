@@ -22,7 +22,7 @@ namespace dropkick.Engine
     {
         static readonly IDictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>> _actions = new Dictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>>();
         static DropkickDeploymentInspector _inspector;
-        static readonly ILog _log = LogManager.GetLogger(typeof (DeploymentPlanDispatcher));
+        static readonly ILog _log = LogManager.GetLogger(typeof(DeploymentPlanDispatcher));
 
         static DeploymentPlanDispatcher()
         {
@@ -36,7 +36,7 @@ namespace dropkick.Engine
         {
             _inspector = new DropkickDeploymentInspector(args.ServerMappings);
 
-            if(args.Role != "ALL")
+            if (args.Role != "ALL")
                 _inspector.RolesToGet(args.Role.Split(','));
 
             var plan = _inspector.GetPlan(deployment);
@@ -45,23 +45,22 @@ namespace dropkick.Engine
             //TODO: should be able to block here
             var results = _actions[args.Command](plan);
 
-            DisplayResults(results);
         }
 
         static void DisplayResults(DeploymentResult results)
         {
             foreach (var result in results)
             {
-                if(result.Status == DeploymentItemStatus.Error)
+                if (result.Status == DeploymentItemStatus.Error)
                     _log.ErrorFormat("[{0,-5}] {1}", result.Status, result.Message);
-                
-                if(result.Status == DeploymentItemStatus.Alert)
+
+                if (result.Status == DeploymentItemStatus.Alert)
                     _log.WarnFormat("[{0,-5}] {1}", result.Status, result.Message);
 
                 if (result.Status == DeploymentItemStatus.Good)
                     _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
 
-                if(result.Status == DeploymentItemStatus.Note)
+                if (result.Status == DeploymentItemStatus.Note)
                     _log.DebugFormat("[{0,-5}] {1}", result.Status, result.Message);
             }
         }

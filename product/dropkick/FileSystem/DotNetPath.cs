@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
-    using System;
     using System.IO;
     using System.Security.AccessControl;
     using DeploymentModel;
@@ -66,11 +65,11 @@ namespace dropkick.FileSystem
             if (!result)
                 r.AddError("Something wrong happened");
 
-            accessRule = new FileSystemAccessRule(group, 
+            accessRule = new FileSystemAccessRule(group,
                                                   permission,
-                                                  InheritanceFlags.ContainerInherit | 
+                                                  InheritanceFlags.ContainerInherit |
                                                   InheritanceFlags.ObjectInherit,
-                                                  PropagationFlags.InheritOnly, 
+                                                  PropagationFlags.InheritOnly,
                                                   AccessControlType.Allow);
 
             result = false;
@@ -79,8 +78,8 @@ namespace dropkick.FileSystem
                 r.AddError("Something wrong happened");
 
             Directory.SetAccessControl(target, newSecurity);
-            if(result)
-                r.AddGood("whoot");
+            if (result)
+                r.AddGood("Permissions set for '{0}' on folder '{1}'", group, target);
 
             if (!result) r.AddError("Something wrong happened");
         }
