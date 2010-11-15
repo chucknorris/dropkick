@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
+    using System;
     using System.IO;
     using System.Security.AccessControl;
     using DeploymentModel;
@@ -48,9 +49,9 @@ namespace dropkick.FileSystem
             catch (Exception ex)
             {
                 var msg = "Attempted to determine if '{0}' was a path, and encountered the following error.".FormatWith(path);
-                 throw new DeploymentException(msg, ex);
+                throw new DeploymentException(msg, ex);
             }
-            
+
         }
 
         //http://www.west-wind.com/weblog/posts/4072.aspx
