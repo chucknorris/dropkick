@@ -10,34 +10,23 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-using System;
-using dropkick.Tasks.RoundhousE;
-using log4net;
-using Microsoft.Build.Framework;
-using roundhouse.infrastructure.app;
-using roundhouse.runners;
-
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
+    using System;
     using DeploymentModel;
     using Tasks;
-    using Tasks.CommandLine;
+    using Tasks.RoundhousE;
 
     public class RoundhousEProtoTask :
         BaseProtoTask,
         RoundhousEOptions
     {
-        public RoundhousEProtoTask()
-        {
-            //TODO: get the defaults from global configuration
-        }
-
-        private string _environmentName;
-        private string _instanceName;
-        private string _databaseName;
-        private string _scriptsLocation;
-        private bool _useSimpleRecoveryMode;
-        private string _databaseType;
+        string _environmentName;
+        string _instanceName;
+        string _databaseName;
+        string _scriptsLocation;
+        bool _useSimpleRecoveryMode;
+        string _databaseType;
 
         public RoundhousEOptions ForDatabaseType(string type)
         {
@@ -60,6 +49,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         public RoundhousEOptions WithScriptsFolder(string scriptsLocation)
         {
             _scriptsLocation = ReplaceTokens(scriptsLocation);
+            return this;
         }
 
         public RoundhousEOptions ForEnvironment(string environment)
@@ -91,7 +81,8 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new RoundhousETask(_instanceName,_databaseName,_databaseType,_scriptsLocation,_environmentName,_useSimpleRecoveryMode);
+            var task = new RoundhousETask(_instanceName, _databaseName, _databaseType, _scriptsLocation,
+                                          _environmentName, _useSimpleRecoveryMode);
             //rhtask.Args = "/d={0} /f={1} /s={2} /env={3} /dt={4}".FormatWith(DatabaseName, SqlFilesLocation, site.Name,
             //                                                                 EnvironmentName, DatabaseType);
             //if (UseSimpleRestoreMode)
@@ -100,5 +91,4 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             site.AddTask(task);
         }
     }
-
 }

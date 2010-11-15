@@ -92,7 +92,6 @@
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
-    <Compile Include="Configuration\Dsl\RoundhousE\RoundhousEConfiguration.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />
