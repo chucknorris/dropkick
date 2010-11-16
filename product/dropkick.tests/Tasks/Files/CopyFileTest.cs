@@ -13,6 +13,8 @@
 namespace dropkick.tests.Tasks.Files
 {
     using System.IO;
+    using dropkick.Configuration.Dsl.Files;
+    using dropkick.DeploymentModel;
     using dropkick.Tasks.Files;
     using FileSystem;
     using NUnit.Framework;
@@ -57,6 +59,23 @@ namespace dropkick.tests.Tasks.Files
 
             string s = File.ReadAllText(_path.Combine(_destinationDirectory, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
+        }
+
+        [Test]
+        public void CopyFileToUncDirectory()
+        {
+            var toDir = @"\\srvtestmachine\some_directory";
+            var fromDir = @".\bob";
+            HUB.Settings = new object();
+
+            var proto = new ProtoCopyFileTask(fromDir);
+            proto.ToDirectory(toDir);
+
+            var server = new DeploymentServer("dru");
+
+            proto.RegisterRealTasks(server);
+
+
         }
 
         [Test]

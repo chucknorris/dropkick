@@ -11,10 +11,11 @@ namespace dropkick.tests.Settings
         [Test]
         public void ParseTheContentToObject()
         {
+            File.WriteAllText(".\\test.json","{Website:\"cue\",Database:\"cue_db\",YesNo:true}");
             var commandLine = @"-Website:cue -Database:cue_db -YesNo:true";
 
             var p = new SettingsParser();
-            var r = p.Parse<TestSettings>(new FileInfo("."), commandLine, "test");
+            var r = p.Parse<TestSettings>(new FileInfo(".\\test.json"), commandLine, "test");
 
             Assert.AreEqual("cue_db",r.Database);
             Assert.AreEqual("cue",r.Website);

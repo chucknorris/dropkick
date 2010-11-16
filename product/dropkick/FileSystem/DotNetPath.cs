@@ -16,6 +16,7 @@ namespace dropkick.FileSystem
     using System.IO;
     using System.Security.AccessControl;
     using DeploymentModel;
+    using Exceptions;
 
     public class DotNetPath :
         Path
@@ -40,8 +41,17 @@ namespace dropkick.FileSystem
 
         public bool IsDirectory(string path)
         {
-            var di = new DirectoryInfo(GetFullPath(path));
-            return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+            try
+            {
+                var di = new DirectoryInfo(GetFullPath(path));
+                return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
+            }
+            catch (Exception ex)
+            {
+                var msg = "Attempted to determine if '{0}' was a path, and encountered the following error.".FormatWith(path);
+                 throw new DeploymentException(msg, ex);
+            }
+            
         }
 
         //http://www.west-wind.com/weblog/posts/4072.aspx

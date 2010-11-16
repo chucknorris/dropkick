@@ -12,73 +12,83 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
+    using System;
     using DeploymentModel;
     using Tasks;
-    using Tasks.CommandLine;
+    using Tasks.RoundhousE;
 
     public class RoundhousEProtoTask :
         BaseProtoTask,
         RoundhousEOptions
     {
-        public RoundhousEProtoTask()
-        {
-            SqlFilesLocation = ".\\database";
-            InstanceName = ".";
-        }
+        string _environmentName;
+        string _instanceName;
+        string _databaseName;
+        string _scriptsLocation;
+        bool _useSimpleRecoveryMode;
+        string _databaseType;
 
-        public string EnvironmentName { get; private set; }
-        public string InstanceName { get; private set; }
-        public string DatabaseName { get; private set; }
-        public string SqlFilesLocation { get; private set; }
-        public bool UseSimpleRestoreMode { get; private set; }
-        public string DatabaseType { get; private set; }
-
-        public RoundhousEOptions Environment(string name)
+        public RoundhousEOptions ForDatabaseType(string type)
         {
-            EnvironmentName = ReplaceTokens(name);
+            _databaseType = ReplaceTokens(type);
             return this;
         }
 
         public RoundhousEOptions OnInstance(string name)
         {
-            InstanceName = ReplaceTokens(name);
+            _instanceName = ReplaceTokens(name);
             return this;
         }
 
         public RoundhousEOptions OnDatabase(string name)
         {
-            DatabaseName = ReplaceTokens(name);
+            _databaseName = ReplaceTokens(name);
             return this;
         }
 
-        public RoundhousEOptions UseMsSqlServer2005()
+        public RoundhousEOptions WithScriptsFolder(string scriptsLocation)
         {
-            DatabaseType = "2005";
+            _scriptsLocation = ReplaceTokens(scriptsLocation);
             return this;
         }
 
-        public RoundhousEOptions UseMsSqlServer2008()
+        public RoundhousEOptions ForEnvironment(string environment)
         {
-            DatabaseType = "2008";
+            _environmentName = ReplaceTokens(environment);
             return this;
         }
 
-        public RoundhousEOptions WithRecoveryMode(string type)
+        public RoundhousEOptions UseSimpleRecoveryMode(bool useSimple)
         {
-            UseSimpleRestoreMode = true;
+            _useSimpleRecoveryMode = useSimple;
             return this;
+        }
+
+        public RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore)
+        {
+            throw new NotImplementedException();
+        }
+
+        public RoundhousEOptions RestoreDatabaseFrom(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+        public RoundhousEOptions WithRestoreOptions(string options)
+        {
+            throw new NotImplementedException();
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var rhtask = new LocalCommandLineTask(".\\roundhouse\\rh.exe");
+            var task = new RoundhousETask(_instanceName, _databaseName, _databaseType, _scriptsLocation,
+                                          _environmentName, _useSimpleRecoveryMode);
+            //rhtask.Args = "/d={0} /f={1} /s={2} /env={3} /dt={4}".FormatWith(DatabaseName, SqlFilesLocation, site.Name,
+            //                                                                 EnvironmentName, DatabaseType);
+            //if (UseSimpleRestoreMode)
+            //    rhtask.Args += " /simple";
 
-            rhtask.Args = "/d={0} /f={1} /s={2} /env={3} /dt={4}".FormatWith(DatabaseName, SqlFilesLocation, site.Name,
-                                                                             EnvironmentName, DatabaseType);
-            if (UseSimpleRestoreMode)
-                rhtask.Args += " /simple";
-
-            site.AddTask(rhtask);
+            site.AddTask(task);
         }
     }
 }

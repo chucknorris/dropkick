@@ -12,6 +12,8 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
+    using System;
+
     public class RemotePathHelper
     {
         public static string Convert(string server, string localpath)
@@ -20,6 +22,11 @@ namespace dropkick.FileSystem
             newPath = newPath.Replace(':', '$');
 
             return newPath;
+        }
+
+        public static bool IsUncPath(string path)
+        {
+            return path.StartsWith(@"\\");
         }
     }
 }

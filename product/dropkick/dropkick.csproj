@@ -66,6 +66,9 @@
       <HintPath>..\..\lib\Microsoft.Web.Administration.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="roundhouse">
+      <HintPath>..\..\lib\RoundhousE\roundhouse.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -104,6 +107,7 @@
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
