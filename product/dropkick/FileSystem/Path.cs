@@ -22,6 +22,8 @@ namespace dropkick.FileSystem
         bool IsFile(string path);
         bool IsDirectory(string path);
         void SetFileSystemRights(string target, string group, FileSystemRights permission, DeploymentResult result);
-
+        bool DirectoryExists(string path);
+        bool DirectoryDoesntExist(string path);
+        void CreateDirectory(string path);
     }
 }

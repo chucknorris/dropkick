@@ -24,6 +24,12 @@ namespace dropkick.Tasks.Iis
         public string ServerName { get; set; }
         public abstract int VersionNumber { get; }
         public string AppPoolName { get; set; }
+        public int PortForWebsite { get; set; }
+
+        protected BaseIisTask()
+        {
+            PortForWebsite = 80;
+        }
 
         #region Task Members
 
@@ -36,14 +42,15 @@ namespace dropkick.Tasks.Iis
             }
         }
 
+
         public abstract DeploymentResult VerifyCanRun();
         public abstract DeploymentResult Execute();
 
         #endregion
 
-        public void CheckForSiteAndVDirExistance(Func<bool> website, Func<bool> vdir, DeploymentResult result)
+        public void CheckForSiteAndVDirExistance(Func<DeploymentResult, bool> website, Func<bool> vdir, DeploymentResult result)
         {
-            if (website())
+            if (website(result))
             {
                 result.AddGood("Found Website '{0}'", WebsiteName);
 

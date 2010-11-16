@@ -26,13 +26,16 @@ namespace dropkick.Configuration.Dsl.Iis
             WebsiteName = websiteName;
         }
 
-        public bool ShouldCreate { get; protected set; }
+        public bool ShouldCreate { get; set; }
         public string WebsiteName { get; set; }
         public string VdirPath { get; set; }
         public IisVersion Version { get; set; }
         public string PathOnServer { get; set; }
         protected string AppPoolName { get; set; }
         public bool ClassicPipelineRequested { get; set; }
+        public string ManagedRuntimeVersion { get; set; }
+        public string PathForWebsite { get; set; }
+        public int PortForWebsite { get; set; }
 
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
@@ -55,6 +58,18 @@ namespace dropkick.Configuration.Dsl.Iis
         public IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName)
         {
             AppPoolName = ReplaceTokens(appPoolName);
+            return this;
+        }
+
+        public IisVirtualDirectoryOptions SetRuntimeToV2()
+        {
+            ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V2;
+            return this;
+        }
+
+        public IisVirtualDirectoryOptions SetRuntimeToV4()
+        {
+            ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V4;
             return this;
         }
 
@@ -84,8 +99,12 @@ namespace dropkick.Configuration.Dsl.Iis
                               VdirPath = VdirPath,
                               WebsiteName = WebsiteName,
                               AppPoolName = AppPoolName,
-                              UseClassicPipeline = ClassicPipelineRequested
+                              UseClassicPipeline = ClassicPipelineRequested,
+                              ManagedRuntimeVersion = this.ManagedRuntimeVersion,
+                              PathForWebsite = this.PathForWebsite,
+                              PortForWebsite = this.PortForWebsite
                           });
         }
+
     }
 }

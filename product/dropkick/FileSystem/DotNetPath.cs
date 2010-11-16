@@ -54,6 +54,21 @@ namespace dropkick.FileSystem
             
         }
 
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        public bool DirectoryDoesntExist(string path)
+        {
+            return !DirectoryExists(path);
+        }
+
+        public void CreateDirectory(string path)
+        {
+            Directory.CreateDirectory(path);
+        }
+
         //http://www.west-wind.com/weblog/posts/4072.aspx
         public void SetFileSystemRights(string target, string group, FileSystemRights permission, DeploymentResult r)
         {
