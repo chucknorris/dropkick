@@ -93,6 +93,7 @@
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
+    <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
@@ -167,7 +168,7 @@
     <Compile Include="Engine\RoleToServerMap.cs" />
     <Compile Include="DeploymentModel\DeploymentServer.cs" />
     <Compile Include="Engine\DeploymentCommandLineParser.cs" />
-    <Compile Include="Engine\DeploymentFinders\SearchesForAnAssemblyEndingInDeployment.cs" />
+    <Compile Include="Engine\DeploymentFinders\SearchesForAnAssemblyNameContainingDeployment.cs" />
     <Compile Include="Engine\DeploymentFinders\TypeWasSpecifiedAssumingItHasADefaultConstructor.cs" />
     <Compile Include="Engine\DeploymentPlanDispatcher.cs" />
     <Compile Include="DeploymentModel\DeploymentItem.cs" />

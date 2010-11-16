@@ -26,6 +26,11 @@ namespace dropkick.tests.TestObjects
             return (Deployment) Activator.CreateInstance(typeof(T));
         }
 
+        public string Name
+        {
+            get { return "Generic Finder for Tests"; }
+        }
+
         #endregion
     }
 }

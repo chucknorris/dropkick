@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -14,9 +14,9 @@ namespace dropkick.Engine.DeploymentFinders
 {
     using Configuration.Dsl;
 
-    public interface DeploymentFinder
+    public class FindResult
     {
-        Deployment Find(string assemblyName);
-        string Name { get; }
+        public Deployment Deployment { get; set; }
+        public string MethodOfFinding { get; set; }
     }
 }

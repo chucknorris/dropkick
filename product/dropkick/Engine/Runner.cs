@@ -18,7 +18,6 @@ namespace dropkick.Engine
     using Configuration.Dsl;
     using DeploymentFinders;
     using log4net;
-    using Magnum.Reflection;
     using Settings;
 
     public static class Runner
@@ -32,6 +31,11 @@ namespace dropkick.Engine
         {
             try
             {
+                Console.WriteLine("********");
+                Console.WriteLine("DropkicK");
+                Console.WriteLine("********");
+                Console.WriteLine("");
+
                 DeploymentArguments newArgs = DeploymentCommandLineParser.Parse(commandLine);
 
                 if (!File.Exists(newArgs.PathToServerMapsFile))
@@ -40,26 +44,49 @@ namespace dropkick.Engine
                     return;
                 }
 
-                var maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
+                RoleToServerMap maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
                 newArgs.ServerMappings.Merge(maps);
 
-                _log.Info("*******SETTINGS*******");
                 _log.InfoFormat("Command: {0}", newArgs.Command);
-                _log.InfoFormat("Deployment: {0}", newArgs.Deployment);
                 _log.InfoFormat("Environment: {0}", newArgs.Environment);
                 _log.InfoFormat("Role: {0}", newArgs.Role);
-                DisplayServerMappingsForEnvironment(newArgs.ServerMappings);
-                VerifyPathToSettingsFile(newArgs.PathToSettingsFile);
-                _log.Info("*******SETTINGS*******");
 
+                //////// DEPLOYMENT STUFF
+                FindResult findResult = _finder.Find(newArgs.Deployment);
+                Deployment deployment = findResult.Deployment;
+                _log.InfoFormat("Deployment Method: '{0}'", findResult.MethodOfFinding);
+                _log.InfoFormat("Deployment Found: '{0}'", findResult.Deployment.GetType().Name);
+
+                if (deployment.GetType().Equals(typeof(NullDeployment)))
+                {
+                    _log.Fatal("Couldn't find a deployment to run.");
+                    return;
+                }
+                ////////
+
+
+
+                ////////// SETTINGS STUFF
+                DisplayServerMappingsForEnvironment(newArgs.ServerMappings);
+
+                if (!VerifyPathToSettingsFile(newArgs.PathToSettingsFile))
+                {
+                    return;
+                }
+                //////////
+                 
+                Console.WriteLine("Please review the settings above when you are ready,");
                 Console.WriteLine("Press enter to kick it out there");
+                Console.WriteLine("Press ctrl+c to cancel.");
                 Console.ReadKey(true);
 
-                Deployment deployment = _finder.Find(newArgs.Deployment);
+
+
+                /////// how to clean this up - below 
                 Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-                var settings = (DropkickConfiguration)_parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
-                              newArgs.Environment);
+                var settings = (DropkickConfiguration) _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
+                                                                     newArgs.Environment);
 
                 settings.Environment = newArgs.Environment;
                 deployment.Initialize(settings);
@@ -87,12 +114,16 @@ namespace dropkick.Engine
             }
         }
 
-        static void VerifyPathToSettingsFile(string pathToSettingsFile)
+        static bool VerifyPathToSettingsFile(string pathToSettingsFile)
         {
             if (File.Exists(pathToSettingsFile))
+            {
                 _log.InfoFormat("Settings Path: {0}", pathToSettingsFile);
-            else
-                _log.ErrorFormat("Settings Path: {0}", pathToSettingsFile);
+                return true;
+            }
+
+            _log.FatalFormat("SETTINGS FILE '{0}' NOT FOUND", pathToSettingsFile);
+            return false;
         }
     }
 }

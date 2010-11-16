@@ -1,4 +1,4 @@
-// Copyright 2007-2008 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -12,19 +12,24 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Engine.DeploymentFinders
 {
-    using Configuration.Dsl;
-
     public class MultipleFinder
     {
-        public Deployment Find(string deployment)
+        public FindResult Find(string deployment)
         {
             DeploymentFinder finder = deployment == "SEARCH" ?
-                new SearchesForAnAssemblyEndingInDeployment() :
+                new SearchesForAnAssemblyNameContainingDeployment() :
                     deployment.EndsWith(".dll") || deployment.EndsWith(".exe") ?
                         new AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass() :
                             (DeploymentFinder) new TypeWasSpecifiedAssumingItHasADefaultConstructor();
 
-            return finder.Find(deployment);
+            var dep = finder.Find(deployment);
+
+            var result = new FindResult
+                {
+                    Deployment = dep,
+                    MethodOfFinding = finder.Name
+                };
+            return result;
         }
     }
 }
