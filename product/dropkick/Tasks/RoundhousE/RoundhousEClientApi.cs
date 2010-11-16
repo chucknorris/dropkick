@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using Microsoft.Build.Framework;
+using NAnt.Core;
+
 namespace dropkick.Tasks.RoundhousE
 {
     using log4net;
@@ -45,7 +48,7 @@ namespace dropkick.Tasks.RoundhousE
             _useSimpleRecoveryMode = useSimpleRecoveryMode;
 
             ConfigurationPropertyHolder config = GetRoundhousEConfiguration();
-
+            
             //should be wrapped in his api
             ApplicationConfiguraton.set_defaults_if_properties_are_not_set(config);
 
@@ -59,16 +62,17 @@ namespace dropkick.Tasks.RoundhousE
         static ConfigurationPropertyHolder GetRoundhousEConfiguration()
         {
             //roundhouse needs a client api - you may want to make one for him?
-            var config = new ConsoleConfiguration(_logger);
+            var config = new RoundhousEConfig
+                             {
+                                 DatabaseName = _databaseName,
+                                 ServerName = _instanceName,
+                                 DatabaseType = _databaseType,
+                                 SqlFilesDirectory = _scriptsLocation,
+                                 EnvironmentName = _environmentName,
+                                 RecoveryModeSimple = _useSimpleRecoveryMode,
+                                 Silent = true
+                             };
 
-            config.DatabaseName = _databaseName;
-            config.ServerName = _instanceName;
-            config.DatabaseType = _databaseType;
-            config.SqlFilesDirectory = _scriptsLocation;
-            config.EnvironmentName = _environmentName;
-            config.RecoveryModeSimple = _useSimpleRecoveryMode;
-
-            config.Silent = true;
             return config;
         }
 
@@ -87,5 +91,56 @@ namespace dropkick.Tasks.RoundhousE
                 configuration.WithTransaction,
                 configuration.RecoveryModeSimple);
         }
+    }
+
+    public class RoundhousEConfig : ConfigurationPropertyHolder
+    {
+        public RoundhousEConfig()
+        {
+            MSBuildTask = null;
+            NAntTask = null;
+            Log4NetLogger = LogManager.GetLogger(typeof(RoundhouseMigrationRunner));
+        }
+
+        public ITask MSBuildTask { get; private set; }
+        public Task NAntTask { get; private set; }
+        public ILog Log4NetLogger { get; private set; }
+        public string ServerName { get; set; }
+        public string DatabaseName { get; set; }
+        public string ConnectionString { get; set; }
+        public string ConnectionStringAdmin { get; set; }
+        public string SqlFilesDirectory { get; set; }
+        public string RepositoryPath { get; set; }
+        public string VersionFile { get; set; }
+        public string VersionXPath { get; set; }
+        public string UpFolderName { get; set; }
+        public string DownFolderName { get; set; }
+        public string RunFirstAfterUpFolderName { get; set; }
+        public string FunctionsFolderName { get; set; }
+        public string ViewsFolderName { get; set; }
+        public string SprocsFolderName { get; set; }
+        public string PermissionsFolderName { get; set; }
+        public string SchemaName { get; set; }
+        public string VersionTableName { get; set; }
+        public string ScriptsRunTableName { get; set; }
+        public string ScriptsRunErrorsTableName { get; set; }
+        public string EnvironmentName { get; set; }
+        public bool Restore { get; set; }
+        public string RestoreFromPath { get; set; }
+        public string RestoreCustomOptions { get; set; }
+        public int RestoreTimeout { get; set; }
+        public string CreateDatabaseCustomScript { get; set; }
+        public string OutputPath { get; set; }
+        public bool WarnOnOneTimeScriptChanges { get; set; }
+        public bool Silent { get; set; }
+        public string DatabaseType { get; set; }
+        public bool Drop { get; set; }
+        public bool DoNotCreateDatabase { get; set; }
+        public bool WithTransaction { get; set; }
+        public bool RecoveryModeSimple { get; set; }
+        public bool Debug { get; set; }
+        public bool DryRun { get; set; }
+        public bool Baseline { get; set; }
+        public bool RunAllAnyTimeScripts { get; set; }
     }
 }
