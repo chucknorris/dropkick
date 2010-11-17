@@ -49,9 +49,9 @@ namespace dropkick.FileSystem
             catch (Exception ex)
             {
                 var msg = "Attempted to determine if '{0}' was a path, and encountered the following error.".FormatWith(path);
-                 throw new DeploymentException(msg, ex);
+                throw new DeploymentException(msg, ex);
             }
-            
+
         }
 
         public bool DirectoryExists(string path)
@@ -91,11 +91,11 @@ namespace dropkick.FileSystem
             if (!result)
                 r.AddError("Something wrong happened");
 
-            accessRule = new FileSystemAccessRule(group, 
+            accessRule = new FileSystemAccessRule(group,
                                                   permission,
-                                                  InheritanceFlags.ContainerInherit | 
+                                                  InheritanceFlags.ContainerInherit |
                                                   InheritanceFlags.ObjectInherit,
-                                                  PropagationFlags.InheritOnly, 
+                                                  PropagationFlags.InheritOnly,
                                                   AccessControlType.Allow);
 
             result = false;
@@ -104,8 +104,8 @@ namespace dropkick.FileSystem
                 r.AddError("Something wrong happened");
 
             Directory.SetAccessControl(target, newSecurity);
-            if(result)
-                r.AddGood("whoot");
+            if (result)
+                r.AddGood("Permissions set for '{0}' on folder '{1}'", group, target);
 
             if (!result) r.AddError("Something wrong happened");
         }
