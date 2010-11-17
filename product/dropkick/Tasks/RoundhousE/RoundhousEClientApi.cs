@@ -10,8 +10,10 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System;
 using Microsoft.Build.Framework;
 using NAnt.Core;
+using roundhouse.infrastructure.logging;
 
 namespace dropkick.Tasks.RoundhousE
 {
@@ -37,7 +39,7 @@ namespace dropkick.Tasks.RoundhousE
 
         static readonly ILog _logger = LogManager.GetLogger(typeof (RoundhousEClientApi));
 
-        public static void Run(string instanceName, string databaseName, string databaseType, string scriptsLocation,
+        public static void Run(Logger log, string instanceName, string databaseName, string databaseType, string scriptsLocation,
                                string environmentName, bool useSimpleRecoveryMode)
         {
             _instanceName = instanceName;
@@ -47,7 +49,7 @@ namespace dropkick.Tasks.RoundhousE
             _environmentName = environmentName;
             _useSimpleRecoveryMode = useSimpleRecoveryMode;
 
-            ConfigurationPropertyHolder config = GetRoundhousEConfiguration();
+            ConfigurationPropertyHolder config = GetRoundhousEConfiguration(log);
             
             //should be wrapped in his api
             ApplicationConfiguraton.set_defaults_if_properties_are_not_set(config);
@@ -59,10 +61,10 @@ namespace dropkick.Tasks.RoundhousE
             runner.run();
         }
 
-        static ConfigurationPropertyHolder GetRoundhousEConfiguration()
+        static ConfigurationPropertyHolder GetRoundhousEConfiguration(Logger log)
         {
             //roundhouse needs a client api - you may want to make one for him?
-            var config = new RoundhousEConfig
+            var config = new RoundhousEConfig(log)
                              {
                                  DatabaseName = _databaseName,
                                  ServerName = _instanceName,
@@ -95,16 +97,12 @@ namespace dropkick.Tasks.RoundhousE
 
     public class RoundhousEConfig : ConfigurationPropertyHolder
     {
-        public RoundhousEConfig()
+        public RoundhousEConfig(Logger log)
         {
-            MSBuildTask = null;
-            NAntTask = null;
-            Log4NetLogger = LogManager.GetLogger(typeof(RoundhouseMigrationRunner));
+            Logger = log;
         }
 
-        public ITask MSBuildTask { get; private set; }
-        public Task NAntTask { get; private set; }
-        public ILog Log4NetLogger { get; private set; }
+        public Logger Logger { get; private set; }
         public string ServerName { get; set; }
         public string DatabaseName { get; set; }
         public string ConnectionString { get; set; }

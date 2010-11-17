@@ -63,8 +63,9 @@ namespace dropkick.Tasks.RoundhousE
         {
             var results = new DeploymentResult();
 
+            var log = new DeploymentLogger(results);
 
-            RoundhousEClientApi.Run(_instanceName, _databaseName, _databaseType, _scriptsLocation, _environmentName,
+            RoundhousEClientApi.Run(log, _instanceName, _databaseName, _databaseType, _scriptsLocation, _environmentName,
                                     _useSimpleRecoveryMode);
 
 
