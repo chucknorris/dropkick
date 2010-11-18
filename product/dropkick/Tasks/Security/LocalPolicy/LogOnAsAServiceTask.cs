@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.LocalPolicy
 {
-    using System;
     using DeploymentModel;
 
     public class LogOnAsAServiceTask :
@@ -34,7 +33,7 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
         public DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            return new DeploymentResult();
         }
 
         public DeploymentResult Execute()
