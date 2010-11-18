@@ -107,8 +107,9 @@ namespace dropkick.Tasks.Iis
             {
                 _path.CreateDirectory(PathForWebsite);
             }
+            
             //TODO: check for port collision?
-            iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
+            var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);           
         }
 
         
@@ -143,6 +144,7 @@ namespace dropkick.Tasks.Iis
                 //create it
                 _logger.Debug(PathOnServer);
                 var app = site.Applications.Add(appPath, PathOnServer);
+                
                 
                 if(AppPoolName != null)
                     app.ApplicationPoolName = AppPoolName;
