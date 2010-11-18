@@ -92,6 +92,7 @@
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="HUB.cs" />
@@ -111,6 +112,7 @@
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
     <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
