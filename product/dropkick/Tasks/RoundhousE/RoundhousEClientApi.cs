@@ -10,71 +10,76 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-using System;
-using Microsoft.Build.Framework;
-using NAnt.Core;
 using roundhouse.infrastructure.logging;
 
 namespace dropkick.Tasks.RoundhousE
 {
+    using System.Collections.Generic;
     using log4net;
-    using roundhouse.consoles;
-    using roundhouse.environments;
     using roundhouse.folders;
     using roundhouse.infrastructure.app;
     using roundhouse.infrastructure.containers;
     using roundhouse.infrastructure.filesystem;
+    using roundhouse.infrastructure.logging.custom;
     using roundhouse.migrators;
     using roundhouse.resolvers;
     using roundhouse.runners;
+    using Environment = roundhouse.environments.Environment;
 
     public class RoundhousEClientApi
     {
         static string _instanceName;
-        static string _databaseName;
         static string _databaseType;
+        static string _databaseName;
+        static bool _dropDatabase;
         static string _scriptsLocation;
         static string _environmentName;
         static bool _useSimpleRecoveryMode;
 
-        static readonly ILog _logger = LogManager.GetLogger(typeof (RoundhousEClientApi));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(RoundhousEClientApi));
 
-        public static void Run(Logger log, string instanceName, string databaseName, string databaseType, string scriptsLocation,
-                               string environmentName, bool useSimpleRecoveryMode)
+        public static void Run(Logger log, string instanceName, string databaseType, string databaseName, bool dropDatabase, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode)
         {
             _instanceName = instanceName;
-            _databaseName = databaseName;
             _databaseType = databaseType;
+            _databaseName = databaseName;
+            _dropDatabase = dropDatabase;
             _scriptsLocation = scriptsLocation;
             _environmentName = environmentName;
             _useSimpleRecoveryMode = useSimpleRecoveryMode;
 
-            ConfigurationPropertyHolder config = GetRoundhousEConfiguration(log);
-            
+            var loggers = new List<Logger>();
+            loggers.Add(log);
+            loggers.Add(new Log4NetLogger(_logger));
+
+            var multiLogger = new MultipleLogger(loggers);
+            var config = GetRoundhousEConfiguration(multiLogger);
+
             //should be wrapped in his api
             ApplicationConfiguraton.set_defaults_if_properties_are_not_set(config);
 
             //should be wrapped in his api
             ApplicationConfiguraton.build_the_container(config);
 
-            IRunner runner = GetMigrationRunner(config);
+            var runner = GetMigrationRunner(config);
             runner.run();
         }
 
         static ConfigurationPropertyHolder GetRoundhousEConfiguration(Logger log)
         {
             //roundhouse needs a client api - you may want to make one for him?
+
             var config = new RoundhousEConfig(log)
                              {
                                  DatabaseName = _databaseName,
                                  ServerName = _instanceName,
                                  DatabaseType = _databaseType,
+                                 Drop = _dropDatabase,
                                  SqlFilesDirectory = _scriptsLocation,
                                  EnvironmentName = _environmentName,
                                  RecoveryModeSimple = _useSimpleRecoveryMode,
                                  Silent = true
                              };
-
             return config;
         }
 
@@ -94,6 +99,42 @@ namespace dropkick.Tasks.RoundhousE
                 configuration.RecoveryModeSimple);
         }
     }
+
+    public class Log4NetLogger : Logger
+    {
+        readonly ILog _log;
+
+        public Log4NetLogger(ILog log)
+        {
+            _log = log;
+        }
+
+        public void log_a_debug_event_containing(string message, params object[] args)
+        {
+            _log.DebugFormat(message, args);
+        }
+
+        public void log_an_info_event_containing(string message, params object[] args)
+        {
+            _log.InfoFormat(message, args);
+        }
+
+        public void log_a_warning_event_containing(string message, params object[] args)
+        {
+            _log.WarnFormat(message, args);
+        }
+
+        public void log_an_error_event_containing(string message, params object[] args)
+        {
+            _log.ErrorFormat(message, args);
+        }
+
+        public void log_a_fatal_event_containing(string message, params object[] args)
+        {
+            _log.FatalFormat(message, args);
+        }
+    }
+
 
     public class RoundhousEConfig : ConfigurationPropertyHolder
     {
