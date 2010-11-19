@@ -207,7 +207,7 @@ namespace dropkick.Tasks.Iis
             result.AddAlert("Didn't find the AppPool '{0}' creating.", name);    
 
             var pool = mgr.ApplicationPools.Add(name);
-            pool.ManagedRuntimeVersion = "v4.0";
+            pool.ManagedRuntimeVersion = this.ManagedRuntimeVersion;
             result.AddGood("Created app pool '{0}'", name);
         }
     }

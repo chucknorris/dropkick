@@ -24,6 +24,7 @@ namespace dropkick.Configuration.Dsl.Iis
         public IisProtoTask(string websiteName)
         {
             WebsiteName = websiteName;
+            ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V2;
         }
 
         public bool ShouldCreate { get; set; }

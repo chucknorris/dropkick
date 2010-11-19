@@ -31,7 +31,7 @@ namespace dropkick.tests.Tasks.Iis
                                VdirPath = "Victastic",
                                WebsiteName = "SCOTT",
                                AppPoolName = "VICKERS",//could be set on either website or vdir basis
-                               ManagedRuntimeVersion = ManagedRuntimeVersion.V4
+                               ManagedRuntimeVersion = ManagedRuntimeVersion.V2
                            };
             DeploymentResult output = task.Execute();
 
