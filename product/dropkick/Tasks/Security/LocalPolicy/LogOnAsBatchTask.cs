@@ -34,7 +34,7 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
         public DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            return new DeploymentResult();
         }
 
         public DeploymentResult Execute()
