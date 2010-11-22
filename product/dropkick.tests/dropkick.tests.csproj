@@ -106,6 +106,7 @@
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
+    <Compile Include="Tasks\Security\LogOnAsBatchTaskTest.cs" />
     <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTest.cs" />

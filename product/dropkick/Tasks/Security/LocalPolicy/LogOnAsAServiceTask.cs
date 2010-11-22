@@ -33,7 +33,9 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
         public DeploymentResult VerifyCanRun()
         {
-            return new DeploymentResult();
+            var r = new DeploymentResult();
+            r.AddAlert("NO CHECKS RUN");
+            return r;
         }
 
         public DeploymentResult Execute()
