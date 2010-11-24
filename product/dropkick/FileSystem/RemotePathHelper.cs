@@ -12,10 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
-    using System;
+    using DeploymentModel;
 
     public class RemotePathHelper
     {
+        public static string Convert(PhysicalServer server, string localpath)
+        {
+            return Convert(server.Name, localpath);
+        }
+
         public static string Convert(string server, string localpath)
         {
             var newPath = @"\\{0}\{1}".FormatWith(server,localpath);

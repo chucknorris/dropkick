@@ -3,8 +3,8 @@
 namespace dropkick.tests.Tasks.Security.Msmq
 {
     using System.Messaging;
+    using dropkick.Configuration.Dsl.Msmq;
     using dropkick.Tasks.Security.Msmq;
-    using Dsl.Msmq;
     using NUnit.Framework;
 
     [TestFixture]

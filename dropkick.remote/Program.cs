@@ -12,16 +12,31 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.remote
 {
+    using System;
     using System.Messaging;
+    using Configuration.Dsl.Msmq;
+
 
     internal class Program
     {
+        //dropkick.remote create_queue msmq://servername/dk_remote
         static void Main(string[] args)
         {
-            string action = args[0];
-            string queuename = args[1];
-
-            MessageQueue.Create(queuename);
+            if (args[0] == "create_queue")
+            {
+                var queuename = args[1];
+                var queueAddress = new QueueAddress(queuename);
+                var formattedName = queueAddress.LocalName;
+                MessageQueue.Create(formattedName);
+            }
+            else if(args[0] == "verify_queue")
+            {
+                var queuename = args[1];
+                var queueAddress = new QueueAddress(queuename);
+                var formattedName = queueAddress.LocalName;
+                var result = MessageQueue.Exists(formattedName);
+                Console.WriteLine("exists");
+            }
         }
     }
 }

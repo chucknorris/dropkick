@@ -14,7 +14,6 @@ namespace dropkick.Configuration.Dsl.Msmq
 {
     using System;
     using DeploymentModel;
-    using dropkick.Dsl.Msmq;
     using Tasks;
     using Tasks.Msmq;
 
@@ -32,7 +31,11 @@ namespace dropkick.Configuration.Dsl.Msmq
         public override void RegisterRealTasks(PhysicalServer server)
         {
             var ub = new UriBuilder("msmq", server.Name) {Path = _queueName};
-            server.AddTask(new MsmqTask(server, new QueueAddress(ub.Uri)));
+
+            if(server.IsLocal)
+                server.AddTask(new CreateLocalMsmqQueueTask(server, new QueueAddress(ub.Uri)));
+            else
+                server.AddTask(new CreateRemoteMsmqQueueTask(server, new QueueAddress(ub.Uri)));
         }
     }
 }

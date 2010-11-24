@@ -14,8 +14,8 @@ namespace dropkick.Tasks.Security.Msmq
 {
     using System;
     using System.Messaging;
+    using Configuration.Dsl.Msmq;
     using DeploymentModel;
-    using Dsl.Msmq;
 
     public class MsmqGrantReadWriteTask :
         BaseTask

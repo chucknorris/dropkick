@@ -110,6 +110,7 @@
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
+    <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
@@ -229,7 +230,7 @@
     <Compile Include="Configuration\Dsl\Iis\IisVirtualDirectoryOptions.cs" />
     <Compile Include="Configuration\Dsl\Msmq\Extension.cs" />
     <Compile Include="Configuration\Dsl\Msmq\MsmqOptions.cs" />
-    <Compile Include="Tasks\Msmq\MsmqTask.cs" />
+    <Compile Include="Tasks\Msmq\CreateLocalMsmqQueueTask.cs" />
     <Compile Include="Configuration\Dsl\Msmq\QueueAddress.cs" />
     <Compile Include="Tasks\MsSql\BaseSqlTask.cs" />
     <Compile Include="Configuration\Dsl\MsSql\DatabaseOptions.cs" />
