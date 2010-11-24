@@ -102,6 +102,7 @@
     <Compile Include="Tasks\Console\RemoteTest.cs" />
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="Tasks\Files\DotNetPathTests.cs" />
+    <Compile Include="Tasks\Files\RemotePathHelperTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />

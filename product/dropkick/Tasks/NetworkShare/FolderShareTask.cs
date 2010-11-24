@@ -1,6 +1,7 @@
 namespace dropkick.Tasks.NetworkShare
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using System.Management;
     using Configuration.Dsl;
