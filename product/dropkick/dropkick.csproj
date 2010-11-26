@@ -125,7 +125,7 @@
     <Compile Include="Tasks\Security\MsSql\GrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurity.cs" />
-    <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
+    <Compile Include="Exceptions\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoCopyDirectoryTask.cs" />

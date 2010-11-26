@@ -35,8 +35,17 @@ namespace dropkick.FileSystem
 
         public bool IsFile(string path)
         {
-            var fi = new FileInfo(GetFullPath(path));
-            return (fi.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
+            try
+            {
+                var fi = new FileInfo(GetFullPath(path));
+                return (fi.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
+            }
+            catch (IOException ex)
+            {
+                var msg = "Attempted to determine if '{0}' was a file, and encountered the following error.".FormatWith(path);
+                throw new DeploymentException(msg, ex);
+            }
+            
         }
 
         public bool IsDirectory(string path)
@@ -46,9 +55,16 @@ namespace dropkick.FileSystem
                 var di = new DirectoryInfo(GetFullPath(path));
                 return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                var msg = "Attempted to determine if '{0}' was a path, and encountered the following error.".FormatWith(path);
+                if(DirectoryDoesntExist(path))
+                {
+
+                    var msg2 = "Attempted to determine if '{0}' was a directory, but found that the path doesn't exist at all".FormatWith(path);
+                    throw new DeploymentException(msg2, ex);
+                }
+
+                var msg = "Attempted to determine if '{0}' was a directory, and encountered the following error.".FormatWith(path);
                 throw new DeploymentException(msg, ex);
             }
 
@@ -62,6 +78,16 @@ namespace dropkick.FileSystem
         public bool DirectoryDoesntExist(string path)
         {
             return !DirectoryExists(path);
+        }
+
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public bool FileDoesntExist(string path)
+        {
+            return !FileExists(path);
         }
 
         public void CreateDirectory(string path)

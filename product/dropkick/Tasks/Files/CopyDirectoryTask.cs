@@ -118,7 +118,7 @@ namespace dropkick.Tasks.Files
                 Path.GetFullPath(_to);
                 //TODO: add directory test
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
             }

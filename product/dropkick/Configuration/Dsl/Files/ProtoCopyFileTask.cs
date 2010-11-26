@@ -49,7 +49,10 @@ namespace dropkick.Configuration.Dsl.Files
             if (!site.IsLocal)
                 if (!RemotePathHelper.IsUncPath(to))
                     to = RemotePathHelper.Convert(site.Name, to);
-            
+
+            if (to.StartsWith("~"))
+                to = RemotePathHelper.Convert(site.Name, to);
+
 
             var o = new CopyFileTask(_from, to, _newFileName, new DotNetPath());
             site.AddTask(o);

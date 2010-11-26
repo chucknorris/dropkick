@@ -53,12 +53,12 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-            using (var remote = new CopyRemoteOut(_server))
-            {
+            //using (var remote = new CopyRemoteOut(_server))
+            //{
                 //capture output
-                var vresult = remote.VerifyQueue(Address);
-                result.AddAlert("DID NOTHING");
-            }
+               // var vresult = remote.VerifyQueue(Address);
+                result.AddAlert("REMOTE QUEUE - DID NOTHING");
+            //}
 
 
             return result;
@@ -70,12 +70,12 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-            using (var remote = new CopyRemoteOut(_server))
-            {
+            //using (var remote = new CopyRemoteOut(_server))
+            //{
                 //capture output
-                var vresult = remote.CreateQueue(Address);
-                result.AddAlert("DID NOTHING");
-            }
+                //var vresult = remote.CreateQueue(Address);
+                result.AddAlert("REMOTE QUEUE - DID NOTHING");
+            //}
 
 
             return result;
@@ -88,9 +88,10 @@ namespace dropkick.Tasks.Msmq
             public CopyRemoteOut(PhysicalServer server)
             {
                 //copy remote out
-                var p = RemotePathHelper.Convert(server, "E:\\dropkick.remote");
+                //TODO: make this path configurable
+                var p = RemotePathHelper.Convert(server, @"~\FHLBApp\dropkick.remote");
                 p = System.IO.Path.Combine(p, "dropkick.remote.exe");
-                File.Copy(".\\dropkick.remote.exe", p);
+                File.Copy(@".\dropkick.remote.exe", p);
             }
 
             public bool VerifyQueue(QueueAddress path)

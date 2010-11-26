@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick", "product\dropkic
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.console", "product\dropkick.console\dropkick.console.csproj", "{4F9DA31A-86EE-4CB1-BEB3-A00155CCB351}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.remote", "dropkick.remote\dropkick.remote.csproj", "{97A21367-4943-4F47-9905-68668DBB3F5E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.remote", "product\dropkick.remote\dropkick.remote.csproj", "{97A21367-4943-4F47-9905-68668DBB3F5E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

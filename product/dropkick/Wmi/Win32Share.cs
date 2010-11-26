@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Wmi
 {
+    using System;
     using System.Management;
 
     public static class Win32Share
@@ -19,10 +20,14 @@ namespace dropkick.Wmi
         public static string GetLocalPathForShare(string serverName, string shareName)
         {
             var query = new WqlObjectQuery("select Name, Path from Win32_Share");
-            var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(serverName));
-
-            scope.Options.Impersonation = ImpersonationLevel.Impersonate;
-            scope.Options.EnablePrivileges = true;
+            var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(serverName))
+                            {
+                                Options =
+                                    {
+                                        Impersonation = ImpersonationLevel.Impersonate,
+                                        EnablePrivileges = true
+                                    }
+                            };
 
             using (var search = new ManagementObjectSearcher(scope, query))
             {
@@ -35,6 +40,7 @@ namespace dropkick.Wmi
                         return path;
                 }
             }
+            throw new Exception("There is no share '{0}' on machine '{1}'".FormatWith(shareName, serverName));
         }
     }
 }

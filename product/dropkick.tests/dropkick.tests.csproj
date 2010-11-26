@@ -95,6 +95,7 @@
     <Compile Include="DeploymentModel\WithFailingModel.cs" />
     <Compile Include="Engine\GivenANullCommandLine.cs" />
     <Compile Include="DeploymentModel\WithSimpleModel.cs" />
+    <Compile Include="Engine\PhysicalServerTests.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="RemotePathHelperTest.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />

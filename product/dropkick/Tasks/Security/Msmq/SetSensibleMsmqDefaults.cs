@@ -16,6 +16,7 @@ namespace dropkick.Tasks.Security.Msmq
     using System.Messaging;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
+    using Exceptions;
 
     public class SetSensibleMsmqDefaults :
         BaseTask
@@ -60,19 +61,32 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessLocalQueue(DeploymentResult result)
         {
-            var q = new MessageQueue(_address.FormatName);
+            try
+            {
+                var q = new MessageQueue(_address.LocalName);
 
-            q.SetPermissions(WellKnownRoles.Administrators, MessageQueueAccessRights.FullControl, AccessControlEntryType.Allow);
-            result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
+                q.SetPermissions(WellKnownRoles.Administrators, MessageQueueAccessRights.FullControl, AccessControlEntryType.Allow);
+                result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
 
-            q.SetPermissions(WellKnownRoles.CurrentUser, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
-            result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
+                q.SetPermissions(WellKnownRoles.CurrentUser, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
+                result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
 
-            q.SetPermissions(WellKnownRoles.Everyone, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
-            result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
+                q.SetPermissions(WellKnownRoles.Everyone, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
+                result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
 
-            q.SetPermissions(WellKnownRoles.Anonymous, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
-            result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
+                q.SetPermissions(WellKnownRoles.Anonymous, MessageQueueAccessRights.FullControl, AccessControlEntryType.Revoke);
+                result.AddGood("Successfully set permissions for '{0}' on queue '{1}'".FormatWith(WellKnownRoles.Administrators, _address.LocalName));
+            }
+            catch (MessageQueueException ex)
+            {
+                if(ex.Message.Contains("does not exist"))
+                {
+                    var msg = "The queue '{0}' doesn't exist.";
+                    throw new DeploymentException(msg, ex);
+                }
+                throw;
+            }
+            
 
         }
 
