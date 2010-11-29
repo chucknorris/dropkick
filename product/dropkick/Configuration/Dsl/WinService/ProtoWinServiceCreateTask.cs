@@ -32,9 +32,11 @@ namespace dropkick.Configuration.Dsl.WinService
         string _password;
         ServiceStartMode _startMode;
         string _userName;
+        Path _path;
 
-        public ProtoWinServiceCreateTask(string serviceName)
+        public ProtoWinServiceCreateTask(Path path, string serviceName)
         {
+            _path = path;
             _serviceName = ReplaceTokens(serviceName);
         }
 
@@ -91,14 +93,7 @@ namespace dropkick.Configuration.Dsl.WinService
                     throw new DeploymentConfigurationException(sb.ToString());
                 }
                     
-
-                var regex = new Regex(@"~\\(?<shareName>[A-Za-z0-9]+)");
-                var shareMatch = regex.Match(_installPath);
-                if (shareMatch.Success)
-                {
-                    var shareName = shareMatch.Groups["shareName"].Value;
-                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
-                }
+                serviceLocation = _path.ConvertUncShareToLocalPath(site, _installPath);
             }
             
             

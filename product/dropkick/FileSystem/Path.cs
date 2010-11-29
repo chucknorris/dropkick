@@ -17,6 +17,7 @@ namespace dropkick.FileSystem
 
     public interface Path
     {
+        string ConvertUncShareToLocalPath(PhysicalServer server, string path);
         string Combine(string root, string ex);
         string GetFullPath(string path);
         bool IsFile(string path);

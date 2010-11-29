@@ -15,13 +15,29 @@ namespace dropkick.FileSystem
     using System;
     using System.IO;
     using System.Security.AccessControl;
+    using System.Text.RegularExpressions;
     using DeploymentModel;
     using Exceptions;
+    using Wmi;
 
     public class DotNetPath :
         Path
     {
         #region Path Members
+
+        public string ConvertUncShareToLocalPath(PhysicalServer site, string path)
+        {
+            var serviceLocation = path;
+                var regex = new Regex(@"~\\(?<shareName>[A-Za-z0-9]+)(?<rest>.*)");
+                var shareMatch = regex.Match(path);
+                if (shareMatch.Success)
+                {
+                    var shareName = shareMatch.Groups["shareName"].Value;
+                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
+                }
+            var rest = shareMatch.Groups["rest"].Value;
+            return System.IO.Path.Combine(serviceLocation, rest);
+        }
 
         public string Combine(string root, string ex)
         {
