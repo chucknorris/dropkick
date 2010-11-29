@@ -2,11 +2,20 @@ using dropkick.FileSystem;
 
 namespace dropkick.tests
 {
+    using dropkick.DeploymentModel;
     using NUnit.Framework;
 
     [TestFixture]
     public class RemotePathHelperTest
     {
+        [Test, Explicit]
+        public void FHLBApp()
+        {
+            var path = new DotNetPath();
+            var x = path.ConvertUncShareToLocalPath(new DeploymentServer("sellersd"), @"~\FHLBWinSvc\Bill");
+            Assert.AreEqual("D:\\Development\\cue_dep\\Shares\\FHLBWinSvc\\Bill", x);
+        }
+
         [Test]
         public void NAME()
         {

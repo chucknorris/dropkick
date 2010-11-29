@@ -99,6 +99,7 @@
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
+    <Compile Include="Tasks\Files\BaseIoTask.cs" />
     <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantWriteTask.cs" />

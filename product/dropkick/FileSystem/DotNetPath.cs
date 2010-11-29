@@ -28,7 +28,7 @@ namespace dropkick.FileSystem
         public string ConvertUncShareToLocalPath(PhysicalServer site, string path)
         {
             var serviceLocation = path;
-                var regex = new Regex(@"~\\(?<shareName>[A-Za-z0-9]+)(?<rest>.*)");
+                var regex = new Regex(@"~\\(?<shareName>[A-Za-z0-9]+)\\(?<rest>.*)");
                 var shareMatch = regex.Match(path);
                 if (shareMatch.Success)
                 {
@@ -104,6 +104,11 @@ namespace dropkick.FileSystem
         public bool FileDoesntExist(string path)
         {
             return !FileExists(path);
+        }
+
+        public string[] GetFiles(string path)
+        {
+            return System.IO.Directory.GetFiles(path);
         }
 
         public void CreateDirectory(string path)

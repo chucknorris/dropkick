@@ -28,5 +28,6 @@ namespace dropkick.FileSystem
         void CreateDirectory(string path);
         bool FileExists(string path);
         bool FileDoesntExist(string path);
+        string[] GetFiles(string path);
     }
 }

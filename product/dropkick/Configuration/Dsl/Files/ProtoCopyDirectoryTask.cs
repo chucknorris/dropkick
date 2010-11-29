@@ -63,7 +63,7 @@ namespace dropkick.Configuration.Dsl.Files
 
             foreach (var f in _froms)
             {
-                var o = new CopyDirectoryTask(f, to, _options);
+                var o = new CopyDirectoryTask(f, to, _options, new DotNetPath());
                 site.AddTask(o);
             }
         }

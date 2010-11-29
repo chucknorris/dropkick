@@ -51,7 +51,7 @@ namespace dropkick.tests.Tasks.Files
         [Test]
         public void CopyDirectory()
         {
-            var t = new CopyDirectoryTask(_source, _dest, DestinationCleanOptions.None);
+            var t = new CopyDirectoryTask(_source, _dest, DestinationCleanOptions.None, new DotNetPath());
             t.Execute();
 
             var s = File.ReadAllText(_path.Combine(_dest, "test.txt"));
