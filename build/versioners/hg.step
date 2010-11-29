@@ -5,7 +5,7 @@
   <property name="build.config.settings" value="__NONE__" overwrite="false" />
   <include buildfile="${build.config.settings}" if="${file::exists(build.config.settings)}" />
   <property name="path.separator" value="${string::trim(path::combine(' ', ' '))}" />
-  <property name="file.current.no_extension" value="git" />
+  <property name="file.current.no_extension" value="hg" />
   <property name="path.to.toplevel" value="..${path.separator}.." />
   <property name="dirs.current" value="${directory::get-parent-directory(project::get-buildfile-path())}" />
   <property name="folder.build_scripts" value="build" overwrite="false" />
@@ -63,8 +63,8 @@
   <target name="get_revision">
     <echo message="Getting revision number from working directory ${directory::get-parent-directory(dirs.current)} or remotely at ${repository.path}."/>
     <!-- try to update the revision -->
-    <getVersionFromGit
-      gitExecutableWithPath="git"
+    <getVersionFromMercurial
+      hgExecutableWithPath="hg"
       repoDirectory="."
       repoPath="${repository.path}"
       output="_revision.xml"
