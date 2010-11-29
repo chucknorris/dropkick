@@ -2,7 +2,7 @@
 {
     using System;
     using DeploymentModel;
-    using dropkick.Dsl.Msmq;
+    using Dsl.Msmq;
     using Tasks;
     using Tasks.Security.Msmq;
 

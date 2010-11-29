@@ -17,6 +17,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         RoundhousEOptions ForDatabaseType(string type);
         RoundhousEOptions OnInstance(string name);
         RoundhousEOptions OnDatabase(string name);
+        RoundhousEOptions DropDatabase(bool drop);
         RoundhousEOptions WithScriptsFolder(string scriptsLocation);
         RoundhousEOptions ForEnvironment(string environment);
         RoundhousEOptions UseSimpleRecoveryMode(bool useSimple);

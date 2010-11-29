@@ -5,6 +5,7 @@
     using System.Diagnostics;
     using System.DirectoryServices;
     using System.Text;
+    using DeploymentModel;
 
     [DebuggerDisplay("{_siteName}->{_vDir}")]
     public class Iis6Path
@@ -89,9 +90,13 @@
             throw new Exception(sb.ToString());
         }
 
-        public bool DoesSiteExist()
+        public bool DoesSiteExist(DeploymentResult result)
         {
-            return ConvertSiteNameToSiteNumber(WebsiteName) > 0;
+            var doesExist = ConvertSiteNameToSiteNumber(WebsiteName) > 0;
+
+            
+
+            return doesExist;
         }
     }
 }

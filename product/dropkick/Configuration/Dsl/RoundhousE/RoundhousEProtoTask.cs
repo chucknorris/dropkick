@@ -10,12 +10,13 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
     using System;
     using DeploymentModel;
+    using dropkick.Tasks.RoundhousE;
     using Tasks;
-    using Tasks.RoundhousE;
 
     public class RoundhousEProtoTask :
         BaseProtoTask,
@@ -27,6 +28,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         string _scriptsLocation;
         bool _useSimpleRecoveryMode;
         string _databaseType;
+        bool _drop;
 
         public RoundhousEOptions ForDatabaseType(string type)
         {
@@ -43,6 +45,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         public RoundhousEOptions OnDatabase(string name)
         {
             _databaseName = ReplaceTokens(name);
+            return this;
+        }
+
+        public RoundhousEOptions DropDatabase(bool drop)
+        {
+            _drop = drop;
             return this;
         }
 
@@ -81,12 +89,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var task = new RoundhousETask(_instanceName, _databaseName, _databaseType, _scriptsLocation,
-                                          _environmentName, _useSimpleRecoveryMode);
-            //rhtask.Args = "/d={0} /f={1} /s={2} /env={3} /dt={4}".FormatWith(DatabaseName, SqlFilesLocation, site.Name,
-            //                                                                 EnvironmentName, DatabaseType);
-            //if (UseSimpleRestoreMode)
-            //    rhtask.Args += " /simple";
+            var serverAddressWithInstance = site.Name;
+            if (!string.IsNullOrEmpty(_instanceName))
+                serverAddressWithInstance = @"{0}\{1}".FormatWith(serverAddressWithInstance, _instanceName);
+
+            var task = new RoundhousETask(serverAddressWithInstance, _databaseType, _databaseName, _drop,
+                                          _scriptsLocation, _environmentName, _useSimpleRecoveryMode);
 
             site.AddTask(task);
         }

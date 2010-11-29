@@ -17,6 +17,8 @@
     <Name>System</Name>
     <Name>System.ServiceProcess</Name>
     <Name>System.Messaging</Name>
+    <Name>System.Web.Services</Name>
+    <Name>System.Xml</Name>
   </FrameworkAssemblies>
   <Dirs>
     <Dir>C:\Windows\Microsoft.NET\Framework\v2.0.50727</Dir>

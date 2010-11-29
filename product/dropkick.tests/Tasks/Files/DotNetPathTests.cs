@@ -61,6 +61,13 @@ namespace dropkick.tests.Tasks.Files
             Assert.IsTrue(_path.IsFile(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\des.exe"));
         }
 
+        [Test, Explicit]
+        public void RemotePathIsDirectoryTest()
+        {
+            Assert.IsTrue(_path.IsDirectory(@"\\localhost\Appl2\Warehouse"));
+        }
+
+
         [Test]
         public void IsFileReturnsFalseForADirecroty()
         {
@@ -73,5 +80,6 @@ namespace dropkick.tests.Tasks.Files
         {
             Assert.IsTrue(File.Exists(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\FHLBank.BloombergIntegration.Host.exe.config"));
         }
+
     }
 }

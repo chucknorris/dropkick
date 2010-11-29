@@ -14,9 +14,9 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
 {
     using System;
     using dropkick.DeploymentModel;
-    using dropkick.Dsl.Msmq;
     using dropkick.Tasks;
     using dropkick.Tasks.Security.Msmq;
+    using Dsl.Msmq;
 
     public class ProtoMsmqGrantReadTask :
         BaseProtoTask

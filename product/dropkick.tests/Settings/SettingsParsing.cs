@@ -11,7 +11,7 @@ namespace dropkick.tests.Settings
         [Test]
         public void ParseTheContentToObject()
         {
-            File.WriteAllText(".\\test.json","{Website:\"cue\",Database:\"cue_db\",YesNo:true}");
+            File.WriteAllText(".\\test.json","{Website:\"cue\",Database:\"cue_db\",YesNo:true,Auto:\"Manual\"}");
             var commandLine = @"-Website:cue -Database:cue_db -YesNo:true";
 
             var p = new SettingsParser();
@@ -20,12 +20,13 @@ namespace dropkick.tests.Settings
             Assert.AreEqual("cue_db",r.Database);
             Assert.AreEqual("cue",r.Website);
             Assert.IsTrue(r.YesNo);
+            Assert.AreEqual(SampleEnum.Manual, r.Auto);
         }
 
         [Test]
         public void ViaFastInvoke()
         {
-            var commandLine = @"-Website:cue -Database:cue_db -YesNo:true";
+            var commandLine = @"-Website:cue -Database:cue_db -YesNo:true -Auto:Manual";
 
             var p = new SettingsParser();
             var r = (TestSettings)p.FastInvoke<SettingsParser, object>(new []{typeof(TestSettings)}, "Parse", new FileInfo("."), commandLine, "test");
@@ -33,6 +34,7 @@ namespace dropkick.tests.Settings
             Assert.AreEqual("cue_db", r.Database);
             Assert.AreEqual("cue", r.Website);
             Assert.IsTrue(r.YesNo);
+            Assert.AreEqual(SampleEnum.Manual, r.Auto);
         }
     }
 
@@ -41,5 +43,12 @@ namespace dropkick.tests.Settings
         public string Website { get; set; }
         public string Database { get; set; }
         public bool YesNo { get; set; }
+        public SampleEnum Auto { get; set; }
+    }
+
+    public enum SampleEnum
+    {
+        Auto,
+        Manual
     }
 }

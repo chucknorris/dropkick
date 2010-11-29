@@ -14,8 +14,8 @@ namespace dropkick.Tasks.Security.Msmq
 {
     using System;
     using System.Messaging;
+    using Configuration.Dsl.Msmq;
     using DeploymentModel;
-    using Dsl.Msmq;
 
     public class MsmqGrantReadWriteTask :
         BaseTask
@@ -48,7 +48,7 @@ namespace dropkick.Tasks.Security.Msmq
             if (_address.IsLocal)
                 VerifyInAdministratorRole(result);
             else
-                result.AddAlert("Cannot administer the private remote queue '{0}' while on server '{1}'".FormatWith(_address, Environment.MachineName));
+                result.AddAlert("Cannot set permissions for the private remote queue '{0}' while on server '{1}'".FormatWith(_address.ActualUri, Environment.MachineName));
 
             return result;
         }
@@ -80,7 +80,7 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessRemoteQueue(DeploymentResult result)
         {
-            var message = "Cannot administer the private remote queue '{0}' while on server '{1}'.".FormatWith(_address, Environment.MachineName);
+            var message = "Cannot set permissions for the remote queue '{0}' while on server '{1}'.".FormatWith(_address.ActualUri, Environment.MachineName);
 
             result.AddError(message);
         }

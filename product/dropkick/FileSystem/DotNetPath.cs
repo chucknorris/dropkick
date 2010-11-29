@@ -15,13 +15,29 @@ namespace dropkick.FileSystem
     using System;
     using System.IO;
     using System.Security.AccessControl;
+    using System.Text.RegularExpressions;
     using DeploymentModel;
     using Exceptions;
+    using Wmi;
 
     public class DotNetPath :
         Path
     {
         #region Path Members
+
+        public string ConvertUncShareToLocalPath(PhysicalServer site, string path)
+        {
+            var serviceLocation = path;
+                var regex = new Regex(@"~\\(?<shareName>[A-Za-z0-9]+)\\(?<rest>.*)");
+                var shareMatch = regex.Match(path);
+                if (shareMatch.Success)
+                {
+                    var shareName = shareMatch.Groups["shareName"].Value;
+                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
+                }
+            var rest = shareMatch.Groups["rest"].Value;
+            return System.IO.Path.Combine(serviceLocation, rest);
+        }
 
         public string Combine(string root, string ex)
         {
@@ -35,8 +51,17 @@ namespace dropkick.FileSystem
 
         public bool IsFile(string path)
         {
-            var fi = new FileInfo(GetFullPath(path));
-            return (fi.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
+            try
+            {
+                var fi = new FileInfo(GetFullPath(path));
+                return (fi.Attributes & FileAttributes.Directory) != FileAttributes.Directory;
+            }
+            catch (IOException ex)
+            {
+                var msg = "Attempted to determine if '{0}' was a file, and encountered the following error.".FormatWith(path);
+                throw new DeploymentException(msg, ex);
+            }
+            
         }
 
         public bool IsDirectory(string path)
@@ -46,12 +71,49 @@ namespace dropkick.FileSystem
                 var di = new DirectoryInfo(GetFullPath(path));
                 return (di.Attributes & FileAttributes.Directory) == FileAttributes.Directory;
             }
-            catch (Exception ex)
+            catch (IOException ex)
             {
-                var msg = "Attempted to determine if '{0}' was a path, and encountered the following error.".FormatWith(path);
-                 throw new DeploymentException(msg, ex);
+                if(DirectoryDoesntExist(path))
+                {
+
+                    var msg2 = "Attempted to determine if '{0}' was a directory, but found that the path doesn't exist at all".FormatWith(path);
+                    throw new DeploymentException(msg2, ex);
+                }
+
+                var msg = "Attempted to determine if '{0}' was a directory, and encountered the following error.".FormatWith(path);
+                throw new DeploymentException(msg, ex);
             }
-            
+
+        }
+
+        public bool DirectoryExists(string path)
+        {
+            return Directory.Exists(path);
+        }
+
+        public bool DirectoryDoesntExist(string path)
+        {
+            return !DirectoryExists(path);
+        }
+
+        public bool FileExists(string path)
+        {
+            return File.Exists(path);
+        }
+
+        public bool FileDoesntExist(string path)
+        {
+            return !FileExists(path);
+        }
+
+        public string[] GetFiles(string path)
+        {
+            return System.IO.Directory.GetFiles(path);
+        }
+
+        public void CreateDirectory(string path)
+        {
+            Directory.CreateDirectory(path);
         }
 
         //http://www.west-wind.com/weblog/posts/4072.aspx
@@ -76,11 +138,11 @@ namespace dropkick.FileSystem
             if (!result)
                 r.AddError("Something wrong happened");
 
-            accessRule = new FileSystemAccessRule(group, 
+            accessRule = new FileSystemAccessRule(group,
                                                   permission,
-                                                  InheritanceFlags.ContainerInherit | 
+                                                  InheritanceFlags.ContainerInherit |
                                                   InheritanceFlags.ObjectInherit,
-                                                  PropagationFlags.InheritOnly, 
+                                                  PropagationFlags.InheritOnly,
                                                   AccessControlType.Allow);
 
             result = false;
@@ -89,8 +151,8 @@ namespace dropkick.FileSystem
                 r.AddError("Something wrong happened");
 
             Directory.SetAccessControl(target, newSecurity);
-            if(result)
-                r.AddGood("whoot");
+            if (result)
+                r.AddGood("Permissions set for '{0}' on folder '{1}'", group, target);
 
             if (!result) r.AddError("Something wrong happened");
         }

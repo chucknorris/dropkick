@@ -39,7 +39,7 @@ namespace dropkick.console
             //      FHLBank.Flames.Deployment.StandardDepoy (a class, lack of .dll)
             //      (null) - if omitted search for a dll ending with 'Deployment' then pass that name in
 
-            Runner.Deploy(args.Aggregate((a, b) => a + " " + b).Trim());
+            Runner.Deploy(args.Aggregate("",(a, b) => a + " " + b).Trim());
         }
     }
 }

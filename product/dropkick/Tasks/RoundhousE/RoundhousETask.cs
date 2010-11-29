@@ -12,26 +12,29 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.RoundhousE
 {
+    using System;
+    using System.IO;
     using DeploymentModel;
     using log4net;
 
     public class RoundhousETask :
         Task
     {
-        static readonly ILog _logger = LogManager.GetLogger(typeof (RoundhousETask));
+        static readonly ILog _logger = LogManager.GetLogger(typeof(RoundhousETask));
 
         readonly string _instanceName;
         readonly string _databaseName;
+        readonly bool _dropDatabase;
         readonly string _databaseType;
         readonly string _scriptsLocation;
         readonly string _environmentName;
         readonly bool _useSimpleRecoveryMode;
 
-        public RoundhousETask(string instanceName, string databaseName, string databaseType, string scriptsLocation,
-                              string environmentName, bool useSimpleRecoveryMode)
+        public RoundhousETask(string instanceName, string databaseType, string databaseName, bool dropDatabase, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode)
         {
             _instanceName = instanceName;
             _databaseName = databaseName;
+            _dropDatabase = dropDatabase;
             _databaseType = databaseType;
             _scriptsLocation = scriptsLocation;
             _environmentName = environmentName;
@@ -51,10 +54,12 @@ namespace dropkick.Tasks.RoundhousE
         public DeploymentResult VerifyCanRun()
         {
             var results = new DeploymentResult();
+            results.AddNote(Name);
 
             //check you can connect to the _instancename
             //check that the path _scriptsLocation exists
             results.AddNote("I don't know what to do here...");
+
 
             return results;
         }
@@ -63,10 +68,19 @@ namespace dropkick.Tasks.RoundhousE
         {
             var results = new DeploymentResult();
 
+            var scriptsPath = Path.GetFullPath(_scriptsLocation);
 
-            RoundhousEClientApi.Run(_instanceName, _databaseName, _databaseType, _scriptsLocation, _environmentName,
-                                    _useSimpleRecoveryMode);
-
+            var log = new DeploymentLogger(results);
+            try
+            {
+                if (_dropDatabase)
+                    RoundhousEClientApi.Run(log, _instanceName, _databaseType, _databaseName, true, scriptsPath, _environmentName, _useSimpleRecoveryMode);
+                RoundhousEClientApi.Run(log, _instanceName, _databaseType, _databaseName, false, scriptsPath, _environmentName, _useSimpleRecoveryMode);
+            }
+            catch (Exception ex)
+            {
+                results.AddError("An error occured during RoundhousE execution.", ex);
+            }
 
             return results;
         }

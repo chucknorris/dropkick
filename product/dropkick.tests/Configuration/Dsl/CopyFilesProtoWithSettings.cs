@@ -50,6 +50,4 @@ namespace dropkick.tests.Configuration.Dsl
             public string Bob { get; set; }
         }
     }
-
-    
 }

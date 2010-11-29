@@ -24,10 +24,22 @@
 			</layout>
 		</appender>
 
-		<root>
+        <appender name="TripwireFileAppender" type="log4net.Appender.FileAppender">
+            <file value=".\tripwire.log"/>
+            <appendToFile value="true"/>
+            <layout type="log4net.Layout.PatternLayout">
+                <conversionPattern value="%message%newline"/>
+            </layout>
+        </appender>
+
+        <root>
 			<level value="INFO" />
 			<appender-ref ref="Console" />
 		</root>
 
+        <logger name="dropkick.filewrite">
+            <level value="INFO" />
+            <appender-ref ref="TripwireFileAppender" />
+        </logger>
 	</log4net>
 </configuration>
