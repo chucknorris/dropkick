@@ -42,7 +42,7 @@ namespace dropkick.Tasks.Security.Acl
             _target = _path.GetFullPath(_target);
 
             if (!_path.DirectoryExists(_target) && !_path.FileExists(_target))
-                result.AddAlert("'{0}' does not exist.".FormatWith(_target));
+                result.AddAlert("'{0}' does not exist. It may be created.".FormatWith(_target));
 
             return result;
         }
@@ -52,6 +52,7 @@ namespace dropkick.Tasks.Security.Acl
             var result = new DeploymentResult();
 
             _target = _path.GetFullPath(_target);
+            if (_path.DirectoryDoesntExist(_target)) _path.CreateDirectory(_target);
 
             //TODO: Pass into the method
             //result.AddAlert("Could not apply Modify permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
