@@ -17,11 +17,17 @@ namespace dropkick.FileSystem
 
     public interface Path
     {
+        string ConvertUncShareToLocalPath(PhysicalServer server, string path);
         string Combine(string root, string ex);
         string GetFullPath(string path);
         bool IsFile(string path);
         bool IsDirectory(string path);
         void SetFileSystemRights(string target, string group, FileSystemRights permission, DeploymentResult result);
-
+        bool DirectoryExists(string path);
+        bool DirectoryDoesntExist(string path);
+        void CreateDirectory(string path);
+        bool FileExists(string path);
+        bool FileDoesntExist(string path);
+        string[] GetFiles(string path);
     }
 }

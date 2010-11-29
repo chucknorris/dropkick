@@ -13,6 +13,7 @@
 namespace dropkick.Configuration.Dsl.WinService
 {
     using System;
+    using FileSystem;
 
     public class ProtoWinServiceTask :
         WinServiceOptions
@@ -52,7 +53,7 @@ namespace dropkick.Configuration.Dsl.WinService
 
         public WinServiceCreateOptions Create()
         {
-            var proto = new ProtoWinServiceCreateTask(_serviceName);
+            var proto = new ProtoWinServiceCreateTask(new DotNetPath(), _serviceName);
             _protoServer.RegisterProtoTask(proto);
             return proto;
         }

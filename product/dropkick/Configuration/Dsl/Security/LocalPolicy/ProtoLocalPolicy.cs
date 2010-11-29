@@ -30,6 +30,12 @@ namespace dropkick.Configuration.Dsl.Security.LocalPolicy
             _server.RegisterProtoTask(p);
         }
 
+        public void LogOnAsBatch(string accountName)
+        {
+            var p = new ProtoLogOnBatchTask(accountName);
+            _server.RegisterProtoTask(p);
+        }
+
         #endregion
     }
 }

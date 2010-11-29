@@ -14,6 +14,7 @@ namespace dropkick.Tasks.Iis
 {
     using System;
     using DeploymentModel;
+    using FileSystem;
     using log4net;
     using Microsoft.Web.Administration;
     using System.Linq;
@@ -24,12 +25,21 @@ namespace dropkick.Tasks.Iis
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof (Iis7Task));
         public bool UseClassicPipeline { get; set; }
+        Path _path = new DotNetPath();
 
         public override int VersionNumber
         {
             get { return 7; }
         }
 
+        public Iis7Task()
+        {
+            ManagedRuntimeVersion = Iis.ManagedRuntimeVersion.V2;
+            PathForWebsite = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\inetpub\wwwroot");
+        }
+
+        public string PathForWebsite { get; set; }
+        public string ManagedRuntimeVersion { get; set; }
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -54,17 +64,19 @@ namespace dropkick.Tasks.Iis
 
             BuildApplicationPool(iisManager, result);
 
-            if (DoesSiteExist())
+            if (!DoesSiteExist(result))
             {
-                result.AddGood("'{0}' site exists", WebsiteName);
-                Site site = GetSite(iisManager, WebsiteName);
+                CreateWebSite(iisManager, WebsiteName, result);
+            }
 
-                if (!DoesVirtualDirectoryExist(site))
-                {
-                    result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
-                    CreateVirtualDirectory(site, iisManager);
-                    result.AddGood("'{0}' was created", VdirPath);
-                }
+
+            Site site = GetSite(iisManager, WebsiteName);
+
+            if (!DoesVirtualDirectoryExist(site))
+            {
+                result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
+                CreateVirtualDirectory(site, iisManager);
+                result.AddGood("'{0}' was created", VdirPath);
             }
 
 
@@ -72,6 +84,35 @@ namespace dropkick.Tasks.Iis
 
             return result;
         }
+
+        public bool DoesSiteExist(DeploymentResult result)
+        {
+            var iisManager = ServerManager.OpenRemote(ServerName);
+            foreach (var site in iisManager.Sites)
+            {
+                if (site.Name.Equals(WebsiteName))
+                {
+                    result.AddGood("'{0}' site exists", WebsiteName);
+                    return true;
+                }
+            }
+
+            result.AddAlert("'{0}' site DOES NOT exist", WebsiteName);
+            return false;
+        }
+
+        void CreateWebSite(ServerManager iisManager, string websiteName, DeploymentResult result)
+        {
+            if(_path.DirectoryDoesntExist(PathForWebsite))
+            {
+                _path.CreateDirectory(PathForWebsite);
+            }
+            
+            //TODO: check for port collision?
+            var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);           
+        }
+
+        
 
         void BuildApplicationPool(ServerManager iisManager, DeploymentResult result)
         {
@@ -104,6 +145,7 @@ namespace dropkick.Tasks.Iis
                 _logger.Debug(PathOnServer);
                 var app = site.Applications.Add(appPath, PathOnServer);
                 
+                
                 if(AppPoolName != null)
                     app.ApplicationPoolName = AppPoolName;
             }
@@ -128,18 +170,6 @@ namespace dropkick.Tasks.Iis
                 result.AddAlert("This machine does not have IIS7 on it");
         }
 
-        public bool DoesSiteExist()
-        {
-            var iisManager = ServerManager.OpenRemote(ServerName);
-            foreach (var site in iisManager.Sites)
-            {
-                if (site.Name.Equals(WebsiteName))
-                {
-                    return true;
-                }
-            }
-            return false;
-        }
 
         public bool DoesVirtualDirectoryExist(Site site)
         {
@@ -176,7 +206,8 @@ namespace dropkick.Tasks.Iis
             }
             result.AddAlert("Didn't find the AppPool '{0}' creating.", name);    
 
-            mgr.ApplicationPools.Add(name);
+            var pool = mgr.ApplicationPools.Add(name);
+            pool.ManagedRuntimeVersion = this.ManagedRuntimeVersion;
             result.AddGood("Created app pool '{0}'", name);
         }
     }

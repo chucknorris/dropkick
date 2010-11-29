@@ -12,7 +12,10 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.tests.Tasks.Files
 {
+    using System;
     using System.IO;
+    using dropkick.Configuration.Dsl.Files;
+    using dropkick.DeploymentModel;
     using dropkick.Tasks.Files;
     using FileSystem;
     using NUnit.Framework;
@@ -23,21 +26,27 @@ namespace dropkick.tests.Tasks.Files
         readonly DotNetPath _path = new DotNetPath();
         const string BaseDir = @".\CopyFileTests";
         //const string BaseDir = @"\\srvtestweb01\e$\CopyFileTests";
-        readonly string _sourceDirectory = @"{0}\source".FormatWith(BaseDir);
-        readonly string _destinationDirectory = @"{0}\dest".FormatWith(BaseDir);
+        string _sourceFilePath;
+        string _destinationFolderPath;
 
         #region Setup/Teardown
 
         [SetUp]
         public void SetUp()
         {
+            var sourceDirectory = @"{0}\source".FormatWith(BaseDir);
+            var destinationDirectory = @"{0}\dest".FormatWith(BaseDir);
+
             if (Directory.Exists(BaseDir))
                 Directory.Delete(BaseDir, true);
 
             Directory.CreateDirectory(BaseDir);
-            Directory.CreateDirectory(_sourceDirectory);
-            File.WriteAllLines(_path.Combine(_sourceDirectory, "test.txt"), new[] {"the test"});
-            Directory.CreateDirectory(_destinationDirectory);
+            Directory.CreateDirectory(sourceDirectory);
+            File.WriteAllLines(_path.Combine(sourceDirectory, "test.txt"), new[] { "the test" });
+            Directory.CreateDirectory(destinationDirectory);
+
+            _sourceFilePath = _path.GetFullPath(_path.Combine(sourceDirectory, "test.txt"));
+            _destinationFolderPath = _path.GetFullPath(destinationDirectory);
         }
 
         [TearDown]
@@ -51,47 +60,73 @@ namespace dropkick.tests.Tasks.Files
         [Test]
         public void CopyFileToDirectory()
         {
-            string file = _path.Combine(_sourceDirectory, "test.txt");
-            var t = new CopyFileTask(file, _destinationDirectory, null, new DotNetPath());
+            var t = new CopyFileTask(_sourceFilePath, _destinationFolderPath, null, new DotNetPath());
             t.Execute();
 
-            string s = File.ReadAllText(_path.Combine(_destinationDirectory, "test.txt"));
+            string s = File.ReadAllText(_path.Combine(_destinationFolderPath, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
+        }
+
+        [Test]
+        public void CopyFileToUncDirectory()
+        {
+            var toDir = @"\\srvtestmachine\some_directory";
+            var fromDir = @".\bob";
+            HUB.Settings = new object();
+
+            var proto = new ProtoCopyFileTask(fromDir);
+            proto.ToDirectory(toDir);
+
+            var server = new DeploymentServer("dru");
+
+            proto.RegisterRealTasks(server);
+
+
         }
 
         [Test]
         public void CopyFileToFileWithSameName()
         {
-            string file = _path.Combine(_sourceDirectory, "test.txt");
-            var t = new CopyFileTask(file, _destinationDirectory, "test.txt", new DotNetPath());
+            var t = new CopyFileTask(_sourceFilePath, _destinationFolderPath, "test.txt", new DotNetPath());
             t.Execute();
 
-            string s = File.ReadAllText(_path.Combine(_destinationDirectory, "test.txt"));
+            string s = File.ReadAllText(_path.Combine(_destinationFolderPath, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
         }
 
         [Test]
         public void CopyFileToFileWithRename()
         {
-            string file = _path.Combine(_sourceDirectory, "test.txt");
-            var t = new CopyFileTask(file, _destinationDirectory, "newtest.txt", new DotNetPath());
+            var t = new CopyFileTask(_sourceFilePath, _destinationFolderPath, "newtest.txt", new DotNetPath());
             t.Execute();
 
-            string s = File.ReadAllText(_path.Combine(_destinationDirectory, "newtest.txt"));
+            string s = File.ReadAllText(_path.Combine(_destinationFolderPath, "newtest.txt"));
             Assert.AreEqual("the test\r\n", s);
         }
 
         [Test]
         public void CopyFileToFileWithSameNameAndOverwrite()
         {
-            File.WriteAllLines(_path.Combine(_destinationDirectory, "test.txt"), new[] {"bad file"});
+            File.WriteAllLines(_path.Combine(_destinationFolderPath, "test.txt"), new[] { "bad file" });
 
-            string file = _path.Combine(_sourceDirectory, "test.txt");
-            var t = new CopyFileTask(file, _destinationDirectory, "test.txt", new DotNetPath());
+            var t = new CopyFileTask(_sourceFilePath, _destinationFolderPath, "test.txt", new DotNetPath());
             t.Execute();
 
-            string s = File.ReadAllText(_path.Combine(_destinationDirectory, "test.txt"));
+            string s = File.ReadAllText(_path.Combine(_destinationFolderPath, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
         }
+        [Test]
+        public void CopyFileToUncPath()
+        {
+            var sourceUncPath = RemotePathHelper.Convert(Environment.MachineName, _path.GetFullPath(_sourceFilePath));
+            var destinationUncPath = RemotePathHelper.Convert(Environment.MachineName, _path.GetFullPath(_destinationFolderPath));
+
+            var t = new CopyFileTask(sourceUncPath, destinationUncPath, null, new DotNetPath());
+            t.Execute();
+
+            string s = File.ReadAllText(_path.Combine(destinationUncPath, "test.txt"));
+            Assert.AreEqual("the test\r\n", s);
+        }
+
     }
 }

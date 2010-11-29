@@ -12,29 +12,45 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Msmq
 {
+    using System;
     using System.Messaging;
+    using Configuration.Dsl.Msmq;
     using DeploymentModel;
 
     public class MsmqGrantReadTask :
         BaseTask
     {
-        public string Group;
-        public string QueueName;
-        public string ServerName;
-        public bool PrivateQueue;
+        string _group;
+        QueueAddress _address;
+
+        public MsmqGrantReadTask(QueueAddress address, string group)
+        {
+            _group = group;
+            _address = address;
+        }
+
+        public MsmqGrantReadTask(PhysicalServer server, string queueName, string group)
+        {
+            _group = group;
+            var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
+            _address = new QueueAddress(ub.Uri);
+        }
+
+
 
         public override string Name
         {
-            get { return "Grant read to '{0}'".FormatWith(Group); }
+            get { return "Grant read to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri); }
         }
-
-        string QueuePath { get { return @"{0}\{1}{2}".FormatWith(ServerName, (PrivateQueue ? @"Private$\" : string.Empty), QueueName); } }
 
         public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
-            VerifyInAdministratorRole(result);
+            if (_address.IsLocal)
+                VerifyInAdministratorRole(result);
+            else
+                result.AddAlert("Cannot set permissions for the private remote queue '{0}' while on server '{1}'".FormatWith(_address.ActualUri, Environment.MachineName));
 
             return result;
         }
@@ -42,12 +58,29 @@ namespace dropkick.Tasks.Security.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var q = new MessageQueue(@"FormatName:DIRECT=OS:{0}".FormatWith(QueuePath));
-            q.SetPermissions(Group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
-            q.SetPermissions(Group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+            if (_address.IsLocal)
+                ProcessLocalQueue(result);
+            else
+                ProcessRemoteQueue(result);
 
-            result.AddGood("Successfully granted Read permissions to '{0}' for queue '{1}'".FormatWith(Group, QueuePath));
             return result;
         }
+
+        void ProcessLocalQueue(DeploymentResult result)
+        {
+            var q = new MessageQueue(_address.FormatName);
+            q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
+            q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+
+            result.AddGood("Successfully granted Read permissions to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri));
+        }
+
+        void ProcessRemoteQueue(DeploymentResult result)
+        {
+            var message = "Cannot set permissions for the remote queue '{0}' while on server '{1}'.".FormatWith(_address.ActualUri, Environment.MachineName);
+
+            result.AddError(message);
+        }
+
     }
 }

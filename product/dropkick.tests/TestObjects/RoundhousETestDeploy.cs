@@ -11,11 +11,10 @@ namespace dropkick.tests.TestObjects
             Define((settings) => DeploymentStepsFor(Db, server =>
             {
                 server.RoundhousE()
-                    .Environment("TEST")
+                    .ForEnvironment("TEST")
                     .OnInstance(".")
                     .OnDatabase("test")
-                    .UseMsSqlServer2005()
-                    .WithRecoveryMode("simple");
+                    .UseSimpleRecoveryMode(true);
             }));
         }
 

@@ -15,5 +15,6 @@ namespace dropkick.Configuration.Dsl.Security.LocalPolicy
     public interface LocalPolicyConfig
     {
         void LogOnAsService(string accountName);
+        void LogOnAsBatch(string accountName);
     }
 }

@@ -25,14 +25,18 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public ProtoPathGrantReadTask(string path, string group)
         {
-            _path = path;
-            _group = group;
+            _path = ReplaceTokens(path);
+            _group = ReplaceTokens(group);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
             var path = _path;
+
             if (!site.IsLocal)
+                path = RemotePathHelper.Convert(site.Name, _path);
+
+            if (path.StartsWith("~"))
                 path = RemotePathHelper.Convert(site.Name, _path);
 
             var task = new GrantReadTask(path, _group, new DotNetPath());

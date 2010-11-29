@@ -51,5 +51,10 @@ namespace dropkick.Engine.DeploymentFinders
 
             return p;
         }
+
+        public string Name
+        {
+            get { return "Specific Assembly Specified"; }
+        }
     }
 }

@@ -45,7 +45,12 @@ namespace dropkick.Configuration.Dsl.Files
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string to = _to;
+
             if (!site.IsLocal)
+                if (!RemotePathHelper.IsUncPath(to))
+                    to = RemotePathHelper.Convert(site.Name, to);
+
+            if (to.StartsWith("~"))
                 to = RemotePathHelper.Convert(site.Name, to);
 
 

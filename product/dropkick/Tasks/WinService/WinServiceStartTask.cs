@@ -3,12 +3,14 @@ namespace dropkick.Tasks.WinService
     using System;
     using System.ServiceProcess;
     using DeploymentModel;
+    using TimeoutException = System.ServiceProcess.TimeoutException;
 
 
     public class WinServiceStartTask :
         BaseServiceTask
     {
-        public WinServiceStartTask(string machineName, string serviceName) : base(machineName, serviceName)
+        public WinServiceStartTask(string machineName, string serviceName)
+            : base(machineName, serviceName)
         {
         }
 
@@ -43,14 +45,28 @@ namespace dropkick.Tasks.WinService
             {
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
-                    c.Start();
-                    c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                    try
+                    {
+                        c.Start();
+                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                    }
+                    catch (InvalidOperationException ex)
+                    {
+                        result.AddError("The service '{0}' did not start, most likely due to a logon issue.".FormatWith(ServiceName), ex);
+                        return result;
+                    }
+                    catch (TimeoutException)
+                    {
+                        result.AddAlert(
+                            "Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.",ServiceName);
+                        return result;
+                    }
                 }
                 result.AddGood("Started the service '{0}'", ServiceName);
             }
             else
             {
-                result.AddAlert("Service '{0}' does not exist", ServiceName);
+                result.AddAlert("Service '{0}' does not exist so it cannot be started", ServiceName);
             }
 
             return result;

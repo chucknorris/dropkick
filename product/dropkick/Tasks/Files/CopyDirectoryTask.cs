@@ -15,19 +15,18 @@ namespace dropkick.Tasks.Files
     using System;
     using System.IO;
     using DeploymentModel;
-    using Exceptions;
     using log4net;
+    using Path = FileSystem.Path;
 
     public class CopyDirectoryTask :
-        Task
+        BaseIoTask
     {
-        readonly ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
         readonly ILog _log = LogManager.GetLogger(typeof (CopyDirectoryTask));
         readonly DestinationCleanOptions _options;
         string _from;
         string _to;
 
-        public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options)
+        public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options, Path path) : base(path)
         {
             _from = from;
             _to = to;
@@ -36,20 +35,20 @@ namespace dropkick.Tasks.Files
 
         #region Task Members
 
-        public string Name
+        public override string Name
         {
             get { return string.Format("Copy '{0}' to '{1}'", _from, _to); }
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
 
             ValidatePath(result, _to);
             ValidatePath(result, _from);
 
-            _from = Path.GetFullPath(_from);
-            _to = Path.GetFullPath(_to);
+            _from = _path.GetFullPath(_from);
+            _to = _path.GetFullPath(_to);
 
             if (_options == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
 
@@ -61,28 +60,29 @@ namespace dropkick.Tasks.Files
         }
 
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
             ValidatePath(result, _to);
             ValidatePath(result, _from);
 
-            _from = Path.GetFullPath(_from);
-            _to = Path.GetFullPath(_to);
+            _from = _path.GetFullPath(_from);
+            _to = _path.GetFullPath(_to);
 
             //check can write from _to
-            if (!Directory.Exists(_to))
+            if (_path.DirectoryDoesntExist(_to))
                 result.AddAlert(string.Format("'{0}' doesn't exist and will be created", _to));
 
             if (_options == DestinationCleanOptions.Delete)
                 result.AddAlert("The files and directories in '{0}' will be deleted before deploying", _to);
 
-            if (Directory.Exists(_from))
+            if (_path.DirectoryExists(_from))
             {
                 result.AddGood(string.Format("'{0}' exists", _from));
+
                 //check can read from _from
-                string[] readFiles = Directory.GetFiles(_from);
+                string[] readFiles = _path.GetFiles(_from);
                 foreach (var file in readFiles)
                 {
                     Stream fs = new MemoryStream();
@@ -110,57 +110,5 @@ namespace dropkick.Tasks.Files
         }
 
         #endregion
-
-        void ValidatePath(DeploymentResult result, string path)
-        {
-            try
-            {
-                Path.GetFullPath(_to);
-                //TODO: add directory test
-            }
-            catch (Exception ex)
-            {
-                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(_to));
-            }
-        }
-
-        void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
-        {
-            if (!destination.Exists)
-            {
-                destination.Create();
-            }
-
-            // Copy all files.
-            FileInfo[] files = source.GetFiles();
-            foreach (var file in files)
-            {
-                string fileDestination = Path.Combine(destination.FullName,
-                                                      file.Name);
-                file.CopyTo(fileDestination);
-                _log.DebugFormat("Copy file '{0}' to '{1}'", file.FullName, fileDestination);
-                _fileLog.Info(fileDestination); //log where files are copied for tripwire
-            }
-
-            // Process subdirectories.
-            DirectoryInfo[] dirs = source.GetDirectories();
-            foreach (var dir in dirs)
-            {
-                // Get destination directory.
-                string destinationDir = Path.Combine(destination.FullName, dir.Name);
-
-                // Call CopyDirectory() recursively.
-                CopyDirectory(dir, new DirectoryInfo(destinationDir));
-            }
-        }
-
-        static void DeleteDestinationFirst(DirectoryInfo directory, DeploymentResult result)
-        {
-            if (directory.Exists)
-            {
-                directory.Delete(true);
-                result.AddGood("'{0}' was successfully deleted".FormatWith(directory.FullName));
-            }
-        }
     }
 }

@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
 {
     public interface QueueSecurityConfig
     {
+        void SetSensibleMsmqDefaults();
         void GrantRead(string group);
         void GrantWrite(string group);
         void GrantReadWrite(string group);

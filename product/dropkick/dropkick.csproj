@@ -57,14 +57,17 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\references\log4net\log4net.dll</HintPath>
     </Reference>
-    <Reference Include="Magnum, Version=0.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+    <Reference Include="Magnum, Version=1.0.0.188, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\references\magnum\Magnum.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Microsoft.Web.Administration.dll</HintPath>
-      <Private>True</Private>
+    </Reference>
+    <Reference Include="roundhouse, Version=0.5.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\RoundhousE\roundhouse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -89,20 +92,29 @@
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
+    <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
+    <Compile Include="Tasks\Files\BaseIoTask.cs" />
     <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEmptyFolderTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueWriteTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoQueueReadWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantWriteTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantReadTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\QueueSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataReaderTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
+    <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
+    <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
@@ -114,7 +126,7 @@
     <Compile Include="Tasks\Security\MsSql\GrantWriteToAllTablesTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\MsSqlSecurity.cs" />
-    <Compile Include="Configuration\Dsl\DeploymentConfigurationException.cs" />
+    <Compile Include="Exceptions\DeploymentConfigurationException.cs" />
     <Compile Include="Configuration\Dsl\Dsn\ProtoDsnTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FromOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoCopyDirectoryTask.cs" />
@@ -162,7 +174,7 @@
     <Compile Include="Engine\RoleToServerMap.cs" />
     <Compile Include="DeploymentModel\DeploymentServer.cs" />
     <Compile Include="Engine\DeploymentCommandLineParser.cs" />
-    <Compile Include="Engine\DeploymentFinders\SearchesForAnAssemblyEndingInDeployment.cs" />
+    <Compile Include="Engine\DeploymentFinders\SearchesForAnAssemblyNameContainingDeployment.cs" />
     <Compile Include="Engine\DeploymentFinders\TypeWasSpecifiedAssumingItHasADefaultConstructor.cs" />
     <Compile Include="Engine\DeploymentPlanDispatcher.cs" />
     <Compile Include="DeploymentModel\DeploymentItem.cs" />
@@ -219,7 +231,7 @@
     <Compile Include="Configuration\Dsl\Iis\IisVirtualDirectoryOptions.cs" />
     <Compile Include="Configuration\Dsl\Msmq\Extension.cs" />
     <Compile Include="Configuration\Dsl\Msmq\MsmqOptions.cs" />
-    <Compile Include="Tasks\Msmq\MsmqTask.cs" />
+    <Compile Include="Tasks\Msmq\CreateLocalMsmqQueueTask.cs" />
     <Compile Include="Configuration\Dsl\Msmq\QueueAddress.cs" />
     <Compile Include="Tasks\MsSql\BaseSqlTask.cs" />
     <Compile Include="Configuration\Dsl\MsSql\DatabaseOptions.cs" />
@@ -258,6 +270,7 @@
     <Compile Include="Wmi\ServiceReturnCode.cs" />
     <Compile Include="Wmi\ServiceStartMode.cs" />
     <Compile Include="Wmi\ServiceType.cs" />
+    <Compile Include="Wmi\Win32Share.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiService.cs" />
   </ItemGroup>

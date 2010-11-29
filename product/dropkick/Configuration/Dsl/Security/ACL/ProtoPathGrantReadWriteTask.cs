@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.ACL
 {
-    using System;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
@@ -26,17 +25,21 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public ProtoPathGrantReadWriteTask(string path, string group)
         {
-            _path = path;
-            _group = group;
+            _path = ReplaceTokens(path);
+            _group = ReplaceTokens(group);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
             var path = _path;
+
             if (!site.IsLocal)
                 path = RemotePathHelper.Convert(site.Name, _path);
 
-            var task = new GrantReadWriteTask(path,_group,new DotNetPath());
+            if (path.StartsWith("~"))
+                path = RemotePathHelper.Convert(site.Name, _path);
+
+            var task = new GrantReadWriteTask(path, _group, new DotNetPath());
             site.AddTask(task);
         }
     }

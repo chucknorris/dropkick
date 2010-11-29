@@ -40,7 +40,7 @@ namespace dropkick.Tasks.Security.Acl
 
             _target = _path.GetFullPath(_target);
 
-            if (!_path.IsDirectory(_target) && !_path.IsFile(_target))
+            if (!_path.DirectoryExists(_target) && !_path.FileExists(_target))
                 result.AddAlert("'{0}' does not exist.".FormatWith(_target));
 
             return result;

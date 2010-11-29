@@ -13,7 +13,10 @@
 namespace dropkick.Tasks.Security.LocalPolicy
 {
     using System;
+    using System.ComponentModel;
+    using System.Text;
     using DeploymentModel;
+    using Exceptions;
 
     public class LogOnAsAServiceTask :
         Task
@@ -34,7 +37,9 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
         public DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var r = new DeploymentResult();
+            r.AddAlert("NO CHECKS RUN");
+            return r;
         }
 
         public DeploymentResult Execute()
@@ -42,10 +47,20 @@ namespace dropkick.Tasks.Security.LocalPolicy
             //http://weblogs.asp.net/avnerk/archive/2007/05/10/granting-user-rights-in-c.aspx
             var result = new DeploymentResult();
 
-            using (var lsa = new LsaWrapper())
+            try
             {
-                lsa.AddPrivileges(_userAccount, "SeServiceLogonRight");
+                using (var lsa = new LsaWrapper())
+                {
+                    lsa.AddPrivileges(_userAccount, "SeServiceLogonRight");
+                }
             }
+            catch (Win32Exception ex)
+            {
+                var sb = new StringBuilder();
+                sb.AppendFormat("Error while attempting to grant '{0}' the right '{1}'", _userAccount, "SeServiceLogonRight");
+                result.AddError(sb.ToString(), ex);
+            }
+            
 
             return result;
         }
