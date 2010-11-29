@@ -89,7 +89,6 @@
     </None>
     <Content Include="settings\local.js">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-      <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>local1.Designer.cs</LastGenOutput>
     </Content>
   </ItemGroup>

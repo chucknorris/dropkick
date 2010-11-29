@@ -40,7 +40,7 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = ReplaceTokens(serviceName);
         }
 
-        public WinServiceCreateOptions WithDescription(string description)
+        public WinServiceCreateOptions WithDisplayName(string description)
         {
             _description = ReplaceTokens(description);
             return this;

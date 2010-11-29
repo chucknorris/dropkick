@@ -41,5 +41,23 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             var proto = new ProtoPathGrantReadWriteTask(_path, group);
             _server.RegisterProtoTask(proto);
         }
+
+        public void Grant(Rights readWrite, string group)
+        {
+            //TODO: YUCK-O - a switch?
+            switch(readWrite)
+            {
+                case Rights.ReadWrite:
+                    {
+                        GrantReadWrite(group);
+                        break;
+                    }
+                default:
+                    {
+                        GrantRead(group);
+                        break;
+                    }
+            }
+        }
     }
 }

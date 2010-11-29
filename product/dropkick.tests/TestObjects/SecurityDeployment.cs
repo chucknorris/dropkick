@@ -35,7 +35,9 @@ namespace dropkick.tests.TestObjects
                                 p.Clear();
                                 p.GrantRead(settings.UserGroupA);
                                 p.GrantReadWrite(settings.UserGroupB);
+                                p.Grant(Rights.ReadWrite, settings.UserGroupA);
                             });
+
                             o.ForQueue(settings.Queue, q =>
                             {
                                 q.GrantRead(settings.TheRest);
