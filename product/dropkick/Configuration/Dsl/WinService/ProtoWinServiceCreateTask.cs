@@ -27,7 +27,7 @@ namespace dropkick.Configuration.Dsl.WinService
     {
         readonly List<string> _dependencies = new List<string>();
         readonly string _serviceName;
-        string _description;
+        string _displayName;
         string _installPath;
         string _password;
         ServiceStartMode _startMode;
@@ -40,9 +40,9 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = ReplaceTokens(serviceName);
         }
 
-        public WinServiceCreateOptions WithDisplayName(string description)
+        public WinServiceCreateOptions WithDisplayName(string displayName)
         {
-            _description = ReplaceTokens(description);
+            _displayName = ReplaceTokens(displayName);
             return this;
         }
 
@@ -104,7 +104,7 @@ namespace dropkick.Configuration.Dsl.WinService
                                  Dependencies = _dependencies.ToArray(),
                                  UserName = _userName,
                                  Password = _password,
-                                 ServiceDescription = _description,
+                                 ServiceDisplayName = _displayName,
                                  ServiceLocation = serviceLocation,
                                  StartMode = _startMode
                              });

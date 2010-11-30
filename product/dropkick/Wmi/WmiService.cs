@@ -10,7 +10,7 @@ namespace dropkick.Wmi
         const string CLASSNAME = "Win32_Service";
         //private char NULL_VALUE = char(0);
 
-        public static ServiceReturnCode Create(string machineName, string serviceName, string serviceDescription,
+        public static ServiceReturnCode Create(string machineName, string serviceName, string serviceDisplayName,
                                                string serviceLocation, ServiceStartMode startMode, string userName,
                                                string password, string[] dependencies)
         {
@@ -27,7 +27,7 @@ namespace dropkick.Wmi
                 var parameters = new object[]
                                      {
                                          serviceName, // Name
-                                         serviceDescription, // Display Name
+                                         serviceDisplayName, // Display Name
                                          serviceLocation, // Path Name | The Location "E:\somewhere\something"
                                          Convert.ToInt32(ServiceType.OwnProcess), // ServiceType
                                          Convert.ToInt32(ErrorControl.UserNotified), // Error Control

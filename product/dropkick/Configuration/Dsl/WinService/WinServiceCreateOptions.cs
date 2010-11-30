@@ -16,7 +16,7 @@ namespace dropkick.Configuration.Dsl.WinService
 
     public interface WinServiceCreateOptions
     {
-        WinServiceCreateOptions WithDisplayName(string description);
+        WinServiceCreateOptions WithDisplayName(string display_name);
         WinServiceCreateOptions WithServicePath(string path);
         WinServiceCreateOptions WithStartMode(ServiceStartMode mode);
         WinServiceCreateOptions WithCredentials(string username, string password);

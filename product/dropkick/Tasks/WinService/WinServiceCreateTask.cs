@@ -40,7 +40,7 @@ namespace dropkick.Tasks.WinService
         public string UserName { get; set; }
         public ServiceStartMode StartMode { get; set; }
         public string ServiceLocation { get; set; }
-        public string ServiceDescription { get; set; }
+        public string ServiceDisplayName { get; set; }
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -65,7 +65,7 @@ namespace dropkick.Tasks.WinService
             if (Password.ShouldPrompt())
                 Password = _prompt.Prompt("Win Service '{0}' Password".FormatWith(ServiceName));
 
-            ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceName, ServiceLocation,
+            ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceDisplayName, ServiceLocation,
                                                              StartMode, UserName, Password, Dependencies);
             
             if (returnCode != ServiceReturnCode.Success)
