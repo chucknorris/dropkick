@@ -24,9 +24,16 @@ namespace dropkick.Configuration.Dsl
     {
         public static DeploymentDetail ToDetail(this Task task, DeploymentServer server)
         {
-            var d = new DeploymentDetail(() => task.Name, task.VerifyCanRun, task.Execute);
+            var d = new DeploymentDetail(() => task.Name, task.VerifyCanRun, task.Execute, ()=>Tracer(task) );
 
             return d;
+        }
+
+        public static DeploymentResult Tracer(Task task)
+        {
+            var r = new DeploymentResult();
+            r.AddNote(task.Name);
+            return r;
         }
     }
 }

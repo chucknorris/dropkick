@@ -7,12 +7,14 @@ namespace dropkick.DeploymentModel
         readonly Func<string> _name;
         readonly Func<DeploymentResult> _verify;
         readonly Func<DeploymentResult> _execute;
+        readonly Func<DeploymentResult> _trace;
 
-        public DeploymentDetail(Func<string> name, Func<DeploymentResult> verify, Func<DeploymentResult> execute)
+        public DeploymentDetail(Func<string> name, Func<DeploymentResult> verify, Func<DeploymentResult> execute, Func<DeploymentResult> trace)
         {
             _name = name;
             _verify = verify;
             _execute = execute;
+            _trace = trace;
         }
 
         public string Name
@@ -28,6 +30,11 @@ namespace dropkick.DeploymentModel
         public DeploymentResult Execute()
         {
             return _execute();
+        }
+
+        public DeploymentResult Trace()
+        {
+            return _trace();
         }
     }
 }

@@ -42,7 +42,8 @@ namespace dropkick.tests.DeploymentModel
                 var r = new DeploymentResult();
                 r.AddGood("test:e");
                 return r;
-            });
+            },
+            ()=> new DeploymentResult());
 
 
             var web = new DeploymentRole("WEB");
@@ -85,7 +86,7 @@ namespace dropkick.tests.DeploymentModel
             {
                 executeRan = true;
                 return new DeploymentResult();
-            });
+            }, ()=>new DeploymentResult());
 
 
             var web = new DeploymentRole("WEB");
@@ -128,7 +129,7 @@ namespace dropkick.tests.DeploymentModel
             {
                 executeRan = true;
                 return new DeploymentResult();
-            });
+            },()=>new DeploymentResult());
 
 
             var web = new DeploymentRole("WEB");

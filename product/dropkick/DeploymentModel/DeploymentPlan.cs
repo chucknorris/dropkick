@@ -52,7 +52,12 @@ namespace dropkick.DeploymentModel
         }
         public DeploymentResult Trace()
         {
-            return Ex(d => new DeploymentResult());
+            return Ex(d =>
+            {
+                var o = d.Trace();
+                DisplayResults(o);
+                return o;
+            });
         }
 
         DeploymentResult Ex(Func<DeploymentDetail, DeploymentResult> action)
@@ -102,7 +107,7 @@ namespace dropkick.DeploymentModel
                     _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
 
                 if (result.Status == DeploymentItemStatus.Note)
-                    _log.DebugFormat("[{0,-5}] {1}", result.Status, result.Message);
+                    _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
             }
         }
 
