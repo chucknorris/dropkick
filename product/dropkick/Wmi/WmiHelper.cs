@@ -8,6 +8,10 @@ namespace dropkick.Wmi
         static ManagementScope Connect(string machineName)
         {
             var options = new ConnectionOptions();
+            //todo: DRU - the stuff in Win32Share should come here and the below be added for connections
+            //options.Impersonation = ImpersonationLevel.Impersonate;
+            //options.EnablePrivileges = true;
+            
 
             string path = "\\\\{0}\\root\\cimv2";
             path = String.Format(path, machineName);

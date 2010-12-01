@@ -268,11 +268,13 @@
     <Compile Include="Configuration\Dsl\ProtoTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Wmi\ErrorControl.cs" />
+    <Compile Include="Wmi\ProcessReturnCode.cs" />
     <Compile Include="Wmi\ServiceReturnCode.cs" />
     <Compile Include="Wmi\ServiceStartMode.cs" />
     <Compile Include="Wmi\ServiceType.cs" />
     <Compile Include="Wmi\Win32Share.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
+    <Compile Include="Wmi\WmiProcess.cs" />
     <Compile Include="Wmi\WmiService.cs" />
   </ItemGroup>
   <ItemGroup>

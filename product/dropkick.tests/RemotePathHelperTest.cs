@@ -2,6 +2,8 @@ using dropkick.FileSystem;
 
 namespace dropkick.tests
 {
+    using System.IO;
+    using System.Reflection;
     using dropkick.DeploymentModel;
     using NUnit.Framework;
 
@@ -34,5 +36,19 @@ namespace dropkick.tests
             var actual = string.Format("{0,-5}", "1234");
             Assert.AreEqual(expected, actual);
         }
+
+        //[Test]
+        //public void CreateADirectoryThatDoesNotExistRemotely() {
+
+        //    var p = @"\\192.168.2.109\C$\Temp\dropkick.remote";
+        //    var assembly = Assembly.GetExecutingAssembly();
+        //    var assemblyName = assembly.GetName().Name + ".dll";
+        //    if (!Directory.Exists(p)) Directory.CreateDirectory(p);
+        //    File.Copy(Assembly.GetExecutingAssembly().Location, Path.Combine(p,assemblyName));
+        //    //
+        //   // p = System.IO.Path.Combine(p, "dropkick.remote.exe");
+
+        //  //  File.Copy(@".\dropkick.remote.exe", p);
+        //}
     }
 }
