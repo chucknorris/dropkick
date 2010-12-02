@@ -16,7 +16,8 @@ namespace dropkick.Tasks.Security.Acl
     using DeploymentModel;
     using FileSystem;
 
-    public class GrantReadTask : Task
+    public class GrantReadTask : 
+        BaseSecurityTask
     {
         string _target;
         readonly string _group;
@@ -29,12 +30,12 @@ namespace dropkick.Tasks.Security.Acl
             _path = dnPath;
         }
 
-        public string Name
+        public override string Name
         {
             get { return "Grant Read permissions to '{0}' for path '{1}'".FormatWith(_group, _target); }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
 
@@ -46,17 +47,19 @@ namespace dropkick.Tasks.Security.Acl
             return result;
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
 
             var result = new DeploymentResult();
 
             _target = _path.GetFullPath(_target);
+
+            //TODO: I/O Task
             if (_path.DirectoryDoesntExist(_target)) _path.CreateDirectory(_target);
 
-            //    result.AddAlert("Could not apply Read permissions for '{0}' to '{1}'.".FormatWith(_target, _group));
             _path.SetFileSystemRights(_target, _group, FileSystemRights.ReadAndExecute, result);
-            
+            LogSecurity("[security][acl] Granted READ/EXECUTE to '{0}' on '{1}'", _group, _target);
+
 
             result.AddGood(Name);
             return result;

@@ -52,12 +52,12 @@
       <level value="ALL" />
     </root>
 
-    <logger name="dropkick.filechanges">
+    <logger name="dropkick.changes.file">
       <level value="INFO" />
       <appender-ref ref="FileChangeAppender" />
     </logger>
     
-    <logger name="dropkick.securitychanges">
+    <logger name="dropkick.changes.security">
       <level value="INFO" />
       <appender-ref ref="SecurityChangeAppender" />
     </logger>
