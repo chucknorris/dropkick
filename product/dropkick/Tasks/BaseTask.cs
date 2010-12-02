@@ -14,13 +14,18 @@ namespace dropkick.Tasks
 {
     using System.Threading;
     using DeploymentModel;
+    using log4net;
 
     public abstract class BaseTask :
         Task
     {
+        readonly ILog _coarseLog = LogManager.GetLogger("dropkick.coarsegrain");
+        readonly ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
+
         public abstract string Name { get; }
         public abstract DeploymentResult VerifyCanRun();
         public abstract DeploymentResult Execute();
+        
 
         protected void VerifyInAdministratorRole(DeploymentResult result)
         {
@@ -32,6 +37,16 @@ namespace dropkick.Tasks
             {
                 result.AddGood("You are in the 'Administrator' role");
             }
+        }
+
+        public void LogFineGrain(string format, params object[] args)
+        {
+            _fineLog.DebugFormat(format, args);
+        }
+
+        public void LogCoarseGrain(string format, params object[] args)
+        {
+            _coarseLog.DebugFormat(format, args);
         }
     }
 }

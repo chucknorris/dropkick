@@ -52,7 +52,7 @@ namespace dropkick.Tasks.Files
 
             if (_options == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
 
-            CopyDirectory(new DirectoryInfo(_from), new DirectoryInfo(_to));
+            CopyDirectory(result, new DirectoryInfo(_from), new DirectoryInfo(_to));
 
             result.AddGood(Name);
 

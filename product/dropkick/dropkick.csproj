@@ -101,6 +101,7 @@
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Files\BaseIoTask.cs" />
+    <Compile Include="Tasks\Files\CopyOptions.cs" />
     <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEmptyFolderTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantWriteTask.cs" />
@@ -211,6 +212,7 @@
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\WellKnownRoles.cs" />
+    <Compile Include="Tasks\UserInteraction\PromptTask.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
     <Compile Include="Configuration\Dsl\Notes\WaitProtoTask.cs" />
     <Compile Include="Tasks\Dsn\DsnAction.cs" />
@@ -294,6 +296,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

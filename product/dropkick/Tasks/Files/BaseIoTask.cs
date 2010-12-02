@@ -9,20 +9,14 @@ namespace dropkick.Tasks.Files
     using Path = FileSystem.Path;
 
     public abstract class BaseIoTask :
-        Task
+        BaseTask
     {
-        readonly ILog _log = LogManager.GetLogger(typeof (BaseIoTask));
-        readonly ILog _fileLog = LogManager.GetLogger("dropkick.filewrite");
+        readonly ILog _fileLog = LogManager.GetLogger("dropkick.filechanges");
         protected readonly Path _path;
         protected BaseIoTask(Path path)
         {
             _path = path;
         }
-
-        public abstract string Name { get; }
-
-        public abstract DeploymentResult VerifyCanRun();
-        public abstract DeploymentResult Execute();
 
         protected void ValidateIsFile(DeploymentResult result, string path)
         {
@@ -46,9 +40,9 @@ namespace dropkick.Tasks.Files
         {
             try
             {
-                if(!_path.IsDirectory(path))
+                if (!_path.IsDirectory(path))
                 {
-                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(path));
+                    throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(path));
                 }
             }
             catch (Exception)
@@ -57,7 +51,7 @@ namespace dropkick.Tasks.Files
             }
         }
 
-        protected void CopyDirectory(DirectoryInfo source, DirectoryInfo destination)
+        protected void CopyDirectory(DeploymentResult result, DirectoryInfo source, DirectoryInfo destination)
         {
             if (!destination.Exists)
             {
@@ -70,9 +64,8 @@ namespace dropkick.Tasks.Files
             {
                 string fileDestination = _path.Combine(destination.FullName,
                                                        file.Name);
-                file.CopyTo(fileDestination, true);
-                _log.DebugFormat("Copy file '{0}' to '{1}'", file.FullName, fileDestination);
-                _fileLog.Info(fileDestination); //log where files are copied for tripwire
+
+                CopyFileToFile(result, file, new FileInfo(fileDestination));
             }
 
             // Process subdirectories.
@@ -83,7 +76,7 @@ namespace dropkick.Tasks.Files
                 string destinationDir = _path.Combine(destination.FullName, dir.Name);
 
                 // Call CopyDirectory() recursively.
-                CopyDirectory(dir, new DirectoryInfo(destinationDir));
+                CopyDirectory(result, dir, new DirectoryInfo(destinationDir));
             }
         }
 
@@ -93,6 +86,7 @@ namespace dropkick.Tasks.Files
             {
                 directory.Delete(true);
                 result.AddGood("'{0}' was successfully deleted".FormatWith(directory.FullName));
+                //TODO: a delete list?
             }
         }
 
@@ -106,13 +100,18 @@ namespace dropkick.Tasks.Files
 
         void CopyFileToFile(DeploymentResult result, FileInfo source, FileInfo destination)
         {
-            if (destination.Exists)
-                result.AddAlert("'{0}' exists, copy will overwrite the existing file.".FormatWith(destination.FullName));
+            var overwrite = destination.Exists;
 
-            // Copy file.
+            
             source.CopyTo(destination.FullName, true);
-            _log.DebugFormat(Name);
-            _fileLog.Info(destination.FullName); //log where files are copied for tripwire
+
+            if (overwrite)
+                LogFineGrain("[copy][overwrite] '{0}' -> '{1}'", source.FullName, destination.FullName);
+            else
+                LogFineGrain("[copy] '{0}' -> '{1}'", source.FullName, destination.FullName);
+
+            //TODO: Adjust for remote pathing
+            _fileLog.Info(destination.FullName); //log where files are modified
         }
 
         void CopyFileToDirectory(DeploymentResult result, FileInfo source, DirectoryInfo destination)
@@ -120,21 +119,19 @@ namespace dropkick.Tasks.Files
             if (!destination.Exists)
                 destination.Create();
 
-            // Copy file.
             var fileDestination = _path.Combine(destination.FullName, source.Name);
 
-            if (_path.IsFile(fileDestination))
-                result.AddAlert("'{0}' exists, copy will overwrite the existing file.".FormatWith(fileDestination));
+            var overwrite = _path.IsFile(fileDestination);
 
             source.CopyTo(fileDestination, true);
-            _log.DebugFormat(Name);
-            _fileLog.Info(fileDestination); //log where files are copied for tripwire
-        }
-    }
 
-    public enum CopyOptions
-    {
-        Override,
-        DontOverride
+            if(overwrite)
+                LogFineGrain("[copy][overwrite] '{0}' -> '{1}'", source.FullName, fileDestination);
+            else
+                LogFineGrain("[copy] '{0}' -> '{1}'", source.FullName, fileDestination);
+
+            //TODO: Adjust for remote pathing
+            _fileLog.Info(fileDestination);
+        }
     }
 }
