@@ -1,5 +1,7 @@
-﻿namespace dropkick.Wmi {
-    public enum ProcessReturnCode {
+﻿namespace dropkick.Wmi
+{
+    public enum ProcessReturnCode
+    {
         Success = 0,
         AccessDenied = 2,
         InsufficentPrivileges = 3,

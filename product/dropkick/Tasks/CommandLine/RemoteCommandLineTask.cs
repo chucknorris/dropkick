@@ -17,6 +17,7 @@ namespace dropkick.Tasks.CommandLine
     using System.IO;
     using System.Management;
     using DeploymentModel;
+    using Wmi;
 
     public class RemoteCommandLineTask :
         Task
@@ -70,35 +71,14 @@ namespace dropkick.Tasks.CommandLine
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var connOptions = new ConnectionOptions
-                              {
-                                  Impersonation = ImpersonationLevel.Impersonate, EnablePrivileges = true
-                              };
 
-            var manScope = new ManagementScope(String.Format(@"\\{0}\ROOT\CIMV2", Machine), connOptions);
-            manScope.Connect();
+            ProcessReturnCode returnCode  = WmiProcess.Run(Machine, Command + " " + Args, string.Empty);
 
-            var objectGetOptions = new ObjectGetOptions();
-            var managementPath = new ManagementPath("Win32_Process");
-            var processClass = new ManagementClass(manScope, managementPath, objectGetOptions);
-
-            var inParams = processClass.GetMethodParameters("Create");
-
-            inParams["CommandLine"] = Command + " " + Args;
-
-            //if (this.WorkingDirectory != null)
-            //    inParams["CurrentDirectory"] = this.WorkingDirectory;
-
-
-            var outParams = processClass.InvokeMethod("Create", inParams, null);
-
-            
-            int returnVal = Convert.ToInt32(outParams["returnValue"]);
-
-            if (returnVal != 0)
-                result.AddError(_status[returnVal]);
-            
             //TODO: how can I get the output back from the computer?
+
+            if (returnCode != ProcessReturnCode.Success) {
+                result.AddError(_status[(int)returnCode]);
+            }
 
             return result;
         }
