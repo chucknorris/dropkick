@@ -16,6 +16,7 @@ namespace dropkick.Configuration.Dsl.WinService
     using System.Text;
     using System.Text.RegularExpressions;
     using DeploymentModel;
+    using Exceptions;
     using FileSystem;
     using Tasks;
     using Tasks.WinService;

@@ -16,6 +16,7 @@ namespace dropkick.Configuration.Dsl
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Exceptions;
 
     public interface Deployment :
         DeploymentInspectorSite

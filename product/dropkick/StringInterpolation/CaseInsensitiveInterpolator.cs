@@ -15,6 +15,7 @@ namespace dropkick.StringInterpolation
     using System;
     using System.Collections.Generic;
     using System.Text.RegularExpressions;
+    using Exceptions;
     using Magnum.Reflection;
 
     public class CaseInsensitiveInterpolator :
@@ -29,10 +30,20 @@ namespace dropkick.StringInterpolation
             PrepareDictionary(settings.GetType());
             string output = _pattern.Replace(input, m =>
             {
-                string key = m.Groups["key"].Value;
-                var pi = _properties[settings.GetType()][key];
-                var value = (string) pi.Get(settings);
-                return value;
+                string key = "";
+                try
+                {
+                    key = m.Groups["key"].Value;
+                    var setting = _properties[settings.GetType()];
+                    var pi = setting[key];
+
+                    var value = (string) pi.Get(settings);
+                    return value;
+                }
+                catch (KeyNotFoundException kex)
+                {
+                    throw new DeploymentConfigurationException("Couldn't find key '{0}' from settings type '{1}'".FormatWith(key, settings.GetType()),kex);
+                }
             });
 
             return output;
