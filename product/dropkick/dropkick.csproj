@@ -97,6 +97,7 @@
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="HUB.cs" />
+    <Compile Include="Prompting\ConsolePromptService.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />

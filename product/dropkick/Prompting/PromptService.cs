@@ -12,38 +12,9 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Prompting
 {
-    using System;
-    using Magnum.Reflection;
-
     public interface PromptService
     {
         T Prompt<T>() where T : new();
         string Prompt(string nameToDisplay);
-    }
-
-    public class ConsolePromptService :
-        PromptService
-    {
-        public T Prompt<T>() where T : new()
-        {
-            var output = new T();
-
-            Console.WriteLine("Please provide the following:");
-            Type t = typeof (T);
-            foreach (var p in t.GetProperties())
-            {
-                string capturedValue = Prompt(p.Name);
-                new FastProperty<T>(p).Set(output, capturedValue);
-            }
-
-            return output;
-        }
-
-        public string Prompt(string nameToDisplay)
-        {
-            Console.WriteLine("{0}:", nameToDisplay);
-            string capturedValue = Console.ReadLine();
-            return capturedValue;
-        }
     }
 }

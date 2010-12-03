@@ -13,6 +13,7 @@
 namespace dropkick.Configuration.Dsl.Iis
 {
     using DeploymentModel;
+    using FileSystem;
     using Tasks;
     using Tasks.Iis;
 
@@ -21,8 +22,10 @@ namespace dropkick.Configuration.Dsl.Iis
         IisSiteOptions,
         IisVirtualDirectoryOptions
     {
-        public IisProtoTask(string websiteName)
+        Path _path;
+        public IisProtoTask(string websiteName, Path path)
         {
+            _path = path;
             WebsiteName = websiteName;
             ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V2;
         }
@@ -81,11 +84,14 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
+            var scrubbedPath = _path.ConvertUncShareToLocalPath(s, PathOnServer);
+
+
             if (Version == IisVersion.Six)
             {
                 s.AddTask(new Iis6Task
                               {
-                                  PathOnServer = PathOnServer,
+                                  PathOnServer = scrubbedPath,
                                   ServerName = s.Name,
                                   VdirPath = VdirPath,
                                   WebsiteName = WebsiteName,
@@ -95,7 +101,7 @@ namespace dropkick.Configuration.Dsl.Iis
             }
             s.AddTask(new Iis7Task
                           {
-                              PathOnServer = PathOnServer,
+                              PathOnServer = scrubbedPath,
                               ServerName = s.Name,
                               VdirPath = VdirPath,
                               WebsiteName = WebsiteName,
