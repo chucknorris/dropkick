@@ -2,8 +2,10 @@ namespace dropkick.Tasks.WinService
 {
     using System;
     using System.ServiceProcess;
+    using System.Threading;
     using DeploymentModel;
     using TimeoutException = System.ServiceProcess.TimeoutException;
+    using Magnum.Extensions;
 
 
     public class WinServiceStartTask :
@@ -48,7 +50,8 @@ namespace dropkick.Tasks.WinService
                     try
                     {
                         c.Start();
-                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                        LogCoarseGrain("[svc] Waiting 60 seconds because Windows can be silly");
+                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
                     }
                     catch (InvalidOperationException ex)
                     {

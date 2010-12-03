@@ -14,10 +14,12 @@ namespace dropkick.Tasks.Iis
 {
     using System;
     using DeploymentModel;
+    using log4net;
 
     public abstract class BaseIisTask :
-        Task
+        BaseTask
     {
+        ILog _log = LogManager.GetLogger("dropkick.changes.iis");
         public string WebsiteName { get; set; }
         public string VdirPath { get; set; }
         public string PathOnServer { get; set; }
@@ -33,7 +35,7 @@ namespace dropkick.Tasks.Iis
 
         #region Task Members
 
-        public string Name
+        public override string Name
         {
             get
             {
@@ -41,10 +43,6 @@ namespace dropkick.Tasks.Iis
                                                                                             WebsiteName, ServerName);
             }
         }
-
-
-        public abstract DeploymentResult VerifyCanRun();
-        public abstract DeploymentResult Execute();
 
         #endregion
 
@@ -69,6 +67,11 @@ namespace dropkick.Tasks.Iis
                 result.AddAlert("Couldn't find Website '{0}'", WebsiteName);
                 result.AddAlert("Website '{0}' and VDir '{1}' will be created", WebsiteName, VdirPath);
             }
+        }
+
+        public void LogIis(string format, params object[] args)
+        {
+            _log.DebugFormat(format, args);
         }
     }
 }

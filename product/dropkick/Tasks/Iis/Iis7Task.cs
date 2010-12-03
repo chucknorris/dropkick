@@ -15,7 +15,6 @@ namespace dropkick.Tasks.Iis
     using System;
     using DeploymentModel;
     using FileSystem;
-    using log4net;
     using Microsoft.Web.Administration;
     using System.Linq;
 
@@ -23,9 +22,8 @@ namespace dropkick.Tasks.Iis
     public class Iis7Task :
         BaseIisTask
     {
-        static readonly ILog _logger = LogManager.GetLogger(typeof (Iis7Task));
         public bool UseClassicPipeline { get; set; }
-        Path _path = new DotNetPath();
+        readonly Path _path = new DotNetPath();
 
         public override int VersionNumber
         {
@@ -81,7 +79,7 @@ namespace dropkick.Tasks.Iis
 
 
             iisManager.CommitChanges();
-
+            LogCoarseGrain("[iis7] {0}", Name);
             return result;
         }
 
@@ -106,20 +104,36 @@ namespace dropkick.Tasks.Iis
             if(_path.DirectoryDoesntExist(PathForWebsite))
             {
                 _path.CreateDirectory(PathForWebsite);
+                LogFineGrain("[iis7] Created '{0}'", PathForWebsite);
+                
             }
             
             //TODO: check for port collision?
-            var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);           
+            var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
+            LogIis("[iis7] Created website '{0}'", WebsiteName);
         }
 
-        
 
-        void BuildApplicationPool(ServerManager iisManager, DeploymentResult result)
+
+        void BuildApplicationPool(ServerManager mgr, DeploymentResult result)
         {
-            if (!string.IsNullOrEmpty(AppPoolName))
+            if (string.IsNullOrEmpty(AppPoolName)) return;
+
+            if (mgr.ApplicationPools.Any(x => x.Name == AppPoolName))
             {
-                CreateAppPool(AppPoolName, iisManager, result);
+                LogIis("[iis7] Found the AppPool '{0}' skipping work", AppPoolName);
+                return;
             }
+
+            var pool = mgr.ApplicationPools.Add(AppPoolName);
+
+            pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
+
+            if (UseClassicPipeline)
+                pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
+
+            LogIis("[iis7] Created app pool '{0}'", AppPoolName);
+            result.AddGood("Created app pool '{0}'", AppPoolName);
         }
 
         void CreateVirtualDirectory(Site site, ServerManager mgr)
@@ -127,39 +141,20 @@ namespace dropkick.Tasks.Iis
             Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VdirPath;
 
-            Application appToAdd = null;
             foreach (var app in site.Applications)
             {
                 if (app.Path.Equals(appPath))
                 {
-                    appToAdd = app;
-                    _logger.Debug("Found the app {0} and will not create it".FormatWith(VdirPath));
-                    break;
+                    LogIis("[iis7] Found the application '{0}'".FormatWith(VdirPath));
+                    return;
                 }
             }
 
-            if (appToAdd == null)
-            {
-                _logger.Info("Application was not found, creating.");
-                //create it
-                _logger.Debug(PathOnServer);
-                var app = site.Applications.Add(appPath, PathOnServer);
-                
-                
-                if(AppPoolName != null)
-                    app.ApplicationPoolName = AppPoolName;
-            }
+            var application = site.Applications.Add(appPath, PathOnServer);
+            LogIis("[iis7] Created application '{0}'", VdirPath);
 
-            if(UseClassicPipeline)
-            {
-                if(appToAdd == null) return;
-                //TODO: ideally we wouldn't jack with the default pool either
-
-                var poolName = appToAdd.ApplicationPoolName;
-                var pool = mgr.ApplicationPools[poolName];
-                pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
-            }
-                
+            application.ApplicationPoolName = AppPoolName;
+            LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VdirPath, AppPoolName);
         }
 
 
@@ -195,20 +190,6 @@ namespace dropkick.Tasks.Iis
             }
 
             throw new Exception("cant find site '{0}'".FormatWith(name));
-        }
-
-        public void CreateAppPool(string name, ServerManager mgr, DeploymentResult result)
-        {
-            if (mgr.ApplicationPools.Any(x => x.Name == name))
-            {
-                result.AddAlert("Found the AppPool '{0}'", name);
-                return;
-            }
-            result.AddAlert("Didn't find the AppPool '{0}' creating.", name);    
-
-            var pool = mgr.ApplicationPools.Add(name);
-            pool.ManagedRuntimeVersion = this.ManagedRuntimeVersion;
-            result.AddGood("Created app pool '{0}'", name);
         }
     }
 }

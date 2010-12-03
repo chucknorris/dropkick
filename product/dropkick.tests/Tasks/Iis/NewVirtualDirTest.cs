@@ -31,7 +31,7 @@ namespace dropkick.tests.Tasks.Iis
                                VdirPath = "Victastic",
                                WebsiteName = "SCOTT",
                                AppPoolName = "VICKERS",//could be set on either website or vdir basis
-                               ManagedRuntimeVersion = ManagedRuntimeVersion.V2
+                               ManagedRuntimeVersion = ManagedRuntimeVersion.V4
                            };
             DeploymentResult output = task.Execute();
 
@@ -40,6 +40,28 @@ namespace dropkick.tests.Tasks.Iis
                 Console.WriteLine(item.Message);
             }
         }
+
+        [Test, Explicit]
+        public void Create_A_VirtualDiretory_withClassic()
+        {
+            var task = new Iis7Task
+                           {
+                               PathOnServer = "D:\\SomethingAwesome",
+                               ServerName = "localhost",
+                               VdirPath = "Victastic",
+                               WebsiteName = "SCOTT",
+                               AppPoolName = "VICKERS",
+                               //could be set on either website or vdir basis
+                               UseClassicPipeline = true
+                           };
+            DeploymentResult output = task.Execute();
+
+            foreach (var item in output.Results)
+            {
+                Console.WriteLine(item.Message);
+            }
+        }
+
 
         [Test, Explicit]
         public void Create_An_AppPool()
