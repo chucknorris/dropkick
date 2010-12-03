@@ -16,6 +16,7 @@ namespace dropkick.Tasks.NetworkShare
     using System.IO;
     using System.Management;
     using DeploymentModel;
+    using Wmi;
 
     public class FolderShareTask :
         Task
@@ -40,25 +41,15 @@ namespace dropkick.Tasks.NetworkShare
             return result;
         }
 
-
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var managementClass = new ManagementClass("Win32_Share");
 
-            ManagementBaseObject args = managementClass.GetMethodParameters("Create");
-            args["Description"] = Description;
-            args["Name"] = ShareName;
-            args["Path"] = PointingTo;
-            args["Type"] = 0x0; // Disk Drive
+            ShareReturnCode returnCode = Win32Share.Create(Server, ShareName, PointingTo, Description);
 
-            ManagementBaseObject outParams = managementClass.InvokeMethod("Create", args, null);
-
-            // Check to see if the method invocation was successful
-            if (outParams != null && (uint) (outParams.Properties["ReturnValue"].Value) != 0)
+            if (returnCode != ShareReturnCode.Success)
             {
-                throw new Exception("Unable to share directory '{0}' as '{2}' on '{1}'.".FormatWith(PointingTo, Server,
-                                                                                                    ShareName));
+                throw new Exception("Unable to share directory '{0}' as '{2}' on '{1}'.".FormatWith(PointingTo, Server, ShareName));
             }
 
             result.AddGood("Created share");

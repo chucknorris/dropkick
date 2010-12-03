@@ -276,6 +276,7 @@
     <Compile Include="Wmi\ServiceReturnCode.cs" />
     <Compile Include="Wmi\ServiceStartMode.cs" />
     <Compile Include="Wmi\ServiceType.cs" />
+    <Compile Include="Wmi\ShareReturnCode.cs" />
     <Compile Include="Wmi\Win32Share.cs" />
     <Compile Include="Wmi\WmiHelper.cs" />
     <Compile Include="Wmi\WmiProcess.cs" />

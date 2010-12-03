@@ -5,32 +5,41 @@ namespace dropkick.Wmi
 
     public class WmiHelper
     {
-        static ManagementScope Connect(string machineName)
+        public static ManagementScope Connect(string machineName)
         {
-            var options = new ConnectionOptions();
-            //todo: DRU - the stuff in Win32Share should come here and the below be added for connections
-            //options.Impersonation = ImpersonationLevel.Impersonate;
-            //options.EnablePrivileges = true;
-            
+            var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(machineName))
+            {
+                Options =
+                {
+                    Impersonation = ImpersonationLevel.Impersonate,
+                    EnablePrivileges = true
+                }
+            };
 
-            string path = "\\\\{0}\\root\\cimv2";
-            path = String.Format(path, machineName);
-            var scope = new ManagementScope(path, options);
             scope.Connect();
             return scope;
         }
 
-        static ManagementObject GetInstanceByName(string machineName, string className, string name)
-        {
-            ManagementScope scope = Connect(machineName);
-            var query = new ObjectQuery("SELECT * FROM " + className + " WHERE Name = '" + name + "'");
-            var searcher = new ManagementObjectSearcher(scope, query);
-            ManagementObjectCollection results = searcher.Get();
-            foreach (ManagementObject manObject in results)
+        static ManagementObject GetInstanceByName(string machineName, string className, string name) {
+            var query = "SELECT * FROM " + className + " WHERE Name = '" + name + "'";
+            foreach (ManagementObject manObject in Query(machineName,query)) {
                 return manObject;
+            }
 
             return null;
         }
+
+        public static ManagementObjectCollection Query(string machineName, string query)
+        {
+            ManagementScope scope = Connect(machineName);
+            var queryObj = new ObjectQuery(query);
+            var searcher = new ManagementObjectSearcher(scope, queryObj);
+            ManagementObjectCollection results = searcher.Get();
+
+            return results;
+        }
+
+
 
         static ManagementClass GetStaticByName(string machineName, string className)
         {
