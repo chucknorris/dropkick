@@ -31,7 +31,7 @@ namespace dropkick.tests.TestObjects
                            .ToDirectory("web.config");
 
                        server.Msmq()
-                           .PrivateQueueNamed("mt_timeout");
+                           .PrivateQueue("mt_timeout");
                    })
                 );
         }

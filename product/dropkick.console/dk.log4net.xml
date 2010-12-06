@@ -28,7 +28,7 @@
       <file value=".\filechange.log"/>
       <appendToFile value="true"/>
       <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%message%newline"/>
+        <conversionPattern value="%message%newline" />
       </layout>
     </appender>
 
@@ -36,7 +36,7 @@
       <file value=".\securitychange.log"/>
       <appendToFile value="true"/>
       <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%message%newline"/>
+        <conversionPattern value="%message%newline" />
       </layout>
     </appender>
 
@@ -44,14 +44,14 @@
       <file value=".\dropkick.deployment.log"/>
       <appendToFile value="true"/>
       <layout type="log4net.Layout.PatternLayout">
-        <conversionPattern value="%message%newline"/>
+        <conversionPattern value="%message%newline" />
       </layout>
     </appender>
 
     <root>
       <level value="ALL" />
     </root>
-
+    
     <logger name="dropkick.changes.file">
       <level value="INFO" />
       <appender-ref ref="FileChangeAppender" />
@@ -61,15 +61,16 @@
       <level value="INFO" />
       <appender-ref ref="SecurityChangeAppender" />
     </logger>
-
+    
     <logger name="dropkick.finegrain">
-      <appender ref="DetailAppender" />
-    </logger>
+      <appender-ref ref="DetailAppender" />
+    </logger>    
 
     <logger name="dropkick.coarsegrain">
       <appender-ref ref="CoarseAppender" />
-      <appender ref="DetailAppender" />
-    </logger>
-      
+      <appender-ref ref="DetailAppender" />
+    </logger>    
+    
+    
   </log4net>
 </configuration>

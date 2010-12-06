@@ -23,7 +23,7 @@ namespace dropkick.Configuration.Dsl.Msmq
     {
         string _queueName;
 
-        public void PrivateQueueNamed(string name)
+        public void PrivateQueue(string name)
         {
             _queueName = ReplaceTokens(name);
         }

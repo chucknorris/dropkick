@@ -27,7 +27,7 @@ namespace dropkick.tests.TestObjects
                         .ExecutableIsLocatedAt("");
 
                     server.Msmq()
-                        .PrivateQueueNamed("bob");
+                        .PrivateQueue("bob");
 
 
                     server.CopyDirectory(o =>
