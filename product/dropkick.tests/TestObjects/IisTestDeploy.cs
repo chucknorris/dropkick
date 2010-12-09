@@ -24,12 +24,15 @@ namespace dropkick.tests.TestObjects
             {
                 //TODO: make this a prompt
                 server.Iis7Site("Default Web Site", @"D:\IntNet", 80)
-                    .VirtualDirectory("dk_test")
-                    .UseClassicPipeline();
+                    .VirtualDirectory("dk_test");
 
                 server.Iis7Site("Default Web Site")
                     .VirtualDirectory("fp")
-                    .SetAppPoolTo("appPoolName")
+                    .SetAppPoolTo("appPoolName", pool=>
+                    {
+                        pool.Enable32BitAppOnWin64();
+                        pool.UseClassicPipeline();
+                    })
                     .SetPathTo("set path to");
             }));
         }

@@ -30,8 +30,10 @@ namespace dropkick.tests.Tasks.Iis
                                ServerName = "localhost",
                                VdirPath = "Victastic",
                                WebsiteName = "SCOTT",
-                               AppPoolName = "VICKERS",//could be set on either website or vdir basis
-                               ManagedRuntimeVersion = ManagedRuntimeVersion.V4
+                               AppPoolName = "VICKERS",
+                               //could be set on either website or vdir basis
+                               ManagedRuntimeVersion = ManagedRuntimeVersion.V4,
+                               Enable32BitAppOnWin64 = true
                            };
             DeploymentResult output = task.Execute();
 

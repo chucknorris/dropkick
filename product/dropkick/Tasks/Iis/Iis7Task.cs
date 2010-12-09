@@ -23,6 +23,8 @@ namespace dropkick.Tasks.Iis
         BaseIisTask
     {
         public bool UseClassicPipeline { get; set; }
+        public bool Enable32BitAppOnWin64 { get; set; }
+
         readonly Path _path = new DotNetPath();
 
         public override int VersionNumber
@@ -126,6 +128,9 @@ namespace dropkick.Tasks.Iis
             }
 
             var pool = mgr.ApplicationPools.Add(AppPoolName);
+
+            if(Enable32BitAppOnWin64)
+                pool.Enable32BitAppOnWin64 = true;
 
             pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
 

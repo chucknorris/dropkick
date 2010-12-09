@@ -95,6 +95,7 @@
   <ItemGroup>
     <Content Include="dk.log4net.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
   </ItemGroup>
   <ItemGroup>
