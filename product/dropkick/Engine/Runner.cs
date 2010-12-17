@@ -22,62 +22,72 @@ namespace dropkick.Engine
 
     public static class Runner
     {
-        static readonly ILog _log = LogManager.GetLogger(typeof (Runner));
+        static readonly ILog _coarseLog = LogManager.GetLogger("dropkick.coarsegrain");
+
         static readonly SettingsParser _parser = new SettingsParser();
         static readonly ServerMapParser _serverParser = new ServerMapParser();
         static readonly MultipleFinder _finder = new MultipleFinder();
 
         public static void Deploy(string commandLine)
         {
+            if(!_coarseLog.IsDebugEnabled)
+                Console.WriteLine("LOGGING IS OFF - THIS MIGHT NOT BE FUN");
+
             try
             {
-                Console.WriteLine("********");
-                Console.WriteLine("DropkicK");
-                Console.WriteLine("********");
-                Console.WriteLine("");
+                _coarseLog.Info("****************************************************");
+                _coarseLog.Info("DropkicK");
+                _coarseLog.Info("****************************************************");
+                _coarseLog.Info("");
 
                 DeploymentArguments newArgs = DeploymentCommandLineParser.Parse(commandLine);
 
-                if (!File.Exists(newArgs.PathToServerMapsFile))
-                {
-                    _log.FatalFormat("Cannot find the server maps for the environment '{0}' at '{1}'", newArgs.Environment, newArgs.PathToServerMapsFile);
-                    return;
-                }
+                
 
-                RoleToServerMap maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
-                newArgs.ServerMappings.Merge(maps);
 
-                _log.InfoFormat("Command: {0}", newArgs.Command);
-                _log.InfoFormat("Environment: {0}", newArgs.Environment);
-                _log.InfoFormat("Role: {0}", newArgs.Role);
+                _coarseLog.Info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                _coarseLog.InfoFormat("Command:     {0}", newArgs.Command);
+                _coarseLog.InfoFormat("Environment: {0}", newArgs.Environment);
+                _coarseLog.InfoFormat("Role:        {0}", newArgs.Role);
 
                 //////// DEPLOYMENT STUFF
                 FindResult findResult = _finder.Find(newArgs.Deployment);
                 Deployment deployment = findResult.Deployment;
-                _log.InfoFormat("Deployment Method: '{0}'", findResult.MethodOfFinding);
-                _log.InfoFormat("Deployment Found: '{0}'", findResult.Deployment.GetType().Name);
+                _coarseLog.InfoFormat("Deployment Method: '{0}'", findResult.MethodOfFinding);
+                _coarseLog.InfoFormat("Deployment Found:  '{0}'", findResult.Deployment.GetType().Name);
 
                 if (deployment.GetType().Equals(typeof(NullDeployment)))
                 {
-                    _log.Fatal("Couldn't find a deployment to run.");
+                    _coarseLog.Fatal("Couldn't find a deployment to run.");
                     return;
                 }
                 ////////
 
 
 
-                ////////// SETTINGS STUFF
-                DisplayServerMappingsForEnvironment(newArgs.ServerMappings);
-
+                ////////// File Checks
+                if(!VerifyPathToServerMapsFile(newArgs.PathToServerMapsFile))
+                {
+                    return;
+                }
                 if (!VerifyPathToSettingsFile(newArgs.PathToSettingsFile))
                 {
                     return;
                 }
-                //////////
+                ////////////////////
+
+                RoleToServerMap maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
+                newArgs.ServerMappings.Merge(maps);
+                DisplayServerMappingsForEnvironment(newArgs.ServerMappings);
+
+                
                  
-                Console.WriteLine("Please review the settings above when you are ready,");
-                Console.WriteLine("Press enter to kick it out there");
-                Console.WriteLine("Press ctrl+c to cancel.");
+                _coarseLog.Info("");
+                _coarseLog.Info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
+                _coarseLog.Info("Please review the settings above when you are ready,");
+                _coarseLog.Info("  Press enter to kick it out there");
+                _coarseLog.Info("  Press 'ctrl+c' to cancel.");
+
                 Console.ReadKey(true);
 
 
@@ -95,34 +105,49 @@ namespace dropkick.Engine
             }
             catch (Exception ex)
             {
-                _log.Debug(commandLine);
-                _log.Error(ex);
+                _coarseLog.Debug(commandLine);
+                _coarseLog.Error(ex);
             }
         }
 
         static void DisplayServerMappingsForEnvironment(RoleToServerMap mappings)
         {
-            _log.Info("Server Mappings");
+            _coarseLog.Debug("");
+            _coarseLog.Info("Server Mappings");
             foreach (var role in mappings.Roles())
             {
-                _log.InfoFormat("  '{0}'", role);
+                _coarseLog.InfoFormat("  '{0}'", role);
 
                 foreach (var server in mappings.GetServers(role))
                 {
-                    _log.InfoFormat("    '{0}'", server.Name);
+                    _coarseLog.InfoFormat("    '{0}'", server.Name);
                 }
             }
+        }
+
+        static bool VerifyPathToServerMapsFile(string pathToFile)
+        {
+            if (File.Exists(pathToFile))
+            {
+                _coarseLog.Debug("");
+                _coarseLog.InfoFormat("Server Maps:   '{0}' - Looks Good!", pathToFile);
+                return true;
+            }
+
+            _coarseLog.FatalFormat("Server Maps:   '{0}' - NOT FOUND", pathToFile);
+            return false;
         }
 
         static bool VerifyPathToSettingsFile(string pathToSettingsFile)
         {
             if (File.Exists(pathToSettingsFile))
             {
-                _log.InfoFormat("Settings Path: {0}", pathToSettingsFile);
+                _coarseLog.Debug("");
+                _coarseLog.InfoFormat("Settings Path: '{0}' - Looks Good!", pathToSettingsFile);
                 return true;
             }
 
-            _log.FatalFormat("SETTINGS FILE '{0}' NOT FOUND", pathToSettingsFile);
+            _coarseLog.FatalFormat("Settings Path: '{0}' - NOT FOUND", pathToSettingsFile);
             return false;
         }
     }

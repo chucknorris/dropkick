@@ -52,4 +52,39 @@ namespace dropkick.tests.Tasks.Msmq
         }
 
     }
+
+
+
+    [TestFixture]
+    [Category("Integration")]
+    public class RemoteMsmqTest
+    {
+        [Test]
+        public void Execute()
+        {
+            var ps = new DeploymentServer("srvutilbuild");
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var address = new QueueAddress(ub.Uri);
+
+            //delete the remote queue
+
+            var t = new CreateRemoteMsmqQueueTask(ps, address);
+            var r = t.Execute();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create execution.");
+
+        }
+
+        [Test]
+        public void Verify()
+        {
+            var ps = new DeploymentServer("srvutilbuild");
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var t = new CreateLocalMsmqQueueTask(ps, new QueueAddress(ub.Uri));
+            var r = t.VerifyCanRun();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create verification.");
+        }
+
+    }
 }

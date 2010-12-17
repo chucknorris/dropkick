@@ -14,9 +14,11 @@ namespace dropkick.Tasks.Msmq
 {
     using System;
     using System.IO;
+    using CommandLine;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
     using FileSystem;
+    using Path = System.IO.Path;
 
     public class CreateRemoteMsmqQueueTask :
         BaseTask
@@ -70,12 +72,12 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-            //using (var remote = new CopyRemoteOut(_server))
-            //{
-            //capture output
-            //var vresult = remote.CreateQueue(Address);
-            result.AddAlert("REMOTE QUEUE - DID NOTHING");
-            //}
+            using (var remote = new CopyRemoteOut(_server))
+            {
+                //capture output
+                var vresult = remote.CreateQueue(Address);
+                result.AddAlert("REMOTE QUEUE - DID NOTHING");
+            }
 
 
             return result;
@@ -85,19 +87,31 @@ namespace dropkick.Tasks.Msmq
             IDisposable
         {
             string _path;
+            PhysicalServer _server;
             public CopyRemoteOut(PhysicalServer server)
             {
+                _server = server;
+
                 //copy remote out
                 //TODO: make this path configurable
                 var p = RemotePathHelper.Convert(server, @"C:\Temp\dropkick.remote");
                 if (!Directory.Exists(p)) Directory.CreateDirectory(p);
                 _path = p;
 
-                p = System.IO.Path.Combine(p, "dropkick.remote.exe");
-                
-                File.Copy(@".\dropkick.remote.exe", p);
+
+                string a = Path.Combine(p, "dropkick.remote.exe");
+                File.Copy(@".\dropkick.remote.exe", a, true);
+
+                string b = Path.Combine(p, "dropkick.dll");
+                File.Copy(@".\dropkick.dll", b, true);
+
+                string c = Path.Combine(p,"log4net.dll");
+                File.Copy(@".\log4net.dll", c, true);
+
+                string d = Path.Combine(p, "Magnum.dll");
+                File.Copy(@".\Magnum.dll", d, true);
             }
-            
+
 
             public bool VerifyQueue(QueueAddress path)
             {
@@ -105,15 +119,23 @@ namespace dropkick.Tasks.Msmq
                 return false;
             }
 
-            public bool CreateQueue(QueueAddress path)
+            public DeploymentResult CreateQueue(QueueAddress path)
             {
-                //exe create_queue path
-                return false;
+                var t = new RemoteCommandLineTask("dropkick.remote.exe")
+                    {
+                        Args = "create_queue msmq://srvutilscm/bob",
+                        ExecutableIsLocatedAt = @"C:\Temp\dropkick.remote\",
+                        Machine = _server.Name,
+                        WorkingDirectory = @"C:\Temp\dropkick.remote\"
+
+                    };
+                
+                return t.Execute();
             }
 
             public void Dispose()
             {
-                File.Delete(_path);
+                //Directory.Delete(_path, true);
             }
         }
     }

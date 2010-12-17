@@ -29,7 +29,7 @@ namespace dropkick.tests.Tasks.Iis
                                PathOnServer = "D:\\SomethingAwesome",
                                ServerName = "localhost",
                                VdirPath = "Victastic",
-                               WebsiteName = "SCOTT",
+                               WebsiteName = "Default Web Site",
                                AppPoolName = "VICKERS",
                                //could be set on either website or vdir basis
                                ManagedRuntimeVersion = ManagedRuntimeVersion.V4,

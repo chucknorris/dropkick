@@ -141,6 +141,10 @@
     <Compile Include="TestObjects\WinServiceTestDeploy.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dropkick.remote\dropkick.remote.csproj">
+      <Project>{97A21367-4943-4F47-9905-68668DBB3F5E}</Project>
+      <Name>dropkick.remote</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dropkick\dropkick.csproj">
       <Project>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</Project>
       <Name>dropkick</Name>

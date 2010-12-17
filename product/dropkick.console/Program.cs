@@ -45,6 +45,7 @@ namespace dropkick.console
             //      (null) - if omitted search for a dll ending with 'Deployment' then pass that name in
 
             Runner.Deploy(args.Aggregate("",(a, b) => a + " " + b).Trim());
+            Console.ReadKey();
         }
 
         static void SetRunAppender()

@@ -13,6 +13,7 @@
 namespace dropkick.remote
 {
     using System;
+    using System.IO;
     using System.Messaging;
     using Configuration.Dsl.Msmq;
 
@@ -22,20 +23,32 @@ namespace dropkick.remote
         //dropkick.remote create_queue msmq://servername/dk_remote
         static void Main(string[] args)
         {
-            if (args[0] == "create_queue")
+            try
             {
-                var queuename = args[1];
-                var queueAddress = new QueueAddress(queuename);
-                var formattedName = queueAddress.LocalName;
-                MessageQueue.Create(formattedName);
+                if (args[0] == "create_queue")
+                {
+                    var queuename = args[1];
+                    var queueAddress = new QueueAddress(queuename);
+                    var formattedName = queueAddress.LocalName;
+                    MessageQueue.Create(formattedName);
+                    
+                    Environment.Exit(0);
+                }
+                else if (args[0] == "verify_queue")
+                {
+                    var queuename = args[1];
+                    var queueAddress = new QueueAddress(queuename);
+                    var formattedName = queueAddress.LocalName;
+                    var result = MessageQueue.Exists(formattedName);
+                    Console.WriteLine("exists");
+                    Environment.Exit(0);
+                }
             }
-            else if(args[0] == "verify_queue")
+            catch (Exception ex)
             {
-                var queuename = args[1];
-                var queueAddress = new QueueAddress(queuename);
-                var formattedName = queueAddress.LocalName;
-                var result = MessageQueue.Exists(formattedName);
-                Console.WriteLine("exists");
+                File.AppendAllText("error.txt", ex.ToString());
+                Console.WriteLine(ex);
+                Environment.Exit(21);
             }
         }
     }

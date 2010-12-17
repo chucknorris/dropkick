@@ -15,7 +15,6 @@ namespace dropkick.Tasks.CommandLine
     using System;
     using System.Collections.Generic;
     using System.IO;
-    using System.Management;
     using DeploymentModel;
     using Wmi;
 
@@ -24,6 +23,7 @@ namespace dropkick.Tasks.CommandLine
     {
         readonly Dictionary<int, string> _status = new Dictionary<int, string>
                                                    {
+                                                       {-1, "Unknown Failure"},
                                                        {2, "Access is denied"},
                                                        {3, "Insufficient privileges"},
                                                        {8, "Unknown failure"},
@@ -72,7 +72,8 @@ namespace dropkick.Tasks.CommandLine
         {
             var result = new DeploymentResult();
 
-            ProcessReturnCode returnCode  = WmiProcess.Run(Machine, Command + " " + Args, string.Empty);
+            var p = Path.Combine(ExecutableIsLocatedAt, Command);
+            ProcessReturnCode returnCode  = WmiProcess.Run(Machine, Command + " " + Args, ExecutableIsLocatedAt);
 
             //TODO: how can I get the output back from the computer?
 
