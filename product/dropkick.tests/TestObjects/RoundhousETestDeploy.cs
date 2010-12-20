@@ -4,7 +4,7 @@ namespace dropkick.tests.TestObjects
     using dropkick.Configuration.Dsl.RoundhousE;
 
     public class RoundhousETestDeploy :
-        Deployment<IisTestDeploy, SampleConfiguration>
+        Deployment<RoundhousETestDeploy, SampleConfiguration>
     {
         public RoundhousETestDeploy()
         {

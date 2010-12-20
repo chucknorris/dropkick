@@ -135,6 +135,7 @@
     <Compile Include="TestObjects\SampleConfiguration.cs" />
     <Compile Include="TestObjects\SecurityDeployment.cs" />
     <Compile Include="TestObjects\SingleRoleDeploy.cs" />
+    <Compile Include="TestObjects\TopshelfDeploy.cs" />
     <Compile Include="TestObjects\TwoRoleDeploy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestObjects\TestDeployment.cs" />

@@ -94,6 +94,9 @@
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
+    <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Topshelf\TopshelfConfigurator.cs" />
+    <Compile Include="Configuration\Dsl\Topshelf\TopshelfOptions.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="HUB.cs" />
@@ -214,6 +217,7 @@
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\WellKnownRoles.cs" />
+    <Compile Include="Tasks\Topshelf\LocalTopshelfTask.cs" />
     <Compile Include="Tasks\UserInteraction\PromptTask.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
     <Compile Include="Configuration\Dsl\Notes\WaitProtoTask.cs" />
