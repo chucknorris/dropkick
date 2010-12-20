@@ -2,6 +2,7 @@
 {
     public enum ProcessReturnCode
     {
+        ERROR = -1,
         Success = 0,
         AccessDenied = 2,
         InsufficentPrivileges = 3,

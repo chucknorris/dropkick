@@ -47,6 +47,7 @@ namespace dropkick.Wmi
             var getOptions = new ObjectGetOptions();
             var path = new ManagementPath(className);
             var manClass = new ManagementClass(scope, path, getOptions);
+            
             return manClass;
         }
 
@@ -80,9 +81,11 @@ namespace dropkick.Wmi
         {
             try
             {
-                ManagementClass manClass = GetStaticByName(machineName, className);
-                object result = manClass.InvokeMethod(methodName, parameters);
-                return Convert.ToInt32(result);
+                using (var managementClass = GetStaticByName(machineName, className))
+                {
+                    object result = managementClass.InvokeMethod(methodName, parameters);
+                    return Convert.ToInt32(result);
+                }
             }
             catch
             {

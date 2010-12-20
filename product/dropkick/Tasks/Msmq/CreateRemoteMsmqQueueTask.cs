@@ -123,7 +123,7 @@ namespace dropkick.Tasks.Msmq
             {
                 var t = new RemoteCommandLineTask("dropkick.remote.exe")
                     {
-                        Args = "create_queue msmq://srvutilscm/bob",
+                        Args = "create_queue {0}".FormatWith(path.ActualUri),
                         ExecutableIsLocatedAt = @"C:\Temp\dropkick.remote\",
                         Machine = _server.Name,
                         WorkingDirectory = @"C:\Temp\dropkick.remote\"

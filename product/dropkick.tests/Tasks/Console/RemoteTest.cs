@@ -12,7 +12,7 @@ namespace dropkick.tests.Tasks.Console
         {
             var task = new RemoteCommandLineTask("ping")
                            {
-                               Args = "google.com",
+                               Args = "www.fhlbtopeka.com -n 5",
                                Machine = "SrvTestWeb01"
                            };
 

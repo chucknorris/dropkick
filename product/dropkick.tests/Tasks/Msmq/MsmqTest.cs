@@ -62,7 +62,7 @@ namespace dropkick.tests.Tasks.Msmq
         [Test]
         public void Execute()
         {
-            var ps = new DeploymentServer("srvutilbuild");
+            var ps = new DeploymentServer("srvtestweb01");
             var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
             var address = new QueueAddress(ub.Uri);
 

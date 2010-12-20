@@ -25,7 +25,9 @@ namespace dropkick.tests.TestObjects
             Define((settings) =>
                    DeploymentStepsFor(Web, server => 
                    { 
-                       server.CommandLine("ipconfig");
+                       server.CommandLine("ipconfig")
+                           .Args("")
+                           .ExecutableIsLocatedAt("");
                    }));
         }
 

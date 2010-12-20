@@ -78,6 +78,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Messaging" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -139,6 +140,7 @@
     <Compile Include="TestObjects\TestDeployment.cs" />
     <Compile Include="TestObjects\TestTask.cs" />
     <Compile Include="TestObjects\WinServiceTestDeploy.cs" />
+    <Compile Include="WmiSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\dropkick.remote\dropkick.remote.csproj">
