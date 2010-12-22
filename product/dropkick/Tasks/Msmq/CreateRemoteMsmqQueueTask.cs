@@ -14,10 +14,12 @@ namespace dropkick.Tasks.Msmq
 {
     using System;
     using System.IO;
+    using System.Reflection;
     using CommandLine;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
     using FileSystem;
+    using log4net;
     using Path = System.IO.Path;
 
     public class CreateRemoteMsmqQueueTask :
@@ -88,28 +90,32 @@ namespace dropkick.Tasks.Msmq
         {
             string _path;
             PhysicalServer _server;
+            ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
+
             public CopyRemoteOut(PhysicalServer server)
             {
                 _server = server;
 
                 //copy remote out
                 //TODO: make this path configurable
-                var p = RemotePathHelper.Convert(server, @"C:\Temp\dropkick.remote");
-                if (!Directory.Exists(p)) Directory.CreateDirectory(p);
-                _path = p;
+                var remotePath = RemotePathHelper.Convert(server, @"C:\Temp\dropkick.remote");
+                if (!Directory.Exists(remotePath)) Directory.CreateDirectory(remotePath);
+                _path = remotePath;
 
+                var ewd = Assembly.GetExecutingAssembly().Location;
+                var local = Path.GetDirectoryName(ewd);
 
-                string a = Path.Combine(p, "dropkick.remote.exe");
-                File.Copy(@".\dropkick.remote.exe", a, true);
+                if(local == null) throw new Exception("shouldn't be null");
 
-                string b = Path.Combine(p, "dropkick.dll");
-                File.Copy(@".\dropkick.dll", b, true);
+                var filesToCopy = new[] {"dropkick.remote.exe","dropkick.dll","log4net.dll","Magnum.dll"};
+                foreach (var file in filesToCopy)
+                {
+                    var dest = Path.Combine(remotePath, file);
+                    var src = Path.Combine(local, file);
+                    _fineLog.DebugFormat("[msmq][remote] '{0}'->'{1}'", src, dest);
 
-                string c = Path.Combine(p,"log4net.dll");
-                File.Copy(@".\log4net.dll", c, true);
-
-                string d = Path.Combine(p, "Magnum.dll");
-                File.Copy(@".\Magnum.dll", d, true);
+                    File.Copy(src, dest, true);
+                }
             }
 
 

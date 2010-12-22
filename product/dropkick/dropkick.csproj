@@ -77,6 +77,8 @@
     <Reference Include="System.EnterpriseServices" />
     <Reference Include="System.Management" />
     <Reference Include="System.Messaging" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
     <Reference Include="System.ServiceProcess" />
     <Reference Include="System.Data" />
     <Reference Include="System.Web.Services" />
@@ -92,6 +94,7 @@
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
@@ -202,7 +205,7 @@
     <Compile Include="Configuration\Dsl\DeploymentInspectorSite.cs" />
     <Compile Include="Tasks\CommandLine\RemoteCommandLineTask.cs" />
     <Compile Include="Tasks\Files\CopyFileTask.cs" />
-    <Compile Include="Tasks\Reports\ReportingService.cs">
+    <Compile Include="Tasks\MsSsrs\ReportingService.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Tasks\RoundhousE\RoundhousETask.cs" />
@@ -218,6 +221,7 @@
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\WellKnownRoles.cs" />
     <Compile Include="Tasks\Topshelf\LocalTopshelfTask.cs" />
+    <Compile Include="Tasks\Topshelf\RemoteTopshelfTask.cs" />
     <Compile Include="Tasks\UserInteraction\PromptTask.cs" />
     <Compile Include="Tasks\WaitTask.cs" />
     <Compile Include="Configuration\Dsl\Notes\WaitProtoTask.cs" />
@@ -302,6 +306,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

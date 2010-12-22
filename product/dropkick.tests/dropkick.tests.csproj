@@ -115,6 +115,7 @@
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTest.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTest.cs" />
+    <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />

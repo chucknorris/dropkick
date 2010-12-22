@@ -1,4 +1,4 @@
-// Copyright 2007-2010 The Apache Software Foundation.
+﻿// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -15,28 +15,29 @@ namespace dropkick.Tasks.Topshelf
     using CommandLine;
     using DeploymentModel;
 
-    public class LocalTopshelfTask :
+    public class RemoteTopshelfTask :
         BaseTask
     {
-        readonly LocalCommandLineTask _task;
+        readonly RemoteCommandLineTask _task;
 
-        public LocalTopshelfTask(string exeName, string location, string instanceName)
+        public RemoteTopshelfTask(string exeName, string location, string instanceName, PhysicalServer site)
         {
             string args = string.IsNullOrEmpty(instanceName)
                               ? ""
                               : " /instance:" + instanceName;
 
-            _task = new LocalCommandLineTask(exeName)
+            _task = new RemoteCommandLineTask(exeName)
                         {
                             Args = "install" + args,
                             ExecutableIsLocatedAt = location,
+                            Machine = site.Name,
                             WorkingDirectory = location
                         };
         }
 
         public override string Name
         {
-            get { return "[topshelf] local Installing"; }
+            get { return "[topshelf] remote Installing"; }
         }
 
         public override DeploymentResult VerifyCanRun()
