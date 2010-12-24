@@ -23,6 +23,8 @@ namespace dropkick.Configuration.Dsl.Topshelf
         string _instanceName;
         string _location;
         string _exeName;
+        string _password;
+        string _username;
 
         public void ExeName(string name)
         {
@@ -39,15 +41,21 @@ namespace dropkick.Configuration.Dsl.Topshelf
             _location = location;
         }
 
+        public void PassCredentials(string username, string password)
+        {
+            _username = username;
+            _password = password;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
             if (site.IsLocal)
             {
-                site.AddTask(new LocalTopshelfTask(_exeName, _location, _instanceName));
+                site.AddTask(new LocalTopshelfTask(_exeName, _location, _instanceName, _username, _password));
             }
             else
             {
-                site.AddTask(new RemoteTopshelfTask(_exeName, _location, _instanceName, site));
+                site.AddTask(new RemoteTopshelfTask(_exeName, _location, _instanceName, site, _username, _password));
             }
         }
     }

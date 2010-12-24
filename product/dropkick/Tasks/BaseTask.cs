@@ -14,14 +14,10 @@ namespace dropkick.Tasks
 {
     using System.Threading;
     using DeploymentModel;
-    using log4net;
 
     public abstract class BaseTask :
         Task
     {
-        readonly ILog _coarseLog = LogManager.GetLogger("dropkick.coarsegrain");
-        readonly ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
-
         public abstract string Name { get; }
         public abstract DeploymentResult VerifyCanRun();
         public abstract DeploymentResult Execute();
@@ -41,12 +37,12 @@ namespace dropkick.Tasks
 
         public void LogFineGrain(string format, params object[] args)
         {
-            _fineLog.DebugFormat(format, args);
+            Logging.Fine(format, args);
         }
 
         public void LogCoarseGrain(string format, params object[] args)
         {
-            _coarseLog.DebugFormat(format, args);
+            Logging.Coarse(format, args);
         }
     }
 }

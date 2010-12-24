@@ -69,10 +69,12 @@ namespace dropkick.Tasks.WinService
                     }
                 }
                 result.AddGood("Stopped Service '{0}'", ServiceName);
+                Logging.Coarse("[svc] Stopped service '{0}'", ServiceName);
             }
             else
             {
                 result.AddAlert("Service '{0}' does not exist and could not be stopped", ServiceName);
+                Logging.Coarse("[svc] Service '{0}' does not exist.", ServiceName);
             }
 
             return result;

@@ -103,6 +103,7 @@
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="HUB.cs" />
+    <Compile Include="Logging.cs" />
     <Compile Include="Prompting\ConsolePromptService.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
@@ -125,6 +126,8 @@
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />
     <Compile Include="Tasks\Security\MsSql\BaseSecuritySqlTask.cs" />
     <Compile Include="Tasks\Security\MsSql\CreateLoginTask.cs" />
@@ -214,10 +217,9 @@
     <Compile Include="Tasks\Security\Acl\GrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsAServiceTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LsaSecurity.cs" />
-    <Compile Include="Tasks\Security\Msmq\CreateQueueTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\DeleteQueueTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTask.cs" />
+    <Compile Include="Tasks\Msmq\DeleteLocalQueueTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\LocalMsmqGrantReadTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\LocalMsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Security\WellKnownRoles.cs" />
     <Compile Include="Tasks\Topshelf\LocalTopshelfTask.cs" />

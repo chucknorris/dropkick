@@ -35,6 +35,7 @@ namespace dropkick.tests.TestObjects
                         o.Instance("TEST");
                         o.LocatedAt("~/bob");
                         o.ExeName("VikingHost.exe");
+                        o.PassCredentials("username", "password");
                     });
                 });
             });

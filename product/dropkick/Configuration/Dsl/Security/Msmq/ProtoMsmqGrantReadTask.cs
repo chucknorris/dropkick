@@ -33,7 +33,7 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
         public override void RegisterRealTasks(PhysicalServer site)
         {
             var ub = new UriBuilder("msmq", site.Name) { Path = _queue };
-            var task = new MsmqGrantReadTask(new QueueAddress(ub.Uri), _group);
+            var task = new LocalMsmqGrantReadTask(new QueueAddress(ub.Uri), _group);
 
             site.AddTask(task);
         }

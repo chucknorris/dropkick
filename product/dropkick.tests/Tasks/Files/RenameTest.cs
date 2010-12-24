@@ -43,12 +43,10 @@ namespace dropkick.tests.Tasks.Files
         [Test]
         public void RenameFileWorks()
         {
-           
                 var task = new RenameTask(_sourceFile, _renameTo, new DotNetPath());
                 task.Execute();
 
                 Assert.IsTrue(File.Exists(_renameTo));
-           
         }
 
         [Test]
@@ -76,7 +74,7 @@ namespace dropkick.tests.Tasks.Files
         }
 
         [Test, Explicit]
-        public void TryIt()
+        public void RemoteRename()
         {
             var task = new RenameTask(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\des.exe", "hi.exe", new DotNetPath());
             task.Execute();

@@ -7,14 +7,14 @@ namespace dropkick.tests.Tasks.Dsn
     [TestFixture]
     public class CreatingDsns
     {
-        [Test]
+        [Test][Explicit]
         public void Execute()
         {
             var t = new DsnTask(Environment.MachineName, "dk_dsn", DsnAction.AddSystemDsn, DsnDriver.Sql(), "Test");
             t.Execute();
         }
 
-        [Test]
+        [Test][Explicit]
         public void Verify()
         {
             var t = new DsnTask(Environment.MachineName, "dk_dsn", DsnAction.AddSystemDsn, DsnDriver.Sql(), "Test");

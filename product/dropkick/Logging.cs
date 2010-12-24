@@ -1,4 +1,4 @@
-﻿// Copyright 2007-2010 The Apache Software Foundation.
+// Copyright 2007-2010 The Apache Software Foundation.
 // 
 // Licensed under the Apache License, Version 2.0 (the "License"); you may not use 
 // this file except in compliance with the License. You may obtain a copy of the 
@@ -10,13 +10,23 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Topshelf
+namespace dropkick
 {
-    public interface TopshelfOptions
+    using log4net;
+
+    public static class Logging
     {
-        void ExeName(string name);
-        void Instance(string name);
-        void LocatedAt(string location);
-        void PassCredentials(string username, string password);
+        static readonly ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
+        static readonly ILog _coarsLog = LogManager.GetLogger("dropkick.coarsegrain");
+
+        public static void Fine(string format, params object[] args)
+        {
+            _fineLog.DebugFormat(format, args);
+        }
+
+        public static void Coarse(string format, params object[] args)
+        {
+            _coarsLog.InfoFormat(format, args);
+        }
     }
 }

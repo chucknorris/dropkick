@@ -16,5 +16,6 @@ namespace dropkick.Prompting
     {
         T Prompt<T>() where T : new();
         string Prompt(string nameToDisplay);
+        void Tick();
     }
 }

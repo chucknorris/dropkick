@@ -20,11 +20,16 @@ namespace dropkick.Tasks.Topshelf
     {
         readonly RemoteCommandLineTask _task;
 
-        public RemoteTopshelfTask(string exeName, string location, string instanceName, PhysicalServer site)
+        public RemoteTopshelfTask(string exeName, string location, string instanceName, PhysicalServer site, string username, string password)
         {
             string args = string.IsNullOrEmpty(instanceName)
                               ? ""
                               : " /instance:" + instanceName;
+
+            if(username != null && password != null)
+            {
+                args += " /username:{0} /password:{1}".FormatWith(username, password);
+            }
 
             _task = new RemoteCommandLineTask(exeName)
                         {

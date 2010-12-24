@@ -28,7 +28,7 @@ namespace dropkick.tests.Tasks.Security.Msmq
         [Test]
         public void Execute()
         {
-            var t = new MsmqGrantReadTask(_address, @"Everyone");
+            var t = new LocalMsmqGrantReadTask(_address, @"Everyone");
             var r = t.Execute();
 
             Assert.IsFalse(r.ContainsError(), "Errors occured during permission setting.");

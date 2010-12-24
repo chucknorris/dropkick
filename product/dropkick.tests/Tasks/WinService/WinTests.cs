@@ -19,33 +19,9 @@ namespace dropkick.tests.Tasks.WinService
     using Wmi;
 
     [TestFixture]
+    [Category("Integration")]
     public class WinTests
     {
-        [Test]
-        [Category("Integration")]
-        public void Remote()
-        {
-            //TODO: friggin 2008 LUA-must run as admin
-            var t = new WinServiceStopTask("SrvTestWeb01", "MSMQ");
-            DeploymentResult o = t.VerifyCanRun();
-            t.Execute();
-            var t2 = new WinServiceStartTask("SrvTestWeb01", "MSMQ");
-            t2.Execute();
-        }
-
-        [Test]
-        [Category("Integration")]
-        public void RemoteCreate()
-        {
-            var t = new WinServiceCreateTask("SrvTestWeb01", "FHLBank.Cue");
-            t.ServiceLocation = "E:\\FHLBWinSvc\\Cue\\FHLBank.Cue.Host.exe";
-            t.StartMode = ServiceStartMode.Automatic;
-
-            DeploymentResult o = t.VerifyCanRun();
-            t.Execute();
-        }
-
-        [Test]
         [Category("Integration")]
         public void RemoteDelete()
         {
@@ -57,7 +33,31 @@ namespace dropkick.tests.Tasks.WinService
         }
 
         [Test]
-        [Category("Integration")]
+        [Explicit]
+        public void Remote()
+        {
+            //TODO: friggin 2008 LUA-must run as admin
+            var t = new WinServiceStopTask("SrvTestWeb01", "MSMQ");
+            DeploymentResult o = t.VerifyCanRun();
+            t.Execute();
+            var t2 = new WinServiceStartTask("SrvTestWeb01", "MSMQ");
+            t2.Execute();
+        }
+
+        [Test]
+        [Explicit]
+        public void RemoteCreate()
+        {
+            var t = new WinServiceCreateTask("SrvTestWeb01", "FHLBank.Cue");
+            t.ServiceLocation = "E:\\FHLBWinSvc\\Cue\\FHLBank.Cue.Host.exe";
+            t.StartMode = ServiceStartMode.Automatic;
+
+            DeploymentResult o = t.VerifyCanRun();
+            t.Execute();
+        }
+
+        [Test]
+        [Explicit]
         public void Start()
         {
             //TODO: friggin 2008 LUA-must run as admin

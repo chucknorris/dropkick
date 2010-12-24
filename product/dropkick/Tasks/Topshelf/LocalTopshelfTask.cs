@@ -20,11 +20,16 @@ namespace dropkick.Tasks.Topshelf
     {
         readonly LocalCommandLineTask _task;
 
-        public LocalTopshelfTask(string exeName, string location, string instanceName)
+        public LocalTopshelfTask(string exeName, string location, string instanceName, string username, string password)
         {
             string args = string.IsNullOrEmpty(instanceName)
                               ? ""
                               : " /instance:" + instanceName;
+
+            if(username != null && password != null)
+            {
+                args += " /username:{0} /password:{1}".FormatWith(username, password);
+            }
 
             _task = new LocalCommandLineTask(exeName)
                         {

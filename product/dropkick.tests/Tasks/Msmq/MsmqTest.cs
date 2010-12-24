@@ -23,7 +23,7 @@ namespace dropkick.tests.Tasks.Msmq
     [Category("Integration")]
     public class MsmqTest
     {
-        [Test]
+        [Test][Explicit]
         public void ExecuteLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
@@ -40,7 +40,7 @@ namespace dropkick.tests.Tasks.Msmq
 
         }
 
-        [Test]
+        [Test][Explicit]
         public void VerifyLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
@@ -53,13 +53,11 @@ namespace dropkick.tests.Tasks.Msmq
 
     }
 
-
-
     [TestFixture]
     [Category("Integration")]
-    public class RemoteMsmqTest
+    public class RemoteCreateMsmqTest
     {
-        [Test]
+        [Test][Explicit]
         public void Execute()
         {
             var ps = new DeploymentServer("srvtestweb01");
@@ -75,7 +73,7 @@ namespace dropkick.tests.Tasks.Msmq
 
         }
 
-        [Test]
+        [Test][Explicit]
         public void Verify()
         {
             var ps = new DeploymentServer("srvutilbuild");

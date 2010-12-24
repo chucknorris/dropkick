@@ -19,7 +19,7 @@ namespace dropkick.Tasks.Security.Msmq
     using Exceptions;
 
     public class SetSensibleMsmqDefaults :
-        BaseTask
+        BaseSecurityTask
     {
         readonly QueueAddress _address;
 

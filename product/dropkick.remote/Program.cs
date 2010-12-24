@@ -16,11 +16,14 @@ namespace dropkick.remote
     using System.IO;
     using System.Messaging;
     using Configuration.Dsl.Msmq;
+    using Tasks.Security.Msmq;
 
 
     internal class Program
     {
         //dropkick.remote create_queue msmq://servername/dk_remote
+        //dropkick.remote verify_queue msmq://servername/dk_remote
+        //dropkick.remote grant [r|w|rw] username msmq://servername/dk_remote
         static void Main(string[] args)
         {
             try
@@ -42,6 +45,27 @@ namespace dropkick.remote
                     var result = MessageQueue.Exists(formattedName);
                     Console.WriteLine("exists");
                     Environment.Exit(0);
+                }
+                else if(args[0] =="grant")
+                {
+                    var perm = args[1];
+                    var user = args[2];
+                    var queue = args[3];
+
+                    var queueAddress = new QueueAddress(queue);
+
+                    if(perm == "r")
+                    {
+                        new LocalMsmqGrantReadTask(queueAddress, user).Execute();
+                    }
+                    else if (perm == "w")
+                    {
+                        new MsmqGrantWriteTask(queueAddress, user).Execute();
+                    }
+                    else
+                    {
+                        new LocalMsmqGrantReadWriteTask(queueAddress, user).Execute();
+                    }
                 }
             }
             catch (Exception ex)

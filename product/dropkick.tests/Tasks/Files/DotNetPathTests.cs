@@ -75,7 +75,7 @@ namespace dropkick.tests.Tasks.Files
             Assert.IsFalse(_path.IsFile(".\\stuff"));
         }
 
-        [Test]
+        [Test][Explicit]
         public void RemoteFileTest()
         {
             Assert.IsTrue(File.Exists(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\FHLBank.BloombergIntegration.Host.exe.config"));

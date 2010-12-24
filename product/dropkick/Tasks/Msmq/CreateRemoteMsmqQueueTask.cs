@@ -57,12 +57,12 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-           // using (var remote = new CopyRemoteOut(_server))
-            //{
+            using (var remote = new CopyRemoteOut(_server))
+            {
                 //capture output
-               // var vresult = remote.VerifyQueue(Address);
+                var vresult = remote.VerifyQueue(Address);
                 result.AddAlert("REMOTE QUEUE - DID NOTHING");
-            //}
+            }
 
 
             return result;
@@ -84,65 +84,76 @@ namespace dropkick.Tasks.Msmq
 
             return result;
         }
+    }
 
-        class CopyRemoteOut :
-            IDisposable
+    public class CopyRemoteOut :
+        IDisposable
+    {
+        string _path;
+        PhysicalServer _server;
+        ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
+
+        public CopyRemoteOut(PhysicalServer server)
         {
-            string _path;
-            PhysicalServer _server;
-            ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
+            _server = server;
 
-            public CopyRemoteOut(PhysicalServer server)
+            //copy remote out
+            //TODO: make this path configurable
+            var remotePath = RemotePathHelper.Convert(server, @"C:\Temp\dropkick.remote");
+            if (!Directory.Exists(remotePath)) Directory.CreateDirectory(remotePath);
+            _path = remotePath;
+
+            var ewd = Assembly.GetExecutingAssembly().Location;
+            var local = Path.GetDirectoryName(ewd);
+
+            if(local == null) throw new Exception("shouldn't be null");
+
+            var filesToCopy = new[] {"dropkick.remote.exe","dropkick.dll","log4net.dll","Magnum.dll"};
+            foreach (var file in filesToCopy)
             {
-                _server = server;
+                var dest = Path.Combine(remotePath, file);
+                var src = Path.Combine(local, file);
+                _fineLog.DebugFormat("[msmq][remote] '{0}'->'{1}'", src, dest);
 
-                //copy remote out
-                //TODO: make this path configurable
-                var remotePath = RemotePathHelper.Convert(server, @"C:\Temp\dropkick.remote");
-                if (!Directory.Exists(remotePath)) Directory.CreateDirectory(remotePath);
-                _path = remotePath;
-
-                var ewd = Assembly.GetExecutingAssembly().Location;
-                var local = Path.GetDirectoryName(ewd);
-
-                if(local == null) throw new Exception("shouldn't be null");
-
-                var filesToCopy = new[] {"dropkick.remote.exe","dropkick.dll","log4net.dll","Magnum.dll"};
-                foreach (var file in filesToCopy)
-                {
-                    var dest = Path.Combine(remotePath, file);
-                    var src = Path.Combine(local, file);
-                    _fineLog.DebugFormat("[msmq][remote] '{0}'->'{1}'", src, dest);
-
-                    File.Copy(src, dest, true);
-                }
+                File.Copy(src, dest, true);
             }
+        }
 
 
-            public bool VerifyQueue(QueueAddress path)
-            {
-                //exe verify_queue path
-                return false;
-            }
+        public bool VerifyQueue(QueueAddress path)
+        {
+            //exe verify_queue path
+            return false;
+        }
 
-            public DeploymentResult CreateQueue(QueueAddress path)
-            {
-                var t = new RemoteCommandLineTask("dropkick.remote.exe")
-                    {
-                        Args = "create_queue {0}".FormatWith(path.ActualUri),
-                        ExecutableIsLocatedAt = @"C:\Temp\dropkick.remote\",
-                        Machine = _server.Name,
-                        WorkingDirectory = @"C:\Temp\dropkick.remote\"
-
-                    };
+        public DeploymentResult CreateQueue(QueueAddress path)
+        {
+            var t = new RemoteCommandLineTask("dropkick.remote.exe")
+                        {
+                            Args = "create_queue {0}".FormatWith(path.ActualUri),
+                            ExecutableIsLocatedAt = @"C:\Temp\dropkick.remote\",
+                            Machine = _server.Name,
+                            WorkingDirectory = @"C:\Temp\dropkick.remote\"
+                        };
                 
-                return t.Execute();
-            }
+            return t.Execute();
+        }
 
-            public void Dispose()
-            {
-                //Directory.Delete(_path, true);
-            }
+        public void Dispose()
+        {
+            //Directory.Delete(_path, true);
+        }
+
+        public DeploymentResult GrantReadWrite(QueueAddress address, string @group)
+        {
+            var t = new RemoteCommandLineTask("dropkick.remote.exe")
+                        {
+                            Args = "grant rw {0} {1}".FormatWith(@group, address.ActualUri),
+                            ExecutableIsLocatedAt = @"C:\Temp\dropkick.remote\",
+                            Machine = _server.Name,
+                            WorkingDirectory = @"C:\Temp\dropkick.remote\"
+                        };
+            return t.Execute();
         }
     }
 }

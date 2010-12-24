@@ -12,9 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.WinService
 {
-    using System;
     using DeploymentModel;
-    using Magnum.Extensions;
     using Prompting;
     using Wmi;
 

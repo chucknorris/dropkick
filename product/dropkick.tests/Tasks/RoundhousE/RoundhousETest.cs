@@ -21,7 +21,7 @@ namespace dropkick.tests.Tasks.RoundhousE
     [Category("Integration")]
     public class RoundhousETest
     {
-        [Test]
+        [Test][Explicit]
         public void TestRoundhousE()
         {
             var task = new RoundhousETask(".", "SQL2005", "TestRoundhousE", true,

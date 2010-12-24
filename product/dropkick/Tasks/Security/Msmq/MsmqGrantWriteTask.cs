@@ -18,7 +18,7 @@ namespace dropkick.Tasks.Security.Msmq
     using DeploymentModel;
 
     public class MsmqGrantWriteTask :
-        BaseTask
+        BaseSecurityTask
     {
         string _group;
         QueueAddress _address;

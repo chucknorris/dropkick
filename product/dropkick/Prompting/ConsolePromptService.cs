@@ -39,5 +39,10 @@ namespace dropkick.Prompting
             string capturedValue = Console.ReadLine();
             return capturedValue;
         }
+
+        public void Tick()
+        {
+            Console.Write(".");
+        }
     }
 }

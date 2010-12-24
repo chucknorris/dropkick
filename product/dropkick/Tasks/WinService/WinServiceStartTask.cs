@@ -2,10 +2,8 @@ namespace dropkick.Tasks.WinService
 {
     using System;
     using System.ServiceProcess;
-    using System.Threading;
     using DeploymentModel;
     using TimeoutException = System.ServiceProcess.TimeoutException;
-    using Magnum.Extensions;
 
 
     public class WinServiceStartTask :

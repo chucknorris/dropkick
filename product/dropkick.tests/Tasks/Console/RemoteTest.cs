@@ -7,7 +7,7 @@ namespace dropkick.tests.Tasks.Console
     [TestFixture]
     public class RemoteTest
     {
-        [Test,Explicit]
+        [Test, Explicit]
         public void Remote()
         {
             var task = new RemoteCommandLineTask("ping")
