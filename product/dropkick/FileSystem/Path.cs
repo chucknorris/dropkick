@@ -29,5 +29,6 @@ namespace dropkick.FileSystem
         bool FileExists(string path);
         bool FileDoesntExist(string path);
         string[] GetFiles(string path);
+        string GetFileNameWithoutExtension(string file);
     }
 }

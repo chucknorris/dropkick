@@ -1,8 +1,8 @@
 namespace dropkick.tests.Tasks.Console
 {
-    using DeploymentModel;
     using dropkick.DeploymentModel;
     using dropkick.Tasks.CommandLine;
+    using FileSystem;
     using NUnit.Framework;
 
     [TestFixture]
@@ -11,7 +11,7 @@ namespace dropkick.tests.Tasks.Console
         [Test]
         public void Execute()
         {
-            var t = new LocalCommandLineTask("ping");
+            var t = new LocalCommandLineTask(new DotNetPath(), "ping");
             t.Args = "localhost";
             t.Execute();
 
@@ -20,13 +20,13 @@ namespace dropkick.tests.Tasks.Console
         [Test]
         public void Verify()
         {
-            var t = new LocalCommandLineTask("ping");
+            var t = new LocalCommandLineTask(new DotNetPath(), "ping");
             t.Args = "localhost";
             var r = t.VerifyCanRun();
             var vi = new DeploymentItem(DeploymentItemStatus.Good, "");
 
             Assert.AreEqual(1, r.Results.Count);
-            
+
             //Assert.Contains(vi, r.Results);
         }
     }
