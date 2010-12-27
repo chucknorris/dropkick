@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.CommandLine
 {
     using System;
     using DeploymentModel;
+    using FileSystem;
     using Tasks;
     using Tasks.CommandLine;
 
@@ -53,7 +54,7 @@ namespace dropkick.Configuration.Dsl.CommandLine
         {
             if (s.IsLocal)
             {
-                s.AddTask(new LocalCommandLineTask(_command)
+                s.AddTask(new LocalCommandLineTask(new DotNetPath(), _command)
                               {
                                   Args = _args,
                                   ExecutableIsLocatedAt = _path,

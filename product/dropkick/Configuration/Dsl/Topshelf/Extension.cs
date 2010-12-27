@@ -13,12 +13,13 @@
 namespace dropkick.Configuration.Dsl.Topshelf
 {
     using System;
+    using FileSystem;
 
     public static class Extension
     {
         public static void Topshelf(this ProtoServer server, Action<TopshelfOptions> action)
         {
-            var cfg = new TopshelfConfigurator();
+            var cfg = new TopshelfConfigurator(new DotNetPath());
             action(cfg);
             server.RegisterProtoTask(cfg);
         }

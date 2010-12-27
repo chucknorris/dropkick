@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
-    using System;
     using System.IO;
     using System.Security.AccessControl;
     using System.Text.RegularExpressions;
@@ -109,6 +108,11 @@ namespace dropkick.FileSystem
         public string[] GetFiles(string path)
         {
             return System.IO.Directory.GetFiles(path);
+        }
+
+        public string GetFileNameWithoutExtension(string file)
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(file);
         }
 
         public void CreateDirectory(string path)
