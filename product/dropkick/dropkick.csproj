@@ -95,6 +95,8 @@
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
+    <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
@@ -122,6 +124,7 @@
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
+    <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
     <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
