@@ -21,11 +21,13 @@ namespace dropkick.Configuration.Dsl.Files
         BaseProtoTask,
         RenameOptions
     {
+        readonly Path _path;
         readonly string _target;
         string _newName;
 
-        public ProtoRenameTask(string target)
+        public ProtoRenameTask(Path path, string target)
         {
+            _path = path;
             _target = ReplaceTokens(target);
         }
 
@@ -38,11 +40,6 @@ namespace dropkick.Configuration.Dsl.Files
         {
             string target = _target;
             string newName = _newName;
-
-            if (!site.IsLocal)
-            {
-                target = RemotePathHelper.Convert(site.Name, target);
-            }
 
             var o = new RenameTask(target, newName, new DotNetPath());
             site.AddTask(o);

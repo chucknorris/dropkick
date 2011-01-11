@@ -16,13 +16,13 @@ namespace dropkick.Tasks.Security.Acl
     using DeploymentModel;
     using FileSystem;
 
-    public class GrantReadWriteTask : 
+    public class GrantReadWriteTask :
         BaseSecurityTask
     {
         string _target;
         readonly string _group;
         readonly Path _path;
-        
+
         public GrantReadWriteTask(string target, string @group, Path dnPath)
         {
             _target = target;
@@ -57,9 +57,9 @@ namespace dropkick.Tasks.Security.Acl
             if (_path.DirectoryDoesntExist(_target)) _path.CreateDirectory(_target);
 
             _path.SetFileSystemRights(_target, _group, FileSystemRights.Modify, result);
-            
+
             LogSecurity("[security][acl] Granted MODIFY to '{1}' on '{0}'", _target, _group);
-                
+
             return result;
         }
 

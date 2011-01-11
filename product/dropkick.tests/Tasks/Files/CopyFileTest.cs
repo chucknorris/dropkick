@@ -67,14 +67,15 @@ namespace dropkick.tests.Tasks.Files
             Assert.AreEqual("the test\r\n", s);
         }
 
-        [Test][Explicit]
+        [Test]
+        [Explicit]
         public void CopyFileToUncDirectory()
         {
             var toDir = @"\\srvtestmachine\some_directory";
             var fromDir = @".\bob";
             HUB.Settings = new object();
 
-            var proto = new ProtoCopyFileTask(fromDir);
+            var proto = new ProtoCopyFileTask(new DotNetPath(), fromDir);
             proto.ToDirectory(toDir);
 
             var server = new DeploymentServer("dru");
@@ -114,7 +115,8 @@ namespace dropkick.tests.Tasks.Files
             Assert.AreEqual("the test\r\n", s);
         }
 
-        [Test][Explicit]
+        [Test]
+        [Explicit]
         public void CopyFileToUncPath()
         {
             var sourceUncPath = RemotePathHelper.Convert(Environment.MachineName, _path.GetFullPath(_sourceFilePath));
