@@ -23,7 +23,8 @@ namespace dropkick.Tasks.WinService
     public class WinServiceStopTask :
         BaseServiceTask
     {
-        public WinServiceStopTask(string machineName, string serviceName) : base(machineName, serviceName)
+        public WinServiceStopTask(string machineName, string serviceName)
+            : base(machineName, serviceName)
         {
         }
 
@@ -63,7 +64,7 @@ namespace dropkick.Tasks.WinService
                         int pid = GetProcessId(ServiceName);
 
                         c.Stop();
-                        c.WaitForStatus(ServiceControllerStatus.Stopped, 10.Seconds());
+                        c.WaitForStatus(ServiceControllerStatus.Stopped, 30.Seconds());
 
                         WaitForProcessToDie(pid);
                     }
