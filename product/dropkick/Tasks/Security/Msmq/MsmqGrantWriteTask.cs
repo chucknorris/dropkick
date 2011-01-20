@@ -16,10 +16,12 @@ namespace dropkick.Tasks.Security.Msmq
     using System.Messaging;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
+    using Tasks.Msmq;
 
     public class MsmqGrantWriteTask :
         BaseSecurityTask
     {
+        readonly PhysicalServer _server;
         string _group;
         QueueAddress _address;
 
@@ -29,11 +31,11 @@ namespace dropkick.Tasks.Security.Msmq
             _address = address;
         }
 
-        public MsmqGrantWriteTask(PhysicalServer server, string queueName, string group)
+        public MsmqGrantWriteTask(PhysicalServer server, QueueAddress address, string group)
         {
+            _server = server;
+            _address = address;
             _group = group;
-            var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
-            _address = new QueueAddress(ub.Uri);
         }
 
 
@@ -78,9 +80,15 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessRemoteQueue(DeploymentResult result)
         {
-            var message = "Cannot set permissions for the remote queue '{0}' while on server '{1}'.".FormatWith(_address.ActualUri, Environment.MachineName);
+            VerifyInAdministratorRole(result);
 
-            result.AddError(message);
+            using (var remote = new CopyRemoteOut(_server))
+            {
+                //capture output
+                var vresult = remote.GrantPermission(QueuePermission.Write, _address, _group);
+                foreach (var r in vresult) result.Add(r);
+            }
+
         }
 
     }

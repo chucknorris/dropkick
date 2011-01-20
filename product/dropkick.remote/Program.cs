@@ -34,7 +34,7 @@ namespace dropkick.remote
                     var queueAddress = new QueueAddress(queuename);
                     var formattedName = queueAddress.LocalName;
                     MessageQueue.Create(formattedName);
-                    
+
                     Environment.Exit(0);
                 }
                 else if (args[0] == "verify_queue")
@@ -46,7 +46,7 @@ namespace dropkick.remote
                     Console.WriteLine("exists");
                     Environment.Exit(0);
                 }
-                else if(args[0] =="grant")
+                else if (args[0] == "grant")
                 {
                     var perm = args[1];
                     var user = args[2];
@@ -54,17 +54,20 @@ namespace dropkick.remote
 
                     var queueAddress = new QueueAddress(queue);
 
-                    if(perm == "r")
+                    switch (perm)
                     {
-                        new LocalMsmqGrantReadTask(queueAddress, user).Execute();
-                    }
-                    else if (perm == "w")
-                    {
-                        new MsmqGrantWriteTask(queueAddress, user).Execute();
-                    }
-                    else
-                    {
-                        new LocalMsmqGrantReadWriteTask(queueAddress, user).Execute();
+                        case "r":
+                            new LocalMsmqGrantReadTask(queueAddress, user).Execute();
+                            break;
+                        case "w":
+                            new MsmqGrantWriteTask(queueAddress, user).Execute();
+                            break;
+                        case "rw":
+                            new LocalMsmqGrantReadWriteTask(queueAddress, user).Execute();
+                            break;
+                        case "default":
+                            new SetSensibleMsmqDefaults(queueAddress).Execute();
+                            break;
                     }
                 }
             }

@@ -57,9 +57,9 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-            using(var remote = new CopyRemoteOut(_server))
+            using (var remote = new CopyRemoteOut(_server))
             {
-                remote.GrantReadWrite(_address, _group);
+                remote.GrantPermission(QueuePermission.ReadWrite, _address, _group);
             }
 
             return result;

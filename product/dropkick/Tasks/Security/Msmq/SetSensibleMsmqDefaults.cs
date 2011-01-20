@@ -17,14 +17,22 @@ namespace dropkick.Tasks.Security.Msmq
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
     using Exceptions;
+    using Tasks.Msmq;
 
     public class SetSensibleMsmqDefaults :
         BaseSecurityTask
     {
+        readonly PhysicalServer _server;
         readonly QueueAddress _address;
 
         public SetSensibleMsmqDefaults(QueueAddress path)
         {
+            _address = path;
+        }
+
+        public SetSensibleMsmqDefaults(PhysicalServer server, QueueAddress path)
+        {
+            _server = server;
             _address = path;
         }
 
@@ -79,22 +87,27 @@ namespace dropkick.Tasks.Security.Msmq
             }
             catch (MessageQueueException ex)
             {
-                if(ex.Message.Contains("does not exist"))
+                if (ex.Message.Contains("does not exist"))
                 {
                     var msg = "The queue '{0}' doesn't exist.";
                     throw new DeploymentException(msg, ex);
                 }
                 throw;
             }
-            
+
 
         }
 
         void ProcessRemoteQueue(DeploymentResult result)
         {
-            var message = "Cannot set permissions for the remote queue '{0}' while on server '{1}'.".FormatWith(_address.ActualUri, Environment.MachineName);
+            VerifyInAdministratorRole(result);
 
-            result.AddError(message);
+            using (var remote = new CopyRemoteOut(_server))
+            {
+                var vresult = remote.GrantPermission(QueuePermission.SetSensibleDefaults, _address, WellKnownRoles.Administrators);
+                foreach (var r in vresult) result.Add(r);
+            }
+
         }
 
     }
