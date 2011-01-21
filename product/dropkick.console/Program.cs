@@ -15,7 +15,6 @@ namespace dropkick.console
     using System;
     using System.IO;
     using System.Linq;
-    using System.Net.Mime;
     using Engine;
     using log4net;
     using log4net.Appender;
@@ -44,8 +43,7 @@ namespace dropkick.console
             //      FHLBank.Flames.Deployment.StandardDepoy (a class, lack of .dll)
             //      (null) - if omitted search for a dll ending with 'Deployment' then pass that name in
 
-            Runner.Deploy(args.Aggregate("",(a, b) => a + " " + b).Trim());
-            Console.ReadKey();
+            Runner.Deploy(args.Aggregate("", (a, b) => a + " " + b).Trim());
         }
 
         static void SetRunAppender()
@@ -61,11 +59,11 @@ namespace dropkick.console
 
             var app = new FileAppender
                           {
-                              Name="dropkick.runlog",
+                              Name = "dropkick.runlog",
                               File = string.Format("{0}.runlog", DateTime.Now.ToString("yyyyMMdd-HHmmssfff")),
                               Layout = layout,
                               AppendToFile = false
-                                           
+
                           };
             app.ActivateOptions();
 

@@ -12,14 +12,14 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.Msmq
 {
-    using System;
-    using System.Messaging;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
+    using Tasks.Msmq;
 
     public class RemoteMsmqGrantReadTask :
         BaseSecurityTask
     {
+        readonly PhysicalServer _server;
         string _group;
         QueueAddress _address;
 
@@ -29,11 +29,11 @@ namespace dropkick.Tasks.Security.Msmq
             _address = address;
         }
 
-        public RemoteMsmqGrantReadTask(PhysicalServer server, string queueName, string group)
+        public RemoteMsmqGrantReadTask(PhysicalServer server, QueueAddress address, string group)
         {
+            _server = server;
+            _address = address;
             _group = group;
-            var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
-            _address = new QueueAddress(ub.Uri);
         }
 
 
@@ -47,7 +47,7 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-                result.AddAlert("Cannot set permissions for the private remote queue '{0}' while on server '{1}'".FormatWith(_address.ActualUri, Environment.MachineName));
+            //TODO add meaningful verification
 
             return result;
         }
@@ -55,9 +55,13 @@ namespace dropkick.Tasks.Security.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var message = "Cannot set permissions for the remote queue '{0}' while on server '{1}'.".FormatWith(_address.ActualUri, Environment.MachineName);
 
-            result.AddError(message);
+            Logging.Coarse("[msmq][remote] Setting permission for '{0}' on remote queue '{1}'.", _group, _address.ActualUri);
+
+            using (var remote = new CopyRemoteOut(_server))
+            {
+                remote.GrantPermission(QueuePermission.Read, _address, _group);
+            }
 
             return result;
         }

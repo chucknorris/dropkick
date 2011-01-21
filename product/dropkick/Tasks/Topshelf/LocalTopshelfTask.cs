@@ -15,11 +15,13 @@ namespace dropkick.Tasks.Topshelf
     using CommandLine;
     using DeploymentModel;
     using FileSystem;
+    using Prompting;
 
     public class LocalTopshelfTask :
         BaseTask
     {
         readonly LocalCommandLineTask _task;
+        readonly PromptService _prompt = new ConsolePromptService();
 
         public LocalTopshelfTask(string exeName, string location, string instanceName, string username, string password)
         {
@@ -29,7 +31,14 @@ namespace dropkick.Tasks.Topshelf
 
             if (username != null && password != null)
             {
-                args += " /username:{0} /password:{1}".FormatWith(username, password);
+                var user = username;
+                var pass = password;
+                if (username.ShouldPrompt())
+                    user = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(exeName));
+                if (password.ShouldPrompt())
+                    pass = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(exeName, username));
+
+                args += " /username:{0} /password:{1}".FormatWith(user, pass);
             }
 
             _task = new LocalCommandLineTask(new DotNetPath(), exeName)
@@ -52,6 +61,7 @@ namespace dropkick.Tasks.Topshelf
 
         public override DeploymentResult Execute()
         {
+            Logging.Coarse("[topshelf] Installing a local Topshelf service.");
             return _task.Execute();
         }
     }

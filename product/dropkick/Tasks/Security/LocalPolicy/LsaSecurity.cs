@@ -2,9 +2,9 @@
 namespace dropkick.Tasks.Security.LocalPolicy
 {
     using System;
+    using System.ComponentModel;
     using System.Runtime.InteropServices;
     using System.Security;
-    using System.ComponentModel;
 
     [StructLayout(LayoutKind.Sequential)]
     struct LSA_OBJECT_ATTRIBUTES
@@ -194,7 +194,6 @@ namespace dropkick.Tasks.Security.LocalPolicy
             IntPtr tdom = IntPtr.Zero;
             names[0] = InitLsaString(account);
             lts.Sid = IntPtr.Zero;
-            Console.WriteLine("String account: {0}", names[0].Length);
             int ret = Win32Sec.LsaLookupNames2(lsaHandle, 0, 1, names, ref tdom, ref
 tsids);
             if (ret != 0)

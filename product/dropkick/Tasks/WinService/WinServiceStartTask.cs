@@ -45,6 +45,7 @@ namespace dropkick.Tasks.WinService
             {
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
+                    Logging.Coarse("[svc] Starting service '{0}'", ServiceName);
                     try
                     {
                         c.Start();
@@ -59,7 +60,7 @@ namespace dropkick.Tasks.WinService
                     catch (TimeoutException)
                     {
                         result.AddAlert(
-                            "Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.",ServiceName);
+                            "Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
                         return result;
                     }
                 }

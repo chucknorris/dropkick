@@ -68,6 +68,8 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessLocalQueue(DeploymentResult result)
         {
+            Logging.Coarse("[msmq] Setting permissions for '{0}' on local queue '{1}'", _group, _address.ActualUri);
+
             using (var q = new MessageQueue(_address.FormatName))
             {
                 q.SetPermissions(_group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);

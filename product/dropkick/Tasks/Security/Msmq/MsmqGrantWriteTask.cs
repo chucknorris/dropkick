@@ -61,15 +61,23 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
             if (_address.IsLocal)
+            {
+                Logging.Fine("[msmq] '{0}' is a local queue.", _address.ActualUri);
                 ProcessLocalQueue(result);
+            }
             else
+            {
+                Logging.Fine("[msmq][remote] '{0}' is a remote queue.", _address.ActualUri);
                 ProcessRemoteQueue(result);
+            }
 
             return result;
         }
 
         void ProcessLocalQueue(DeploymentResult result)
         {
+            Logging.Coarse("[msmq] Setting permissions for '{0}' on local queue '{1}'", _group, _address.ActualUri);
+
             var q = new MessageQueue(_address.FormatName);
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
@@ -81,6 +89,7 @@ namespace dropkick.Tasks.Security.Msmq
         void ProcessRemoteQueue(DeploymentResult result)
         {
             VerifyInAdministratorRole(result);
+            Logging.Coarse("[msmq][remote] Setting permission for '{0}' on remote queue '{1}'.", _group, _address.ActualUri);
 
             using (var remote = new CopyRemoteOut(_server))
             {

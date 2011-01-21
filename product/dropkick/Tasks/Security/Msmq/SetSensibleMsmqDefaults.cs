@@ -69,6 +69,8 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessLocalQueue(DeploymentResult result)
         {
+            Logging.Coarse("[msmq] Setting default permissions for on local queue '{0}'", _address.ActualUri);
+
             try
             {
                 var q = new MessageQueue(_address.LocalName);
@@ -101,6 +103,8 @@ namespace dropkick.Tasks.Security.Msmq
         void ProcessRemoteQueue(DeploymentResult result)
         {
             VerifyInAdministratorRole(result);
+
+            Logging.Coarse("[msmq][remote] Setting default permissions on remote queue '{0}'.", _address.ActualUri);
 
             using (var remote = new CopyRemoteOut(_server))
             {
