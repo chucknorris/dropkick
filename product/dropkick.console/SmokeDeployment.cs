@@ -21,7 +21,10 @@ namespace dropkick.console
     {
         public SmokeDeployment()
         {
-            Define(settings => DeploymentStepsFor(One, server => server.Note("hi")));
+            Define(settings => DeploymentStepsFor(One, server =>
+            {
+                server.Note("hi");
+            }));
         }
 
         public static Role One { get; set; }

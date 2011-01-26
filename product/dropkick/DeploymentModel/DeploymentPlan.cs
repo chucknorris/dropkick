@@ -28,39 +28,36 @@ namespace dropkick.DeploymentModel
             _roles.Add(role);
         }
 
-        public DeploymentResult Execute()
+        public void Execute()
         {
-            return Ex(d =>
+            Ex(d =>
             {
                 var o = d.Verify();
                 if (o.ContainsError())
                 {
                     //stop. report verify error.
-                    return o;
+                    return;
                 }
 
                 var oo = d.Execute();
 
                 DisplayResults(oo);
-
-                return oo;
             });
         }
-        public DeploymentResult Verify()
+        public void Verify()
         {
-            return Ex(d => d.Verify());
+            Ex(d => d.Verify());
         }
-        public DeploymentResult Trace()
+        public void Trace()
         {
-            return Ex(d =>
+            Ex(d =>
             {
                 var o = d.Trace();
                 DisplayResults(o);
-                return o;
             });
         }
 
-        DeploymentResult Ex(Func<DeploymentDetail, DeploymentResult> action)
+        void Ex(Action<DeploymentDetail> action)
         {
             var result = new DeploymentResult();
             result.AddNote(Name);
@@ -75,17 +72,10 @@ namespace dropkick.DeploymentModel
                     s.ForEachDetail(d =>
                     {
                         result.AddNote(d.Name);
-                        var r = action(d);
-                        result.MergedWith(r);
-                        foreach (var item in r.Results)
-                        {
-                            result.Add(item);
-                        }
+                        action(d);
                     });
                 });
             }
-
-            return result;
         }
 
         public DeploymentRole GetRole(string name)

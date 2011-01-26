@@ -31,7 +31,7 @@ namespace dropkick.Engine
         public static void Deploy(string commandLine)
         {
             if(!_coarseLog.IsDebugEnabled)
-                Console.WriteLine("LOGGING IS OFF - THIS MIGHT NOT BE FUN");
+                Console.WriteLine("Sad Emo Otter says \"DEBUG LOGGING IS OFF - THIS ISN'T GOING TO BE FUN :(\"");
 
             try
             {

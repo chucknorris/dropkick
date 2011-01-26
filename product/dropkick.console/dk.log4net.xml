@@ -23,7 +23,7 @@
         <conversionPattern value="%message%newline" />
       </layout>
     </appender>
-
+    
     <appender name="FileChangeAppender" type="log4net.Appender.FileAppender">
       <file value=".\filechange.log"/>
       <appendToFile value="true"/>
@@ -67,8 +67,8 @@
     </logger>    
 
     <logger name="dropkick.coarsegrain">
-      <appender-ref ref="CoarseAppender" />
       <appender-ref ref="DetailAppender" />
+      <appender-ref ref="CoarseAppender" />
     </logger>
 
       <logger name="Topshelf" >

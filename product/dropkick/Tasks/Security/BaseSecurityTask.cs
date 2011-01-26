@@ -17,7 +17,7 @@ namespace dropkick.Tasks.Security
     public abstract class BaseSecurityTask :
         BaseTask
     {
-        readonly ILog _securityLog = LogManager.GetLogger("dropkick.changes.security");
+        readonly ILog _securityLog = Logging.WellKnown.SecurityChanges;
 
         public void LogSecurity(string format, params object[] args)
         {
