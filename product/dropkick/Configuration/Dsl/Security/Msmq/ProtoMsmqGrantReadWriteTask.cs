@@ -40,7 +40,7 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
             }
             else
             {
-                var task = new RemoteMsmqGrantReadWriteTask(new QueueAddress(ub.Uri), _group);
+                var task = new RemoteMsmqGrantReadWriteTask(server, new QueueAddress(ub.Uri), _group);
                 server.AddTask(task);
             }
         }
