@@ -55,12 +55,13 @@ namespace dropkick.Tasks.WinService
                     catch (InvalidOperationException ex)
                     {
                         result.AddError("The service '{0}' did not start, most likely due to a logon issue.".FormatWith(ServiceName), ex);
+                        LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.{1}{2}", ServiceName, Environment.NewLine, ex);
                         return result;
                     }
                     catch (TimeoutException)
                     {
-                        result.AddAlert(
-                            "Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
+                        result.AddAlert("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
+                        LogCoarseGrain("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
                         return result;
                     }
                 }

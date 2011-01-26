@@ -69,8 +69,12 @@
     <logger name="dropkick.coarsegrain">
       <appender-ref ref="CoarseAppender" />
       <appender-ref ref="DetailAppender" />
-    </logger>    
-    
+    </logger>
+
+      <logger name="Topshelf" >
+          <level value ="ALL" />
+          <appender-ref ref="CoarseAppender" />
+      </logger>
     
   </log4net>
 </configuration>
