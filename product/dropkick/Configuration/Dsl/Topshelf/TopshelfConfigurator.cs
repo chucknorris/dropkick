@@ -13,6 +13,7 @@
 namespace dropkick.Configuration.Dsl.Topshelf
 {
     using DeploymentModel;
+    using FileSystem;
     using Tasks;
     using Tasks.Topshelf;
 
@@ -20,11 +21,17 @@ namespace dropkick.Configuration.Dsl.Topshelf
         BaseProtoTask,
         TopshelfOptions
     {
+        readonly Path _path;
         string _instanceName;
         string _location;
         string _exeName;
         string _password;
         string _username;
+
+        public TopshelfConfigurator(Path path)
+        {
+            _path = path;
+        }
 
         public void ExeName(string name)
         {
@@ -49,13 +56,14 @@ namespace dropkick.Configuration.Dsl.Topshelf
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            var location = _path.ConvertUncShareToLocalPath(site, _location);
             if (site.IsLocal)
             {
-                site.AddTask(new LocalTopshelfTask(_exeName, _location, _instanceName, _username, _password));
+                site.AddTask(new LocalTopshelfTask(_exeName, location, _instanceName, _username, _password));
             }
             else
             {
-                site.AddTask(new RemoteTopshelfTask(_exeName, _location, _instanceName, site, _username, _password));
+                site.AddTask(new RemoteTopshelfTask(_exeName, location, _instanceName, site, _username, _password));
             }
         }
     }

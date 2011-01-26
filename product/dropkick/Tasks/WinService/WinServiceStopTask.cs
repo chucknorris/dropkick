@@ -23,7 +23,8 @@ namespace dropkick.Tasks.WinService
     public class WinServiceStopTask :
         BaseServiceTask
     {
-        public WinServiceStopTask(string machineName, string serviceName) : base(machineName, serviceName)
+        public WinServiceStopTask(string machineName, string serviceName)
+            : base(machineName, serviceName)
         {
         }
 
@@ -58,12 +59,13 @@ namespace dropkick.Tasks.WinService
             {
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
+                    Logging.Coarse("[svc] Stopping service '{0}'", ServiceName);
                     if (c.CanStop)
                     {
                         int pid = GetProcessId(ServiceName);
 
                         c.Stop();
-                        c.WaitForStatus(ServiceControllerStatus.Stopped, 10.Seconds());
+                        c.WaitForStatus(ServiceControllerStatus.Stopped, 30.Seconds());
 
                         WaitForProcessToDie(pid);
                     }
@@ -91,6 +93,7 @@ namespace dropkick.Tasks.WinService
                 {
                     return;
                 }
+                Logging.Fine("[svc] Seriously...just die already");
             }
             throw new Exception("Service has not died yet!");
         }

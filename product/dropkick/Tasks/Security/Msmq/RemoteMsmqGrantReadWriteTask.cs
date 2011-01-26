@@ -48,7 +48,7 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-            result.AddAlert("Cannot verify permissions for the private remote queue '{0}' while on server '{1}'".FormatWith(_address.ActualUri, Environment.MachineName));
+            //TODO add meaningful verification
 
             return result;
         }
@@ -57,9 +57,11 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
 
-            using(var remote = new CopyRemoteOut(_server))
+            Logging.Coarse("[msmq][remote] Setting permission for '{0}' on remote queue '{1}'.", _group, _address.ActualUri);
+
+            using (var remote = new CopyRemoteOut(_server))
             {
-                remote.GrantReadWrite(_address, _group);
+                remote.GrantPermission(QueuePermission.ReadWrite, _address, _group);
             }
 
             return result;

@@ -20,7 +20,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public static FileCopyOptions CopyFile(this ProtoServer protoServer, string from)
         {
-            var proto = new ProtoCopyFileTask(from);
+            var proto = new ProtoCopyFileTask(new DotNetPath(), from);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }
@@ -31,7 +31,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public static CopyOptions CopyDirectory(this ProtoServer protoServer, Action<FromOptions> a)
         {
-            var proto = new ProtoCopyDirectoryTask();
+            var proto = new ProtoCopyDirectoryTask(new DotNetPath());
             a(proto);
             protoServer.RegisterProtoTask(proto);
             return proto;
@@ -39,7 +39,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public static void CreateEmptyFolder(this ProtoServer protoServer, string folderName)
         {
-            var task = new ProtoEmptyFolderTask(folderName);
+            var task = new ProtoEmptyFolderTask(new DotNetPath(), folderName);
             protoServer.RegisterProtoTask(task);
         }
 
@@ -57,7 +57,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public static RenameOptions RenameFile(this ProtoServer protoServer, string file)
         {
-            var proto = new ProtoRenameTask(file);
+            var proto = new ProtoRenameTask(new DotNetPath(), file);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }

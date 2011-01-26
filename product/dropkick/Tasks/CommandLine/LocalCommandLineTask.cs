@@ -13,16 +13,21 @@
 namespace dropkick.Tasks.CommandLine
 {
     using System;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.IO;
     using DeploymentModel;
     using Magnum.Extensions;
+    using Path = FileSystem.Path;
 
     public class LocalCommandLineTask :
         Task
     {
-        public LocalCommandLineTask(string command)
+        readonly Path _path;
+
+        public LocalCommandLineTask(Path path, string command)
         {
+            _path = path;
             WorkingDirectory = Environment.CurrentDirectory;
             Command = command;
             ExecutableIsLocatedAt = FindThePathToTheCommand(command);
@@ -50,7 +55,7 @@ namespace dropkick.Tasks.CommandLine
             var result = new DeploymentResult();
 
             if (!Directory.Exists(ExecutableIsLocatedAt))
-                result.AddAlert(string.Format("Can't find the executable '{0}'", Path.Combine(ExecutableIsLocatedAt, Command)));
+                result.AddAlert(string.Format("Can't find the executable '{0}'", _path.Combine(ExecutableIsLocatedAt, Command)));
 
             if (IsTheExeInThisDirectory(ExecutableIsLocatedAt, Command))
                 result.AddGood(string.Format("Found command '{0}' in '{1}'", Command, ExecutableIsLocatedAt));
@@ -70,15 +75,27 @@ namespace dropkick.Tasks.CommandLine
 
             if (!string.IsNullOrEmpty(WorkingDirectory)) psi.WorkingDirectory = WorkingDirectory;
 
-            string output;
-            using (Process p = Process.Start(psi))
-            {
-                //what to do here?
-                p.WaitForExit(30.Seconds().Milliseconds);
-                output = p.StandardOutput.ReadToEnd();
-            }
+            psi.FileName = _path.Combine(WorkingDirectory, Command);
 
-            result.AddGood("Command Line Executed");
+            string output;
+            try
+            {
+                using (Process p = Process.Start(psi))
+                {
+                    //what to do here?
+                    p.WaitForExit(30.Seconds().Milliseconds);
+                    output = p.StandardOutput.ReadToEnd();
+                    result.AddNote(output);
+                }
+
+                result.AddGood("Command Line Executed");
+            }
+            catch (Win32Exception ex)
+            {
+                result.AddError(
+                    "An exception occured while attempting to execute the following remote command.  Working Directory:'{0}' Command:'{1}' Args:'{2}'{3}{4}"
+                        .FormatWith(WorkingDirectory, Command, Args, Environment.NewLine, ex));
+            }
 
             return result;
         }
@@ -101,7 +118,7 @@ namespace dropkick.Tasks.CommandLine
             return result;
         }
 
-        static bool IsTheExeInThisDirectory(string dir, string command)
+        bool IsTheExeInThisDirectory(string dir, string command)
         {
             if (!Directory.Exists(dir))
             {
@@ -112,7 +129,7 @@ namespace dropkick.Tasks.CommandLine
             var files = Directory.GetFiles(dir);
             foreach (var file in files)
             {
-                var name = Path.GetFileNameWithoutExtension(file);
+                var name = _path.GetFileNameWithoutExtension(file);
                 if (name.Equals(command, StringComparison.InvariantCultureIgnoreCase))
                 {
                     return true;

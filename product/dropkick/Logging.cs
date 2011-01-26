@@ -17,7 +17,7 @@ namespace dropkick
     public static class Logging
     {
         static readonly ILog _fineLog = LogManager.GetLogger("dropkick.finegrain");
-        static readonly ILog _coarsLog = LogManager.GetLogger("dropkick.coarsegrain");
+        static readonly ILog _coarseLog = LogManager.GetLogger("dropkick.coarsegrain");
 
         public static void Fine(string format, params object[] args)
         {
@@ -26,7 +26,7 @@ namespace dropkick
 
         public static void Coarse(string format, params object[] args)
         {
-            _coarsLog.InfoFormat(format, args);
+            _coarseLog.InfoFormat(format, args);
         }
     }
 }

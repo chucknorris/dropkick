@@ -21,12 +21,14 @@ namespace dropkick.Configuration.Dsl.Files
         BaseProtoTask,
         FileCopyOptions
     {
+        readonly Path _path;
         readonly string _from;
         string _to;
         string _newFileName;
 
-        public ProtoCopyFileTask(string @from)
+        public ProtoCopyFileTask(Path path, string @from)
         {
+            _path = path;
             _from = ReplaceTokens(from);
         }
 
@@ -45,14 +47,6 @@ namespace dropkick.Configuration.Dsl.Files
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string to = _to;
-
-            if (!site.IsLocal)
-                if (!RemotePathHelper.IsUncPath(to))
-                    to = RemotePathHelper.Convert(site.Name, to);
-
-            if (to.StartsWith("~"))
-                to = RemotePathHelper.Convert(site.Name, to);
-
 
             var o = new CopyFileTask(_from, to, _newFileName, new DotNetPath());
             site.AddTask(o);

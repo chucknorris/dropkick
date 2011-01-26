@@ -23,9 +23,15 @@ namespace dropkick.Configuration.Dsl.Files
         CopyOptions,
         FromOptions
     {
+        readonly Path _path;
         readonly IList<string> _froms = new List<string>();
         DestinationCleanOptions _options = DestinationCleanOptions.None;
         string _to;
+
+        public ProtoCopyDirectoryTask(Path path)
+        {
+            _path = path;
+        }
 
         public CopyOptions To(string destinationPath)
         {
@@ -55,15 +61,9 @@ namespace dropkick.Configuration.Dsl.Files
         {
             string to = _to;
 
-            if (!site.IsLocal)
-                to = RemotePathHelper.Convert(site.Name, to);
-
-            if (to.StartsWith("~"))
-                to = RemotePathHelper.Convert(site.Name, to);
-
             foreach (var f in _froms)
             {
-                var o = new CopyDirectoryTask(f, to, _options, new DotNetPath());
+                var o = new CopyDirectoryTask(f, to, _options, _path);
                 site.AddTask(o);
             }
         }

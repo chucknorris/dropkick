@@ -20,19 +20,18 @@ namespace dropkick.Configuration.Dsl.Files
     public class ProtoEmptyFolderTask :
         BaseProtoTask
     {
+        readonly Path _path;
         readonly string _folderName;
 
-        public ProtoEmptyFolderTask(string folderName)
+        public ProtoEmptyFolderTask(Path path, string folderName)
         {
+            _path = path;
             _folderName = ReplaceTokens(folderName);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string to = _folderName;
-            if (!site.IsLocal)
-                to = RemotePathHelper.Convert(site.Name, to);
-
             var task = new EmptyFolderTask(to, new DotNetPath());
             site.AddTask(task);
         }
