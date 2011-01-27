@@ -85,10 +85,26 @@ namespace dropkick.Engine
                 _coarseLog.Info("");
                 _coarseLog.Info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 _coarseLog.Info("Please review the settings above when you are ready,");
-                _coarseLog.Info("  Press enter to kick it out there");
                 _coarseLog.Info("  Press 'ctrl+c' to cancel.");
-
-                Console.ReadKey(true);
+                
+                if(deployment.HardPrompt)
+                {
+                    bool wrong = true;
+                    do
+                    {
+                        _coarseLog.Info("  Please type the environment name '{0}' to continue.".FormatWith(newArgs.Environment));
+                        var environment = Console.ReadLine();
+                        if(environment.EqualsIgnoreCase(newArgs.Environment))
+                        {
+                            wrong = false;
+                        }
+                    } while (wrong);
+                }
+                else
+                {
+                    _coarseLog.Info("  Press enter to kick it out there");
+                    Console.ReadKey(true);
+                }
 
 
 
@@ -97,7 +113,7 @@ namespace dropkick.Engine
 
                 var settings = (DropkickConfiguration) _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
                                                                      newArgs.Environment);
-
+                
                 settings.Environment = newArgs.Environment;
                 deployment.Initialize(settings);
 

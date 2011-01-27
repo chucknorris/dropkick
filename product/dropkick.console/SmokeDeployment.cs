@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.console
 {
+    using System;
     using Configuration;
     using Configuration.Dsl;
     using Configuration.Dsl.Notes;
@@ -21,6 +22,8 @@ namespace dropkick.console
     {
         public SmokeDeployment()
         {
+            RequireHardConfirmation();
+
             Define(settings => DeploymentStepsFor(One, server =>
             {
                 server.Note("hi");
