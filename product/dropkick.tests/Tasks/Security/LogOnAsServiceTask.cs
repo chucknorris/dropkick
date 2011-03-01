@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.tests.Tasks.Security
 {
+    using System;
     using dropkick.Tasks.Security.LocalPolicy;
     using NUnit.Framework;
 
@@ -21,14 +22,14 @@ namespace dropkick.tests.Tasks.Security
         [Test]
         public void Verify()
         {
-            var t = new LogOnAsAServiceTask("sellersd","test\\reynoldsr");
+            var t = new LogOnAsAServiceTask(Environment.MachineName,"dk_test");
             var r = t.VerifyCanRun();
         }
 
-        [Test]
+        [Test][Explicit]
         public void Execute()
         {
-            var t = new LogOnAsAServiceTask("sellersd", "test\\reynoldsr");
+            var t = new LogOnAsAServiceTask(Environment.MachineName, "dk_test");
             var r = t.Execute();
         }
     }
