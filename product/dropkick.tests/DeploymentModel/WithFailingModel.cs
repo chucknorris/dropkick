@@ -1,5 +1,6 @@
 namespace dropkick.tests.DeploymentModel
 {
+    using System;
     using dropkick.DeploymentModel;
     using NUnit.Framework;
 
@@ -17,7 +18,7 @@ namespace dropkick.tests.DeploymentModel
                                                                                        }, () => new DeploymentResult()
                                                                                                     {
                                                                                                         new DeploymentItem(DeploymentItemStatus.Good, "execute")
-                                                                                                    });
+                                                                                                    }, ()=>new DeploymentResult());
 
             var failDetail = new DeploymentDetail(() => "fail detail", () => new DeploymentResult()
                                                                                  {
@@ -25,7 +26,7 @@ namespace dropkick.tests.DeploymentModel
                                                                                  }, () => new DeploymentResult()
                                                                                               {
                                                                                                   new DeploymentItem(DeploymentItemStatus.Good, "execute")
-                                                                                              });
+                                                                                              }, ()=>new DeploymentResult());
 
 
             var webRole = new DeploymentRole("Web");

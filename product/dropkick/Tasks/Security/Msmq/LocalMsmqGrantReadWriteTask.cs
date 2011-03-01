@@ -17,19 +17,19 @@ namespace dropkick.Tasks.Security.Msmq
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
 
-    public class MsmqGrantReadWriteTask :
-        BaseTask
+    public class LocalMsmqGrantReadWriteTask :
+        BaseSecurityTask
     {
         readonly string _group;
         readonly QueueAddress _address;
 
-        public MsmqGrantReadWriteTask(QueueAddress address, string group)
+        public LocalMsmqGrantReadWriteTask(QueueAddress address, string group)
         {
             _group = group;
             _address = address;
         }
 
-        public MsmqGrantReadWriteTask(PhysicalServer server, string queueName, string group)
+        public LocalMsmqGrantReadWriteTask(PhysicalServer server, string queueName, string group)
         {
             _group = group;
             var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
@@ -68,12 +68,16 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessLocalQueue(DeploymentResult result)
         {
-            var q = new MessageQueue(_address.FormatName);
-            q.SetPermissions(_group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(_group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
-            q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
-            q.SetPermissions(_group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
+            Logging.Coarse("[msmq] Setting permissions for '{0}' on local queue '{1}'", _group, _address.ActualUri);
+
+            using (var q = new MessageQueue(_address.FormatName))
+            {
+                q.SetPermissions(_group, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
+                q.SetPermissions(_group, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
+                q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
+                q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
+                q.SetPermissions(_group, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
+            }
 
             result.AddGood("Successfully granted Read/Write permissions to '{0}' for queue '{1}'".FormatWith(_group, _address.ActualUri));
         }

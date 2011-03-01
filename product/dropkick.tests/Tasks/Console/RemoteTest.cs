@@ -7,12 +7,12 @@ namespace dropkick.tests.Tasks.Console
     [TestFixture]
     public class RemoteTest
     {
-        [Test,Explicit]
+        [Test, Explicit]
         public void Remote()
         {
             var task = new RemoteCommandLineTask("ping")
                            {
-                               Args = "google.com",
+                               Args = "www.fhlbtopeka.com -n 5",
                                Machine = "SrvTestWeb01"
                            };
 

@@ -16,11 +16,13 @@ namespace dropkick.Configuration.Dsl
     using System.Collections.Generic;
     using System.Linq.Expressions;
     using System.Reflection;
+    using Exceptions;
 
     public interface Deployment :
         DeploymentInspectorSite
     {
         void Initialize(object settings);
+        bool HardPrompt { get; }
     }
 
     public class Deployment<Inheritor, SETTINGS> :
@@ -61,6 +63,8 @@ namespace dropkick.Configuration.Dsl
         }
 
         #endregion
+
+        public bool HardPrompt { get; private set; }
 
         void InitializeParts()
         {
@@ -118,6 +122,11 @@ namespace dropkick.Configuration.Dsl
             {
                 return _roles.Values;
             }
+        }
+
+        protected void RequireHardConfirmation()
+        {
+            HardPrompt = true;
         }
     }
 }

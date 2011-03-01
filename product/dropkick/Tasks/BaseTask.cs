@@ -21,6 +21,7 @@ namespace dropkick.Tasks
         public abstract string Name { get; }
         public abstract DeploymentResult VerifyCanRun();
         public abstract DeploymentResult Execute();
+        
 
         protected void VerifyInAdministratorRole(DeploymentResult result)
         {
@@ -32,6 +33,16 @@ namespace dropkick.Tasks
             {
                 result.AddGood("You are in the 'Administrator' role");
             }
+        }
+
+        public void LogFineGrain(string format, params object[] args)
+        {
+            Logging.Fine(format, args);
+        }
+
+        public void LogCoarseGrain(string format, params object[] args)
+        {
+            Logging.Coarse(format, args);
         }
     }
 }

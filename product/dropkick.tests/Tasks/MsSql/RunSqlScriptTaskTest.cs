@@ -6,7 +6,7 @@ namespace dropkick.tests.Tasks.MsSql
     [TestFixture]
     public class RunSqlScriptTaskTest
     {
-        [Test]
+        [Test][Explicit]
         public void NAME()
         {
             var t = new RunSqlScriptTask(".", "master");

@@ -48,6 +48,11 @@ namespace dropkick.Engine.DeploymentFinders
             throw new NotImplementedException();
         }
 
+        public bool HardPrompt
+        {
+            get { return false; }
+        }
+
         public void Initialize(object settings)
         {
             throw new NotImplementedException();

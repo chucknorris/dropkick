@@ -16,7 +16,10 @@ namespace dropkick.console
     using System.IO;
     using System.Linq;
     using Engine;
+    using log4net;
+    using log4net.Appender;
     using log4net.Config;
+    using log4net.Layout;
 
     internal static class Program
     {
@@ -24,6 +27,7 @@ namespace dropkick.console
         {
             var logpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dk.log4net.xml");
             XmlConfigurator.Configure(new FileInfo(logpath));
+            SetRunAppender();
 
             // commands 
             //   verify
@@ -39,7 +43,31 @@ namespace dropkick.console
             //      FHLBank.Flames.Deployment.StandardDepoy (a class, lack of .dll)
             //      (null) - if omitted search for a dll ending with 'Deployment' then pass that name in
 
-            Runner.Deploy(args.Aggregate("",(a, b) => a + " " + b).Trim());
+            Runner.Deploy(args.Aggregate("", (a, b) => a + " " + b).Trim());
+        }
+
+        static void SetRunAppender()
+        {
+            var log = LogManager.GetLogger("dropkick");
+            var l = (log4net.Repository.Hierarchy.Logger)log.Logger;
+
+            var layout = new PatternLayout
+                             {
+                                 ConversionPattern = "%message%newline"
+                             };
+            layout.ActivateOptions();
+
+            var app = new FileAppender
+                          {
+                              Name = "dropkick.runlog",
+                              File = string.Format("{0}.runlog", DateTime.Now.ToString("yyyyMMdd-HHmmssfff")),
+                              Layout = layout,
+                              AppendToFile = false
+
+                          };
+            app.ActivateOptions();
+
+            l.AddAppender(app);
         }
     }
 }

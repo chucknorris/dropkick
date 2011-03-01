@@ -16,10 +16,12 @@ namespace dropkick.Tasks.Security.Msmq
     using System.Messaging;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
+    using Tasks.Msmq;
 
     public class MsmqGrantWriteTask :
-        BaseTask
+        BaseSecurityTask
     {
+        readonly PhysicalServer _server;
         string _group;
         QueueAddress _address;
 
@@ -29,11 +31,11 @@ namespace dropkick.Tasks.Security.Msmq
             _address = address;
         }
 
-        public MsmqGrantWriteTask(PhysicalServer server, string queueName, string group)
+        public MsmqGrantWriteTask(PhysicalServer server, QueueAddress address, string group)
         {
+            _server = server;
+            _address = address;
             _group = group;
-            var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
-            _address = new QueueAddress(ub.Uri);
         }
 
 
@@ -59,15 +61,23 @@ namespace dropkick.Tasks.Security.Msmq
         {
             var result = new DeploymentResult();
             if (_address.IsLocal)
+            {
+                Logging.Fine("[msmq] '{0}' is a local queue.", _address.ActualUri);
                 ProcessLocalQueue(result);
+            }
             else
+            {
+                Logging.Fine("[msmq][remote] '{0}' is a remote queue.", _address.ActualUri);
                 ProcessRemoteQueue(result);
+            }
 
             return result;
         }
 
         void ProcessLocalQueue(DeploymentResult result)
         {
+            Logging.Coarse("[msmq] Setting permissions for '{0}' on local queue '{1}'", _group, _address.ActualUri);
+
             var q = new MessageQueue(_address.FormatName);
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueuePermissions, AccessControlEntryType.Allow);
             q.SetPermissions(_group, MessageQueueAccessRights.GetQueueProperties, AccessControlEntryType.Allow);
@@ -78,9 +88,16 @@ namespace dropkick.Tasks.Security.Msmq
 
         void ProcessRemoteQueue(DeploymentResult result)
         {
-            var message = "Cannot set permissions for the remote queue '{0}' while on server '{1}'.".FormatWith(_address.ActualUri, Environment.MachineName);
+            VerifyInAdministratorRole(result);
+            Logging.Coarse("[msmq][remote] Setting permission for '{0}' on remote queue '{1}'.", _group, _address.ActualUri);
 
-            result.AddError(message);
+            using (var remote = new CopyRemoteOut(_server))
+            {
+                //capture output
+                var vresult = remote.GrantPermission(QueuePermission.Write, _address, _group);
+                foreach (var r in vresult) result.Add(r);
+            }
+
         }
 
     }

@@ -23,7 +23,7 @@ namespace dropkick.tests.Tasks.Msmq
     [Category("Integration")]
     public class MsmqTest
     {
-        [Test]
+        [Test][Explicit]
         public void ExecuteLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
@@ -40,10 +40,43 @@ namespace dropkick.tests.Tasks.Msmq
 
         }
 
-        [Test]
+        [Test][Explicit]
         public void VerifyLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var t = new CreateLocalMsmqQueueTask(ps, new QueueAddress(ub.Uri));
+            var r = t.VerifyCanRun();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create verification.");
+        }
+
+    }
+
+    [TestFixture]
+    [Category("Integration")]
+    public class RemoteCreateMsmqTest
+    {
+        [Test][Explicit]
+        public void Execute()
+        {
+            var ps = new DeploymentServer("srvtestweb01");
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var address = new QueueAddress(ub.Uri);
+
+            //delete the remote queue
+
+            var t = new CreateRemoteMsmqQueueTask(ps, address);
+            var r = t.Execute();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create execution.");
+
+        }
+
+        [Test][Explicit]
+        public void Verify()
+        {
+            var ps = new DeploymentServer("srvutilbuild");
             var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
             var t = new CreateLocalMsmqQueueTask(ps, new QueueAddress(ub.Uri));
             var r = t.VerifyCanRun();

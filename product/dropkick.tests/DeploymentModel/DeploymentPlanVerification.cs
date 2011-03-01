@@ -11,7 +11,7 @@ namespace dropkick.tests.DeploymentModel
 
         public override void BecauseOf()
         {
-            Result = Plan.Verify();
+            Plan.Verify();
         }
 
         [Test]

@@ -14,6 +14,6 @@ namespace dropkick.Configuration.Dsl.Msmq
 {
     public interface MsmqOptions
     {
-        void PrivateQueueNamed(string name);
+        void PrivateQueue(string name);
     }
 }

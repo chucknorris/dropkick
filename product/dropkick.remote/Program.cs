@@ -13,29 +13,69 @@
 namespace dropkick.remote
 {
     using System;
+    using System.IO;
     using System.Messaging;
     using Configuration.Dsl.Msmq;
+    using Tasks.Security.Msmq;
 
 
     internal class Program
     {
         //dropkick.remote create_queue msmq://servername/dk_remote
+        //dropkick.remote verify_queue msmq://servername/dk_remote
+        //dropkick.remote grant [r|w|rw] username msmq://servername/dk_remote
         static void Main(string[] args)
         {
-            if (args[0] == "create_queue")
+            try
             {
-                var queuename = args[1];
-                var queueAddress = new QueueAddress(queuename);
-                var formattedName = queueAddress.LocalName;
-                MessageQueue.Create(formattedName);
+                if (args[0] == "create_queue")
+                {
+                    var queuename = args[1];
+                    var queueAddress = new QueueAddress(queuename);
+                    var formattedName = queueAddress.LocalName;
+                    MessageQueue.Create(formattedName);
+
+                    Environment.Exit(0);
+                }
+                else if (args[0] == "verify_queue")
+                {
+                    var queuename = args[1];
+                    var queueAddress = new QueueAddress(queuename);
+                    var formattedName = queueAddress.LocalName;
+                    var result = MessageQueue.Exists(formattedName);
+                    Console.WriteLine("exists");
+                    Environment.Exit(0);
+                }
+                else if (args[0] == "grant")
+                {
+                    var perm = args[1];
+                    var user = args[2];
+                    var queue = args[3];
+
+                    var queueAddress = new QueueAddress(queue);
+
+                    switch (perm)
+                    {
+                        case "r":
+                            new LocalMsmqGrantReadTask(queueAddress, user).Execute();
+                            break;
+                        case "w":
+                            new MsmqGrantWriteTask(queueAddress, user).Execute();
+                            break;
+                        case "rw":
+                            new LocalMsmqGrantReadWriteTask(queueAddress, user).Execute();
+                            break;
+                        case "default":
+                            new SetSensibleMsmqDefaults(queueAddress).Execute();
+                            break;
+                    }
+                }
             }
-            else if(args[0] == "verify_queue")
+            catch (Exception ex)
             {
-                var queuename = args[1];
-                var queueAddress = new QueueAddress(queuename);
-                var formattedName = queueAddress.LocalName;
-                var result = MessageQueue.Exists(formattedName);
-                Console.WriteLine("exists");
+                File.AppendAllText("error.txt", ex.ToString());
+                Console.WriteLine(ex);
+                Environment.Exit(21);
             }
         }
     }

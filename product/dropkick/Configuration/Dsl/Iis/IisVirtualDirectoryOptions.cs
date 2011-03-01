@@ -12,12 +12,19 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
+    using System;
+
     public interface IisVirtualDirectoryOptions
     {
         IisVirtualDirectoryOptions SetPathTo(string path);
         IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName);
-        IisVirtualDirectoryOptions UseClassicPipeline();
-        IisVirtualDirectoryOptions SetRuntimeToV2();
-        IisVirtualDirectoryOptions SetRuntimeToV4();
+        IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName, Action<AppPoolOptions> action);
+    }
+
+    public interface AppPoolOptions
+    {
+        void Enable32BitAppOnWin64();
+        void UseClassicPipeline();
+        void SetRuntimeToV4();
     }
 }

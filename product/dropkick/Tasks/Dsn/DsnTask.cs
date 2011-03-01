@@ -16,6 +16,7 @@ namespace dropkick.Tasks.Dsn
     using System.Runtime.InteropServices;
     using System.Threading;
     using DeploymentModel;
+    using log4net;
 
     public class DsnTask :
         Task
@@ -25,6 +26,7 @@ namespace dropkick.Tasks.Dsn
         readonly DsnDriver _driver;
         readonly string _dsnName;
         readonly string _serverName;
+        readonly ILog _coarseLog = LogManager.GetLogger("dropkick.coarsegrain");
 
         public DsnTask(string serverName, string dsnName, DsnAction action, DsnDriver driver, string databaseName)
         {
@@ -61,10 +63,13 @@ namespace dropkick.Tasks.Dsn
                                                  "SERVER={0}\0DSN={1}\0DESCRIPTION=NewDSN\0DATABASE={2}\0TRUSTED_CONNECTION=YES"
                                                      .FormatWith(_serverName, _dsnName, _databaseName));
                 result.AddGood("Created DSN");
+                _coarseLog.InfoFormat("[DSN] Created DSN '{0}'", _dsnName);
+
             }
             catch (Exception ex)
             {
                 result.AddError("Failed to create DSN", ex);
+                _coarseLog.ErrorFormat("[DSN] Error when creating DSN '{0}'", _dsnName);
             }
 
 

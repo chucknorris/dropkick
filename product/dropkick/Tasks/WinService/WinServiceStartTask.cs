@@ -45,20 +45,23 @@ namespace dropkick.Tasks.WinService
             {
                 using (var c = new ServiceController(ServiceName, MachineName))
                 {
+                    Logging.Coarse("[svc] Starting service '{0}'", ServiceName);
                     try
                     {
                         c.Start();
-                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(10));
+                        LogCoarseGrain("[svc] Waiting 60 seconds because Windows can be silly");
+                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
                     }
                     catch (InvalidOperationException ex)
                     {
                         result.AddError("The service '{0}' did not start, most likely due to a logon issue.".FormatWith(ServiceName), ex);
+                        LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.{1}{2}", ServiceName, Environment.NewLine, ex);
                         return result;
                     }
                     catch (TimeoutException)
                     {
-                        result.AddAlert(
-                            "Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.",ServiceName);
+                        result.AddAlert("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
+                        LogCoarseGrain("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
                         return result;
                     }
                 }

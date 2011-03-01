@@ -20,7 +20,7 @@ namespace dropkick.Engine
 
     public static class DeploymentPlanDispatcher
     {
-        static readonly IDictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>> _actions = new Dictionary<DeploymentCommands, Func<DeploymentPlan, DeploymentResult>>();
+        static readonly IDictionary<DeploymentCommands, Action<DeploymentPlan>> _actions = new Dictionary<DeploymentCommands, Action<DeploymentPlan>>();
         static DropkickDeploymentInspector _inspector;
         static readonly ILog _log = LogManager.GetLogger(typeof(DeploymentPlanDispatcher));
 
@@ -43,26 +43,7 @@ namespace dropkick.Engine
 
             //HOW TO PLUG IN   args.Role
             //TODO: should be able to block here
-            var results = _actions[args.Command](plan);
-
-        }
-
-        static void DisplayResults(DeploymentResult results)
-        {
-            foreach (var result in results)
-            {
-                if (result.Status == DeploymentItemStatus.Error)
-                    _log.ErrorFormat("[{0,-5}] {1}", result.Status, result.Message);
-
-                if (result.Status == DeploymentItemStatus.Alert)
-                    _log.WarnFormat("[{0,-5}] {1}", result.Status, result.Message);
-
-                if (result.Status == DeploymentItemStatus.Good)
-                    _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
-
-                if (result.Status == DeploymentItemStatus.Note)
-                    _log.DebugFormat("[{0,-5}] {1}", result.Status, result.Message);
-            }
+            _actions[args.Command](plan);
         }
     }
 }

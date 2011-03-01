@@ -6,7 +6,7 @@ namespace dropkick.tests.Tasks.MsSql
     [TestFixture]
     public class OutputSqlTest
     {
-        [Test]
+        [Test][Explicit]
         public void NAME()
         {
             var t = new OutputSqlTask(".", "master");

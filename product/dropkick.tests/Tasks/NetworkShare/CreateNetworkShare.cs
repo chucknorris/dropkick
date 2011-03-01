@@ -9,7 +9,7 @@ namespace dropkick.tests.Tasks.NetworkShare
     [Category("Integration")]
     public class CreateNetworkShare
     {
-        [Test]
+        [Test][Explicit]
         public void Execute()
         {
             if(Directory.Exists(".\\temp"))
@@ -23,7 +23,7 @@ namespace dropkick.tests.Tasks.NetworkShare
             t.Execute();
         }
 
-        [Test]
+        [Test][Explicit]
         public void Verify()
         {
             var t = new FolderShareTask();

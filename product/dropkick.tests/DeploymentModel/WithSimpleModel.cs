@@ -17,7 +17,7 @@ namespace dropkick.tests.DeploymentModel
                                                                     }, () => new DeploymentResult()
                                                                              {
                                                                                  new DeploymentItem(DeploymentItemStatus.Good, "execute")
-                                                                             });
+                                                                             },()=>new DeploymentResult());
             var webRole = new DeploymentRole("Web");
             webRole.AddServer(new DeploymentServer("SrvWeb1"));
             webRole.AddServer(new DeploymentServer("SrvWeb2"));

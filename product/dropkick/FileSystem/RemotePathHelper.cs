@@ -25,8 +25,7 @@ namespace dropkick.FileSystem
         {
             var newPath = @"\\{0}\{1}".FormatWith(server,localpath);
 
-            if (localpath.StartsWith("~"))
-                newPath = newPath.Replace(@"~\", "");
+            if (localpath.StartsWith("~")) newPath = newPath.Replace(@"~\", "");
 
             newPath = newPath.Replace(':', '$');
 

@@ -13,10 +13,8 @@
 namespace dropkick.Tasks.Msmq
 {
     using System;
-    using System.IO;
     using Configuration.Dsl.Msmq;
     using DeploymentModel;
-    using FileSystem;
 
     public class CreateRemoteMsmqQueueTask :
         BaseTask
@@ -32,7 +30,7 @@ namespace dropkick.Tasks.Msmq
         public CreateRemoteMsmqQueueTask(PhysicalServer server, string queueName)
         {
             _server = server;
-            var ub = new UriBuilder("msmq", server.Name) {Path = queueName};
+            var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
             Address = new QueueAddress(ub.Uri);
         }
 
@@ -53,12 +51,12 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-            //using (var remote = new CopyRemoteOut(_server))
-            //{
+            using (var remote = new CopyRemoteOut(_server))
+            {
                 //capture output
-               // var vresult = remote.VerifyQueue(Address);
+                var vresult = remote.VerifyQueue(Address);
                 result.AddAlert("REMOTE QUEUE - DID NOTHING");
-            //}
+            }
 
 
             return result;
@@ -70,46 +68,15 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-            //using (var remote = new CopyRemoteOut(_server))
-            //{
+            using (var remote = new CopyRemoteOut(_server))
+            {
                 //capture output
-                //var vresult = remote.CreateQueue(Address);
+                var vresult = remote.CreateQueue(Address);
                 result.AddAlert("REMOTE QUEUE - DID NOTHING");
-            //}
+            }
 
 
             return result;
-        }
-
-        class CopyRemoteOut :
-            IDisposable
-        {
-            string _path;
-            public CopyRemoteOut(PhysicalServer server)
-            {
-                //copy remote out
-                //TODO: make this path configurable
-                var p = RemotePathHelper.Convert(server, @"~\FHLBApp\dropkick.remote");
-                p = System.IO.Path.Combine(p, "dropkick.remote.exe");
-                File.Copy(@".\dropkick.remote.exe", p);
-            }
-
-            public bool VerifyQueue(QueueAddress path)
-            {
-                //exe verify_queue path
-                return false;
-            }
-
-            public bool CreateQueue(QueueAddress path)
-            {
-                //exe create_queue path
-                return false;
-            }
-
-            public void Dispose()
-            {
-                File.Delete(_path);
-            }
         }
     }
 }

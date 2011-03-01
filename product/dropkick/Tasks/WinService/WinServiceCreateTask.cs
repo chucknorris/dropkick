@@ -12,9 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.WinService
 {
-    using System;
     using DeploymentModel;
-    using Magnum.Extensions;
     using Prompting;
     using Wmi;
 
@@ -63,7 +61,7 @@ namespace dropkick.Tasks.WinService
                 UserName = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(ServiceName));
 
             if (Password.ShouldPrompt())
-                Password = _prompt.Prompt("Win Service '{0}' Password".FormatWith(ServiceName));
+                Password = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(ServiceName, UserName));
 
             ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceDisplayName, ServiceLocation,
                                                              StartMode, UserName, Password, Dependencies);

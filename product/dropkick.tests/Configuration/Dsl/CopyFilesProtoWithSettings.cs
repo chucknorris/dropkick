@@ -15,6 +15,7 @@ namespace dropkick.tests.Configuration.Dsl
     using dropkick.Configuration;
     using dropkick.Configuration.Dsl.Files;
     using dropkick.DeploymentModel;
+    using FileSystem;
     using NUnit.Framework;
 
     [TestFixture]
@@ -30,7 +31,7 @@ namespace dropkick.tests.Configuration.Dsl
             settings.Bob = "dru";
             settings.Environment = "PROD";
             HUB.Settings = settings;
-            _proto = new ProtoCopyFileTask("C:\\from\\here");
+            _proto = new ProtoCopyFileTask(new DotNetPath(), "C:\\from\\here");
             _proto.ToDirectory("C:\\to\\there\\{{Environment}}");
             _serv = new DeploymentServer("bob");
 

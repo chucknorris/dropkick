@@ -17,10 +17,9 @@ namespace dropkick.Tasks.Security.Acl
     using System.Security.AccessControl;
     using System.Security.Principal;
     using DeploymentModel;
-    using Msmq;
 
     public class ClearAclsTask :
-        Task
+        BaseSecurityTask
     {
         readonly string _path;
 
@@ -29,17 +28,19 @@ namespace dropkick.Tasks.Security.Acl
             _path = path;
         }
 
-        public string Name
+        public override string Name
         {
-            get { return "clear acls"; }
+            get { return "Clear ACLs on '{0}'".FormatWith(_path); }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+            base.VerifyInAdministratorRole(result);
+            return result;
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
 
@@ -49,8 +50,10 @@ namespace dropkick.Tasks.Security.Acl
             {
                 if (WellKnownRoles.NotADefaultRule(rule) && WellKnownRoles.NotInherited(rule))
                 {
-                    Console.WriteLine("Removing {0}", rule.IdentityReference);
+                    
                     security.RemoveAccessRuleSpecific(rule); // won't remove inherited stuff
+                    LogSecurity("[security][acl] Removed '{0}' on '{1}'", rule.IdentityReference, _path);
+                    result.AddGood("Removed '{0}' on '{1}'", rule.IdentityReference, _path);
                 }
             }
             Directory.SetAccessControl(_path, security);

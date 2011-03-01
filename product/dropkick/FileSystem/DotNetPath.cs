@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
-    using System;
     using System.IO;
     using System.Security.AccessControl;
     using System.Text.RegularExpressions;
@@ -28,13 +27,13 @@ namespace dropkick.FileSystem
         public string ConvertUncShareToLocalPath(PhysicalServer site, string path)
         {
             var serviceLocation = path;
-                var regex = new Regex(@"~\\(?<shareName>[A-Za-z0-9]+)\\(?<rest>.*)");
-                var shareMatch = regex.Match(path);
-                if (shareMatch.Success)
-                {
-                    var shareName = shareMatch.Groups["shareName"].Value;
-                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
-                }
+            var regex = new Regex(@"(?<front>[\\\\]?.+?)\\(?<shareName>[A-Za-z0-9\+\.\~\!\@\#\$\%\^\&\(\)_\-'\{\}\s-[\r\n\f]]+)\\?(?<rest>.*)", RegexOptions.IgnoreCase & RegexOptions.Multiline & RegexOptions.IgnorePatternWhitespace);
+            var shareMatch = regex.Match(path);
+            if (shareMatch.Success)
+            {
+                var shareName = shareMatch.Groups["shareName"].Value;
+                serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
+            }
             var rest = shareMatch.Groups["rest"].Value;
             return System.IO.Path.Combine(serviceLocation, rest);
         }
@@ -61,7 +60,7 @@ namespace dropkick.FileSystem
                 var msg = "Attempted to determine if '{0}' was a file, and encountered the following error.".FormatWith(path);
                 throw new DeploymentException(msg, ex);
             }
-            
+
         }
 
         public bool IsDirectory(string path)
@@ -73,7 +72,7 @@ namespace dropkick.FileSystem
             }
             catch (IOException ex)
             {
-                if(DirectoryDoesntExist(path))
+                if (DirectoryDoesntExist(path))
                 {
 
                     var msg2 = "Attempted to determine if '{0}' was a directory, but found that the path doesn't exist at all".FormatWith(path);
@@ -109,6 +108,11 @@ namespace dropkick.FileSystem
         public string[] GetFiles(string path)
         {
             return System.IO.Directory.GetFiles(path);
+        }
+
+        public string GetFileNameWithoutExtension(string file)
+        {
+            return System.IO.Path.GetFileNameWithoutExtension(file);
         }
 
         public void CreateDirectory(string path)

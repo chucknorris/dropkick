@@ -12,17 +12,23 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
+    using System;
     using DeploymentModel;
+    using FileSystem;
     using Tasks;
     using Tasks.Iis;
 
     public class IisProtoTask :
         BaseProtoTask,
         IisSiteOptions,
-        IisVirtualDirectoryOptions
+        IisVirtualDirectoryOptions,
+        AppPoolOptions
     {
-        public IisProtoTask(string websiteName)
+        Path _path;
+
+        public IisProtoTask(string websiteName, Path path)
         {
+            _path = path;
             WebsiteName = websiteName;
             ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V2;
         }
@@ -37,6 +43,7 @@ namespace dropkick.Configuration.Dsl.Iis
         public string ManagedRuntimeVersion { get; set; }
         public string PathForWebsite { get; set; }
         public int PortForWebsite { get; set; }
+        public bool Bit32Requested { get; set; }
 
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
@@ -50,10 +57,14 @@ namespace dropkick.Configuration.Dsl.Iis
             return this;
         }
 
-        public IisVirtualDirectoryOptions UseClassicPipeline()
+        public void UseClassicPipeline()
         {
             ClassicPipelineRequested = true;
-            return this;
+        }
+
+        public void Enable32BitAppOnWin64()
+        {
+            Bit32Requested = true;
         }
 
         public IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName)
@@ -62,16 +73,17 @@ namespace dropkick.Configuration.Dsl.Iis
             return this;
         }
 
-        public IisVirtualDirectoryOptions SetRuntimeToV2()
+        public IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName, Action<AppPoolOptions> options)
         {
-            ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V2;
+            SetAppPoolTo(appPoolName);
+            options(this);
             return this;
         }
 
-        public IisVirtualDirectoryOptions SetRuntimeToV4()
+
+        public void SetRuntimeToV4()
         {
             ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V4;
-            return this;
         }
 
         public void CreateIfItDoesntExist()
@@ -81,11 +93,14 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
+            var scrubbedPath = _path.ConvertUncShareToLocalPath(s, PathOnServer);
+
+
             if (Version == IisVersion.Six)
             {
                 s.AddTask(new Iis6Task
                               {
-                                  PathOnServer = PathOnServer,
+                                  PathOnServer = scrubbedPath,
                                   ServerName = s.Name,
                                   VdirPath = VdirPath,
                                   WebsiteName = WebsiteName,
@@ -95,7 +110,7 @@ namespace dropkick.Configuration.Dsl.Iis
             }
             s.AddTask(new Iis7Task
                           {
-                              PathOnServer = PathOnServer,
+                              PathOnServer = scrubbedPath,
                               ServerName = s.Name,
                               VdirPath = VdirPath,
                               WebsiteName = WebsiteName,
@@ -103,7 +118,8 @@ namespace dropkick.Configuration.Dsl.Iis
                               UseClassicPipeline = ClassicPipelineRequested,
                               ManagedRuntimeVersion = this.ManagedRuntimeVersion,
                               PathForWebsite = this.PathForWebsite,
-                              PortForWebsite = this.PortForWebsite
+                              PortForWebsite = this.PortForWebsite,
+                              Enable32BitAppOnWin64 = Bit32Requested
                           });
         }
 

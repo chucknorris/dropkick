@@ -12,14 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Tasks.Security.LocalPolicy
 {
-    using System;
     using System.ComponentModel;
     using System.Text;
     using DeploymentModel;
-    using Exceptions;
 
     public class LogOnAsAServiceTask :
-        Task
+        BaseSecurityTask
     {
         readonly string _serverName;
         readonly string _userAccount;
@@ -30,19 +28,19 @@ namespace dropkick.Tasks.Security.LocalPolicy
             _userAccount = userAccount;
         }
 
-        public string Name
+        public override string Name
         {
             get { return "Give '{0}' Log On As A Service on server '{1}'".FormatWith(_userAccount, _serverName); }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
             var r = new DeploymentResult();
             r.AddAlert("NO CHECKS RUN");
             return r;
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
             //http://weblogs.asp.net/avnerk/archive/2007/05/10/granting-user-rights-in-c.aspx
             var result = new DeploymentResult();
@@ -53,6 +51,7 @@ namespace dropkick.Tasks.Security.LocalPolicy
                 {
                     lsa.AddPrivileges(_userAccount, "SeServiceLogonRight");
                 }
+                LogSecurity("[security][lpo] Grant '{0}' LogOnAsService on '{1}'", _userAccount, _serverName);
             }
             catch (Win32Exception ex)
             {

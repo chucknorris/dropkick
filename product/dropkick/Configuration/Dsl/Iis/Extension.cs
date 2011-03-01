@@ -12,11 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Iis
 {
+    using FileSystem;
+
     public static class Extension //ProtoTaskBuilder
     {
         public static IisSiteOptions Iis6Site(this ProtoServer protoServer, string websiteName)
         {
-            var task = new IisProtoTask(websiteName)
+            var task = new IisProtoTask(websiteName, new DotNetPath())
                        {
                            Version = IisVersion.Six
                        };
@@ -26,7 +28,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public static IisSiteOptions Iis7Site(this ProtoServer protoServer, string websiteName)
         {
-            var task = new IisProtoTask(websiteName)
+            var task = new IisProtoTask(websiteName, new DotNetPath())
                            {
                                Version = IisVersion.Seven,
                        };
@@ -36,7 +38,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public static IisSiteOptions Iis7Site(this ProtoServer protoServer, string websiteName, string pathForWebsite, int port)
         {
-            var task = new IisProtoTask(websiteName)
+            var task = new IisProtoTask(websiteName,new DotNetPath())
                            {
                                Version = IisVersion.Seven,
                                PathForWebsite = pathForWebsite,

@@ -78,6 +78,7 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Data" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Messaging" />
     <Reference Include="System.Xml" />
   </ItemGroup>
@@ -114,6 +115,7 @@
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTest.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTest.cs" />
+    <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />
@@ -134,13 +136,19 @@
     <Compile Include="TestObjects\SampleConfiguration.cs" />
     <Compile Include="TestObjects\SecurityDeployment.cs" />
     <Compile Include="TestObjects\SingleRoleDeploy.cs" />
+    <Compile Include="TestObjects\TopshelfDeploy.cs" />
     <Compile Include="TestObjects\TwoRoleDeploy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TestObjects\TestDeployment.cs" />
     <Compile Include="TestObjects\TestTask.cs" />
     <Compile Include="TestObjects\WinServiceTestDeploy.cs" />
+    <Compile Include="WmiSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\dropkick.remote\dropkick.remote.csproj">
+      <Project>{97A21367-4943-4F47-9905-68668DBB3F5E}</Project>
+      <Name>dropkick.remote</Name>
+    </ProjectReference>
     <ProjectReference Include="..\dropkick\dropkick.csproj">
       <Project>{34B12D58-36E5-4D51-A34E-C6E9FD53D70E}</Project>
       <Name>dropkick</Name>
@@ -153,6 +161,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Configuration\Dsl\roundhouse\" />
+    <Folder Include="Prompting\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

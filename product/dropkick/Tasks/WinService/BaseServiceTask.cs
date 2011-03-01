@@ -39,7 +39,7 @@ namespace dropkick.Tasks.WinService
                     return true;
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
                 return false;
             }
@@ -54,7 +54,7 @@ namespace dropkick.Tasks.WinService
             int processId = -1;
             foreach (ManagementObject obj in searcher.Get())
             {
-                processId = Convert.ToInt32((uint) obj["ProcessId"]);
+                processId = Convert.ToInt32((uint)obj["ProcessId"]);
             }
             return processId;
         }

@@ -14,8 +14,8 @@ namespace dropkick.Configuration.Dsl.WinService
 {
     using System.Collections.Generic;
     using System.Text;
-    using System.Text.RegularExpressions;
     using DeploymentModel;
+    using Exceptions;
     using FileSystem;
     using Tasks;
     using Tasks.WinService;
@@ -76,28 +76,7 @@ namespace dropkick.Configuration.Dsl.WinService
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string serviceLocation = _installPath;
-
-            if (site.IsLocal)
-            {
-                //check path exists?
-            }
-            else
-            {
-                if (!_installPath.StartsWith("~"))
-                {
-                    var sb = new StringBuilder();
-                    sb.AppendLine("You are trying to install a service to the remote machine. You must start the path with '~'.");
-                    sb.AppendLine(@"We will reverse out the share name using WMI - Example ~\{sharename}\some_folder");
-                    sb.AppendLine(@"Will become (based on a WMI query) E:\folder_share_mapped_to\some_folder");
-
-                    throw new DeploymentConfigurationException(sb.ToString());
-                }
-                    
-                serviceLocation = _path.ConvertUncShareToLocalPath(site, _installPath);
-            }
-            
-            
-            
+            serviceLocation = _path.ConvertUncShareToLocalPath(site, _installPath);
 
             site.AddTask(new WinServiceCreateTask(site.Name, _serviceName)
                              {

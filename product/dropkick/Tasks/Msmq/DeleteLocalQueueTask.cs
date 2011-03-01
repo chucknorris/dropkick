@@ -16,12 +16,12 @@ namespace dropkick.Tasks.Security.Msmq
     using System.Messaging;
     using DeploymentModel;
 
-    public class DeleteQueueTask :
+    public class DeleteLocalQueueTask :
         Task
     {
         readonly string _queue;
 
-        public DeleteQueueTask(string queue)
+        public DeleteLocalQueueTask(string queue)
         {
             _queue = queue;
         }

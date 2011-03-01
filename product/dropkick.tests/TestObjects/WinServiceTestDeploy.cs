@@ -26,7 +26,7 @@ namespace dropkick.tests.TestObjects
             Define((settings) =>
                    DeploymentStepsFor(Web, server =>
                                            {
-                                               server.WinService("MSMQ").Do(s => s.Msmq().PrivateQueueNamed("dru"));
+                                               server.WinService("MSMQ").Do(s => s.Msmq().PrivateQueue("dru"));
 
                                                server.WinService("FHLB").Delete();
                                                server.WinService("FHLB").Create()
