@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl
     public interface ProtoTask :
         DeploymentInspectorSite
     {
-        void RegisterRealTasks(PhysicalServer site);
+        void RegisterRealTasks(PhysicalServer server);
     }
 
     public static class TaskHelpers

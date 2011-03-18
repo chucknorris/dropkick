@@ -17,5 +17,6 @@ namespace dropkick.DeploymentModel
         string Name { get; }
         bool IsLocal { get; }
         void AddTask(Task task);
+        string MapPath(string path);
     }
 }

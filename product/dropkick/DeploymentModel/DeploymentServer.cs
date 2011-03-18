@@ -16,6 +16,7 @@ namespace dropkick.DeploymentModel
     using System.Collections.Generic;
     using System.Diagnostics;
     using Configuration.Dsl;
+    using FileSystem;
 
     [DebuggerDisplay("Deploy Server: {Name}")]
     public class DeploymentServer :
@@ -46,6 +47,10 @@ namespace dropkick.DeploymentModel
                 || "localhost".EqualsIgnoreCase(Name); }
         }
 
+        public string MapPath(string path)
+        {
+            return RemotePathHelper.Convert(this, path);
+        }
 
         public void AddTask(Task task)
         {

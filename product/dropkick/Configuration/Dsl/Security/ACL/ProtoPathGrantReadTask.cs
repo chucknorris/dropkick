@@ -33,6 +33,7 @@ namespace dropkick.Configuration.Dsl.Security.ACL
         {
             var path = _path;
 
+            path = RemotePathHelper.Convert(site, path);
             var task = new GrantReadTask(path, _group, new DotNetPath());
             site.AddTask(task);
         }

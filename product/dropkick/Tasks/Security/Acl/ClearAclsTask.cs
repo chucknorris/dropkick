@@ -44,18 +44,19 @@ namespace dropkick.Tasks.Security.Acl
         {
             var result = new DeploymentResult();
 
-            DirectorySecurity security = Directory.GetAccessControl(_path);
-            AuthorizationRuleCollection rules = security.GetAccessRules(true, true, typeof (NTAccount));
+            var security = Directory.GetAccessControl(_path);
+            var rules = security.GetAccessRules(true, true, typeof (NTAccount));
+            
             foreach (FileSystemAccessRule rule in rules)
             {
-                if (WellKnownRoles.NotADefaultRule(rule) && WellKnownRoles.NotInherited(rule))
-                {
-                    
-                    security.RemoveAccessRuleSpecific(rule); // won't remove inherited stuff
-                    LogSecurity("[security][acl] Removed '{0}' on '{1}'", rule.IdentityReference, _path);
-                    result.AddGood("Removed '{0}' on '{1}'", rule.IdentityReference, _path);
-                }
+                if (!WellKnownRoles.NotADefaultRule(rule) || !WellKnownRoles.NotInherited(rule)) 
+                    continue;
+
+                security.RemoveAccessRuleSpecific(rule); // won't remove inherited stuff
+                LogSecurity("[security][acl] Removed '{0}' on '{1}'", rule.IdentityReference, _path);
+                result.AddGood("Removed '{0}' on '{1}'", rule.IdentityReference, _path);
             }
+
             Directory.SetAccessControl(_path, security);
 
             return result;

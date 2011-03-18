@@ -26,7 +26,7 @@ namespace dropkick.Tasks
             inspector.Inspect(this);
         }
 
-        public abstract void RegisterRealTasks(PhysicalServer site);
+        public abstract void RegisterRealTasks(PhysicalServer server);
 
         public string ReplaceTokens(string input)
         {

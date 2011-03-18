@@ -55,7 +55,8 @@ namespace dropkick.Tasks.Security.Acl
             _target = _path.GetFullPath(_target);
 
             //TODO: I/O Task
-            if (_path.DirectoryDoesntExist(_target)) _path.CreateDirectory(_target);
+            if (_path.DirectoryDoesntExist(_target))
+                _path.CreateDirectory(_target);
 
             _path.SetFileSystemRights(_target, _group, FileSystemRights.ReadAndExecute, result);
             LogSecurity("[security][acl] Granted READ/EXECUTE to '{0}' on '{1}'", _group, _target);

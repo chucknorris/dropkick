@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.FileSystem
 {
+    using System.Text.RegularExpressions;
     using DeploymentModel;
 
     public class RemotePathHelper
@@ -23,9 +24,13 @@ namespace dropkick.FileSystem
 
         public static string Convert(string server, string localpath)
         {
+            if (IsUncPath(localpath))
+                return localpath;
+
             var newPath = @"\\{0}\{1}".FormatWith(server,localpath);
 
-            if (localpath.StartsWith("~")) newPath = newPath.Replace(@"~\", "");
+            if (localpath.StartsWith("~")) 
+                newPath = newPath.Replace(@"~\", "");
 
             newPath = newPath.Replace(':', '$');
 
@@ -35,6 +40,13 @@ namespace dropkick.FileSystem
         public static bool IsUncPath(string path)
         {
             return path.StartsWith(@"\\");
+        }
+
+
+        public static string SwapUncServerFor(string server)
+        {
+            var bob = new Regex(@"\\\\");
+            return server;
         }
     }
 }

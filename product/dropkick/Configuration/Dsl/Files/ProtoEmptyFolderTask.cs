@@ -29,11 +29,12 @@ namespace dropkick.Configuration.Dsl.Files
             _folderName = ReplaceTokens(folderName);
         }
 
-        public override void RegisterRealTasks(PhysicalServer site)
+        public override void RegisterRealTasks(PhysicalServer server)
         {
-            string to = _folderName;
+            string to = server.MapPath(_folderName);
+
             var task = new EmptyFolderTask(to, new DotNetPath());
-            site.AddTask(task);
+            server.AddTask(task);
         }
     }
 }

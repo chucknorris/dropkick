@@ -75,8 +75,8 @@ namespace dropkick.Tasks.CommandLine
             var p = Path.Combine(ExecutableIsLocatedAt, Command);
             ProcessReturnCode returnCode  = WmiProcess.Run(Machine, Command, Args, ExecutableIsLocatedAt);
 
+            
             //TODO: how can I get the output back from the computer?
-
             if (returnCode != ProcessReturnCode.Success) {
                 result.AddError(_status[(int)returnCode]);
             }

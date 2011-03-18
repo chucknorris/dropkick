@@ -57,14 +57,14 @@ namespace dropkick.Configuration.Dsl.Files
             return this;
         }
 
-        public override void RegisterRealTasks(PhysicalServer site)
+        public override void RegisterRealTasks(PhysicalServer server)
         {
-            string to = _to;
+            string to = server.MapPath(_to);
 
             foreach (var f in _froms)
             {
                 var o = new CopyDirectoryTask(f, to, _options, _path);
-                site.AddTask(o);
+                server.AddTask(o);
             }
         }
     }

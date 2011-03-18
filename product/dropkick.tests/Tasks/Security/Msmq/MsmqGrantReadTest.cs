@@ -16,7 +16,7 @@ namespace dropkick.tests.Tasks.Security.Msmq
         [TestFixtureSetUp]
         public void Setup()
         {
-            var ub = new UriBuilder("msmq", Environment.MachineName) { Path = "dk_test" };
+            var ub = new UriBuilder("msmq", Environment.MachineName) { Path = "dk_test2" };
             _address = new QueueAddress(ub.Uri);
 
             if (MessageQueue.Exists(_address.LocalName))
@@ -28,7 +28,7 @@ namespace dropkick.tests.Tasks.Security.Msmq
         [Test]
         public void Execute()
         {
-            var t = new LocalMsmqGrantReadTask(_address, @"Everyone");
+            var t = new LocalMsmqGrantReadTask(_address, @"TEST\BrubakerM");
             var r = t.Execute();
 
             Assert.IsFalse(r.ContainsError(), "Errors occured during permission setting.");

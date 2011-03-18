@@ -162,6 +162,7 @@
   <ItemGroup>
     <Folder Include="Configuration\Dsl\roundhouse\" />
     <Folder Include="Prompting\" />
+    <Folder Include="Tasks\Security\Acl\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

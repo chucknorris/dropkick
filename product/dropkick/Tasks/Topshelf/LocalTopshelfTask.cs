@@ -43,7 +43,7 @@ namespace dropkick.Tasks.Topshelf
 
             _task = new LocalCommandLineTask(new DotNetPath(), exeName)
                         {
-                            Args = "install" + args,
+                            Args = "install " + args, 
                             ExecutableIsLocatedAt = location,
                             WorkingDirectory = location
                         };

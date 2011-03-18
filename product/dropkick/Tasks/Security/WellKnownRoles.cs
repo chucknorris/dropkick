@@ -30,6 +30,7 @@ namespace dropkick.Tasks.Security
         static HashSet<string> _defaults = new HashSet<string>()
                                         {
                                             @"FHLB10\Prod Control",
+                                            @"FHLB10\Prod Read",
                                             @"NT AUTHORITY\SYSTEM",
                                             @"FHLB10\Directory Admins"
                                         };

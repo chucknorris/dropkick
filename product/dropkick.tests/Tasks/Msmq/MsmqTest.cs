@@ -27,7 +27,7 @@ namespace dropkick.tests.Tasks.Msmq
         public void ExecuteLocal()
         {
             var ps = new DeploymentServer(Environment.MachineName);
-            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test" };
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test2" };
             var address = new QueueAddress(ub.Uri);
 
             if (MessageQueue.Exists(address.LocalName))

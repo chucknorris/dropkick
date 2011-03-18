@@ -33,7 +33,8 @@ namespace dropkick.tests.TestObjects
                         pool.Enable32BitAppOnWin64();
                         pool.UseClassicPipeline();
                     })
-                    .SetPathTo("set path to");
+                    .SetPathTo(@"~\websites\my_web");
+                //     '\\server' + \websites\my_web
             }));
         }
 

@@ -39,7 +39,17 @@
                 var src = Path.Combine(local, file);
                 _fineLog.DebugFormat("[msmq][remote] '{0}'->'{1}'", src, dest);
 
-                File.Copy(src, dest, true);
+                try
+                {
+                    if(!File.Exists(dest))
+                        File.Copy(src, dest, true);
+                }
+                catch (IOException ex)
+                {
+                    _fineLog.DebugFormat("[msmq][remote][file] Error copying '{0}' to '{1}'", file, remotePath);
+                    throw;
+                }
+                
             }
         }
 

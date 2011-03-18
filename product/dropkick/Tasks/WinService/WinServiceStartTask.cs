@@ -49,7 +49,7 @@ namespace dropkick.Tasks.WinService
                     try
                     {
                         c.Start();
-                        LogCoarseGrain("[svc] Waiting 60 seconds because Windows can be silly");
+                        LogCoarseGrain("[svc] Waiting up to 60 seconds because Windows can be silly");
                         c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
                     }
                     catch (InvalidOperationException ex)
