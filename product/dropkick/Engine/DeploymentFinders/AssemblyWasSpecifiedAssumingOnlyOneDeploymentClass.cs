@@ -13,7 +13,6 @@
 namespace dropkick.Engine.DeploymentFinders
 {
     using System;
-    using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -36,18 +35,21 @@ namespace dropkick.Engine.DeploymentFinders
 
             try
             {
-                Assembly asm = Assembly.LoadFile(path);
-                IEnumerable<Type> tt = asm.GetTypes().Where(t => typeof (Deployment).IsAssignableFrom(t));
+                var asm = Assembly.LoadFile(path);
+                var foundDeploymentTypes = asm.GetTypes().Where(t => typeof (Deployment).IsAssignableFrom(t));
 
-                
-                if(tt.Count() > 1)
+                if(foundDeploymentTypes.Count() > 1)
                     throw new DeploymentConfigurationException("There was more than one deployment in the assembly '{0}'".FormatWith(assemblyName));
 
-                return new TypeWasSpecifiedAssumingItHasADefaultConstructor().Find(tt.First());
+                return new TypeWasSpecifiedAssumingItHasADefaultConstructor().Find(foundDeploymentTypes.First());
             }
             catch (BadImageFormatException bifex)
             {
                 var msg = "There was an issue with loading the file '{0}' at path '{1}'.".FormatWith(assemblyName, path);
+                
+                _log.Debug("FUSION LOG");
+                _log.Debug(bifex.FusionLog);
+
                 throw new DeploymentConfigurationException(msg, bifex);
             }
         }

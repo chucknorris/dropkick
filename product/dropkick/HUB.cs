@@ -13,6 +13,7 @@
 namespace dropkick
 {
     //TODO: YUCK!
+    //currently helps me to not have to pass the settings around everywhere
     public static class HUB
     {
         public static object Settings { get; set; }
