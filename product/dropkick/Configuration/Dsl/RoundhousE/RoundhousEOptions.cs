@@ -14,16 +14,18 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 {
     public interface RoundhousEOptions
     {
-        RoundhousEOptions ForDatabaseType(string type);
+        // RoundhousEOptions ForDatabaseType(string type);
         RoundhousEOptions OnInstance(string name);
         RoundhousEOptions OnDatabase(string name);
+        RoundhousEOptions WithUserName(string userName);
+        RoundhousEOptions WithPassword(string password);
         RoundhousEOptions DropDatabase(bool drop);
         RoundhousEOptions WithScriptsFolder(string scriptsLocation);
         RoundhousEOptions ForEnvironment(string environment);
         RoundhousEOptions UseSimpleRecoveryMode(bool useSimple);
-        RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore);
-        RoundhousEOptions RestoreDatabaseFrom(string path);
-        RoundhousEOptions WithRestoreOptions(string options);
+        //RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore);
+        //RoundhousEOptions RestoreDatabaseFrom(string path);
+        //RoundhousEOptions WithRestoreOptions(string options);
     }
 
 }

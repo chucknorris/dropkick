@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <configuration>
   <log4net>
-    <appender name="CoarseAppender"
+    <appender name="ConsoleAppender"
 							type="log4net.Appender.ColoredConsoleAppender">
       <mapping>
         <level value="ERROR" />
@@ -50,16 +50,19 @@
 
     <root>
       <level value="ALL" />
+      <appender-ref ref="ConsoleAppender" />
     </root>
     
     <logger name="dropkick.changes.file">
       <level value="INFO" />
       <appender-ref ref="FileChangeAppender" />
+      <appender-ref ref="ConsoleAppender" />
     </logger>
     
     <logger name="dropkick.changes.security">
       <level value="INFO" />
       <appender-ref ref="SecurityChangeAppender" />
+      <appender-ref ref="ConsoleAppender" />
     </logger>
     
     <logger name="dropkick.finegrain">
@@ -68,12 +71,12 @@
 
     <logger name="dropkick.coarsegrain">
       <appender-ref ref="DetailAppender" />
-      <appender-ref ref="CoarseAppender" />
+      <appender-ref ref="ConsoleAppender" />
     </logger>
 
       <logger name="Topshelf" >
           <level value ="ALL" />
-          <appender-ref ref="CoarseAppender" />
+          <appender-ref ref="ConsoleAppender" />
       </logger>
     
   </log4net>

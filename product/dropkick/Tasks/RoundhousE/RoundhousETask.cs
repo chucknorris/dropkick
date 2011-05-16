@@ -22,22 +22,19 @@ namespace dropkick.Tasks.RoundhousE
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof(RoundhousETask));
 
-        readonly string _instanceName;
-        readonly string _databaseName;
-        readonly bool _dropDatabase;
-        readonly string _databaseType;
+        private string _connectionString;
         readonly string _scriptsLocation;
         readonly string _environmentName;
+        readonly bool _dropDatabase;
         readonly bool _useSimpleRecoveryMode;
-
-        public RoundhousETask(string instanceName, string databaseType, string databaseName, bool dropDatabase, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode)
+        
+        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode, bool dropDatabase)
         {
-            _instanceName = instanceName;
-            _databaseName = databaseName;
-            _dropDatabase = dropDatabase;
-            _databaseType = databaseType;
+            _connectionString = connectionString;
             _scriptsLocation = scriptsLocation;
             _environmentName = environmentName;
+            _dropDatabase = dropDatabase;
+            
             _useSimpleRecoveryMode = useSimpleRecoveryMode;
         }
 
@@ -46,8 +43,8 @@ namespace dropkick.Tasks.RoundhousE
             get
             {
                 return
-                    "Using RoundhousE to deploy the '{0}' database to '{1}' with scripts folder '{2}'.".FormatWith(
-                        _databaseName, _instanceName, _scriptsLocation);
+                    "Using RoundhousE to deploy to connection '{0}' with scripts folder '{1}'.".FormatWith(
+                        _connectionString, _scriptsLocation);
             }
         }
 
@@ -74,8 +71,8 @@ namespace dropkick.Tasks.RoundhousE
             try
             {
                 if (_dropDatabase)
-                    RoundhousEClientApi.Run(log, _instanceName, _databaseType, _databaseName, true, scriptsPath, _environmentName, _useSimpleRecoveryMode);
-                RoundhousEClientApi.Run(log, _instanceName, _databaseType, _databaseName, false, scriptsPath, _environmentName, _useSimpleRecoveryMode);
+                    RoundhousEClientApi.Run(log, _connectionString,scriptsPath, _environmentName, true,  _useSimpleRecoveryMode);
+                RoundhousEClientApi.Run(log,_connectionString,scriptsPath, _environmentName, false, _useSimpleRecoveryMode);
             }
             catch (Exception ex)
             {

@@ -28,6 +28,7 @@ namespace dropkick.tests.TestObjects
                     //copy files out first
                     server.CopyDirectory("~/VikingHost").To("~/bob");
 
+                    //make resharper shut it
                     int i = 0;
 
                     server.Topshelf(o =>

@@ -31,22 +31,60 @@
   <property name="folder.references" value="lib" overwrite="false" />
   <property name="dirs.lib" value="${dirs.current}\${path.to.toplevel}\${folder.references}" overwrite="false" />
   
-  <target name="go" depends="copy_dk_remote" />
+  <target name="go" depends="cleanup_drop, restructure_drop_folder, copy_notices, delete_extras" />
   
-  <target name="copy_dk_remote">
-        <echo message="Putting dropkick.remote into the package" />
-        <move todir="${dirs.drop}\remote">
-            <fileset basedir="${dirs.build}\">
-                <include name="dropkick.remote.exe" />
-            </fileset>
-        </move>
-  </target>
-  <!--<target name="documentation">
-    <echo message="Packaging documentation files to ${dirs.drop}\${folder.documentation}."/>
-    <copy todir="${dirs.drop}\${folder.documentation}">
-      <fileset basedir="${dirs.build}\${folder.documentation}">
+  <target name="cleanup_drop">
+    <echo message="Removing ${dirs.drop}\${folder.app.drop}." />
+    <delete>
+      <fileset basedir="${dirs.drop}\${folder.app.drop}">
         <include name="**/*.*" />
       </fileset>
+    </delete>
+    
+    <echo message="Renaming ${dirs.drop}\_PublishedApplications to ${dirs.drop}\${folder.app.drop}." />
+    <move todir="${dirs.drop}\${folder.app.drop}" overwrite="true">
+      <fileset basedir="${dirs.drop}\_PublishedApplications">
+        <include name="**/*.*" />
+      </fileset>
+    </move>
+    <delete dir="${dirs.drop}\_PublishedApplications" />
+  </target>
+
+  <target name="restructure_drop_folder">
+    <echo message="Renaming ${dirs.drop}\${folder.app.drop}\dropkick to ${dirs.drop}\${folder.app.drop}\lib." />
+    <move todir="${dirs.drop}\${folder.app.drop}\lib" overwrite="true">
+      <fileset basedir="${dirs.drop}\${folder.app.drop}\dropkick">
+        <include name="**/*.*" />
+      </fileset>
+    </move>
+    <delete dir="${dirs.drop}\${folder.app.drop}\dropkick" />
+    
+    <echo message="Renaming ${dirs.drop}\${folder.app.drop}\dropkick.console to ${dirs.drop}\${folder.app.drop}\console." />
+    <move todir="${dirs.drop}\${folder.app.drop}\console" overwrite="true">
+      <fileset basedir="${dirs.drop}\${folder.app.drop}">
+        <include name="dropkick.remote/*.*" />
+        <include name="dropkick.console/*.*" />
+      </fileset>
+    </move>
+    <delete dir="${dirs.drop}\${folder.app.drop}\dropkick.console" />
+    <delete dir="${dirs.drop}\${folder.app.drop}\dropkick.remote" />
+  </target>
+  
+  <target name ="copy_notices">
+    <echo message="Packaging readme file to ${dirs.drop}."/>
+    <copy file="${dirs.current}\..\README.markdown" tofile="${dirs.drop}\ReadMe.txt" />
+    
+    <echo message="Packaging other legal stuff to ${dirs.drop}\LEGAL."/>
+    <copy todir="${dirs.drop}\LEGAL">
+      <fileset basedir="${dirs.current}\..\docs\legal">
+        <include name="**/*" />
+      </fileset>
     </copy>
-  </target>-->
+  </target>
+  
+  <target name="delete_extras">
+    <delete dir="${dirs.drop}\${folder.app.drop}\settings" />
+    <delete dir="${dirs.drop}\${folder.app.drop}\Tasks" />
+  </target>
+  
 </project>

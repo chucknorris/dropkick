@@ -42,8 +42,7 @@ namespace dropkick.tests.Engine
     public class GivenACompleteCommandLine
     {
 
-
-        const string _arguments = "verify -environment:staging -deployment:MyStuff.dll -part:WEB";
+        const string _arguments = "verify -environment:staging -deployment:MyStuff.dll -roles:WEB";
 
         [Test]
         public void Should_parse_out_execute()
@@ -57,7 +56,7 @@ namespace dropkick.tests.Engine
         [Test]
         public void Should_handle_dashes_and_slashes()
         {
-            var arguments = "verify /environment:staging -deployment:MyStuff.dll /part:WEB";
+            var arguments = "verify /environment:staging -deployment:MyStuff.dll /roles:WEB";
             var ea = DeploymentCommandLineParser.Parse(arguments);
 
             Assert.AreEqual("staging", ea.Environment);

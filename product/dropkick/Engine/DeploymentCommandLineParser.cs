@@ -41,8 +41,8 @@ namespace dropkick.Engine
             arguments.Deployment = deployment;
 
 
-            string part = commandLineElements.GetDefinition("part", "ALL");
-            arguments.Role = part;
+           // string part = commandLineElements.GetDefinition("part", "ALL");
+          //  arguments.Role = part;
 
             string enviro = commandLineElements.GetDefinition("environment", "LOCAL");
             arguments.Environment = enviro;

@@ -33,8 +33,6 @@
   <property name="version.build" value="0" overwrite="false" />
   <property name="version.revision" value="0" overwrite="false" />
   <property name="assembly.version.full" value="${version.major}.${version.minor}.${version.build}.${version.revision}" />
-  <property name="file.gems.version" value="${dirs.drop.gems}${path.separator}VERSION" />
-  
   
   <property name="file.custom.step.before" value="${dirs.build_scripts_custom}${path.separator}${file.current.no_extension}.pre.step" />
   <property name="file.custom.step.after" value="${dirs.build_scripts_custom}${path.separator}${file.current.no_extension}.post.step" />
@@ -53,7 +51,7 @@
   </target>
 
   <target name="run_normal_tasks"
-          depends="build_gem"
+          depends="build_gem, remove_gem_files"
           description="Building gems." />
 
   <target name="custom_tasks_before">
@@ -98,6 +96,15 @@
         </exec>
       </do>
     </foreach>
+  </target>
+  
+  <target name="remove_gem_files">
+    <delete>
+      <fileset basedir="${dirs.drop.gems}" >
+        <exclude name="*.gem" />
+        <include name="**/*" />
+      </fileset>
+    </delete>
   </target>
   
   <target name="custom_tasks_after">

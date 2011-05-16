@@ -29,21 +29,34 @@ namespace dropkick.console
             XmlConfigurator.Configure(new FileInfo(logpath));
             SetRunAppender();
 
-            // commands 
-            //   verify
-            //   execute
-            //   trace     (default)
-
-            // args
-            //   /environment:local is the default - used to work with config files
-            //   /role: all is the default
-            //   /configuration: the location of the config files
-            //   /deployment:
-            //      FHLBank.Flames.Deployment.dll (an assembly)
-            //      FHLBank.Flames.Deployment.StandardDepoy (a class, lack of .dll)
-            //      (null) - if omitted search for a dll ending with 'Deployment' then pass that name in
+            if (args.Contains("/help") || args.Contains("/?"))
+            {
+                var log = LogManager.GetLogger("dropkick");
+                log.Info(GetHelpMessage());
+                Environment.Exit(1);
+            }
 
             Runner.Deploy(args.Aggregate("", (a, b) => a + " " + b).Trim());
+        }
+
+        private static string GetHelpMessage()
+        {
+            return string.Format("DropkicK Usage {0}" +
+            "dk.exe [COMMAND] [ARGS]{0}" +
+            "COMMAND {0}" +
+            "   verify {0}" +
+            "   execute {0}" +
+            "   trace   (default) {0}" +
+            "{0}" +
+            "ARGS {0}" +
+            "   /environment:local is the default - used to work with config files {0}" +
+            "   /roles: all is the default {0}" +
+            "   /configuration: the location of the config files {0}" +
+            "   /deployment:  {0}" +
+            "      Company.Project.Deployment.dll (an assembly) {0}" +
+            "      Company.Project.Deployment.StandardDeploy (a class, lack of .dll) {0}" +
+            "      (null) - if omitted, dk will search for a dll ending with 'Deployment' then pass that name in {0}"
+            , Environment.NewLine);
         }
 
         static void SetRunAppender()

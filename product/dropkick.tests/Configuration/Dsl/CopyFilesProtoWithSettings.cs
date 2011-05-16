@@ -41,7 +41,7 @@ namespace dropkick.tests.Configuration.Dsl
         [Test]
         public void Bill()
         {
-            int i = 0;
+            int i = 0; //make resharper shut it
             //need a real test
         }
 
