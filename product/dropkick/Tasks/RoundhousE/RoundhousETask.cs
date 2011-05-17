@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.ComponentModel;
+
 namespace dropkick.Tasks.RoundhousE
 {
     using System;
@@ -25,17 +27,18 @@ namespace dropkick.Tasks.RoundhousE
         private string _connectionString;
         readonly string _scriptsLocation;
         readonly string _environmentName;
-        readonly bool _dropDatabase;
-        readonly bool _useSimpleRecoveryMode;
-        
-        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode, bool dropDatabase)
+        private readonly DatabaseRecoveryMode _recoveryMode;
+        private readonly RoundhousEMode _roundhouseMode;
+        private readonly string _restorePath;
+
+        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath)
         {
             _connectionString = connectionString;
             _scriptsLocation = scriptsLocation;
             _environmentName = environmentName;
-            _dropDatabase = dropDatabase;
-            
-            _useSimpleRecoveryMode = useSimpleRecoveryMode;
+            _recoveryMode = recoveryMode;
+            _roundhouseMode = roundhouseMode;
+            _restorePath = restorePath;
         }
 
         public string Name
@@ -55,8 +58,6 @@ namespace dropkick.Tasks.RoundhousE
 
             //check you can connect to the _instancename
             //check that the path _scriptsLocation exists
-            results.AddNote("I don't know what to do here...");
-
 
             return results;
         }
@@ -64,15 +65,30 @@ namespace dropkick.Tasks.RoundhousE
         public DeploymentResult Execute()
         {
             var results = new DeploymentResult();
-
-            var scriptsPath = Path.GetFullPath(_scriptsLocation);
-
             var log = new DeploymentLogger(results);
+            var scriptsPath = Path.GetFullPath(_scriptsLocation);
+            var useSimpleRecovery = _recoveryMode == DatabaseRecoveryMode.Simple ? true : false;
+
             try
             {
-                if (_dropDatabase)
-                    RoundhousEClientApi.Run(log, _connectionString,scriptsPath, _environmentName, true,  _useSimpleRecoveryMode);
-                RoundhousEClientApi.Run(log,_connectionString,scriptsPath, _environmentName, false, _useSimpleRecoveryMode);
+                switch (_roundhouseMode)
+                {
+                    case RoundhousEMode.Drop:
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery);
+                        break;
+                    case RoundhousEMode.Restore:
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery,true,_restorePath);
+                        break;
+                    case RoundhousEMode.DropCreate:
+                        RoundhousEClientApi.Run(log, _connectionString, @".\", _environmentName, true, useSimpleRecovery);
+                        goto case RoundhousEMode.Normal;
+                    case RoundhousEMode.Normal:
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery);
+                        break;
+                    default:
+                        goto case RoundhousEMode.Normal;
+                }
+
             }
             catch (Exception ex)
             {

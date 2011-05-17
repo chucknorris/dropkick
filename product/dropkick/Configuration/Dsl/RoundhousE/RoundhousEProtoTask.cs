@@ -15,27 +15,29 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 {
     using System;
     using DeploymentModel;
-    using dropkick.Tasks.RoundhousE;
+    using Tasks.RoundhousE;
     using Tasks;
 
     public class RoundhousEProtoTask :
         BaseProtoTask,
         RoundhousEOptions
     {
+        //readonly ProtoServer _server;
+
         string _environmentName;
         string _instanceName;
         string _databaseName;
         string _scriptsLocation;
-        bool _useSimpleRecoveryMode;
-       // string _databaseType;
-        bool _drop;
+        private RoundhousEMode _roundhouseMode;
+        private DatabaseRecoveryMode _recoveryMode;
+        private string _restorePath;
+        
         private string _userName;
         private string _password;
 
-        //public RoundhousEOptions ForDatabaseType(string type)
+        //public RoundhousEProtoTask(ProtoServer server)
         //{
-        //    _databaseType = ReplaceTokens(type);
-        //    return this;
+        //    _server = server;
         //}
 
         public RoundhousEOptions OnInstance(string name)
@@ -50,9 +52,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        public RoundhousEOptions DropDatabase(bool drop)
+        public RoundhousEOptions WithRoundhousEMode(RoundhousEMode roundhouseMode)
         {
-            _drop = drop;
+            _roundhouseMode = roundhouseMode;
             return this;
         }
 
@@ -68,9 +70,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        public RoundhousEOptions UseSimpleRecoveryMode(bool useSimple)
+        public RoundhousEOptions WithDatabaseRecoveryMode(DatabaseRecoveryMode recoveryMode)
         {
-            _useSimpleRecoveryMode = useSimple;
+            _recoveryMode = recoveryMode;
             return this;
         }
 
@@ -86,15 +88,11 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        //public RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //public RoundhousEOptions RestoreDatabaseFrom(string path)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public RoundhousEOptions WithRestorePath(string restorePath)
+        {
+            _restorePath = restorePath;
+            return this;
+        }
 
         //public RoundhousEOptions WithRestoreOptions(string options)
         //{
@@ -109,8 +107,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
             var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
 
-            var task = new RoundhousETask(connectionString,_scriptsLocation, _environmentName,  _drop,
-                                          _useSimpleRecoveryMode);
+            var task = new RoundhousETask(connectionString, _scriptsLocation, 
+                                          _environmentName, _roundhouseMode,
+                                          _recoveryMode, _restorePath);
 
             site.AddTask(task);
         }

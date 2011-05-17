@@ -72,11 +72,10 @@ namespace dropkick.console
 
             var app = new FileAppender
                           {
-                              Name = "dropkick.runlog",
-                              File = string.Format("{0}.runlog", DateTime.Now.ToString("yyyyMMdd-HHmmssfff")),
+                              Name = "dropkick.run.log",
+                              File = string.Format("{0}.run.log", DateTime.Now.ToString("yyyyMMdd-HHmmssfff")),
                               Layout = layout,
                               AppendToFile = false
-
                           };
             app.ActivateOptions();
 

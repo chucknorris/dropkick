@@ -25,10 +25,11 @@ namespace dropkick.tests.Tasks.RoundhousE
         public void TestRoundhousE()
         {
             var task = new RoundhousETask("server=(local);database=TestRoundhouse;integrated security=true;",
-                                          @"C:\Solutions\roundhouse\code_drop\sample\db\SQLServer\TestRoundhousE", "TEST", false,
-                                          true);
+                                          @"C:\Solutions\roundhouse\code_drop\sample\db\SQLServer\TestRoundhousE", "TEST",
+                                          RoundhousEMode.DropCreate,DatabaseRecoveryMode.Simple,string.Empty);
             DeploymentResult results = task.Execute();
 
+            System.Console.WriteLine(results);
             Assert.IsFalse(results.ContainsError());
         }
     }
