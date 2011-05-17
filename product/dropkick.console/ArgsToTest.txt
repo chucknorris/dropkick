@@ -1,0 +1,1 @@
+﻿execute /deployment:..\deployment\dk\deployment.dll /settings:..\deployment\settings /environment:LOCAL /roles:Db

@@ -16,19 +16,9 @@
   <property name="dirs.deployment" value="${dirs.drop}\${folder.deployment}" />
   <property name="dirs.app.drop" value="${dirs.drop}\${folder.app.drop}" overwrite="false" />
 
-  <target name="go" depends="move_console_up, merge_the_remote, merge_the_dll, copy_files_to_deploy_console" />
+  <target name="go" depends="merge_the_remote, merge_the_dll, copy_files_to_deploy_console" />
  
-  <target name="move_console_up">
-   <echo message="Moving ${dirs.app.drop}\console\dropkick.console to ${dirs.app.drop}\console." />
-    <move todir="${dirs.app.drop}\console" overwrite="true">
-      <fileset basedir="${dirs.app.drop}\console\dropkick.console">
-        <include name="**" />
-      </fileset>
-    </move>
-    <delete dir="${dirs.app.drop}\console\dropkick.console" />
-  </target>
-  
-   <target name="merge_the_remote">
+  <target name="merge_the_remote">
     <nant buildfile="${dirs.current}\ilmergeRemote.build" inheritall="true" />
   </target>
   

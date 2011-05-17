@@ -30,8 +30,11 @@ namespace dropkick.Tasks.RoundhousE
         private readonly DatabaseRecoveryMode _recoveryMode;
         private readonly RoundhousEMode _roundhouseMode;
         private readonly string _restorePath;
+        private readonly string _repositoryPath;
+        private readonly string _versionFile;
+        private readonly string _versionXPath;
 
-        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath)
+        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath, string repositoryPath, string versionFile, string versionXPath)
         {
             _connectionString = connectionString;
             _scriptsLocation = scriptsLocation;
@@ -39,6 +42,9 @@ namespace dropkick.Tasks.RoundhousE
             _recoveryMode = recoveryMode;
             _roundhouseMode = roundhouseMode;
             _restorePath = restorePath;
+            _repositoryPath = repositoryPath;
+            _versionFile = versionFile;
+            _versionXPath = versionXPath;
         }
 
         public string Name
@@ -74,16 +80,16 @@ namespace dropkick.Tasks.RoundhousE
                 switch (_roundhouseMode)
                 {
                     case RoundhousEMode.Drop:
-                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery);
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery,_repositoryPath,_versionFile,_versionXPath);
                         break;
                     case RoundhousEMode.Restore:
-                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery,true,_restorePath);
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, true, _restorePath);
                         break;
                     case RoundhousEMode.DropCreate:
-                        RoundhousEClientApi.Run(log, _connectionString, @".\", _environmentName, true, useSimpleRecovery);
+                        RoundhousEClientApi.Run(log, _connectionString, @".\", _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath);
                         goto case RoundhousEMode.Normal;
                     case RoundhousEMode.Normal:
-                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery);
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath);
                         break;
                     default:
                         goto case RoundhousEMode.Normal;

@@ -12,6 +12,7 @@ namespace dropkick.Tasks.RoundhousE
         {
             _results = results;
         }
+        
         public void log_a_debug_event_containing(string message, params object[] args)
         {
            // _results.AddNote(message, args);

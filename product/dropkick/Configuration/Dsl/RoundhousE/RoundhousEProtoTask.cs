@@ -34,6 +34,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         
         private string _userName;
         private string _password;
+        private string _repositoryPath;
+        private string _versionFile;
+        private string _versionXPath;
 
         //public RoundhousEProtoTask(ProtoServer server)
         //{
@@ -94,6 +97,23 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithRepositoryPath(string repositoryPath)
+        {
+            _repositoryPath = repositoryPath;
+            return this;
+        }
+        public RoundhousEOptions WithVersionFile(string versionFile)
+        {
+            _versionFile = versionFile;
+            return this;
+        }
+        public RoundhousEOptions WithVersionXPath(string versionXPath)
+        {
+            _versionXPath = versionXPath;
+            return this;
+        }
+
+
         //public RoundhousEOptions WithRestoreOptions(string options)
         //{
         //    throw new NotImplementedException();
@@ -109,7 +129,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
             var task = new RoundhousETask(connectionString, _scriptsLocation, 
                                           _environmentName, _roundhouseMode,
-                                          _recoveryMode, _restorePath);
+                                          _recoveryMode, _restorePath, _repositoryPath, _versionFile, _versionXPath);
 
             site.AddTask(task);
         }
