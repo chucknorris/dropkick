@@ -55,14 +55,13 @@ namespace dropkick.Wmi
             using (var search = new ManagementObjectSearcher(scope, query))
             {
 
-                foreach (var share in search.Get())
+                foreach (ManagementObject share in search.Get())
                 {
                     string name = share["Name"].ToString();
                     if (name.EqualsIgnoreCase(shareName))
                     {
-                        //share.Delete();
-                        //return ShareReturnCode.Success;
-                        //break;
+                        share.Delete();
+                        return ShareReturnCode.Success;
                     }
                 }
             }
@@ -88,7 +87,6 @@ namespace dropkick.Wmi
             }
             throw new Exception("There is no share '{0}' on machine '{1}'".FormatWith(shareName, serverName));
         }
-
 
     }
     //public class test
