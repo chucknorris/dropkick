@@ -46,7 +46,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            string to = _to;
+            string to = _path.ConvertUncShareToLocalPath(site, _to); 
 
             var o = new CopyFileTask(_from, to, _newFileName, new DotNetPath());
             site.AddTask(o);

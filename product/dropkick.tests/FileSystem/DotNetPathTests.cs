@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Wmi;
+
 namespace dropkick.tests.Tasks.Files
 {
     using System.IO;
@@ -62,10 +64,10 @@ namespace dropkick.tests.Tasks.Files
             Assert.IsTrue(_path.IsFile(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\des.exe"));
         }
 
-        [Test, Explicit]
+        [Test]
         public void RemotePathIsDirectoryTest()
         {
-            Assert.IsTrue(_path.IsDirectory(@"\\localhost\Appl2\Warehouse"));
+            Assert.IsTrue(_path.IsDirectory(@"\\localhost\c$"));
         }
 
         [Test]
@@ -75,7 +77,8 @@ namespace dropkick.tests.Tasks.Files
             Assert.IsFalse(_path.IsFile(".\\stuff"));
         }
 
-        [Test][Explicit]
+        [Test]
+        [Explicit]
         public void RemoteFileTest()
         {
             Assert.IsTrue(File.Exists(@"\\srvtestwebtpg\E$\FHLB MQApps\BloombergIntegration\bin\FHLBank.BloombergIntegration.Host.exe.config"));
@@ -89,7 +92,7 @@ namespace dropkick.tests.Tasks.Files
             var server = new DeploymentServer("localhost");
             Assert.AreEqual(@"C:\temp", _path.ConvertUncShareToLocalPath(server, @"~\c$\temp"));
         }
-        
+
         [Test]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_is_prepended_with_the_server()
         {
@@ -103,21 +106,33 @@ namespace dropkick.tests.Tasks.Files
             var server = new DeploymentServer("localhost");
             Assert.AreEqual(@"C:\temp", _path.ConvertUncShareToLocalPath(server, @"~\c$\temp"));
         }
-        
-        [Test,Explicit]
+
+        [Test]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_has_an_underscore_in_it()
         {
-            var server = new DeploymentServer("localhost");
-            Assert.AreEqual(@"C:\code", _path.ConvertUncShareToLocalPath(server, @"~\code_"));
+            test_share_name("code_");
+        }
 
-        }       
-        
-        [Test,Explicit]
+        [Test]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_has_a_pound_sign_in_it()
         {
-            var server = new DeploymentServer("localhost");
-            Assert.AreEqual(@"C:\code", _path.ConvertUncShareToLocalPath(server, @"~\code#"));
-
+            test_share_name("code#");
         }
+
+        public void test_share_name(string shareName)
+        {
+            string serverName = "localhost";
+            string destination = @".\temp";
+            if (!Directory.Exists(destination)) { Directory.CreateDirectory(destination); }
+            Win32Share.Create(serverName, shareName, destination, "");
+
+            var server = new DeploymentServer(serverName);
+            var actual = _path.ConvertUncShareToLocalPath(server, @"~\{0}".FormatWith(shareName));
+
+            Win32Share.Delete(serverName, shareName);
+
+            Assert.AreEqual(System.IO.Path.GetFullPath(destination), actual);
+        }
+
     }
 }

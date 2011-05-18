@@ -64,9 +64,9 @@
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\lib\references\Microsoft\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.4.6.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -98,13 +98,13 @@
     <Compile Include="DeploymentModel\WithSimpleModel.cs" />
     <Compile Include="Engine\PhysicalServerTests.cs" />
     <Compile Include="Extentions.cs" />
-    <Compile Include="RemotePathHelperTest.cs" />
+    <Compile Include="FileSystem\RemotePathHelperTest.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="StringInterpolation\TestIt.cs" />
     <Compile Include="Tasks\Console\RemoteTest.cs" />
+    <Compile Include="Tasks\Files\CopyDirectoryTaskSpecs.cs" />
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
-    <Compile Include="Tasks\Files\DotNetPathTests.cs" />
-    <Compile Include="Tasks\Files\RemotePathHelperTests.cs" />
+    <Compile Include="FileSystem\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
@@ -120,7 +120,6 @@
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />
     <Compile Include="Tasks\Dsn\CreatingDsns.cs" />
-    <Compile Include="Tasks\Files\CopyDirectoryTest.cs" />
     <Compile Include="Tasks\Msmq\MsmqTest.cs" />
     <Compile Include="Tasks\MsSql\OutputSqlTest.cs" />
     <Compile Include="Tasks\MsSql\RunSqlScriptTaskTest.cs" />
@@ -142,6 +141,7 @@
     <Compile Include="TestObjects\TestDeployment.cs" />
     <Compile Include="TestObjects\TestTask.cs" />
     <Compile Include="TestObjects\WinServiceTestDeploy.cs" />
+    <Compile Include="TinySpec.cs" />
     <Compile Include="WmiSpecs.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +178,9 @@
       <ProductName>Windows Installer 3.1</ProductName>
       <Install>true</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

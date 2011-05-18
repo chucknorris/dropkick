@@ -62,8 +62,7 @@ namespace dropkick.Tasks.Files
             FileInfo[] files = source.GetFiles();
             foreach (var file in files)
             {
-                string fileDestination = _path.Combine(destination.FullName,
-                                                       file.Name);
+                string fileDestination = _path.Combine(destination.FullName,file.Name);
 
                 CopyFileToFile(result, file, new FileInfo(fileDestination));
             }

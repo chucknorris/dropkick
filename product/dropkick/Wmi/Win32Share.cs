@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.IO;
+
 namespace dropkick.Wmi
 {
     using System;
@@ -25,6 +27,8 @@ namespace dropkick.Wmi
         {
             try
             {
+                path = Path.GetFullPath(path);
+
                 const string methodName = "Create";
 
                 //todo: This only creates read only shares
@@ -68,7 +72,6 @@ namespace dropkick.Wmi
 
             return ShareReturnCode.UnknownFailure;
         }
-
 
         public static string GetLocalPathForShare(string serverName, string shareName)
         {

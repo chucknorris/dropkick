@@ -26,7 +26,7 @@ namespace dropkick.Tasks.Files
 
         public CopyFileTask(string @from, string to, string newFileName, Path path) : base(path)
         {
-            _from = from;
+            _from = @from;
             _to = to;
             _newFileName = newFileName;
         }
