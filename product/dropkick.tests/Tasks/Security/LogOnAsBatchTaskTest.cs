@@ -4,6 +4,7 @@
     using NUnit.Framework;
 
     [TestFixture]
+    [Category("Integration")]
     public class LogOnAsBatchTaskTest
     {
         [Test]

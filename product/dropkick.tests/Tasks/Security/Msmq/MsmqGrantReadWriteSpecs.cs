@@ -122,6 +122,8 @@ namespace dropkick.tests.Tasks.Security.Msmq
             }
         }
 
+        [ConcernFor("MSMQ Tasks")]
+        [Category("Integration")]
         public class when_granting_read_write_permissions_to_a_remote_queue : MsmqGrantReadWriteSpecsBase
         {
             protected RemoteMsmqGrantReadWriteTask task;

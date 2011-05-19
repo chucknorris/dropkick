@@ -13,6 +13,7 @@ namespace dropkick.tests
     public class RemotePathHelperTest
     {
         [Test]
+        [Category("Integration")]
         public void when_deploying_to_c_share_should_convert_remote_path_successfully()
         {
             var path = new DotNetPath();
@@ -21,6 +22,7 @@ namespace dropkick.tests
         }
 
         [Test]
+        [Category("Integration")]
         public void when_deploying_to_temp_share_should_convert_remote_path_successfully()
         {
             var path = new DotNetPath();

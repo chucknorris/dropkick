@@ -65,6 +65,7 @@ namespace dropkick.tests.Tasks.Files
         }
 
         [Test]
+        [Category("Integration")]
         public void RemotePathIsDirectoryTest()
         {
             Assert.IsTrue(_path.IsDirectory(@"\\localhost\c$"));
@@ -87,6 +88,7 @@ namespace dropkick.tests.Tasks.Files
         //valid characters in a share name .~!@#$%^&()_-'{} and spaces
 
         [Test]
+        [Category("Integration")]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_is_prepended_with_a_tilda_aka_site_root()
         {
             var server = new DeploymentServer("localhost");
@@ -94,6 +96,7 @@ namespace dropkick.tests.Tasks.Files
         }
 
         [Test]
+        [Category("Integration")]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_is_prepended_with_the_server()
         {
             var server = new DeploymentServer("localhost");
@@ -101,6 +104,7 @@ namespace dropkick.tests.Tasks.Files
         }
 
         [Test]
+        [Category("Integration")]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_has_a_dollar_sign_in_it()
         {
             var server = new DeploymentServer("localhost");
@@ -108,12 +112,14 @@ namespace dropkick.tests.Tasks.Files
         }
 
         [Test]
+        [Category("Integration")]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_has_an_underscore_in_it()
         {
             test_share_name("code_");
         }
 
         [Test]
+        [Category("Integration")]
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_has_a_pound_sign_in_it()
         {
             test_share_name("code#");
