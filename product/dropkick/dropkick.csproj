@@ -102,6 +102,7 @@
     <Compile Include="Configuration\Dsl\Topshelf\TopshelfOptions.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
+    <Compile Include="FileSystem\PathConverter.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Prompting\ConsolePromptService.cs" />

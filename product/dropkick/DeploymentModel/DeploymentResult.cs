@@ -10,6 +10,7 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Diagnostics;
 using System.Text;
 
 namespace dropkick.DeploymentModel
@@ -20,6 +21,7 @@ namespace dropkick.DeploymentModel
     using System.Collections.ObjectModel;
     using System.Linq;
 
+    [DebuggerDisplay("{ResultsToList()}")]
     public class DeploymentResult :
         IEnumerable<DeploymentItem>
     {
@@ -123,7 +125,20 @@ namespace dropkick.DeploymentModel
             var sb = new StringBuilder();
             foreach (var item in _items)
             {
-                sb.Append(item.Message + Environment.NewLine);
+
+                sb.AppendFormat("{0}{1}",item.Message ?? "{null}" , Environment.NewLine);
+            }
+
+            return sb.ToString();
+        }
+
+        public string ResultsToList()
+        {
+            var sb = new StringBuilder();
+            sb.Append("|");
+            foreach (var item in _items)
+            {
+                sb.AppendFormat("{0}{1}", item.Message ?? "{null}", "|");
             }
 
             return sb.ToString();

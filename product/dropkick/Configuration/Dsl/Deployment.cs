@@ -35,16 +35,15 @@ namespace dropkick.Configuration.Dsl
         public SETTINGS Settings { get; private set; }
 
 
-        //this has replaced the static constructor
-
         #region Deployment Members
 
+        //this has replaced the static constructor
         public void Initialize(object settings)
         {
             InitializeParts();
             VerifyDeploymentConfiguration();
 
-            Settings = (SETTINGS) settings;
+            Settings = (SETTINGS)settings;
             HUB.Settings = settings;
             _definition(Settings);
         }
@@ -102,7 +101,7 @@ namespace dropkick.Configuration.Dsl
         static TValue SetPropertyValue<TValue>(PropertyInfo propertyInfo, Func<PropertyInfo, TValue> getValue)
         {
             var value = Expression.Parameter(typeof(TValue), "value");
-            var action = Expression.Lambda<Action<TValue>>(Expression.Call(propertyInfo.GetSetMethod(), value), new[] {value}).Compile();
+            var action = Expression.Lambda<Action<TValue>>(Expression.Call(propertyInfo.GetSetMethod(), value), new[] { value }).Compile();
 
             TValue propertyValue = getValue(propertyInfo);
             action(propertyValue);

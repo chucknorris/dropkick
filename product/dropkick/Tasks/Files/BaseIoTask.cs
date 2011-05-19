@@ -13,6 +13,7 @@ namespace dropkick.Tasks.Files
     {
         readonly ILog _fileLog = LogManager.GetLogger("dropkick.changes.files");
         protected readonly Path _path;
+
         protected BaseIoTask(Path path)
         {
             _path = path;

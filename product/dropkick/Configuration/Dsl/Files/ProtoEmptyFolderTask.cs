@@ -31,7 +31,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            string to = _folderName;
+            string to = PathConverter.Convert(site, _folderName);
             var task = new EmptyFolderTask(to, new DotNetPath());
             site.AddTask(task);
         }

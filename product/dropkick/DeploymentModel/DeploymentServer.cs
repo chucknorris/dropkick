@@ -39,11 +39,13 @@ namespace dropkick.DeploymentModel
 
         public string Name { get; private set; }
 
-
         public bool IsLocal
         {
-            get { return Environment.MachineName.EqualsIgnoreCase(Name) 
-                || "localhost".EqualsIgnoreCase(Name); }
+            get
+            {
+                return Environment.MachineName.EqualsIgnoreCase(Name) || "localhost".EqualsIgnoreCase(Name);
+                //|| "127.0.0.1".EqualsIgnoreCase(Name); }
+            }
         }
 
 

@@ -36,7 +36,9 @@ namespace dropkick.Configuration.Dsl.Files
             task.Args(@" -pe ""connectionStrings"" -app ""/MachineDPAPI"" -prov ""DataProtectionConfigurationProvider""");
             string winDir = Environment.GetEnvironmentVariable("WINDIR");
             task.ExecutableIsLocatedAt(_path.Combine(winDir, @"Microsoft.NET\Framework\v2.0.50727"));
-            task.WorkingDirectory(_where);
+            //task.WorkingDirectory(_where);
+            string where = PathConverter.Convert(site, _where);
+            task.WorkingDirectory(where);
 
             task.RegisterRealTasks(site);
         }

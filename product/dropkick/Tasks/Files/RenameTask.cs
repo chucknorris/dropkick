@@ -74,8 +74,7 @@ namespace dropkick.Tasks.Files
         {
             string path = _path.Combine(source.Directory.FullName, destination.Name);
 
-            if (File.Exists(path))
-                File.Delete(path);
+            if (File.Exists(path)){File.Delete(path);}
 
             source.MoveTo(path);
             _log.DebugFormat("Rename file '{0}' destination '{1}'", source.FullName, destination.FullName);
@@ -84,8 +83,7 @@ namespace dropkick.Tasks.Files
 
         void ValidateFile(DeploymentResult result, string path)
         {
-            if (!_path.IsFile(path))
-                result.AddError("'{0}' is not an acceptable path. It doesn't appear to be a file.".FormatWith(path));
+            if (!_path.IsFile(path)) {result.AddError("'{0}' is not an acceptable path. It doesn't appear to be a file.".FormatWith(path));}
         }
     }
 }

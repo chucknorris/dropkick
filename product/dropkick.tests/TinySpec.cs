@@ -15,6 +15,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 // ==============================================================================
+using System;
+
 namespace dropkick.tests
 {
     using NUnit.Framework;
@@ -44,4 +46,14 @@ namespace dropkick.tests
 
     public class ObservationAttribute : TestAttribute {}
     public class FactAttribute : TestAttribute {}
+
+    public class ConcernForAttribute : Attribute
+    {
+        public string Name { get; set; }
+        
+        public ConcernForAttribute(string name)
+        {
+            Name = name;
+        }
+    }
 }

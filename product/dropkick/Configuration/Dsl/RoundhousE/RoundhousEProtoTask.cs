@@ -11,6 +11,8 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using dropkick.FileSystem;
+
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
     using System;
@@ -22,7 +24,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         BaseProtoTask,
         RoundhousEOptions
     {
-        //readonly ProtoServer _server;
+        private readonly Path _path = new DotNetPath();
 
         string _environmentName;
         string _instanceName;
@@ -31,17 +33,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private RoundhousEMode _roundhouseMode;
         private DatabaseRecoveryMode _recoveryMode;
         private string _restorePath;
-        
+
         private string _userName;
         private string _password;
         private string _repositoryPath;
         private string _versionFile;
         private string _versionXPath;
-
-        //public RoundhousEProtoTask(ProtoServer server)
-        //{
-        //    _server = server;
-        //}
 
         public RoundhousEOptions OnInstance(string name)
         {
@@ -121,13 +118,14 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+           // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
             var instanceServer = site.Name;
             if (!string.IsNullOrEmpty(_instanceName))
                 instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
 
             var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
 
-            var task = new RoundhousETask(connectionString, _scriptsLocation, 
+            var task = new RoundhousETask(connectionString, _scriptsLocation,
                                           _environmentName, _roundhouseMode,
                                           _recoveryMode, _restorePath, _repositoryPath, _versionFile, _versionXPath);
 

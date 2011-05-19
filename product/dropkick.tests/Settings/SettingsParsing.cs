@@ -23,19 +23,19 @@ namespace dropkick.tests.Settings
             Assert.AreEqual(SampleEnum.Manual, r.Auto);
         }
 
-        [Test]
-        public void ViaFastInvoke()
-        {
-            var commandLine = @"-Website:cue -Database:cue_db -YesNo:true -Auto:Manual";
+        //[Test]
+        //public void ViaFastInvoke()
+        //{
+        //    var commandLine = @"-Website:cue -Database:cue_db -YesNo:true -Auto:Manual";
 
-            var p = new SettingsParser();
-            var r = (TestSettings)p.FastInvoke<SettingsParser, object>(new []{typeof(TestSettings)}, "Parse", new FileInfo("."), commandLine, "test");
+        //    var p = new SettingsParser();
+        //    var r = (TestSettings)p.FastInvoke<SettingsParser, object>(new []{typeof(TestSettings)}, "Parse", new FileInfo("."), commandLine, "test");
 
-            Assert.AreEqual("cue_db", r.Database);
-            Assert.AreEqual("cue", r.Website);
-            Assert.IsTrue(r.YesNo);
-            Assert.AreEqual(SampleEnum.Manual, r.Auto);
-        }
+        //    Assert.AreEqual("cue_db", r.Database);
+        //    Assert.AreEqual("cue", r.Website);
+        //    Assert.IsTrue(r.YesNo);
+        //    Assert.AreEqual(SampleEnum.Manual, r.Auto);
+        //}
     }
 
     public class TestSettings

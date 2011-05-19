@@ -64,9 +64,16 @@
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\lib\references\Microsoft\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework, Version=2.5.10.11092, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+    <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\packages\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+      <HintPath>..\..\packages\NUnit.2.5.9.10348\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.mocks, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NUnit.2.5.9.10348\lib\nunit.mocks.dll</HintPath>
+    </Reference>
+    <Reference Include="pnunit.framework">
+      <HintPath>..\..\packages\NUnit.2.5.9.10348\lib\pnunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -90,12 +97,8 @@
     <Compile Include="Configuration\Dsl\roundhouse\RoundhouseProtoTest.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
-    <Compile Include="DeploymentModel\DeploymentPlanExecution.cs" />
-    <Compile Include="DeploymentModel\DeploymentPlanFailingExecution.cs" />
-    <Compile Include="DeploymentModel\DeploymentPlanVerification.cs" />
-    <Compile Include="DeploymentModel\WithFailingModel.cs" />
+    <Compile Include="DeploymentModel\DeploymentPlanSpecs.cs" />
     <Compile Include="Engine\GivenANullCommandLine.cs" />
-    <Compile Include="DeploymentModel\WithSimpleModel.cs" />
     <Compile Include="Engine\PhysicalServerTests.cs" />
     <Compile Include="Extentions.cs" />
     <Compile Include="FileSystem\RemotePathHelperTest.cs" />
@@ -114,7 +117,7 @@
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTest.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteTest.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteSpecs.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
