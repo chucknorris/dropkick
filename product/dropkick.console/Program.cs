@@ -49,13 +49,14 @@ namespace dropkick.console
             "   trace   (default) {0}" +
             "{0}" +
             "ARGS {0}" +
-            "   /environment:local is the default - used to work with config files {0}" +
-            "   /roles: all is the default {0}" +
-            "   /configuration: the location of the config files {0}" +
-            "   /deployment:  {0}" +
+            "  /environment:local is the default - used to work with config files {0}" +
+            "  /roles: all is the default {0}" +
+            "  /settings: path to settings and servermaps {0}" +
+            "  /deployment:  {0}" +
             "      Company.Project.Deployment.dll (an assembly) {0}" +
             "      Company.Project.Deployment.StandardDeploy (a class, lack of .dll) {0}" +
-            "      (null) - if omitted, dk will search for a dll ending with 'Deployment' then pass that name in {0}"
+            "      (null) - if omitted, dk will search for a dll ending with 'Deployment' then pass that name in {0}" + 
+            "  /silent - this switch allows you to run unattended installs {0}" 
             , Environment.NewLine);
         }
 

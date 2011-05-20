@@ -98,9 +98,9 @@
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
     <Compile Include="DeploymentModel\DeploymentPlanSpecs.cs" />
-    <Compile Include="Engine\GivenANullCommandLine.cs" />
+    <Compile Include="Engine\DeploymentCommandLineParserSpecs.cs" />
     <Compile Include="Engine\PhysicalServerTests.cs" />
-    <Compile Include="Extentions.cs" />
+    <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem\RemotePathHelperTest.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="StringInterpolation\TestIt.cs" />

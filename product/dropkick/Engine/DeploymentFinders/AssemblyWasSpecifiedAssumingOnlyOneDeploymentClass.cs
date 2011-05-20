@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.FileSystem;
+
 namespace dropkick.Engine.DeploymentFinders
 {
     using System;
@@ -24,6 +26,7 @@ namespace dropkick.Engine.DeploymentFinders
         DeploymentFinder
     {
         static readonly ILog _log = LogManager.GetLogger(typeof (AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass));
+        private readonly DotNetPath _path = new DotNetPath();
 
         #region DeploymentFinder Members
 
@@ -31,7 +34,11 @@ namespace dropkick.Engine.DeploymentFinders
         {
             //check that it is an assembly
 
-            string path = FindFile(assemblyName);
+            string path = FindFile(assemblyName);    
+            if (string.IsNullOrEmpty(path))
+            {
+                return new NullDeployment();    
+            }
 
             Assembly asm = Assembly.LoadFile(path);
             IEnumerable<Type> tt = asm.GetTypes().Where(t => typeof (Deployment).IsAssignableFrom(t));
@@ -43,11 +50,15 @@ namespace dropkick.Engine.DeploymentFinders
 
         string FindFile(string file)
         {
-            string p = Path.Combine(Environment.CurrentDirectory, file);
+            string p = _path.GetFullPath(file);
+            //string p = Path.Combine(Environment.CurrentDirectory, file);
             _log.DebugFormat("Looking for deployment dll '{0}' at '{1}'", file, p);
 
             if (!File.Exists(p))
-                throw new FileNotFoundException("Couldn't Find File", p);
+            {
+                _log.ErrorFormat("Couldn't find '{0}'", p);
+                p = string.Empty;
+            }
 
             return p;
         }

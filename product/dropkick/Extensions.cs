@@ -65,5 +65,18 @@ namespace dropkick
                 .Select(x => converter(x.Value))
                 .Single();
         }
+
+
+        public static bool GetSwitch(this IEnumerable<ICommandLineElement> elements, string key)
+        {
+            return elements
+                .Where(x => typeof(ISwitchElement).IsAssignableFrom(x.GetType()))
+                .Select(x => x as ISwitchElement)
+                .Where(x => x.Key == key || x.Key[0] == key[0])
+                .Select(x => x.Value)
+                .DefaultIfEmpty(false)
+                .Single();
+        }
+
     }
 }

@@ -41,9 +41,6 @@ namespace dropkick.Engine
             arguments.Deployment = deployment;
 
 
-           // string part = commandLineElements.GetDefinition("part", "ALL");
-          //  arguments.Role = part;
-
             string enviro = commandLineElements.GetDefinition("environment", "LOCAL");
             arguments.Environment = enviro;
 
@@ -52,6 +49,9 @@ namespace dropkick.Engine
 
             string roles = commandLineElements.GetDefinition("roles", "ALL");
             arguments.Role = roles;
+
+            bool silent = commandLineElements.GetSwitch("silent");
+            arguments.Silent = silent;
         }
 
         static IEnumerable<ICommandLineElement> P(string commandLine)

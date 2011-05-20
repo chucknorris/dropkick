@@ -1,3 +1,4 @@
 ﻿execute /deployment:..\deployment\dk\deployment.dll /settings:..\deployment\settings /environment:LOCAL /roles:Db
+execute /deployment:..\deployment\dk\deployment.dll /silent
 
 execute /deployment:C:\code\code_drop\deployment\dk\deployment.dll /settings:C:\code\code_drop\deployment\settings /environment:LOCAL /roles:Web,Host

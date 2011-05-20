@@ -30,8 +30,9 @@ namespace dropkick.Engine
 
         public static void Deploy(string commandLine)
         {
-            if(!_coarseLog.IsDebugEnabled)
-                Console.WriteLine("Sad Emo Otter says \"DEBUG LOGGING IS OFF - THIS ISN'T GOING TO BE FUN :(\"");
+
+
+            if (!_coarseLog.IsDebugEnabled) { Console.WriteLine("Sad Emo Otter says \"DEBUG LOGGING IS OFF - THIS ISN'T GOING TO BE FUN :(\""); }
 
             try
             {
@@ -41,14 +42,31 @@ namespace dropkick.Engine
                 _coarseLog.Info("");
 
                 DeploymentArguments newArgs = DeploymentCommandLineParser.Parse(commandLine);
-
-                
-
+                bool silent = newArgs.Silent;
+                bool argumentsVerified = true;
 
                 _coarseLog.Info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
                 _coarseLog.InfoFormat("Command:     {0}", newArgs.Command);
                 _coarseLog.InfoFormat("Environment: {0}", newArgs.Environment);
                 _coarseLog.InfoFormat("Role:        {0}", newArgs.Role);
+
+                ////////// File Checks
+                if (!VerifyPathToServerMapsFile(newArgs.PathToServerMapsFile))
+                {
+                    if (argumentsVerified)
+                    {
+                        argumentsVerified = false;
+                    }
+                }
+                if (!VerifyPathToSettingsFile(newArgs.PathToSettingsFile))
+                {
+                    if (argumentsVerified)
+                    {
+                        argumentsVerified = false;
+                    }
+                }
+                ////////////////////
+
 
                 //////// DEPLOYMENT STUFF
                 FindResult findResult = _finder.Find(newArgs.Deployment);
@@ -59,61 +77,65 @@ namespace dropkick.Engine
                 if (deployment.GetType().Equals(typeof(NullDeployment)))
                 {
                     _coarseLog.Fatal("Couldn't find a deployment to run.");
-                    return;
+                    if (argumentsVerified)
+                    {
+                        argumentsVerified = false;
+                    }
                 }
                 ////////
 
-
-
-                ////////// File Checks
-                if(!VerifyPathToServerMapsFile(newArgs.PathToServerMapsFile))
+                if (!argumentsVerified)
                 {
-                    return;
+                    Environment.Exit(1);
                 }
-                if (!VerifyPathToSettingsFile(newArgs.PathToSettingsFile))
-                {
-                    return;
-                }
-                ////////////////////
 
                 RoleToServerMap maps = _serverParser.Parse(new FileInfo(newArgs.PathToServerMapsFile));
                 newArgs.ServerMappings.Merge(maps);
                 DisplayServerMappingsForEnvironment(newArgs.ServerMappings);
 
-                
-                 
                 _coarseLog.Info("");
                 _coarseLog.Info("^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^");
-                _coarseLog.Info("Please review the settings above when you are ready,");
-                _coarseLog.Info("  Press 'ctrl+c' to cancel.");
-                
-                if(deployment.HardPrompt)
+
+                if (deployment.HardPrompt)
                 {
-                    bool wrong = true;
-                    do
+
+                    if (!silent)
                     {
-                        _coarseLog.Info("  Please type the environment name '{0}' to continue.".FormatWith(newArgs.Environment));
-                        var environment = Console.ReadLine();
-                        if(environment.EqualsIgnoreCase(newArgs.Environment))
+                        bool wrong = true;
+                        do
                         {
-                            wrong = false;
-                        }
-                    } while (wrong);
+                            _coarseLog.Info("  Please type the environment name '{0}' to continue.".FormatWith(newArgs.Environment));
+                            var environment = Console.ReadLine();
+                            if (environment.EqualsIgnoreCase(newArgs.Environment))
+                            {
+                                wrong = false;
+                            }
+                        } while (wrong);
+                    }
+                    else
+                    {
+                        _coarseLog.Fatal("Cannot use hard prompting when in silent mode.");
+                        Environment.Exit(1);
+                    }
                 }
                 else
                 {
-                    _coarseLog.Info("  Press enter to kick it out there");
-                    Console.ReadKey(true);
+                    //if (!silent)
+                    //{
+                        _coarseLog.Info("Please review the settings above and when you are ready,");
+                        _coarseLog.Info("  Press 'ctrl+c' to cancel.");
+                        _coarseLog.Info("  Press enter to kick it out there");
+                        Console.ReadKey(true);
+                    //}
                 }
-
 
 
                 /////// how to clean this up - below 
                 Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-                var settings = (DropkickConfiguration) _parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
+                var settings = (DropkickConfiguration)_parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
                                                                      newArgs.Environment);
-                
+
                 settings.Environment = newArgs.Environment;
                 deployment.Initialize(settings);
 
@@ -123,6 +145,7 @@ namespace dropkick.Engine
             {
                 _coarseLog.Debug(commandLine);
                 _coarseLog.Error(ex);
+                Environment.Exit(1);
             }
         }
 
