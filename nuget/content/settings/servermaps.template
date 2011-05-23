@@ -1,0 +1,6 @@
+﻿{
+	Web:"${server.services}",
+	VirtualDirectory:"${server.services}",
+	Host:"${server.services}",
+	Db: "${server.database}"
+}

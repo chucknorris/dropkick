@@ -105,7 +105,13 @@
         <include name="ArgsToTest.txt" />
       </fileset>
     </delete>
-  
+    <delete>
+      <fileset basedir="${dirs.drop}\${folder.app.drop}\lib">
+        <exclude name="dropkick.dll" />
+        <exclude name="dropkick.pdb" />
+        <include name="*.*" />
+      </fileset>
+    </delete>
   </target>
   
 </project>

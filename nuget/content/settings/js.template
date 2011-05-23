@@ -1,0 +1,22 @@
+﻿{
+	WebsitePath : "${deploy.web.path}",
+	HostServicePath : "${deploy.service.path}",
+	
+	ServiceStartMode : "${service.host.startmode}",
+	ServiceUserName : "${service.host.username}",
+	ServiceUserPassword : "${service.host.userpassword}",
+
+	WebUserName : "${service.web.username}",
+	WebUserPassword : "${service.web.userpassword}",
+	VirtualDirectorySite : "${service.web.virtualdirectory.site}",
+	VirtualDirectoryName : "${service.web.virtualdirectory.name}",
+	
+	VirtualDirectorySite : "${app.virtualdirectory.site}",
+	VirtualDirectoryName : "${app.virtualdirectory.name}",
+	
+	DbName : "${database.name}",
+	DbSqlFilesPath : "${dirs.db}",
+	DbRestorePath : "${restore.from.path}",
+	DbRecoveryMode : "${db.recovery.mode}",
+	RoundhousEMode : "${roundhouse.mode}"
+}
