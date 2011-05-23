@@ -12,6 +12,7 @@ NDependOut
 *.resharper.user
 *.resharper
 *.cache
+*.docstates
 *~
 *.swp
 *.bak

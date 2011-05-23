@@ -28,6 +28,8 @@ namespace dropkick.tests.Configuration.Dsl
         public void EstablishContext()
         {
             Deployment = new TwoRoleDeploy();
+            Deployment.Initialize(new SampleConfiguration());
+
             Map = new RoleToServerMap();
             Map.AddMap("Web", "SrvTopeka09");
             Map.AddMap("Web", "SrvTopeka19");

@@ -28,36 +28,55 @@ namespace dropkick.DeploymentModel
             _roles.Add(role);
         }
 
-        public void Execute()
+        public DeploymentResult Trace()
         {
+            var deploymentResult = new DeploymentResult();
+            Ex(d =>
+            {
+                var result = d.Trace();
+                DisplayResults(result);
+                deploymentResult.MergedWith(result);
+            });
+
+            return deploymentResult;
+        }
+
+        public DeploymentResult Verify()
+        {
+            var deploymentResult =new DeploymentResult();
+            Ex(d =>
+            {
+                var result = d.Verify();
+                DisplayResults(result);
+                deploymentResult.MergedWith(result);
+            });
+
+            return deploymentResult;
+        }
+
+        public DeploymentResult Execute()
+        {
+            var deploymentResult = new DeploymentResult();
+
             Ex(d =>
             {
                 var o = d.Verify();
+                deploymentResult.MergedWith(o);
                 if (o.ContainsError())
                 {
                     //stop. report verify error.
                     return;
                 }
 
-                var oo = d.Execute();
+                var result = d.Execute();
+                DisplayResults(result);
+                deploymentResult.MergedWith(result);
+            });
 
-                DisplayResults(oo);
-            });
-        }
-        public void Verify()
-        {
-            Ex(d => d.Verify());
-        }
-        public void Trace()
-        {
-            Ex(d =>
-            {
-                var o = d.Trace();
-                DisplayResults(o);
-            });
+            return deploymentResult;
         }
 
-        void Ex(Action<DeploymentDetail> action)
+        DeploymentResult Ex(Action<DeploymentDetail> action)
         {
             var result = new DeploymentResult();
             result.AddNote(Name);
@@ -76,6 +95,8 @@ namespace dropkick.DeploymentModel
                     });
                 });
             }
+
+            return result;
         }
 
         public DeploymentRole GetRole(string name)

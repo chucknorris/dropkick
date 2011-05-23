@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<package xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <metadata>
+    <id>dropkick</id>
+    <title>DropkicK</title>
+    <version>DO_NOT_EDIT</version>
+    <authors>Dru Sellers, Rob Reynolds, Matt Brubaker</authors>
+    <owners>Rob Reynolds</owners>
+    <summary>DropkicK - Deploy Fluently</summary>
+    <description>DropkicK is a fluent deployment framework that allows you to describe what you are trying to do in a fluent manner (C# anyone?). This package contains both the executable and the reference dll. Type dk /? for options.</description>
+    <projectUrl>https://github.com/chucknorris/dropkick</projectUrl>
+    <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <tags>dropkick deploy deployment framework chocolatey</tags>
+    <!--<iconUrl>32x32.png</iconUrl>
+    <dependencies>
+      <dependency id="something" version="1.0.0.0" />
+    </dependencies>-->
+  </metadata>
+</package>

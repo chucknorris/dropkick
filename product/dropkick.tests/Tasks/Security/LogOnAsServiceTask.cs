@@ -17,6 +17,7 @@ namespace dropkick.tests.Tasks.Security
     using NUnit.Framework;
 
     [TestFixture]
+    [Category("Integration")]
     public class LogOnAsServiceTaskTest
     {
         [Test]

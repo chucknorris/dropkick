@@ -11,30 +11,34 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
+using dropkick.FileSystem;
+
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
     using System;
     using DeploymentModel;
-    using dropkick.Tasks.RoundhousE;
+    using Tasks.RoundhousE;
     using Tasks;
 
     public class RoundhousEProtoTask :
         BaseProtoTask,
         RoundhousEOptions
     {
+        private readonly Path _path = new DotNetPath();
+
         string _environmentName;
         string _instanceName;
         string _databaseName;
         string _scriptsLocation;
-        bool _useSimpleRecoveryMode;
-        string _databaseType;
-        bool _drop;
+        private RoundhousEMode _roundhouseMode;
+        private DatabaseRecoveryMode _recoveryMode;
+        private string _restorePath;
 
-        public RoundhousEOptions ForDatabaseType(string type)
-        {
-            _databaseType = ReplaceTokens(type);
-            return this;
-        }
+        private string _userName;
+        private string _password;
+        private string _repositoryPath;
+        private string _versionFile;
+        private string _versionXPath;
 
         public RoundhousEOptions OnInstance(string name)
         {
@@ -48,9 +52,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        public RoundhousEOptions DropDatabase(bool drop)
+        public RoundhousEOptions WithRoundhousEMode(RoundhousEMode roundhouseMode)
         {
-            _drop = drop;
+            _roundhouseMode = roundhouseMode;
             return this;
         }
 
@@ -66,37 +70,71 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        public RoundhousEOptions UseSimpleRecoveryMode(bool useSimple)
+        public RoundhousEOptions WithDatabaseRecoveryMode(DatabaseRecoveryMode recoveryMode)
         {
-            _useSimpleRecoveryMode = useSimple;
+            _recoveryMode = recoveryMode;
             return this;
         }
 
-        public RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore)
+        public RoundhousEOptions WithUserName(string userName)
         {
-            throw new NotImplementedException();
+            _userName = userName;
+            return this;
         }
 
-        public RoundhousEOptions RestoreDatabaseFrom(string path)
+        public RoundhousEOptions WithPassword(string password)
         {
-            throw new NotImplementedException();
+            _password = password;
+            return this;
         }
 
-        public RoundhousEOptions WithRestoreOptions(string options)
+        public RoundhousEOptions WithRestorePath(string restorePath)
         {
-            throw new NotImplementedException();
+            _restorePath = restorePath;
+            return this;
         }
+
+        public RoundhousEOptions WithRepositoryPath(string repositoryPath)
+        {
+            _repositoryPath = repositoryPath;
+            return this;
+        }
+        public RoundhousEOptions WithVersionFile(string versionFile)
+        {
+            _versionFile = versionFile;
+            return this;
+        }
+        public RoundhousEOptions WithVersionXPath(string versionXPath)
+        {
+            _versionXPath = versionXPath;
+            return this;
+        }
+
+
+        //public RoundhousEOptions WithRestoreOptions(string options)
+        //{
+        //    throw new NotImplementedException();
+        //}
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var serverAddressWithInstance = site.Name;
+           // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
+            var instanceServer = site.Name;
             if (!string.IsNullOrEmpty(_instanceName))
-                serverAddressWithInstance = @"{0}\{1}".FormatWith(serverAddressWithInstance, _instanceName);
+                instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
 
-            var task = new RoundhousETask(serverAddressWithInstance, _databaseType, _databaseName, _drop,
-                                          _scriptsLocation, _environmentName, _useSimpleRecoveryMode);
+            var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
+
+            var task = new RoundhousETask(connectionString, _scriptsLocation,
+                                          _environmentName, _roundhouseMode,
+                                          _recoveryMode, _restorePath, _repositoryPath, _versionFile, _versionXPath);
 
             site.AddTask(task);
+        }
+
+        public string BuildConnectionString(string instanceServer, string databaseName, string userName, string password)
+        {
+            return "data source={0};initial catalog={1};{2}".FormatWith(instanceServer, databaseName, string.IsNullOrEmpty(userName) ? "integrated security=sspi;" : "user id={0};password={1};".FormatWith(userName, password));
         }
     }
 }

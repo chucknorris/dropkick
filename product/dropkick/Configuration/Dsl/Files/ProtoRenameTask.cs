@@ -38,8 +38,8 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            string target = _target;
-            string newName = _newName;
+            string target = PathConverter.Convert(site, _target);
+            string newName = PathConverter.Convert(site, _newName);
             target = RemotePathHelper.Convert(site, target);
 
             var o = new RenameTask(target, newName, new DotNetPath());

@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.console", "product
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dropkick.remote", "product\dropkick.remote\dropkick.remote.csproj", "{97A21367-4943-4F47-9905-68668DBB3F5E}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "tests", "tests", "{31E06AD9-664D-44A5-984E-7493FBE24D29}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -64,6 +66,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{05E8B70A-3A2A-48AD-AF36-EE1A0D0A914B} = {31E06AD9-664D-44A5-984E-7493FBE24D29}
 	EndGlobalSection
 	GlobalSection(NDepend) = preSolution
 		Project = ".\dropkick.ndproj"

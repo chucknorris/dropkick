@@ -12,8 +12,7 @@ namespace dropkick.tests.Tasks.NetworkShare
         [Test][Explicit]
         public void Execute()
         {
-            if(Directory.Exists(".\\temp"))
-                Directory.CreateDirectory(".\\temp");
+            if(Directory.Exists(".\\temp")) Directory.CreateDirectory(".\\temp");
 
             var t = new FolderShareTask();
             t.PointingTo = @".\temp";

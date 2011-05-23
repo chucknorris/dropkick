@@ -10,20 +10,26 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Tasks.RoundhousE;
+
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
     public interface RoundhousEOptions
     {
-        RoundhousEOptions ForDatabaseType(string type);
+        // RoundhousEOptions ForDatabaseType(string type);
         RoundhousEOptions OnInstance(string name);
         RoundhousEOptions OnDatabase(string name);
-        RoundhousEOptions DropDatabase(bool drop);
+        RoundhousEOptions WithUserName(string userName);
+        RoundhousEOptions WithPassword(string password);
+        RoundhousEOptions WithRoundhousEMode(RoundhousEMode roundhouseMode);
         RoundhousEOptions WithScriptsFolder(string scriptsLocation);
         RoundhousEOptions ForEnvironment(string environment);
-        RoundhousEOptions UseSimpleRecoveryMode(bool useSimple);
-        RoundhousEOptions RestoreDatabaseBeforeDeployment(bool restore);
-        RoundhousEOptions RestoreDatabaseFrom(string path);
-        RoundhousEOptions WithRestoreOptions(string options);
+        RoundhousEOptions WithDatabaseRecoveryMode(DatabaseRecoveryMode recoveryMode);
+        RoundhousEOptions WithRestorePath(string restorePath);
+        //RoundhousEOptions WithRestoreOptions(string options);
+        RoundhousEOptions WithRepositoryPath(string repositoryPath);
+        RoundhousEOptions WithVersionFile(string versionFile);
+        RoundhousEOptions WithVersionXPath(string versionXPath);
     }
 
 }

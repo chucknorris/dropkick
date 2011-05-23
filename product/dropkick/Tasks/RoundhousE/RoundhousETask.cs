@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.ComponentModel;
+
 namespace dropkick.Tasks.RoundhousE
 {
     using System;
@@ -22,23 +24,27 @@ namespace dropkick.Tasks.RoundhousE
     {
         static readonly ILog _logger = LogManager.GetLogger(typeof(RoundhousETask));
 
-        readonly string _instanceName;
-        readonly string _databaseName;
-        readonly bool _dropDatabase;
-        readonly string _databaseType;
+        private string _connectionString;
         readonly string _scriptsLocation;
         readonly string _environmentName;
-        readonly bool _useSimpleRecoveryMode;
+        private readonly DatabaseRecoveryMode _recoveryMode;
+        private readonly RoundhousEMode _roundhouseMode;
+        private readonly string _restorePath;
+        private readonly string _repositoryPath;
+        private readonly string _versionFile;
+        private readonly string _versionXPath;
 
-        public RoundhousETask(string instanceName, string databaseType, string databaseName, bool dropDatabase, string scriptsLocation, string environmentName, bool useSimpleRecoveryMode)
+        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath, string repositoryPath, string versionFile, string versionXPath)
         {
-            _instanceName = instanceName;
-            _databaseName = databaseName;
-            _dropDatabase = dropDatabase;
-            _databaseType = databaseType;
+            _connectionString = connectionString;
             _scriptsLocation = scriptsLocation;
             _environmentName = environmentName;
-            _useSimpleRecoveryMode = useSimpleRecoveryMode;
+            _recoveryMode = recoveryMode;
+            _roundhouseMode = roundhouseMode;
+            _restorePath = restorePath;
+            _repositoryPath = repositoryPath;
+            _versionFile = versionFile;
+            _versionXPath = versionXPath;
         }
 
         public string Name
@@ -46,8 +52,8 @@ namespace dropkick.Tasks.RoundhousE
             get
             {
                 return
-                    "Using RoundhousE to deploy the '{0}' database to '{1}' with scripts folder '{2}'.".FormatWith(
-                        _databaseName, _instanceName, _scriptsLocation);
+                    "Using RoundhousE to deploy to connection '{0}' with scripts folder '{1}'.".FormatWith(
+                        _connectionString, _scriptsLocation);
             }
         }
 
@@ -58,8 +64,6 @@ namespace dropkick.Tasks.RoundhousE
 
             //check you can connect to the _instancename
             //check that the path _scriptsLocation exists
-            results.AddNote("I don't know what to do here...");
-
 
             return results;
         }
@@ -67,15 +71,30 @@ namespace dropkick.Tasks.RoundhousE
         public DeploymentResult Execute()
         {
             var results = new DeploymentResult();
-
-            var scriptsPath = Path.GetFullPath(_scriptsLocation);
-
             var log = new DeploymentLogger(results);
+            var scriptsPath = Path.GetFullPath(_scriptsLocation);
+            var useSimpleRecovery = _recoveryMode == DatabaseRecoveryMode.Simple ? true : false;
+
             try
             {
-                if (_dropDatabase)
-                    RoundhousEClientApi.Run(log, _instanceName, _databaseType, _databaseName, true, scriptsPath, _environmentName, _useSimpleRecoveryMode);
-                RoundhousEClientApi.Run(log, _instanceName, _databaseType, _databaseName, false, scriptsPath, _environmentName, _useSimpleRecoveryMode);
+                switch (_roundhouseMode)
+                {
+                    case RoundhousEMode.Drop:
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery,_repositoryPath,_versionFile,_versionXPath);
+                        break;
+                    case RoundhousEMode.Restore:
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, true, _restorePath);
+                        break;
+                    case RoundhousEMode.DropCreate:
+                        RoundhousEClientApi.Run(log, _connectionString, @".\", _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath);
+                        goto case RoundhousEMode.Normal;
+                    case RoundhousEMode.Normal:
+                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath);
+                        break;
+                    default:
+                        goto case RoundhousEMode.Normal;
+                }
+
             }
             catch (Exception ex)
             {

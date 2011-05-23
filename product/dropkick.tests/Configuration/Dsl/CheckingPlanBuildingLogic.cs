@@ -22,7 +22,6 @@ namespace dropkick.tests.Configuration.Dsl
 
         public override void BecauseOf()
         {
-            //TODO: not a fan of Inspector.GetPlan - but do I really need to wrap it?
             Plan = Inspector.GetPlan(Deployment);
         }
 
@@ -57,9 +56,9 @@ namespace dropkick.tests.Configuration.Dsl
         }
 
         [Test]
-        public void WebServersShouldHaveOneTask()
+        public void WebServersShouldHaveTwoTasksThatAreCopy()
         {
-            Plan.GetRole("Web").ForEachServerMapped(s => Assert.AreEqual(1, s.DetailCount));
+            Plan.GetRole("Web").ForEachServerMapped(s => Assert.AreEqual(2, s.DetailCount));
         }
 
         [Test]

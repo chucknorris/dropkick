@@ -31,6 +31,7 @@ namespace dropkick.Configuration.Dsl.Files
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            var to = PathConverter.Convert(site, _where);
             throw new NotImplementedException("fix this");
         }
     }

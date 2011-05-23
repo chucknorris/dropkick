@@ -62,12 +62,10 @@
       <HintPath>..\..\lib\references\magnum\Magnum.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Microsoft.Web.Administration.dll</HintPath>
+      <HintPath>..\..\lib\references\Microsoft\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
-    <Reference Include="roundhouse, Version=0.5.0.0, Culture=neutral, processorArchitecture=x86">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\RoundhousE\roundhouse.dll</HintPath>
+    <Reference Include="roundhouse">
+      <HintPath>..\..\lib\references\roundhouse\roundhouse.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -104,6 +102,7 @@
     <Compile Include="Configuration\Dsl\Topshelf\TopshelfOptions.cs" />
     <Compile Include="Configuration\Dsl\WinService\WinServiceCreateOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
+    <Compile Include="FileSystem\PathConverter.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Prompting\ConsolePromptService.cs" />
@@ -126,8 +125,10 @@
     <Compile Include="Tasks\Msmq\CopyRemoteOut.cs" />
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
+    <Compile Include="Tasks\RoundhousE\DatabaseRecoveryMode.cs" />
     <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
+    <Compile Include="Tasks\RoundhousE\RoundhousEMode.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />
@@ -315,9 +316,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="packages.config" />
+    <None Include="targets\Microsoft.Application.targets" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project=".\targets\Microsoft.Application.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

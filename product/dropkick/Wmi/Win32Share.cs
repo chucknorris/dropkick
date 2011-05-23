@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.IO;
+
 namespace dropkick.Wmi
 {
     using System;
@@ -25,6 +27,8 @@ namespace dropkick.Wmi
         {
             try
             {
+                path = Path.GetFullPath(path);
+
                 const string methodName = "Create";
 
                 //todo: This only creates read only shares
@@ -55,21 +59,19 @@ namespace dropkick.Wmi
             using (var search = new ManagementObjectSearcher(scope, query))
             {
 
-                foreach (var share in search.Get())
+                foreach (ManagementObject share in search.Get())
                 {
                     string name = share["Name"].ToString();
                     if (name.EqualsIgnoreCase(shareName))
                     {
-                        //share.Delete();
-                        //return ShareReturnCode.Success;
-                        //break;
+                        share.Delete();
+                        return ShareReturnCode.Success;
                     }
                 }
             }
 
             return ShareReturnCode.UnknownFailure;
         }
-
 
         public static string GetLocalPathForShare(string serverName, string shareName)
         {
@@ -88,7 +90,6 @@ namespace dropkick.Wmi
             }
             throw new Exception("There is no share '{0}' on machine '{1}'".FormatWith(shareName, serverName));
         }
-
 
     }
     //public class test

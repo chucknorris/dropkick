@@ -1,3 +1,5 @@
+using dropkick.Tasks.RoundhousE;
+
 namespace dropkick.tests.TestObjects
 {
     using dropkick.Configuration.Dsl;
@@ -14,7 +16,7 @@ namespace dropkick.tests.TestObjects
                     .ForEnvironment("TEST")
                     .OnInstance(".")
                     .OnDatabase("test")
-                    .UseSimpleRecoveryMode(true);
+                    .WithDatabaseRecoveryMode(DatabaseRecoveryMode.Simple);
             }));
         }
 

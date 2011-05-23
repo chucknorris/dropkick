@@ -13,6 +13,7 @@ namespace dropkick.Tasks.Files
     {
         readonly ILog _fileLog = LogManager.GetLogger("dropkick.changes.files");
         protected readonly Path _path;
+
         protected BaseIoTask(Path path)
         {
             _path = path;
@@ -62,8 +63,7 @@ namespace dropkick.Tasks.Files
             FileInfo[] files = source.GetFiles();
             foreach (var file in files)
             {
-                string fileDestination = _path.Combine(destination.FullName,
-                                                       file.Name);
+                string fileDestination = _path.Combine(destination.FullName,file.Name);
 
                 CopyFileToFile(result, file, new FileInfo(fileDestination));
             }

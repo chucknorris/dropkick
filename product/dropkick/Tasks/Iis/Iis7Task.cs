@@ -49,7 +49,7 @@ namespace dropkick.Tasks.Iis
 
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
-            
+
             if (UseClassicPipeline)
                 result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
 
@@ -69,7 +69,6 @@ namespace dropkick.Tasks.Iis
                 CreateWebSite(iisManager, WebsiteName, result);
             }
 
-
             Site site = GetSite(iisManager, WebsiteName);
 
             if (!DoesVirtualDirectoryExist(site))
@@ -78,7 +77,6 @@ namespace dropkick.Tasks.Iis
                 CreateVirtualDirectory(site, iisManager);
                 result.AddGood("'{0}' was created", VdirPath);
             }
-
 
             iisManager.CommitChanges();
             LogCoarseGrain("[iis7] {0}", Name);
@@ -103,19 +101,17 @@ namespace dropkick.Tasks.Iis
 
         void CreateWebSite(ServerManager iisManager, string websiteName, DeploymentResult result)
         {
-            if(_path.DirectoryDoesntExist(PathForWebsite))
+            if (_path.DirectoryDoesntExist(PathForWebsite))
             {
                 _path.CreateDirectory(PathForWebsite);
                 LogFineGrain("[iis7] Created '{0}'", PathForWebsite);
-                
+
             }
-            
+
             //TODO: check for port collision?
             var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
             LogIis("[iis7] Created website '{0}'", WebsiteName);
         }
-
-
 
         void BuildApplicationPool(ServerManager mgr, DeploymentResult result)
         {
@@ -129,7 +125,7 @@ namespace dropkick.Tasks.Iis
 
             var pool = mgr.ApplicationPools.Add(AppPoolName);
 
-            if(Enable32BitAppOnWin64)
+            if (Enable32BitAppOnWin64)
                 pool.Enable32BitAppOnWin64 = true;
 
             pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
@@ -162,14 +158,12 @@ namespace dropkick.Tasks.Iis
             LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VdirPath, AppPoolName);
         }
 
-
         void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {
             int shouldBe6 = Environment.OSVersion.Version.Major;
             if (shouldBe6 != 6)
                 result.AddAlert("This machine does not have IIS7 on it");
         }
-
 
         public bool DoesVirtualDirectoryExist(Site site)
         {
