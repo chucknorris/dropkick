@@ -114,10 +114,8 @@
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
     <Compile Include="Tasks\Security\LogOnAsBatchTaskTest.cs" />
     <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTest.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadTest.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
-    <Compile Include="Tasks\Security\Msmq\MsmqGrantReadWriteSpecs.cs" />
+    <Compile Include="Tasks\Security\Msmq\MsmqGrantSecuritySpecs.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
@@ -164,7 +162,6 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Configuration\Dsl\roundhouse\" />
     <Folder Include="Prompting\" />
   </ItemGroup>
   <ItemGroup>

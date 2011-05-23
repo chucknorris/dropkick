@@ -32,8 +32,8 @@ namespace dropkick.Configuration.Dsl.Security.ACL
         public override void RegisterRealTasks(PhysicalServer site)
         {
             var path =  PathConverter.Convert(site,_path);
+            //path = RemotePathHelper.Convert(site, path);
 
-            path = RemotePathHelper.Convert(site, path);
             var task = new GrantReadTask(path, _group, new DotNetPath());
             site.AddTask(task);
         }

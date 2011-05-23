@@ -26,20 +26,13 @@ namespace dropkick.Engine
             return args;
         }
 
-        static void Set(DeploymentArguments arguments, IEnumerable<ICommandLineElement> commandLineElements)
+        public static void Set(DeploymentArguments arguments, IEnumerable<ICommandLineElement> commandLineElements)
         {
-            string command = commandLineElements.Where(x => x is IArgumentElement)
-                .Select(x => (IArgumentElement) x)
-                .DefaultIfEmpty(new ArgumentElement("trace"))
-                .Select(x => x.Id)
-                .SingleOrDefault();
-
+            string command = ExtractCommandToRun(commandLineElements);
             arguments.Command = command.ToEnum<DeploymentCommands>();
-
 
             string deployment = commandLineElements.GetDefinition("deployment", "SEARCH");
             arguments.Deployment = deployment;
-
 
             string enviro = commandLineElements.GetDefinition("environment", "LOCAL");
             arguments.Environment = enviro;
@@ -54,7 +47,16 @@ namespace dropkick.Engine
             arguments.Silent = silent;
         }
 
-        static IEnumerable<ICommandLineElement> P(string commandLine)
+        public static string ExtractCommandToRun(IEnumerable<ICommandLineElement> commandLineElements)
+        {
+            return commandLineElements.Where(x => x is IArgumentElement)
+               .Select(x => (IArgumentElement)x)
+               .DefaultIfEmpty(new ArgumentElement("trace"))
+               .Select(x => x.Id)
+               .SingleOrDefault();
+        }
+
+        public static IEnumerable<ICommandLineElement> P(string commandLine)
         {
             var parser = new MonadicCommandLineParser();
 

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using dropkick.Engine;
+using Magnum.CommandLineParser;
 using NUnit.Framework;
 
 namespace dropkick.tests.Engine
@@ -224,7 +226,7 @@ namespace dropkick.tests.Engine
                 arguments.Deployment.ShouldBeEqualTo("..\\deployments\\somedeploy.dll");
             }
         }
-   
+
         [ConcernFor("DeploymentCommandLineParser")]
         public class when_the_DeploymentCommandLineParser_is_given_arguments_that_specify_the_roles : DeploymentCommandLineParserSpecsBase
         {
@@ -353,5 +355,108 @@ namespace dropkick.tests.Engine
             }
         }
 
+        [ConcernFor("DeploymentCommandLineParser")]
+        public class when_the_underlying_command_parser_for_DeploymentCommandLineParser_sets_arguments_that_are_similar : DeploymentCommandLineParserSpecsBase
+        {
+            public string commandline = "execute /somesetting=bob /someothersetting:tim";
+            private IEnumerable<ICommandLineElement> args;
+            private Dictionary<string, ICommandLineElement> dict;
+
+            public override void Context()
+            {
+                base.Context();
+                dict = new Dictionary<string, ICommandLineElement>();
+                args = DeploymentCommandLineParser.P(commandline);
+            }
+
+            public override void Because()
+            {
+                foreach (ICommandLineElement element in args)
+                {
+                    dict.Add(element.ToString(), element);
+                }
+            }
+
+            [Fact]
+            public void should_have_three_elements()
+            {
+                dict.Count.ShouldBeEqualTo(3);
+            }
+
+            [Fact]
+            public void should_have_an_element_for_execute()
+            {
+                dict.ContainsKey("ARGUMENT: execute").ShouldBeEqualTo(true);
+            }
+
+            [Fact]
+            public void should_have_set_execute_element_to_a_command()
+            {
+                var element = dict["ARGUMENT: execute"];
+                element.ShouldBeOfType<Magnum.CommandLineParser.ArgumentElement>();
+            }
+
+            [Fact]
+            public void should_have_an_element_for_somesetting()
+            {
+                dict.ContainsKey("DEFINE: somesetting = bob").ShouldBeEqualTo(true);
+            }
+
+            [Fact]
+            public void should_have_set_somesetting_element_to_a_definition()
+            {
+                var element = dict["DEFINE: somesetting = bob"];
+                element.ShouldBeOfType<Magnum.CommandLineParser.DefinitionElement>();
+            }
+
+            [Fact]
+            public void should_have_an_element_for_someothersetting()
+            {
+                dict.ContainsKey("DEFINE: someothersetting = tim").ShouldBeEqualTo(true);
+            }
+
+            [Fact]
+            public void should_have_set_someothersetting_element_to_a_definition()
+            {
+                var element = dict["DEFINE: someothersetting = tim"];
+                element.ShouldBeOfType<Magnum.CommandLineParser.DefinitionElement>();
+            }
+        }
+  
+        [ConcernFor("DeploymentCommandLineParser")]
+        public class when_extracting_the_command_to_run_from_the_underlying_command_parser_for_DeploymentCommandLineParser_and_you_have_arguments_that_are_similar : DeploymentCommandLineParserSpecsBase
+        {
+            public string commandline = "execute /somesetting=bob /someothersetting:tim";
+            private IEnumerable<ICommandLineElement> args;
+            private string commandToRun;
+
+            public override void Context()
+            {
+                base.Context();
+                args = DeploymentCommandLineParser.P(commandline);
+            }
+
+            public override void Because()
+            {
+                commandToRun = DeploymentCommandLineParser.ExtractCommandToRun(args);
+            }
+
+            [Fact]
+            public void should_not_have_issues_with_the_settings_being_similarly_named()
+            {
+                //this should just work
+            }
+
+
+            [Fact]
+            public void should_have_returned_execute_as_the_command_to_run()
+            {
+                commandToRun.ShouldBeEqualTo("execute");
+            }
+
+
+
+        }
+  
     }
 }

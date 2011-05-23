@@ -16,5 +16,10 @@ namespace dropkick.tests
         {
             Assert.AreEqual(expected,actual);
         }
+
+        public static void ShouldBeOfType<T>(this object actual)
+        {
+            Assert.AreEqual(typeof(T), actual.GetType());
+        }
     }
 }

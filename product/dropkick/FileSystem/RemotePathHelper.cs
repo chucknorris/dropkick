@@ -24,13 +24,11 @@ namespace dropkick.FileSystem
 
         public static string Convert(string server, string localpath)
         {
-            if (IsUncPath(localpath))
-                return localpath;
+            if (IsUncPath(localpath)) { return localpath;}
 
-            var newPath = @"\\{0}\{1}".FormatWith(server,localpath);
+            var newPath = @"\\{0}\{1}".FormatWith(server, localpath);
 
-            if (localpath.StartsWith("~")) 
-                newPath = newPath.Replace(@"~\", "");
+            if (localpath.StartsWith("~")) { newPath = newPath.Replace(@"~\", ""); }
 
             newPath = newPath.Replace(':', '$');
 

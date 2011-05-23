@@ -31,7 +31,7 @@
   <property name="folder.references" value="lib" overwrite="false" />
   <property name="dirs.lib" value="${dirs.current}\${path.to.toplevel}\${folder.references}" overwrite="false" />
   
-  <target name="go" depends="cleanup_drop, restructure_drop_folder, move_console_up, copy_notices, delete_extras" />
+  <target name="go" depends="cleanup_drop, restructure_drop_folder, move_console_up, copy_notices, delete_extras, remove_unnecessary_files" />
   
   <target name="cleanup_drop">
     <echo message="Removing ${dirs.drop}\${folder.app.drop}." />
@@ -95,6 +95,17 @@
   <target name="delete_extras">
     <delete dir="${dirs.drop}\${folder.app.drop}\settings" />
     <delete dir="${dirs.drop}\${folder.app.drop}\Tasks" />
+  </target>
+  
+  <target name="remove_unnecessary_files">
+     <delete>
+      <fileset basedir="${dirs.drop}\${folder.app.drop}\console">
+        <include name="local.js" />
+        <include name="local.servermaps" />
+        <include name="ArgsToTest.txt" />
+      </fileset>
+    </delete>
+  
   </target>
   
 </project>

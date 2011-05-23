@@ -27,6 +27,8 @@ namespace dropkick.Tasks.Security
             get { return WindowsIdentity.GetCurrent().Name; }
         }
 
+
+        //REVIEW: This is a setting that should not be in an OSS product.
         static HashSet<string> _defaults = new HashSet<string>()
                                         {
                                             @"FHLB10\Prod Control",

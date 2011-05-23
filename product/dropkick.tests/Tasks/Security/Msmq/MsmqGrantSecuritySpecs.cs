@@ -8,9 +8,9 @@ using NUnit.Framework;
 
 namespace dropkick.tests.Tasks.Security.Msmq
 {
-    public class MsmqGrantReadWriteSpecs
+    public class MsmqGrantSecuritySpecs
     {
-        public abstract class MsmqGrantReadWriteSpecsBase : TinySpec
+        public abstract class MsmqGrantSecuritySpecsBase : TinySpec
         {
             protected PhysicalServer server;
             protected string user;
@@ -30,24 +30,106 @@ namespace dropkick.tests.Tasks.Security.Msmq
                 address = new QueueAddress(ub.Uri);
             }
 
+            public MessageQueue RemoveLocalQueueIfExistsAndCreate(string queueName)
+            {
+                 if (MessageQueue.Exists(queueName))
+                {
+                    MessageQueue.Delete(queueName);
+                }
+
+               return MessageQueue.Create(queueName);
+            }
+
         }
 
         [ConcernFor("MSMQ Tasks")]
         [Category("Integration")]
-        public class when_granting_read_write_to_a_local_queue_for_a_user : MsmqGrantReadWriteSpecsBase
+        public class when_granting_read_to_a_local_queue_for_a_user : MsmqGrantSecuritySpecsBase
+        {
+            protected LocalMsmqGrantReadTask task;
+
+            public override void Context()
+            {
+                base.Context();
+                RemoveLocalQueueIfExistsAndCreate(address.LocalName);
+                
+                task = new LocalMsmqGrantReadTask(address, user);
+            }
+
+            public override void Because()
+            {
+                result = task.Execute();
+            }
+
+
+            [Fact]
+            public void should_complete_successfully()
+            {
+                //no code issues
+            }
+
+            [Fact]
+            public void should_return_a_result()
+            {
+                Assert.IsNotNull(result);
+            }
+
+            [Fact]
+            public void should_not_contain_any_errors()
+            {
+                Assert.IsFalse(result.ContainsError(), "Errors occured during permission setting.{0}{1}".FormatWith(Environment.NewLine, result.ToString()));
+            }
+        }
+
+        [ConcernFor("MSMQ Tasks")]
+        [Category("Integration")]
+        public class when_granting_write_to_a_queue_for_a_user : MsmqGrantSecuritySpecsBase
+        {
+            protected MsmqGrantWriteTask task;
+
+            public override void Context()
+            {
+                base.Context();
+                RemoveLocalQueueIfExistsAndCreate(address.LocalName);
+
+                task = new MsmqGrantWriteTask(address, user);
+            }
+
+            public override void Because()
+            {
+                result = task.Execute();
+            }
+
+
+            [Fact]
+            public void should_complete_successfully()
+            {
+                //no code issues
+            }
+
+            [Fact]
+            public void should_return_a_result()
+            {
+                Assert.IsNotNull(result);
+            }
+
+            [Fact]
+            public void should_not_contain_any_errors()
+            {
+                Assert.IsFalse(result.ContainsError(), "Errors occured during permission setting.{0}{1}".FormatWith(Environment.NewLine, result.ToString()));
+            }
+        }
+
+        [ConcernFor("MSMQ Tasks")]
+        [Category("Integration")]
+        public class when_granting_read_write_to_a_local_queue_for_a_user : MsmqGrantSecuritySpecsBase
         {
             protected LocalMsmqGrantReadWriteTask task;
 
             public override void Context()
             {
                 base.Context();
-
-                if (MessageQueue.Exists(address.LocalName))
-                {
-                    MessageQueue.Delete(address.LocalName);
-                }
-
-                MessageQueue.Create(address.LocalName);
+                RemoveLocalQueueIfExistsAndCreate(address.LocalName);
 
                 task = new LocalMsmqGrantReadWriteTask(address, user);
             }
@@ -79,20 +161,14 @@ namespace dropkick.tests.Tasks.Security.Msmq
 
         [ConcernFor("MSMQ Tasks")]
         [Category("Integration")]
-        public class when_granting_read_write_to_a_local_queue_for_a_group : MsmqGrantReadWriteSpecsBase
+        public class when_granting_read_write_to_a_local_queue_for_a_group : MsmqGrantSecuritySpecsBase
         {
             protected LocalMsmqGrantReadWriteTask task;
 
             public override void Context()
             {
                 base.Context();
-
-                if (MessageQueue.Exists(address.LocalName))
-                {
-                    MessageQueue.Delete(address.LocalName);
-                }
-
-                MessageQueue.Create(address.LocalName);
+                RemoveLocalQueueIfExistsAndCreate(address.LocalName);
 
                 task = new LocalMsmqGrantReadWriteTask(address, @"Everyone");
             }
@@ -123,8 +199,8 @@ namespace dropkick.tests.Tasks.Security.Msmq
         }
 
         [ConcernFor("MSMQ Tasks")]
-        [Category("Integration")]
-        public class when_granting_read_write_permissions_to_a_remote_queue : MsmqGrantReadWriteSpecsBase
+        [Category("Integration"),Explicit]
+        public class when_granting_read_write_permissions_to_a_remote_queue : MsmqGrantSecuritySpecsBase
         {
             protected RemoteMsmqGrantReadWriteTask task;
 

@@ -51,6 +51,7 @@ namespace dropkick.DeploymentModel
 
         public string MapPath(string path)
         {
+            //note: watch this to see if we need to use pathconverter or not.
             return RemotePathHelper.Convert(this, path);
         }
 
