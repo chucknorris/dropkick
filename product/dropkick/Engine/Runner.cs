@@ -30,8 +30,6 @@ namespace dropkick.Engine
 
         public static void Deploy(string commandLine)
         {
-
-
             if (!_coarseLog.IsDebugEnabled) { Console.WriteLine("Sad Emo Otter says \"DEBUG LOGGING IS OFF - THIS ISN'T GOING TO BE FUN :(\""); }
 
             try
@@ -53,20 +51,13 @@ namespace dropkick.Engine
                 ////////// File Checks
                 if (!VerifyPathToServerMapsFile(newArgs.PathToServerMapsFile))
                 {
-                    if (argumentsVerified)
-                    {
-                        argumentsVerified = false;
-                    }
+                    if (argumentsVerified) { argumentsVerified = false;}
                 }
                 if (!VerifyPathToSettingsFile(newArgs.PathToSettingsFile))
                 {
-                    if (argumentsVerified)
-                    {
-                        argumentsVerified = false;
-                    }
+                    if (argumentsVerified) { argumentsVerified = false;}
                 }
                 ////////////////////
-
 
                 //////// DEPLOYMENT STUFF
                 FindResult findResult = _finder.Find(newArgs.Deployment);
@@ -77,10 +68,7 @@ namespace dropkick.Engine
                 if (deployment.GetType().Equals(typeof(NullDeployment)))
                 {
                     _coarseLog.Fatal("Couldn't find a deployment to run.");
-                    if (argumentsVerified)
-                    {
-                        argumentsVerified = false;
-                    }
+                    if (argumentsVerified) { argumentsVerified = false;}
                 }
                 ////////
 
@@ -120,21 +108,19 @@ namespace dropkick.Engine
                 }
                 else
                 {
-                    //if (!silent)
-                    //{
+                    if (!silent)
+                    {
                         _coarseLog.Info("Please review the settings above and when you are ready,");
                         _coarseLog.Info("  Press 'ctrl+c' to cancel.");
                         _coarseLog.Info("  Press enter to kick it out there");
                         Console.ReadKey(true);
-                    //}
+                    }
                 }
-
 
                 /////// how to clean this up - below 
                 Type settingsType = deployment.GetType().BaseType.GetGenericArguments()[1];
 
-                var settings = (DropkickConfiguration)_parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,
-                                                                     newArgs.Environment);
+                var settings = (DropkickConfiguration)_parser.Parse(settingsType, new FileInfo(newArgs.PathToSettingsFile), commandLine,newArgs.Environment);
 
                 settings.Environment = newArgs.Environment;
                 deployment.Initialize(settings);

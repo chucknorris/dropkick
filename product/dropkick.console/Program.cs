@@ -56,7 +56,7 @@ namespace dropkick.console
             "      Company.Project.Deployment.dll (an assembly) {0}" +
             "      Company.Project.Deployment.StandardDeploy (a class, lack of .dll) {0}" +
             "      (null) - if omitted, dk will search for a dll ending with 'Deployment' then pass that name in {0}" + 
-            "  /silent - this switch allows you to run unattended installs {0}" 
+            "  --silent - this switch allows you to run unattended installs {0}" 
             , Environment.NewLine);
         }
 
