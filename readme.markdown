@@ -19,6 +19,8 @@ DropkicK is a fluent deployment framework that seeks to make deployments easier.
  You can download DropkicK from [http://github.com/chucknorris/dropkick](http://github.com/chucknorris/dropkick)
 
  You can also obtain a copy from the build server at [http://teamcity.codebetter.com](http://teamcity.codebetter.com).  
+  
+ NuGet - Install-Package DropkicK (will bring a default deployment example with it).  
 
 ### Source
 This is the best way to get to the bleeding edge of what we are doing.
