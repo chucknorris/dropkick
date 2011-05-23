@@ -26,7 +26,7 @@ namespace dropkick.Engine.DeploymentFinders
         DeploymentFinder
     {
         static readonly ILog _log = LogManager.GetLogger(typeof (AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass));
-        private readonly DotNetPath _path = new DotNetPath();
+        private readonly static DotNetPath _path = new DotNetPath();
 
         #region DeploymentFinder Members
 
@@ -65,6 +65,7 @@ namespace dropkick.Engine.DeploymentFinders
 
         static string FindFile(string file)
         {
+
             string p = _path.GetFullPath(file);
             //string p = Path.Combine(Environment.CurrentDirectory, file);
             _log.DebugFormat("Looking for deployment dll '{0}' at '{1}'", file, p);

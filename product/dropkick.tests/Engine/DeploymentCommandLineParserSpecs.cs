@@ -251,7 +251,7 @@ namespace dropkick.tests.Engine
         [ConcernFor("DeploymentCommandLineParser")]
         public class when_the_DeploymentCommandLineParser_is_given_arguments_that_specify_silent : DeploymentCommandLineParserSpecsBase
         {
-            public string commandline = "execute /silent";
+            public string commandline = "execute --silent";
 
             public override void Because()
             {
@@ -264,7 +264,7 @@ namespace dropkick.tests.Engine
                 arguments.Command.ShouldBeEqualTo(DeploymentCommands.Execute);
             }
 
-            [Fact, Category("NotWorking")]
+            [Fact]
             public void should_have_Silent_set_to_true()
             {
                 arguments.Silent.ShouldBeEqualTo(true);
@@ -272,10 +272,32 @@ namespace dropkick.tests.Engine
         }
 
         [ConcernFor("DeploymentCommandLineParser")]
-        [Category("NotWorking")]
+        public class when_the_DeploymentCommandLineParser_is_given_arguments_that_specify_silent_short_form : DeploymentCommandLineParserSpecsBase
+        {
+            public string commandline = "execute -s";
+
+            public override void Because()
+            {
+                arguments = DeploymentCommandLineParser.Parse(commandline);
+            }
+
+            [Fact]
+            public void should_have_Command_set_to_Execute()
+            {
+                arguments.Command.ShouldBeEqualTo(DeploymentCommands.Execute);
+            }
+
+            [Fact]
+            public void should_have_Silent_set_to_true()
+            {
+                arguments.Silent.ShouldBeEqualTo(true);
+            }
+        }
+
+        [ConcernFor("DeploymentCommandLineParser")]
         public class when_the_DeploymentCommandLineParser_is_given_a_full_set_of_arguments : DeploymentCommandLineParserSpecsBase
         {
-            public string commandline = "execute /environment:DEV /deployment:..\\deployments\\somedeploy.dll /settings:..\\overhere /roles:Web,Db,Host /silent";
+            public string commandline = "execute /environment:DEV /deployment:..\\deployments\\somedeploy.dll /settings:..\\overhere /roles:Web,Db,Host --silent";
 
             public override void Because()
             {
