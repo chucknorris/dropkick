@@ -105,6 +105,11 @@ namespace $rootnamespace$
                                            WithStartMode(settings.ServiceStartMode)
                                            //.AddDependency("MSMQ")
                                            ;
+
+                                       if (settings.ServiceStartMode != ServiceStartMode.Disabled && settings.ServiceStartMode != ServiceStartMode.Manual)
+                                       {
+                                           s.WinService(serviceName).Start();
+                                       }
                                    });
             });
         }
