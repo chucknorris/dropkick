@@ -14,7 +14,15 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 {
     public interface FileSecurityConfig
     {
-        void Clear();
+        /// <summary>
+        /// Removes all users/groups who are not inherited or in the preserve list (defined in options). 
+        /// </summary>
+        ClearAclOptions Clear();
+
+        /// <summary>
+        /// Removes ACL inheritance from a folder. When used in conjunction with Clear(), you can really lock down a folder.
+        /// </summary>
+        void RemoveInheritance();
         void GrantRead(string group);
         void GrantReadWrite(string group);
 

@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Collections.Generic;
+
 namespace dropkick.Tasks.Security.Acl
 {
     using System;
@@ -17,17 +19,37 @@ namespace dropkick.Tasks.Security.Acl
     using System.Security.AccessControl;
     using System.Security.Principal;
     using DeploymentModel;
+    using System.Linq;
 
     public class ClearAclsTask :
         BaseSecurityTask
     {
         readonly string _path;
 
-        public ClearAclsTask(string path)
+        public ClearAclsTask(string path, IEnumerable<string> groupsToAddToPreserveList, IEnumerable<string> groupsToRemoveFromPreserveList)
         {
             _path = path;
+            SetUpGroupPreservations(groupsToAddToPreserveList, groupsToRemoveFromPreserveList);
         }
 
+        private void SetUpGroupPreservations(IEnumerable<string> groupsToAddToPreserveList, IEnumerable<string> groupsToRemoveFromPreserveList)
+        {
+            if (groupsToRemoveFromPreserveList != null && groupsToRemoveFromPreserveList.Count() !=0)
+            {
+                foreach (string group in groupsToRemoveFromPreserveList)
+                {
+                    WellKnownSecurityRoles.RemoveFromGroupToPreserveList(group);
+                }
+            }
+            if (groupsToAddToPreserveList != null && groupsToAddToPreserveList.Count() != 0)
+            {
+                foreach (string group in groupsToAddToPreserveList)
+                {
+                    WellKnownSecurityRoles.AddToGroupToPreserveList(group);
+                }
+            }
+        }
+        
         public override string Name
         {
             get { return "Clear ACLs on '{0}'".FormatWith(_path); }
@@ -46,13 +68,15 @@ namespace dropkick.Tasks.Security.Acl
 
             var security = Directory.GetAccessControl(_path);
             var rules = security.GetAccessRules(true, true, typeof (NTAccount));
-            
+
+            //AddCurrentUserIfSpecifiedToPreserveAndNotAlreadyThere(rules);
+
             foreach (FileSystemAccessRule rule in rules)
             {
-                if (!WellKnownRoles.NotADefaultRule(rule) || !WellKnownRoles.NotInherited(rule)) 
-                    continue;
+                // won't remove inherited stuff
+                if (!WellKnownSecurityRoles.NotADefaultRule(rule) || !WellKnownSecurityRoles.NotInherited(rule)) continue;
 
-                security.RemoveAccessRuleSpecific(rule); // won't remove inherited stuff
+                security.RemoveAccessRuleSpecific(rule); 
                 LogSecurity("[security][acl] Removed '{0}' on '{1}'", rule.IdentityReference, _path);
                 result.AddGood("Removed '{0}' on '{1}'", rule.IdentityReference, _path);
             }
@@ -61,5 +85,20 @@ namespace dropkick.Tasks.Security.Acl
 
             return result;
         }
+
+        //private void AddCurrentUserIfSpecifiedToPreserveAndNotAlreadyThere(AuthorizationRuleCollection rules)
+        //{
+        //    var currentUser = WellKnownSecurityRoles.CurrentUser;
+        //    if (WellKnownSecurityRoles.IsPreserved(currentUser))
+        //    {
+        //        foreach (AuthorizationRule rule in rules)
+        //        {
+        //            if (rule.IdentityReference.Value == currentUser)
+        //            {
+        //                foundUser = true;
+        //            }
+        //        }
+        //    }
+        //}
     }
 }

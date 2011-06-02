@@ -95,6 +95,8 @@
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
+    <Compile Include="Configuration\Dsl\Security\ACL\ClearAclOptions.cs" />
+    <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathRemoveAclInheritanceTask.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
@@ -129,6 +131,7 @@
     <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEMode.cs" />
+    <Compile Include="Tasks\Security\Acl\RemoveAclsInheritanceTask.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />
@@ -171,7 +174,7 @@
     <Compile Include="Configuration\Dsl\Security\ACL\PathSecurityConfiguration.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLocalPolicy.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnAsAServiceTask.cs" />
-    <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathClearTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathClearAclsTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadTask.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathGrantReadWriteTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoCreateLoginTask.cs" />
@@ -226,7 +229,7 @@
     <Compile Include="Tasks\Security\Msmq\LocalMsmqGrantReadTask.cs" />
     <Compile Include="Tasks\Security\Msmq\LocalMsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaults.cs" />
-    <Compile Include="Tasks\Security\WellKnownRoles.cs" />
+    <Compile Include="Tasks\Security\WellKnownSecurityRoles.cs" />
     <Compile Include="Tasks\Topshelf\LocalTopshelfTask.cs" />
     <Compile Include="Tasks\Topshelf\RemoteTopshelfTask.cs" />
     <Compile Include="Tasks\UserInteraction\PromptTask.cs" />

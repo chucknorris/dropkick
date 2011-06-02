@@ -10,25 +10,30 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using dropkick.DeploymentModel;
+using dropkick.FileSystem;
+using dropkick.Tasks;
+using dropkick.Tasks.Security.Acl;
+
 namespace dropkick.Configuration.Dsl.Security.ACL
 {
-    using System;
-    using DeploymentModel;
-    using Tasks;
-
-    public class ProtoPathClearTask :
+    public class ProtoPathRemoveAclInheritanceTask :
         BaseProtoTask
     {
-        string _path;
+        readonly string _path;
 
-        public ProtoPathClearTask(string path)
+        public ProtoPathRemoveAclInheritanceTask(string path)
         {
             _path = ReplaceTokens(path);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            throw new NotImplementedException();
+            var path =  PathConverter.Convert(site,_path);
+
+            var task = new RemoveAclsInheritanceTask(path);
+            site.AddTask(task);
         }
     }
 }

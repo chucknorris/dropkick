@@ -10,6 +10,10 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System;
+using System.Collections.Generic;
+using dropkick.Tasks.Security;
+
 namespace dropkick.Configuration.Dsl.Security.ACL
 {
     public class PathSecurityConfiguration :
@@ -24,9 +28,23 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             _path = path;
         }
 
-        public void Clear()
+        /// <summary>
+        /// Removes all users/groups who are not inherited or in the preserve list (defined in options). 
+        /// </summary>
+        public ClearAclOptions Clear()
         {
-            var proto = new ProtoPathClearTask(_path);
+            var proto = new ProtoPathClearAclsTask(_path);
+            _server.RegisterProtoTask(proto);
+
+            return proto;
+        }
+
+        /// <summary>
+        /// Removes ACL inheritance from a folder. When used in conjunction with Clear(), you can really lock down a folder.
+        /// </summary>
+        public void RemoveInheritance()
+        {
+            var proto = new ProtoPathRemoveAclInheritanceTask(_path);
             _server.RegisterProtoTask(proto);
         }
 
@@ -44,7 +62,6 @@ namespace dropkick.Configuration.Dsl.Security.ACL
 
         public void Grant(Rights readWrite, string group)
         {
-            //TODO: YUCK-O - a switch?
             switch(readWrite)
             {
                 case Rights.ReadWrite:

@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Security.Principal;
+
 namespace dropkick.tests.TestObjects
 {
     using dropkick.Configuration;
@@ -32,10 +34,20 @@ namespace dropkick.tests.TestObjects
                             o.LocalPolicy(p => p.LogOnAsService(settings.AppAccount));
                             o.ForPath(settings.InstallPath, p =>
                             {
-                                p.Clear();
+                               
                                 p.GrantRead(settings.UserGroupA);
                                 p.GrantReadWrite(settings.UserGroupB);
                                 p.Grant(Rights.ReadWrite, settings.UserGroupA);
+                                p.Grant(Rights.ReadWrite, WindowsIdentity.GetCurrent().Name);
+                                
+                                p.RemoveInheritance();
+                                p.Clear()
+                                    .Preserve(settings.UserGroupA)
+                                    .Preserve(settings.UserGroupB)
+                                    .Preserve(WindowsIdentity.GetCurrent().Name)
+                                    .RemoveAdministratorsGroup()
+                                    .RemoveSystemAccount()
+                                    .RemoveUsersGroup();
                             });
 
                             o.ForQueue(settings.Queue, q =>

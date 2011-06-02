@@ -29,7 +29,6 @@ namespace dropkick.tests.TestObjects
                     server.Msmq()
                         .PrivateQueue("bob");
 
-
                     server.CopyDirectory(o =>
                     {
                         o.Include(@"\\someserver\bob\bill");
