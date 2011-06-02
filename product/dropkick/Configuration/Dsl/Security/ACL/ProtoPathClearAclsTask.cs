@@ -33,19 +33,15 @@ namespace dropkick.Configuration.Dsl.Security.ACL
             _path = ReplaceTokens(path);
         }
              
-        public ClearAclOptions Preserve(string groupName)
+        public ClearAclOptions Preserve(params string[] groupAndOrAccountNames)
         {
-            _groupsToPreserve.Add(groupName);
-
+            foreach (string name in groupAndOrAccountNames)
+            {
+                _groupsToPreserve.Add(name);    
+            }
+            
             return this;
         }
-
-        //public ClearAclOptions PreserveCurrentUser()
-        //{
-        //    _groupsToPreserve.Add(WellKnownSecurityRoles.CurrentUser);
-
-        //    return this;
-        //}
 
         public ClearAclOptions RemoveSystemAccount()
         {

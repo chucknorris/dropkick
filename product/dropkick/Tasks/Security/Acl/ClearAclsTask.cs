@@ -29,12 +29,12 @@ namespace dropkick.Tasks.Security.Acl
         public ClearAclsTask(string path, IEnumerable<string> groupsToAddToPreserveList, IEnumerable<string> groupsToRemoveFromPreserveList)
         {
             _path = path;
-            SetUpGroupPreservations(groupsToAddToPreserveList, groupsToRemoveFromPreserveList);
+            SetUpAccountPreservations(groupsToAddToPreserveList, groupsToRemoveFromPreserveList);
         }
 
-        private void SetUpGroupPreservations(IEnumerable<string> groupsToAddToPreserveList, IEnumerable<string> groupsToRemoveFromPreserveList)
+        private void SetUpAccountPreservations(IEnumerable<string> groupsToAddToPreserveList, IEnumerable<string> groupsToRemoveFromPreserveList)
         {
-            if (groupsToRemoveFromPreserveList != null && groupsToRemoveFromPreserveList.Count() !=0)
+            if (groupsToRemoveFromPreserveList != null && groupsToRemoveFromPreserveList.Count() != 0)
             {
                 foreach (string group in groupsToRemoveFromPreserveList)
                 {
@@ -49,7 +49,7 @@ namespace dropkick.Tasks.Security.Acl
                 }
             }
         }
-        
+
         public override string Name
         {
             get { return "Clear ACLs on '{0}'".FormatWith(_path); }
@@ -67,16 +67,13 @@ namespace dropkick.Tasks.Security.Acl
             var result = new DeploymentResult();
 
             var security = Directory.GetAccessControl(_path);
-            var rules = security.GetAccessRules(true, true, typeof (NTAccount));
-
-            //AddCurrentUserIfSpecifiedToPreserveAndNotAlreadyThere(rules);
+            var rules = security.GetAccessRules(true, true, typeof(NTAccount));
 
             foreach (FileSystemAccessRule rule in rules)
             {
-                // won't remove inherited stuff
-                if (!WellKnownSecurityRoles.NotADefaultRule(rule) || !WellKnownSecurityRoles.NotInherited(rule)) continue;
+                if (WellKnownSecurityRoles.IsInherited(rule) || WellKnownSecurityRoles.IsPreserved(rule)) continue;
 
-                security.RemoveAccessRuleSpecific(rule); 
+                security.RemoveAccessRuleSpecific(rule);
                 LogSecurity("[security][acl] Removed '{0}' on '{1}'", rule.IdentityReference, _path);
                 result.AddGood("Removed '{0}' on '{1}'", rule.IdentityReference, _path);
             }
@@ -86,19 +83,5 @@ namespace dropkick.Tasks.Security.Acl
             return result;
         }
 
-        //private void AddCurrentUserIfSpecifiedToPreserveAndNotAlreadyThere(AuthorizationRuleCollection rules)
-        //{
-        //    var currentUser = WellKnownSecurityRoles.CurrentUser;
-        //    if (WellKnownSecurityRoles.IsPreserved(currentUser))
-        //    {
-        //        foreach (AuthorizationRule rule in rules)
-        //        {
-        //            if (rule.IdentityReference.Value == currentUser)
-        //            {
-        //                foundUser = true;
-        //            }
-        //        }
-        //    }
-        //}
     }
 }

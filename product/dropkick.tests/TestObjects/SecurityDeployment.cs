@@ -42,8 +42,7 @@ namespace dropkick.tests.TestObjects
                                 
                                 p.RemoveInheritance();
                                 p.Clear()
-                                    .Preserve(settings.UserGroupA)
-                                    .Preserve(settings.UserGroupB)
+                                    .Preserve(settings.UserGroupA,settings.UserGroupB)
                                     .Preserve(WindowsIdentity.GetCurrent().Name)
                                     .RemoveAdministratorsGroup()
                                     .RemoveSystemAccount()

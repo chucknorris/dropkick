@@ -41,13 +41,14 @@ namespace dropkick.Tasks.Security
             return _defaults.Contains(name);
         }
 
-        public static bool NotADefaultRule(FileSystemAccessRule rule)
+        public static bool IsPreserved(FileSystemAccessRule rule)
         {
-            return !_defaults.Contains(rule.IdentityReference.Value);
+            return IsPreserved(rule.IdentityReference.Value);
         }
-        public static bool NotInherited(FileSystemAccessRule rule)
+
+        public static bool IsInherited(FileSystemAccessRule rule)
         {
-            return !rule.IsInherited;
+            return rule.IsInherited;
         }
 
         public static void AddToGroupToPreserveList(string name)
