@@ -68,7 +68,7 @@
     </logger>
 
     <logger name="dropkick.changes.security">
-      <level value="INFO" />
+      <level value="DEBUG" />
       <appender-ref ref="SecurityChangeAppender" />
     </logger>
 
@@ -93,7 +93,6 @@
       <level value="INFO"/>
       <appender-ref ref="DbChangeAppender" />
     </logger>
-
 
     <logger name="Topshelf" >
       <level value ="ALL" />

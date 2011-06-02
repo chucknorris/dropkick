@@ -49,6 +49,9 @@ namespace dropkick.Tasks.Security.Acl
             security.SetAccessRuleProtection(true, true);
             Directory.SetAccessControl(_path, security);
 
+            LogSecurity("[security][acl] Removed ACL inheritance on '{0}'. Preserved existing security.",  _path);
+            result.AddGood("Removed ACL inheritance on '{0}'. Preserved existing security.",  _path);
+
             return result;
         }
 
