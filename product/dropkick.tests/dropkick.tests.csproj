@@ -113,6 +113,7 @@
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
     <Compile Include="Tasks\Security\Acl\SecurityAclSpecs.cs" />
+    <Compile Include="Tasks\Security\Certificate\SecurityX509CertificateSpecs.cs" />
     <Compile Include="Tasks\Security\LogOnAsBatchTaskTest.cs" />
     <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />

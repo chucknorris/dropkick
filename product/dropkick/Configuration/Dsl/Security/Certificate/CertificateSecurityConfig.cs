@@ -10,21 +10,12 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
-namespace dropkick.Configuration.Dsl.Security
-{
-    using System;
-    using ACL;
-    using LocalPolicy;
-    using Msmq;
-    using MsSql;
-    using Certificate;
+using System;
 
-    public interface SecurityOptions
+namespace dropkick.Configuration.Dsl.Security.Certificate
+{
+    public interface CertificateSecurityConfig
     {
-        void LocalPolicy(Action<LocalPolicyConfig> func);
-        void ForPath(string path, Action<FileSecurityConfig> action);
-        void ForQueue(string queue, Action<QueueSecurityConfig> action);
-        void ForSqlServer(string database, Action<MsSqlSecurity> action);
-        void ForCertificate(string thumbprint, Action<CertificateSecurityConfig> action);
+        GrantReadCertificateOptions GrantReadPrivateKey();
     }
 }

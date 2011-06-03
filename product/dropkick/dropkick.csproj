@@ -97,6 +97,10 @@
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ClearAclOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathRemoveAclInheritanceTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Certificate\CertificateSecurityConfig.cs" />
+    <Compile Include="Configuration\Dsl\Security\Certificate\CertificateSecurityConfiguration.cs" />
+    <Compile Include="Configuration\Dsl\Security\Certificate\GrantReadCertificateOptions.cs" />
+    <Compile Include="Configuration\Dsl\Security\Certificate\ProtoGrantReadX509CertificatePrivateKeyTask.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
@@ -133,6 +137,8 @@
     <Compile Include="Tasks\RoundhousE\RoundhousEMode.cs" />
     <Compile Include="Tasks\Security\Acl\RemoveAclsInheritanceTask.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
+    <Compile Include="Tasks\Security\Certificate\BaseSecurityCertificatePermissionsTask.cs" />
+    <Compile Include="Tasks\Security\Certificate\GrantReadCertificatePrivateKeyTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadWriteTask.cs" />

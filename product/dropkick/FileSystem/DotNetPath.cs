@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Text;
+
 namespace dropkick.FileSystem
 {
     using System.IO;
@@ -38,9 +40,16 @@ namespace dropkick.FileSystem
             return System.IO.Path.Combine(serviceLocation, rest);
         }
 
-        public string Combine(string root, string ex)
+        public string Combine(string root, params string[] ex)
         {
-            return System.IO.Path.Combine(root, ex);
+            string returnPath = root;
+
+            foreach (string item in ex)
+            {
+                returnPath = System.IO.Path.Combine(returnPath, item);
+            }
+
+            return returnPath;
         }
 
         public string GetFullPath(string path)

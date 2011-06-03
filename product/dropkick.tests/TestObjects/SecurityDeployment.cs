@@ -10,6 +10,7 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
 
 namespace dropkick.tests.TestObjects
@@ -49,6 +50,14 @@ namespace dropkick.tests.TestObjects
                                     .RemoveUsersGroup();
                             });
 
+                            o.ForCertificate(settings.CertificateThumbPrint, c =>
+                            {
+                                c.GrantReadPrivateKey()
+                                    .To(settings.UserGroupB)
+                                    .InStoreLocation(StoreLocation.LocalMachine)
+                                    .InStoreName(StoreName.My);
+                            });
+                                
                             o.ForQueue(settings.Queue, q =>
                             {
                                 q.GrantRead(settings.TheRest);
@@ -80,6 +89,7 @@ namespace dropkick.tests.TestObjects
         public string InstallPath { get; set; }
         public string UserGroupA { get; set; }
         public string UserGroupB { get; set; }
+        public string CertificateThumbPrint { get; set; }
         public string Queue { get; set; }
         public string TheRest { get; set; }
         public string Database { get; set; }

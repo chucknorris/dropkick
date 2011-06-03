@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Configuration.Dsl.Security.Certificate;
+
 namespace dropkick.Configuration.Dsl.Security
 {
     using System;
@@ -45,6 +47,12 @@ namespace dropkick.Configuration.Dsl.Security
         {
             var qsc = new QueueSecurityConfiguration(_server, queue);
             action(qsc);
+        }
+
+        public void ForCertificate(string thumbprint, Action<CertificateSecurityConfig> action)
+        {
+            var csc = new CertificateSecurityConfiguration(_server, thumbprint);
+            action(csc);
         }
 
         public void ForSqlServer(string database, Action<MsSqlSecurity> action)

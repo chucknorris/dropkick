@@ -22,7 +22,7 @@ namespace dropkick.Tasks.Security
     {
         public static string System = @"NT AUTHORITY\SYSTEM";
         public static string Administrators = "Administrators";
-        public static string Users = @"Users";
+        public static string Users = @"BUILTIN\Users";
         public static string Everyone = "Everyone";
         public static string Anonymous = "ANONYMOUS LOGON";
 
