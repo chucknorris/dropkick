@@ -157,6 +157,53 @@ namespace dropkick.tests.Tasks.Security.Acl
         }
 
         [ConcernFor("ClearAclsTask"), Category("Integration")]
+        public class when_clearing_acls_from_a_folder_preserving_currentuser_lowercased_and_not_removing_any_default_preservations : SecurityAclSpecsBase
+        {
+            private ClearAclsTask task;
+
+            private string path = @".\clearAclsPreserveCurrentUserLowercasedFolder";
+
+            public override void Context()
+            {
+                base.Context();
+                if (Directory.Exists(path)) Directory.Delete(path);
+                Directory.CreateDirectory(path);
+                var createUser = new GrantReadWriteTask(path, WellKnownSecurityRoles.CurrentUser, new DotNetPath());
+                result = createUser.Execute();
+                Assert.AreEqual(false, result.ContainsError());
+                var groupsToPreserve = new System.Collections.Generic.List<string>
+                {
+                    WellKnownSecurityRoles.CurrentUser.ToLower()
+                };
+                task = new ClearAclsTask(path, groupsToPreserve, null);
+            }
+
+            public override void Because()
+            {
+                result = task.Execute();
+            }
+
+            [Fact]
+            public void should_not_clear_current_user()
+            {
+                bool found = false;
+                var security = Directory.GetAccessControl(path);
+                var rules = security.GetAccessRules(true, true, typeof(NTAccount));
+                foreach (AuthorizationRule rule in rules)
+                {
+                    if (rule.IdentityReference.Value == WellKnownSecurityRoles.CurrentUser)
+                    {
+                        found = true;
+                    }
+                }
+
+                Assert.AreEqual(true, found);
+            }
+
+        }
+
+
+        [ConcernFor("ClearAclsTask"), Category("Integration")]
         public class when_clearing_acls_from_a_folder_preserving_currentuser_and_removing_all_default_preservations_after_removing_inheritance : SecurityAclSpecsBase
         {
             private ClearAclsTask task;

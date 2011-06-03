@@ -21,7 +21,7 @@ namespace dropkick.Tasks.Security
 
         public void LogSecurity(string format, params object[] args)
         {
-            _securityLog.DebugFormat(format, args);
+            _securityLog.InfoFormat(format, args);
         }
     }
 }
