@@ -110,6 +110,8 @@
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="FileSystem\PathConverter.cs" />
     <Compile Include="HUB.cs" />
+    <Compile Include="Log.cs" />
+    <Compile Include="Log4NetLog.cs" />
     <Compile Include="Logging.cs" />
     <Compile Include="Prompting\ConsolePromptService.cs" />
     <Compile Include="StringInterpolation\Interpolator.cs" />

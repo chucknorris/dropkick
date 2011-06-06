@@ -8,7 +8,6 @@ namespace dropkick.DeploymentModel
     public class DeploymentPlan
     {
         readonly IList<DeploymentRole> _roles = new List<DeploymentRole>();
-        static readonly ILog _log = LogManager.GetLogger(typeof(DeploymentPlan));
 
         public string Name { get; set; }
 
@@ -108,17 +107,10 @@ namespace dropkick.DeploymentModel
         {
             foreach (var result in results)
             {
-                if (result.Status == DeploymentItemStatus.Error)
-                    _log.ErrorFormat("[{0,-5}] {1}", result.Status, result.Message);
-
-                if (result.Status == DeploymentItemStatus.Alert)
-                    _log.WarnFormat("[{0,-5}] {1}", result.Status, result.Message);
-
-                if (result.Status == DeploymentItemStatus.Good)
-                    _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
-
-                if (result.Status == DeploymentItemStatus.Note)
-                    _log.InfoFormat("[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Error) Logging.Coarse(LogLevel.Error,"[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Alert) Logging.Coarse(LogLevel.Warn, "[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Good) Logging.Coarse(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Note) Logging.Coarse(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
             }
         }
 

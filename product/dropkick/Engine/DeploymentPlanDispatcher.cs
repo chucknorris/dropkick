@@ -22,7 +22,7 @@ namespace dropkick.Engine
     {
         static readonly IDictionary<DeploymentCommands, Action<DeploymentPlan>> _actions = new Dictionary<DeploymentCommands, Action<DeploymentPlan>>();
         static DropkickDeploymentInspector _inspector;
-        static readonly ILog _log = LogManager.GetLogger(typeof(DeploymentPlanDispatcher));
+        //static readonly ILog _log = LogManager.GetLogger(typeof(DeploymentPlanDispatcher));
 
         static DeploymentPlanDispatcher()
         {
@@ -36,8 +36,7 @@ namespace dropkick.Engine
         {
             _inspector = new DropkickDeploymentInspector(args.ServerMappings);
 
-            if (args.Role != "ALL")
-                _inspector.RolesToGet(args.Role.Split(','));
+            if (args.Role != "ALL") _inspector.RolesToGet(args.Role.Split(','));
 
             var plan = _inspector.GetPlan(deployment);
 

@@ -22,8 +22,7 @@ namespace dropkick.DeploymentModel
     using System.Linq;
 
     [DebuggerDisplay("{ResultsToList()}")]
-    public class DeploymentResult :
-        IEnumerable<DeploymentItem>
+    public class DeploymentResult : IEnumerable<DeploymentItem>
     {
         readonly List<DeploymentItem> _items = new List<DeploymentItem>();
 

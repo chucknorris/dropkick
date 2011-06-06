@@ -106,9 +106,13 @@ namespace dropkick.Tasks.Files
             source.CopyTo(destination.FullName, true);
 
             if (overwrite)
+            {
                 LogFineGrain("[copy][overwrite] '{0}' -> '{1}'", source.FullName, destination.FullName);
+            }
             else
+            {
                 LogFineGrain("[copy] '{0}' -> '{1}'", source.FullName, destination.FullName);
+            }
 
             //TODO: Adjust for remote pathing
             _fileLog.Info(destination.FullName); //log where files are modified
