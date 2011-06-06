@@ -26,7 +26,7 @@ namespace dropkick
         Fatal,
     }
 
-    internal class Lognames
+    internal class LogNames
     {
         public const string COARSE = "dropkick.coarsegrain";
         public const string FINE = "dropkick.finegrain";
@@ -37,8 +37,8 @@ namespace dropkick
 
     public static class Logging
     {
-        static readonly ILog _fineLog = LogManager.GetLogger(Lognames.FINE);
-        static readonly ILog _coarseLog = LogManager.GetLogger(Lognames.COARSE);
+        static readonly ILog _fineLog = LogManager.GetLogger(LogNames.FINE);
+        static readonly ILog _coarseLog = LogManager.GetLogger(LogNames.COARSE);
         static readonly KnownLoggers _knownLoggers = new KnownLoggers();
 
         /// <summary>
@@ -120,9 +120,9 @@ namespace dropkick
 
     public class KnownLoggers
     {
-        readonly ILog _fileLog = LogManager.GetLogger(Lognames.FILE);
-        readonly ILog _securityLog = LogManager.GetLogger(Lognames.SECURITY);
-        readonly ILog _databaseLog = LogManager.GetLogger(Lognames.DATABASE);
+        readonly ILog _fileLog = LogManager.GetLogger(LogNames.FILE);
+        readonly ILog _securityLog = LogManager.GetLogger(LogNames.SECURITY);
+        readonly ILog _databaseLog = LogManager.GetLogger(LogNames.DATABASE);
 
         public ILog FileChanges
         {

@@ -18,8 +18,7 @@ namespace dropkick.Tasks.Files
     using log4net;
     using Path = FileSystem.Path;
 
-    public class CopyDirectoryTask :
-        BaseIoTask
+    public class CopyDirectoryTask : BaseIoTask
     {
         readonly ILog _log = LogManager.GetLogger(typeof (CopyDirectoryTask));
         readonly DestinationCleanOptions _options;
