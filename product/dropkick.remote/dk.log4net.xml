@@ -1,0 +1,128 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <log4net>
+    <appender name="ConsoleAppender" type="log4net.Appender.ColoredConsoleAppender">
+      <mapping>
+        <level value="ERROR" />
+        <foreColor value="Red, HighIntensity" />
+      </mapping>
+      <mapping>
+        <level value="WARN" />
+        <foreColor value="Yellow, HighIntensity" />
+      </mapping>
+      <mapping>
+        <level value="INFO" />
+        <foreColor value="White" />
+      </mapping>
+      <mapping>
+        <level value="DEBUG" />
+        <foreColor value="Green" />
+      </mapping>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="FileChangeAppender" type="log4net.Appender.RollingFileAppender">
+      <file value=".\filechange.log"/>
+      <appendToFile value="false"/>
+      <maxSizeRollBackups value="10"/>
+      <maximumFileSize value="1MB"/>
+      <rollingStyle value="Size"/>
+      <staticLogFileName value="true"/>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date - %message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="SecurityChangeAppender" type="log4net.Appender.RollingFileAppender">
+      <file value=".\securitychange.log"/>
+      <appendToFile value="false"/>
+      <maxSizeRollBackups value="10"/>
+      <maximumFileSize value="1MB"/>
+      <rollingStyle value="Size"/>
+      <staticLogFileName value="true"/>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date - %message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="DbChangeAppender" type="log4net.Appender.RollingFileAppender">
+      <file value=".\DatabaseChange.log"/>
+      <appendToFile value="false"/>
+      <maxSizeRollBackups value="10"/>
+      <maximumFileSize value="1MB"/>
+      <rollingStyle value="Size"/>
+      <staticLogFileName value="true"/>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%date - %message%newline" />
+      </layout>
+    </appender>
+
+    <appender name="DetailAppender" type="log4net.Appender.RollingFileAppender">
+      <file value=".\dropkick.deployment.log"/>
+      <appendToFile value="false"/>
+      <maxSizeRollBackups value="10"/>
+      <maximumFileSize value="1MB"/>
+      <rollingStyle value="Size"/>
+      <staticLogFileName value="true"/>
+      <layout type="log4net.Layout.PatternLayout">
+        <conversionPattern value="%message%newline" />
+      </layout>
+    </appender>
+
+    <root>
+      <level value="INFO" />
+    </root>
+
+    <!-- not working -->
+    <logger name="dropkick.changes.file">
+      <level value="INFO" />
+      <appender-ref ref="FileChangeAppender" />
+    </logger>
+
+    <logger name="dropkick.changes.security">
+      <level value="DEBUG" />
+      <appender-ref ref="SecurityChangeAppender" />
+      <appender-ref ref="DetailAppender" />
+      <appender-ref ref="ConsoleAppender" />
+    </logger>
+
+    <logger name="dropkick.finegrain">
+      <level value="ALL" />
+      <appender-ref ref="DetailAppender" />
+    </logger>
+
+    <logger name="dropkick.coarsegrain">
+      <level value="ALL" />
+      <appender-ref ref="DetailAppender" />
+      <appender-ref ref="ConsoleAppender" />
+    </logger>
+
+    <!--Standard NHibernate Logging Settings-->
+    <logger name="NHibernate">
+      <level value="ERROR"/>
+    </logger>
+
+    <logger name="NHibernate.SQL">
+      <level value="ERROR"/>
+    </logger>
+
+    <!-- not working -->
+    <logger name="dropkick.changes.database">
+      <level value="INFO"/>
+      <appender-ref ref="DbChangeAppender" />
+    </logger>
+
+    <logger name="roundhouse">
+      <level value="INFO"/>
+      <appender-ref ref="DbChangeAppender" />
+      <appender-ref ref="ConsoleAppender" />
+    </logger>
+
+    <logger name="Topshelf" >
+      <level value ="ALL" />
+    </logger>
+
+  </log4net>
+</configuration>

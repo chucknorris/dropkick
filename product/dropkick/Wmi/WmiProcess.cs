@@ -15,49 +15,51 @@
 
         public static ProcessReturnCode Run(string machineName, string commandLine, string args, string currentDirectory)
         {
-                var connOptions = new ConnectionOptions
-                                      {
-                                          EnablePrivileges = true
-                                      };
+            var connOptions = new ConnectionOptions
+                                  {
+                                      EnablePrivileges = true
+                                  };
 
+            var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(machineName), connOptions);
+            scope.Connect();
+            var managementPath = new ManagementPath(CLASSNAME);
+            using (var processClass = new ManagementClass(scope, managementPath, new ObjectGetOptions()))
+            {
+                var inParams = processClass.GetMethodParameters("Create");
+                commandLine = System.IO.Path.Combine(currentDirectory, commandLine);
+                inParams["CommandLine"] = "{0} {1}".FormatWith(commandLine, args);
 
-                var scope = new ManagementScope(@"\\{0}\ROOT\CIMV2".FormatWith(machineName), connOptions);
-                scope.Connect();
-                var managementPath = new ManagementPath(CLASSNAME);
-                using(var processClass = new ManagementClass(scope, managementPath, new ObjectGetOptions()))
+                var outParams = processClass.InvokeMethod("Create", inParams, null);
+
+                var rtn = Convert.ToUInt32(outParams["returnValue"]);
+                var pid = Convert.ToUInt32(outParams["processId"]);
+                if (pid != 0)
                 {
-                    var inParams = processClass.GetMethodParameters("Create");
-                    commandLine = System.IO.Path.Combine(currentDirectory, commandLine);
-                    inParams["CommandLine"] = "{0} {1}".FormatWith(commandLine, args);
-
-                    var outParams = processClass.InvokeMethod("Create", inParams, null);
-
-                    var rtn = Convert.ToUInt32(outParams["returnValue"]);
-                    var pid = Convert.ToUInt32(outParams["processId"]);
-
-                    WaitForPidToDie(machineName, pid);
-                    return (ProcessReturnCode)rtn;
+                    WaitForPidToDie(machineName, pid);    
                 }
+                
+                return (ProcessReturnCode)rtn;
             }
+        }
 
         static void WaitForPidToDie(string machineName, uint pid)
         {
             const int sleepInterval = 200;
-            const int totalAttemptsAllowed = 5;
+            const int totalAttemptsAllowed = 10;
             var numberOfAttempts = 0;
 
             while (PidExists(machineName, pid))
             {
                 numberOfAttempts++;
-                Logging.Fine("[wmi] waiting for pid '{0}' to die", pid);
+                Logging.Fine("[wmi] Waiting for pid '{0}' to die", pid);
 
                 var sleep = sleepInterval + numberOfAttempts;
-                Logging.Fine("[wmi] sleeping for '{0}' milliseconds",sleep);
+                Logging.Fine("[wmi] Sleeping for '{0}' milliseconds", sleep);
                 Thread.Sleep(sleep);
 
                 if (numberOfAttempts > totalAttemptsAllowed)
                 {
-                    Logging.Fine("Tried waiting for '{0}' times, pid stil alive.", numberOfAttempts);
+                    Logging.Fine("[wmi] Tried waiting for '{0}' times, pid stil alive.", numberOfAttempts);
                     break;
                 }
             }
@@ -67,7 +69,9 @@
         {
             try
             {
-                var p = Process.GetProcessById((int) pid, machineName);
+                if (machineName == "127.0.0.1")  Process.GetProcessById((int)pid);
+                else Process.GetProcessById((int)pid, machineName);
+
                 return true;
             }
             catch (ArgumentException ex)

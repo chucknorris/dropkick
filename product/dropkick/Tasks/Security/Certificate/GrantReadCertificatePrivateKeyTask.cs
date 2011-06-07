@@ -102,7 +102,7 @@ namespace dropkick.Tasks.Security.Certificate
 
         public void ExecuteRemoteTask(DeploymentResult result)
         {
-            LogSecurity("[security][cert][remote] Granting READ to X509 Certificate's private key for thumbprint '{0}' on '{1}'.", _thumbprint,_server);
+            LogSecurity("[remote][security][cert] Granting READ to X509 Certificate's private key for thumbprint '{0}' on '{1}'.", _thumbprint,_server.Name);
 
             using (var remote = new RemoteDropkickExecutionTask(_server))
             {

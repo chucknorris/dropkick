@@ -17,9 +17,7 @@ namespace dropkick.console
     using System.Linq;
     using Engine;
     using log4net;
-    using log4net.Appender;
     using log4net.Config;
-    using log4net.Layout;
 
     internal static class Program
     {
