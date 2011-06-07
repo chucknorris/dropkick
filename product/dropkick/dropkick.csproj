@@ -54,8 +54,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="log4net, Version=1.2.10.0, Culture=neutral, PublicKeyToken=1b44e1d426115821, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\references\log4net\log4net.dll</HintPath>
+      <HintPath>..\..\packages\log4net.1.2.10\lib\2.0\log4net.dll</HintPath>
     </Reference>
     <Reference Include="Magnum, Version=1.0.0.188, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -130,7 +129,7 @@
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
-    <Compile Include="Tasks\Msmq\CopyRemoteOut.cs" />
+    <Compile Include="Tasks\CommandLine\RemoteDropkickExecutionTask.cs" />
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
     <Compile Include="Tasks\RoundhousE\DatabaseRecoveryMode.cs" />
@@ -211,7 +210,6 @@
     <Compile Include="DeploymentModel\DeploymentItemStatus.cs" />
     <Compile Include="FileSystem\DotNetPath.cs" />
     <Compile Include="FileSystem\Path.cs" />
-    <Compile Include="FileSystem\RemotePathHelper.cs" />
     <Compile Include="Prompting\PromptService.cs" />
     <Compile Include="Settings\ServerMapParser.cs" />
     <Compile Include="Settings\SettingsParser.cs" />
@@ -326,7 +324,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="packages.config" />
     <None Include="targets\Microsoft.Application.targets" />
   </ItemGroup>

@@ -32,10 +32,8 @@ namespace dropkick.Configuration.Dsl.Msmq
         {
             var ub = new UriBuilder("msmq", server.Name) {Path = _queueName};
 
-            if(server.IsLocal)
-                server.AddTask(new CreateLocalMsmqQueueTask(server, new QueueAddress(ub.Uri)));
-            else
-                server.AddTask(new CreateRemoteMsmqQueueTask(server, new QueueAddress(ub.Uri)));
+            if(server.IsLocal) server.AddTask(new CreateLocalMsmqQueueTask(server, new QueueAddress(ub.Uri)));
+            else server.AddTask(new CreateRemoteMsmqQueueTask(server, new QueueAddress(ub.Uri)));
         }
     }
 }

@@ -18,8 +18,7 @@ namespace dropkick.Tasks.CommandLine
     using DeploymentModel;
     using Wmi;
 
-    public class RemoteCommandLineTask :
-        Task
+    public class RemoteCommandLineTask : Task
     {
         readonly Dictionary<int, string> _status = new Dictionary<int, string>
                                                    {
@@ -75,8 +74,8 @@ namespace dropkick.Tasks.CommandLine
             var p = Path.Combine(ExecutableIsLocatedAt, Command);
             ProcessReturnCode returnCode  = WmiProcess.Run(Machine, Command, Args, ExecutableIsLocatedAt);
 
+            //TODO: Get the output file. Parse it out to get ERRORS and other things and add them to the results
             
-            //TODO: how can I get the output back from the computer?
             if (returnCode != ProcessReturnCode.Success) {
                 result.AddError(_status[(int)returnCode]);
             }

@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Tasks.CommandLine;
+
 namespace dropkick.Tasks.Security.Msmq
 {
     using Configuration.Dsl.Msmq;
@@ -58,9 +60,9 @@ namespace dropkick.Tasks.Security.Msmq
 
             Logging.Coarse("[msmq][remote] Setting permission for '{0}' on remote queue '{1}'.", _group, _address.ActualUri);
 
-            using (var remote = new CopyRemoteOut(_server))
+            using (var remote = new RemoteDropkickExecutionTask(_server))
             {
-                remote.GrantPermission(QueuePermission.Read, _address, _group);
+                remote.GrantMsmqPermission(QueuePermission.Read, _address, _group);
             }
 
             return result;

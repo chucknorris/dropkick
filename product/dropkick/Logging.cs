@@ -10,7 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using log4net.Appender;
 using log4net.Core;
+using log4net.Layout;
 
 namespace dropkick
 {
@@ -94,7 +96,7 @@ namespace dropkick
 
         public static void Coarse(string format, params object[] args)
         {
-            Coarse(LogLevel.Info,format, args);
+            Coarse(LogLevel.Info, format, args);
         }
 
         public static void Coarse(LogLevel level, string format, params object[] args)
@@ -104,17 +106,47 @@ namespace dropkick
 
         public static void Warn(string format, params object[] args)
         {
-            LogAMessage(_coarseLog,LogLevel.Warn,null,format,args);
+            LogAMessage(_coarseLog, LogLevel.Warn, null, format, args);
         }
 
         public static void Error(Exception ex, string format, params object[] args)
         {
-            LogAMessage(_coarseLog,LogLevel.Error,ex,format,args);
+            LogAMessage(_coarseLog, LogLevel.Error, ex, format, args);
         }
 
         public static KnownLoggers WellKnown
         {
             get { return _knownLoggers; }
+        }
+
+        private static bool _alreadySetRunAppender = false;
+
+        public static void SetRunAppender()
+        {
+            if (!_alreadySetRunAppender)
+            {
+                _alreadySetRunAppender = true;
+
+                var log = LogManager.GetLogger("dropkick");
+                var l = (log4net.Repository.Hierarchy.Logger)log.Logger;
+
+                var layout = new PatternLayout
+                {
+                    ConversionPattern = "%message%newline"
+                };
+                layout.ActivateOptions();
+
+                var app = new FileAppender
+                {
+                    Name = "dropkick.run.log",
+                    File = string.Format("{0}.run.log", DateTime.Now.ToString("yyyyMMdd-HHmmssfff")),
+                    Layout = layout,
+                    AppendToFile = false
+                };
+                app.ActivateOptions();
+
+                l.AddAppender(app);
+            }
         }
     }
 
@@ -138,7 +170,8 @@ namespace dropkick
         {
             get { return _databaseLog; }
         }
-
-
     }
+
+
+
 }

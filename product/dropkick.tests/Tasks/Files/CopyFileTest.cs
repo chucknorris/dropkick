@@ -119,8 +119,8 @@ namespace dropkick.tests.Tasks.Files
         [Explicit]
         public void CopyFileToUncPath()
         {
-            var sourceUncPath = RemotePathHelper.Convert(Environment.MachineName, _path.GetFullPath(_sourceFilePath));
-            var destinationUncPath = RemotePathHelper.Convert(Environment.MachineName, _path.GetFullPath(_destinationFolderPath));
+            var sourceUncPath = PathConverter.Convert(Environment.MachineName, _path.GetFullPath(_sourceFilePath));
+            var destinationUncPath = PathConverter.Convert(Environment.MachineName, _path.GetFullPath(_destinationFolderPath));
 
             var t = new CopyFileTask(sourceUncPath, destinationUncPath, null, new DotNetPath());
             t.Execute();

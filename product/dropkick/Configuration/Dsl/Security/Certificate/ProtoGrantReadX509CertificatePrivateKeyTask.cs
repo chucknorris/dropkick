@@ -43,11 +43,11 @@ namespace dropkick.Configuration.Dsl.Security.Certificate
             _storeLocation = location;
 
             return this;
-        } 
-        
+        }
+
         public override void RegisterRealTasks(PhysicalServer server)
         {
-            var task = new GrantReadCertificatePrivateKeyTask(_groups, _thumbprint, _storeName, _storeLocation, _dotnetPath);
+            var task = new GrantReadCertificatePrivateKeyTask(server,_groups, _thumbprint, _storeName, _storeLocation, _dotnetPath);
             server.AddTask(task);
         }
     }

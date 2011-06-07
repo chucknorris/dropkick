@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Tasks.CommandLine;
+
 namespace dropkick.Tasks.Msmq
 {
     using System;
@@ -48,16 +50,13 @@ namespace dropkick.Tasks.Msmq
         public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
-
             VerifyInAdministratorRole(result);
 
-            using (var remote = new CopyRemoteOut(_server))
+            using (var remote = new RemoteDropkickExecutionTask(_server))
             {
                 //capture output
-                var vresult = remote.VerifyQueue(Address);
-                result.AddAlert("REMOTE QUEUE - DID NOTHING");
+                var vresult = remote.VerifyQueueExists(Address);
             }
-
 
             return result;
         }
@@ -65,14 +64,12 @@ namespace dropkick.Tasks.Msmq
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-
             VerifyInAdministratorRole(result);
 
-            using (var remote = new CopyRemoteOut(_server))
+            using (var remote = new RemoteDropkickExecutionTask(_server))
             {
                 //capture output
                 var vresult = remote.CreateQueue(Address);
-                result.AddAlert("REMOTE QUEUE - DID NOTHING");
             }
 
 

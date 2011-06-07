@@ -22,7 +22,10 @@ namespace dropkick.tests.Tasks.Security.Certificate
         {
             protected DeploymentResult result;
 
-            public override void Context() { }
+            public override void Context()
+            {
+                result = new DeploymentResult();
+            }
         }
 
         #endregion
@@ -49,9 +52,9 @@ namespace dropkick.tests.Tasks.Security.Certificate
                     WellKnownSecurityRoles.Users
                 };
 
-
-                task = new GrantReadCertificatePrivateKeyTask(groups, thumbprint, StoreName.My, StoreLocation.LocalMachine, dotNetPath);
-                certificate = BaseSecurityCertificatePermissionsTask.FindCertificateBy(thumbprint, StoreName.My, StoreLocation.LocalMachine);
+                PhysicalServer server =new DeploymentServer("localhost");
+                task = new GrantReadCertificatePrivateKeyTask(server,groups, thumbprint, StoreName.My, StoreLocation.LocalMachine, dotNetPath);
+                certificate = BaseSecurityCertificatePermissionsTask.FindCertificateBy(thumbprint, StoreName.My, StoreLocation.LocalMachine, server,result);
             }
 
             public override void Because()

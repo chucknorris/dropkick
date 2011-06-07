@@ -27,7 +27,7 @@ namespace dropkick.console
         {
             var logpath = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "dk.log4net.xml");
             XmlConfigurator.Configure(new FileInfo(logpath));
-            SetRunAppender();
+            Logging.SetRunAppender();
 
             if (args.Contains("/help") || args.Contains("/?"))
             {
@@ -59,28 +59,6 @@ namespace dropkick.console
             "  --silent - this switch allows you to run unattended installs {0}" 
             , Environment.NewLine);
         }
-
-        static void SetRunAppender()
-        {
-            var log = LogManager.GetLogger("dropkick");
-            var l = (log4net.Repository.Hierarchy.Logger)log.Logger;
-
-            var layout = new PatternLayout
-                             {
-                                 ConversionPattern = "%message%newline"
-                             };
-            layout.ActivateOptions();
-
-            var app = new FileAppender
-                          {
-                              Name = "dropkick.run.log",
-                              File = string.Format("{0}.run.log", DateTime.Now.ToString("yyyyMMdd-HHmmssfff")),
-                              Layout = layout,
-                              AppendToFile = false
-                          };
-            app.ActivateOptions();
-
-            l.AddAppender(app);
-        }
+   
     }
 }

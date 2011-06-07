@@ -40,7 +40,6 @@ namespace dropkick.Configuration.Dsl.Files
         {
             string target = PathConverter.Convert(site, _target);
             string newName = PathConverter.Convert(site, _newName);
-            target = RemotePathHelper.Convert(site, target);
 
             var o = new RenameTask(target, newName, new DotNetPath());
             site.AddTask(o);

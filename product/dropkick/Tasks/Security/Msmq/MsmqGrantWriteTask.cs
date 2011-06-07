@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Tasks.CommandLine;
+
 namespace dropkick.Tasks.Security.Msmq
 {
     using System;
@@ -37,8 +39,6 @@ namespace dropkick.Tasks.Security.Msmq
             _address = address;
             _group = group;
         }
-
-
 
         public override string Name
         {
@@ -91,10 +91,10 @@ namespace dropkick.Tasks.Security.Msmq
             VerifyInAdministratorRole(result);
             Logging.Coarse("[msmq][remote] Setting permission for '{0}' on remote queue '{1}'.", _group, _address.ActualUri);
 
-            using (var remote = new CopyRemoteOut(_server))
+            using (var remote = new RemoteDropkickExecutionTask(_server))
             {
                 //capture output
-                var vresult = remote.GrantPermission(QueuePermission.Write, _address, _group);
+                var vresult = remote.GrantMsmqPermission(QueuePermission.Write, _address, _group);
                 foreach (var r in vresult) result.Add(r);
             }
 

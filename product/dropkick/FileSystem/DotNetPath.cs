@@ -21,23 +21,42 @@ namespace dropkick.FileSystem
     using Exceptions;
     using Wmi;
 
-    public class DotNetPath :
-        Path
+    public class DotNetPath : Path
     {
         #region Path Members
 
-        public string ConvertUncShareToLocalPath(PhysicalServer site, string path)
+        public string GetPhysicalPath(PhysicalServer site, string path)
         {
-            var serviceLocation = path;
-            var regex = new Regex(@"(?<front>[\\\\]?.+?)\\(?<shareName>[A-Za-z0-9\+\.\~\!\@\#\$\%\^\&\(\)_\-'\{\}\s-[\r\n\f]]+)\\?(?<rest>.*)", RegexOptions.IgnoreCase & RegexOptions.Multiline & RegexOptions.IgnorePatternWhitespace);
-            var shareMatch = regex.Match(path);
-            if (shareMatch.Success)
+            var standardizedPath = path;
+            if (!IsUncPath(standardizedPath))
             {
-                var shareName = shareMatch.Groups["shareName"].Value;
-                serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
+                standardizedPath = @"\\{0}\{1}".FormatWith(site.Name, standardizedPath);
             }
-            var rest = shareMatch.Groups["rest"].Value;
-            return System.IO.Path.Combine(serviceLocation, rest);
+
+            if (path.StartsWith("~")) { standardizedPath = standardizedPath.Replace(@"~\", ""); }
+
+            standardizedPath = standardizedPath.Replace(':', '$');
+
+            if (site.IsLocal)
+            {
+                var serviceLocation = standardizedPath;
+                var regex = new Regex(@"(?<front>[\\\\]?.+?)\\(?<shareName>[A-Za-z0-9\+\.\~\!\@\#\$\%\^\&\(\)_\-'\{\}\s-[\r\n\f]]+)\\?(?<rest>.*)", RegexOptions.IgnoreCase & RegexOptions.Multiline & RegexOptions.IgnorePatternWhitespace);
+                var shareMatch = regex.Match(standardizedPath);
+                if (shareMatch.Success)
+                {
+                    var shareName = shareMatch.Groups["shareName"].Value;
+                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
+                }
+                var rest = shareMatch.Groups["rest"].Value;
+                standardizedPath = System.IO.Path.Combine(serviceLocation, rest);
+            }
+
+            return standardizedPath;
+        }
+
+        public static bool IsUncPath(string path)
+        {
+            return path.StartsWith(@"\\");
         }
 
         public string Combine(string root, params string[] ex)
@@ -148,8 +167,7 @@ namespace dropkick.FileSystem
             bool result;
             newSecurity.ModifyAccessRule(AccessControlModification.Set, accessRule, out result);
 
-            if (!result)
-                r.AddError("Something wrong happened");
+            if (!result) r.AddError("Something wrong happened");
 
             accessRule = new FileSystemAccessRule(group,
                                                   permission,
@@ -160,12 +178,11 @@ namespace dropkick.FileSystem
 
             result = false;
             newSecurity.ModifyAccessRule(AccessControlModification.Add, accessRule, out result);
-            if (!result)
-                r.AddError("Something wrong happened");
+            if (!result) r.AddError("Something wrong happened");
 
             Directory.SetAccessControl(target, newSecurity);
-            if (result)
-                r.AddGood("Permissions set for '{0}' on folder '{1}'", group, target);
+
+            if (result) r.AddGood("Permissions set for '{0}' on folder '{1}'", group, target);
 
             if (!result) r.AddError("Something wrong happened");
         }

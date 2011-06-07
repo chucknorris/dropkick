@@ -4,13 +4,15 @@ using System.Security.AccessControl;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Security.Principal;
+using dropkick.DeploymentModel;
+using dropkick.FileSystem;
 using Path = dropkick.FileSystem.Path;
 
 namespace dropkick.Tasks.Security.Certificate
 {
     public abstract class BaseSecurityCertificatePermissionsTask : BaseSecurityTask
     {
-        public static X509Certificate2 FindCertificateBy(string thumbprint, StoreName storeName, StoreLocation storeLocation)
+        public static X509Certificate2 FindCertificateBy(string thumbprint, StoreName storeName, StoreLocation storeLocation, PhysicalServer server, DeploymentResult result)
         {
             if (string.IsNullOrEmpty(thumbprint)) return null;
 
@@ -31,6 +33,7 @@ namespace dropkick.Tasks.Security.Certificate
                     }
                 }
 
+                result.AddError("Could not find a certificate with thumbprint '{0}' on '{1}'".FormatWith(thumbprint, server.Name));
                 return null;
             }
             finally
@@ -39,27 +42,32 @@ namespace dropkick.Tasks.Security.Certificate
             }
         }
 
-        //Based on this http://www.codeproject.com/script/Forums/View.aspx?fid=1649&msg=2062983
-        // linked from here: http://stackoverflow.com/questions/425688/how-to-set-read-permission-on-the-private-key-file-of-x-509-certificate-from-net
-        protected static void AddAccessToPrivateKey(X509Certificate2 cert, string group, FileSystemRights rights,StoreLocation storeLocation, Path dotNetPath)
+        //Reference http://www.codeproject.com/script/Forums/View.aspx?fid=1649&msg=2062983
+        //Reference http://stackoverflow.com/questions/425688/how-to-set-read-permission-on-the-private-key-file-of-x-509-certificate-from-net
+        protected static void AddAccessToPrivateKey(X509Certificate2 cert, string group, FileSystemRights rights, StoreLocation storeLocation, Path dotNetPath, PhysicalServer server, DeploymentResult result)
         {
             var rsa = cert.PrivateKey as RSACryptoServiceProvider;
 
-            if (rsa != null)
+            if (rsa == null)
             {
-                var keyfilepath = FindKeyLocation(storeLocation,dotNetPath);
-
-                var file = new FileInfo(dotNetPath.Combine(keyfilepath, rsa.CspKeyContainerInfo.UniqueKeyContainerName));
-
-                var account = new NTAccount(group);
-                var fs = file.GetAccessControl();
-                fs.AddAccessRule(new FileSystemAccessRule(account, rights, AccessControlType.Allow));
-
-                file.SetAccessControl(fs);
+                result.AddError("Certificate does not contain a private key that is accessible");
+                return;
             }
+
+            var keyfilepath = FindKeyLocation(storeLocation, dotNetPath);
+
+            var file = dotNetPath.Combine(keyfilepath, rsa.CspKeyContainerInfo.UniqueKeyContainerName);
+            file = PathConverter.Convert(server, file);
+
+            dotNetPath.SetFileSystemRights(file, group, rights, result);
+            //var account = new NTAccount(group);
+            //var fs = file.GetAccessControl();
+            //fs.AddAccessRule(new FileSystemAccessRule(account, rights, AccessControlType.Allow));
+
+            //file.SetAccessControl(fs);
         }
 
-        protected static string FindKeyLocation(StoreLocation storeLocation,Path dotNetPath)
+        protected static string FindKeyLocation(StoreLocation storeLocation, Path dotNetPath)
         {
             string keyLocation = string.Empty;
 

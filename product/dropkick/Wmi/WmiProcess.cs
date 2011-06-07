@@ -13,7 +13,6 @@
         const string CLASSNAME = "Win32_Process";
         //private char NULL_VALUE = char(0);
 
-
         public static ProcessReturnCode Run(string machineName, string commandLine, string args, string currentDirectory)
         {
                 var connOptions = new ConnectionOptions
@@ -40,7 +39,6 @@
                     return (ProcessReturnCode)rtn;
                 }
             }
-
 
         static void WaitForPidToDie(string machineName, uint pid)
         {
@@ -71,7 +69,6 @@
             {
                 var p = Process.GetProcessById((int) pid, machineName);
                 return true;
-
             }
             catch (ArgumentException ex)
             {

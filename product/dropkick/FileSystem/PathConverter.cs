@@ -8,12 +8,12 @@ namespace dropkick.FileSystem
 
         public static string Convert(PhysicalServer server, string path)
         {
-            if (server.IsLocal)
-            {
-                return _dotnetPath.ConvertUncShareToLocalPath(server, path);
-            } else {
-                return RemotePathHelper.Convert(server, path);
-            }
+            return _dotnetPath.GetPhysicalPath(server, path);
+        }
+
+        public static string Convert(string server, string path)
+        {
+            return Convert(new DeploymentServer(server), path);
         }
     }
 }

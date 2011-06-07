@@ -44,15 +44,16 @@ namespace dropkick.DeploymentModel
         {
             get
             {
-                return Environment.MachineName.EqualsIgnoreCase(Name) || "localhost".EqualsIgnoreCase(Name);
-                //|| "127.0.0.1".EqualsIgnoreCase(Name); }
+                return Environment.MachineName.EqualsIgnoreCase(Name) 
+                    || "localhost".EqualsIgnoreCase(Name)
+                    //|| "127.0.0.1".EqualsIgnoreCase(Name)
+                    ; 
             }
         }
 
         public string MapPath(string path)
         {
-            //note: watch this to see if we need to use pathconverter or not.
-            return RemotePathHelper.Convert(this, path);
+            return PathConverter.Convert(this, path);
         }
 
         public void AddTask(Task task)

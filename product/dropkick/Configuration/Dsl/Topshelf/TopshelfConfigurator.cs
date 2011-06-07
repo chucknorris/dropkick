@@ -56,7 +56,7 @@ namespace dropkick.Configuration.Dsl.Topshelf
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var location = _path.ConvertUncShareToLocalPath(site, _location);
+            var location = _path.GetPhysicalPath(site, _location);
             if (site.IsLocal)
             {
                 site.AddTask(new LocalTopshelfTask(_exeName, location, _instanceName, _username, _password));

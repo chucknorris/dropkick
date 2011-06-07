@@ -51,11 +51,11 @@ namespace dropkick.Engine
                 ////////// File Checks
                 if (!VerifyPathToServerMapsFile(newArgs.PathToServerMapsFile))
                 {
-                    if (argumentsVerified) { argumentsVerified = false;}
+                    if (argumentsVerified) argumentsVerified = false;
                 }
                 if (!VerifyPathToSettingsFile(newArgs.PathToSettingsFile))
                 {
-                    if (argumentsVerified) { argumentsVerified = false;}
+                    if (argumentsVerified) argumentsVerified = false;
                 }
                 ////////////////////
 
@@ -68,7 +68,7 @@ namespace dropkick.Engine
                 if (deployment.GetType().Equals(typeof(NullDeployment)))
                 {
                     _coarseLog.Fatal("Couldn't find a deployment to run.");
-                    if (argumentsVerified) { argumentsVerified = false;}
+                    if (argumentsVerified) argumentsVerified = false;
                 }
                 ////////
 

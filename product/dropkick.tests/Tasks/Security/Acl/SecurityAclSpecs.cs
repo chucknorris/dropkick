@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Security.AccessControl;
 using System.Security.Principal;
+using System.Threading;
 using dropkick.DeploymentModel;
 using dropkick.FileSystem;
 using dropkick.Tasks.Security;
@@ -91,12 +92,16 @@ namespace dropkick.tests.Tasks.Security.Acl
                 result = task.Execute();
             }
 
+            /// <summary>
+            /// This test always blows up when run as part of suite. Works when run isolated.
+            /// </summary>
             [Fact]
             public void should_clear_current_user()
             {
                 bool found = false;
                 var security = Directory.GetAccessControl(path);
                 var rules = security.GetAccessRules(true, true, typeof(NTAccount));
+
                 foreach (AuthorizationRule rule in rules)
                 {
                     if (rule.IdentityReference.Value == WellKnownSecurityRoles.CurrentUser)
@@ -105,11 +110,11 @@ namespace dropkick.tests.Tasks.Security.Acl
                     }
                 }
 
-               Assert.AreEqual(false,found);
+                Assert.AreEqual(false, found);
             }
 
-        } 
-        
+        }
+
         [ConcernFor("ClearAclsTask"), Category("Integration")]
         public class when_clearing_acls_from_a_folder_preserving_currentuser_and_not_removing_any_default_preservations : SecurityAclSpecsBase
         {
@@ -151,7 +156,7 @@ namespace dropkick.tests.Tasks.Security.Acl
                     }
                 }
 
-               Assert.AreEqual(true,found);
+                Assert.AreEqual(true, found);
             }
 
         }
@@ -218,7 +223,7 @@ namespace dropkick.tests.Tasks.Security.Acl
                 var createUser = new GrantReadWriteTask(path, WellKnownSecurityRoles.CurrentUser, new DotNetPath());
                 result = createUser.Execute();
                 Assert.AreEqual(false, result.ContainsError());
-                
+
                 RemoveAclsInheritanceTask remove = new RemoveAclsInheritanceTask(path);
                 result = remove.Execute();
 
