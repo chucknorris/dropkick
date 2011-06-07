@@ -134,6 +134,7 @@ namespace dropkick.Tasks.CommandLine
             if (File.Exists(remoteLogPath))
             {
                 var remoteLog = File.ReadAllText(remoteLogPath);
+                var serverName = _server.Name;
                 var lines = Regex.Split(remoteLog, "\r\n");
 
                 foreach (string line in lines)
@@ -143,23 +144,23 @@ namespace dropkick.Tasks.CommandLine
                     //note: kind of nasty right now, but it does the job
                     if (line.Contains(noteStatus))
                     {
-                        vResult.AddNote("[remote] {0}", line.Replace(noteStatus, string.Empty));
+                        vResult.AddNote("[remote:{0}] {1}".FormatWith(serverName,line.Replace(noteStatus, string.Empty)));
                     }
                     else if (line.Contains(goodStatus))
                     {
-                        vResult.AddGood("[remote] {0}".FormatWith(line.Replace(goodStatus, string.Empty)));
+                        vResult.AddGood("[remote:{0}] {1}".FormatWith(serverName, line.Replace(goodStatus, string.Empty)));
                     }
                     else if (line.Contains(alertStatus))
                     {
-                        vResult.AddAlert("[remote] {0}".FormatWith(line.Replace(alertStatus, string.Empty)));
+                        vResult.AddAlert("[remote:{0}] {1}".FormatWith(serverName, line.Replace(alertStatus, string.Empty)));
                     }
                     else if (line.Contains(errorStatus))
                     {
-                        vResult.AddError("[remote] {0}".FormatWith(line.Replace(errorStatus, string.Empty)));
+                        vResult.AddError("[remote:{0}] {1}".FormatWith(serverName, line.Replace(errorStatus, string.Empty)));
                     }
                     else
                     {
-                        Logging.Fine("[remote] {0}".FormatWith(line.Replace(noteStatus, string.Empty)));
+                        Logging.Fine("[remote:{0}] {1}".FormatWith(serverName, line.Replace(noteStatus, string.Empty)));
                     }
                 }
             }
