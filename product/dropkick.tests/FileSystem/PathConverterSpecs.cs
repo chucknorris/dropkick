@@ -42,6 +42,7 @@ namespace dropkick.tests
             }
         }
 
+        [Category("Integration")]
         public class when_using_PathConverter_to_convert_a_path_and_deploying_to_a_local_server : PathConverterSpecsBase
         {
             public override void Because() {}
@@ -59,7 +60,6 @@ namespace dropkick.tests
             }
 
             [Fact]
-            [Category("Integration")]
             public void should_convert_remote_path_with_tilda_shareName_subfolder_successfully()
             {
                 var shareFolder = @".\temp";
