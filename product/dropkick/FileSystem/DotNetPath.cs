@@ -25,7 +25,7 @@ namespace dropkick.FileSystem
     {
         #region Path Members
 
-        public string GetPhysicalPath(PhysicalServer site, string path)
+        public string GetPhysicalPath(PhysicalServer site, string path,bool forceLocalPath)
         {
             var standardizedPath = path;
             if (!IsUncPath(standardizedPath))
@@ -37,7 +37,7 @@ namespace dropkick.FileSystem
 
             standardizedPath = standardizedPath.Replace(':', '$');
 
-            if (site.IsLocal)
+            if (site.IsLocal || forceLocalPath)
             {
                 var serviceLocation = standardizedPath;
                 var regex = new Regex(@"(?<front>[\\\\]?.+?)\\(?<shareName>[A-Za-z0-9\+\.\~\!\@\#\$\%\^\&\(\)_\-'\{\}\s-[\r\n\f]]+)\\?(?<rest>.*)", RegexOptions.IgnoreCase & RegexOptions.Multiline & RegexOptions.IgnorePatternWhitespace);

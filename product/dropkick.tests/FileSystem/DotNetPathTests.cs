@@ -92,7 +92,7 @@ namespace dropkick.tests.Tasks.Files
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_is_prepended_with_a_tilda_aka_site_root()
         {
             var server = new DeploymentServer("localhost");
-            Assert.AreEqual(@"C:\temp", _path.GetPhysicalPath(server, @"~\c$\temp"));
+            Assert.AreEqual(@"C:\temp", _path.GetPhysicalPath(server, @"~\c$\temp", false));
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace dropkick.tests.Tasks.Files
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_is_prepended_with_the_server()
         {
             var server = new DeploymentServer("localhost");
-            Assert.AreEqual(@"C:\temp", _path.GetPhysicalPath(server, @"\\localhost\c$\temp"));
+            Assert.AreEqual(@"C:\temp", _path.GetPhysicalPath(server, @"\\localhost\c$\temp", false));
         }
 
         [Test]
@@ -108,7 +108,7 @@ namespace dropkick.tests.Tasks.Files
         public void when_converting_a_share_to_a_local_path_it_should_work_when_the_share_has_a_dollar_sign_in_it()
         {
             var server = new DeploymentServer("localhost");
-            Assert.AreEqual(@"C:\temp", _path.GetPhysicalPath(server, @"~\c$\temp"));
+            Assert.AreEqual(@"C:\temp", _path.GetPhysicalPath(server, @"~\c$\temp", false));
         }
 
         [Test]
@@ -133,7 +133,7 @@ namespace dropkick.tests.Tasks.Files
             Win32Share.Create(serverName, shareName, destination, "");
 
             var server = new DeploymentServer(serverName);
-            var actual = _path.GetPhysicalPath(server, @"~\{0}".FormatWith(shareName));
+            var actual = _path.GetPhysicalPath(server, @"~\{0}".FormatWith(shareName), false);
 
             Win32Share.Delete(serverName, shareName);
 

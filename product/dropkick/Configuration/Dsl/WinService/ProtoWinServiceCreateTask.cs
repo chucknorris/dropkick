@@ -76,7 +76,7 @@ namespace dropkick.Configuration.Dsl.WinService
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string serviceLocation = _installPath;
-            serviceLocation = _path.GetPhysicalPath(site, _installPath);
+            serviceLocation = _path.GetPhysicalPath(site, _installPath, true);
 
             site.AddTask(new WinServiceCreateTask(site.Name, _serviceName)
                              {

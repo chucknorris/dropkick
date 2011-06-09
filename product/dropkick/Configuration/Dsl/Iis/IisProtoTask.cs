@@ -93,8 +93,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
-            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer);
-           // var pathForWebsite = _path.GetPhysicalPath(s, PathForWebsite);
+            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer,true);
 
             if (Version == IisVersion.Six)
             {

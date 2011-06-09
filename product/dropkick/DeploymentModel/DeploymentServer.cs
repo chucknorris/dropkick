@@ -51,6 +51,12 @@ namespace dropkick.DeploymentModel
             }
         }
 
+        /// <summary>
+        /// This will convert a path string to the physical path (local server deploy will get a local address).
+        /// If you need to force the path to be local always, you should call dropkick.FileSystem.Path.GetPhysicalPath(server,path,TRUE)
+        /// </summary>
+        /// <param name="path">The path on the server</param>
+        /// <returns>A physical path, will be a local path if the deploy is run on the same server it is deploying to</returns>
         public string MapPath(string path)
         {
             return PathConverter.Convert(this, path);

@@ -32,7 +32,7 @@ namespace dropkick.tests
                 Win32Share.Create(serverName, shareName, destination, "");
 
                 var server = new DeploymentServer(serverName);
-                var actual = path.GetPhysicalPath(server, @"~\{0}".FormatWith(shareName));
+                var actual = path.GetPhysicalPath(server, @"~\{0}".FormatWith(shareName),false);
 
                 Win32Share.Delete(serverName, shareName);
 
@@ -50,7 +50,7 @@ namespace dropkick.tests
             [Fact]
             public void should_convert_tilda_c_dollarsign_bill_successfully()
             {
-                Assert.AreEqual("C:\\Bill", path.GetPhysicalPath(server, @"~\c$\Bill"));
+                Assert.AreEqual("C:\\Bill", path.GetPhysicalPath(server, @"~\c$\Bill", false));
             }
 
             [Fact]
@@ -67,7 +67,7 @@ namespace dropkick.tests
 
                 var share = test_share_name("yoyotemp", shareFolder);
 
-                Assert.AreEqual(System.IO.Path.Combine(System.IO.Path.GetFullPath(shareFolder), sub_folder), path.GetPhysicalPath(server, System.IO.Path.Combine(share, sub_folder)));
+                Assert.AreEqual(System.IO.Path.Combine(System.IO.Path.GetFullPath(shareFolder), sub_folder), path.GetPhysicalPath(server, System.IO.Path.Combine(share, sub_folder), false));
             }
         }
 
@@ -86,7 +86,7 @@ namespace dropkick.tests
             [Fact]
             public void should_convert_tilda_c_dollarsign_bill_successfully()
             {
-                Assert.AreEqual(@"\\{0}\C$\Bill".FormatWith(remoteServerName), path.GetPhysicalPath(server, @"~\C$\Bill"));
+                Assert.AreEqual(@"\\{0}\C$\Bill".FormatWith(remoteServerName), path.GetPhysicalPath(server, @"~\C$\Bill", false));
             }
 
             [Fact]
