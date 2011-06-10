@@ -65,52 +65,7 @@ namespace dropkick.Tasks.CommandLine
         [DllImport("kernel32")]
         private static extern int CopyFileA(string lpExistingFileName, string lpNewFileName, int bFailIfExists);
 
-
-        public DeploymentResult VerifyQueueExists(QueueAddress path)
-        {
-            var t = SetUpRemote("verify_queue {0}".FormatWith(path.ActualUri));
-            return ExecuteAndGetResults(t);
-        }
-
-        public DeploymentResult CreateQueue(QueueAddress path)
-        {
-            var t = SetUpRemote("create_queue {0}".FormatWith(path.ActualUri));
-            return ExecuteAndGetResults(t);
-        }
-
-        public DeploymentResult GrantMsmqPermission(QueuePermission permission, QueueAddress address, string @group)
-        {
-            string perm;
-            switch (permission)
-            {
-                case QueuePermission.Read:
-                    perm = "r";
-                    break;
-                case QueuePermission.Write:
-                    perm = "w";
-                    break;
-                case QueuePermission.ReadWrite:
-                    perm = "rw";
-                    break;
-                case QueuePermission.SetSensibleDefaults:
-                    perm = "default";
-                    break;
-                default:
-                    perm = "r";
-                    break;
-            }
-
-            var t = SetUpRemote("grant_queue {0} {1} {2}".FormatWith(perm, @group, address.ActualUri));
-            return ExecuteAndGetResults(t);
-        }
-
-        public DeploymentResult GrantReadCertificatePrivateKey(string group, string thumbprint, string storeName, string storeLocation)
-        {
-            var t = SetUpRemote("grant_cert r {0} {1} {2} {3}".FormatWith(group, thumbprint.Trim().Replace(" ", ""), storeName, storeLocation));
-            return ExecuteAndGetResults(t);
-        }
-
-        protected RemoteCommandLineTask SetUpRemote(string arguments)
+        public RemoteCommandLineTask SetUpRemote(string arguments)
         {
             return new RemoteCommandLineTask("dropkick.remote.exe")
             {
@@ -121,7 +76,7 @@ namespace dropkick.Tasks.CommandLine
             };
         }
 
-        protected DeploymentResult ExecuteAndGetResults(RemoteCommandLineTask task)
+        public DeploymentResult ExecuteAndGetResults(RemoteCommandLineTask task)
         {
             string noteStatus = "[{0,-5}]".FormatWith(DeploymentItemStatus.Note);
             string goodStatus = "[{0,-5}]".FormatWith(DeploymentItemStatus.Good);
@@ -172,13 +127,5 @@ namespace dropkick.Tasks.CommandLine
         {
             //Directory.Delete(_remotePhysicalPath, true);
         }
-    }
-
-    public enum QueuePermission
-    {
-        Read,
-        Write,
-        ReadWrite,
-        SetSensibleDefaults
     }
 }
