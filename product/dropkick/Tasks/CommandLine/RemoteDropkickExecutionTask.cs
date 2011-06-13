@@ -49,9 +49,7 @@ namespace dropkick.Tasks.CommandLine
                 try
                 {
                     //TODO: This should get smarter about whether the file is the same or not.
-
-                    // unsafe file copy (beats file locking that is showing up)
-                    CopyFileA(src, dest, 0);
+                    CopyFileWithNoLocking(src, dest);
                     //File.Copy(src, dest, true);
                 }
                 catch (IOException ex)
@@ -60,6 +58,16 @@ namespace dropkick.Tasks.CommandLine
                     throw;
                 }
             }
+        }
+
+        /// <summary>
+        /// This does a low level copy of a file so it doesn't affect when a file is locked. It will overwrite an existing file
+        /// </summary>
+        /// <param name="source">The file you want to copy</param>
+        /// <param name="destination">The place you want it to go</param>
+        private void CopyFileWithNoLocking(string source,string destination)
+        {
+            CopyFileA(source, destination, 0);
         }
 
         [DllImport("kernel32")]
@@ -88,7 +96,10 @@ namespace dropkick.Tasks.CommandLine
             string remoteLogPath = Path.Combine(_remotePhysicalPath, "dropkick.deployment.log");
             if (File.Exists(remoteLogPath))
             {
-                var remoteLog = File.ReadAllText(remoteLogPath);
+                var remoteLogLocalPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "dropkick.remote.deployment.log");
+                CopyFileWithNoLocking(remoteLogPath, remoteLogLocalPath);
+
+                var remoteLog = File.ReadAllText(remoteLogLocalPath);
                 var serverName = _server.Name;
                 var lines = Regex.Split(remoteLog, "\r\n");
 
@@ -96,7 +107,7 @@ namespace dropkick.Tasks.CommandLine
                 {
                     if (line.Trim() == string.Empty) continue;
 
-                    //note: kind of nasty right now, but it does the job
+                    //review: kind of nasty right now, but it does the job - v2 should use a TCP sink to communicate between logs
                     if (line.Contains(noteStatus))
                     {
                         vResult.AddNote("[remote:{0}] {1}".FormatWith(serverName,line.Replace(noteStatus, string.Empty)));
