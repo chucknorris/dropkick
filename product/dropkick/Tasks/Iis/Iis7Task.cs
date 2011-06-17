@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Runtime.InteropServices;
+using dropkick.Exceptions;
+
 namespace dropkick.Tasks.Iis
 {
     using System;
@@ -24,10 +27,14 @@ namespace dropkick.Tasks.Iis
     {
         public bool UseClassicPipeline { get; set; }
         public bool Enable32BitAppOnWin64 { get; set; }
+		public bool SetProcessModelIdentity { get; set; }
+    	public ProcessModelIdentityType ProcessModelIdentityType { get; set; }
+		public string ProcessModelUsername { get; set; }
+		public string ProcessModelPassword { get; set; }
 
         readonly Path _path = new DotNetPath();
 
-        public override int VersionNumber
+    	public override int VersionNumber
         {
             get { return 7; }
         }
@@ -78,8 +85,18 @@ namespace dropkick.Tasks.Iis
                 result.AddGood("'{0}' was created", VdirPath);
             }
 
-            iisManager.CommitChanges();
-            LogCoarseGrain("[iis7] {0}", Name);
+        	try
+        	{
+				iisManager.CommitChanges();
+			}
+        	catch (COMException ex)
+        	{
+        		if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)
+					throw new DeploymentException("An exception occurred trying to apply deployment changes. If you are attempting to set the IIS " +
+						"Process Model's identity to a specific user then ensure that you are running DropKick with elevated privileges, or UAC is disabled.", ex);
+        		throw;
+        	}
+        	LogCoarseGrain("[iis7] {0}", Name);
             return result;
         }
 
@@ -119,6 +136,7 @@ namespace dropkick.Tasks.Iis
 
             if (mgr.ApplicationPools.Any(x => x.Name == AppPoolName))
             {
+				// TODO: Update existing application pool settings
                 LogIis("[iis7] Found the AppPool '{0}' skipping work", AppPoolName);
                 return;
             }
@@ -135,7 +153,29 @@ namespace dropkick.Tasks.Iis
 
             LogIis("[iis7] Created app pool '{0}'", AppPoolName);
             result.AddGood("Created app pool '{0}'", AppPoolName);
+
+			if (SetProcessModelIdentity)
+			{
+				SetApplicationPoolIdentity(pool);
+				result.AddGood("Set process model identity '{0}'", ProcessModelIdentityType);
+			}
         }
+
+		void SetApplicationPoolIdentity(ApplicationPool pool)
+		{
+			if (ProcessModelIdentityType != ProcessModelIdentityType.SpecificUser && pool.ProcessModel.IdentityType == ProcessModelIdentityType)
+				return;
+
+			pool.ProcessModel.IdentityType = ProcessModelIdentityType;
+			var identityUsername = ProcessModelIdentityType.ToString();
+			if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)
+			{
+				pool.ProcessModel.UserName = ProcessModelUsername;
+				pool.ProcessModel.Password = ProcessModelPassword;
+				identityUsername = ProcessModelUsername;
+			}
+			LogIis("[iis7] Set process model identity '{0}'", identityUsername);
+		}
 
         void CreateVirtualDirectory(Site site, ServerManager mgr)
         {
