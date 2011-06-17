@@ -11,6 +11,7 @@ NDependOut
 *.csproj.user
 *.resharper.user
 *.resharper
+*.dotCover
 *.cache
 *.docstates
 *~
@@ -18,6 +19,7 @@ NDependOut
 *.bak
 *.orig
 *.log
+*.TeamCity.user
  
 TestResult.xml
 submit.xml
