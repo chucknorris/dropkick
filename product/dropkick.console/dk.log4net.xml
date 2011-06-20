@@ -102,6 +102,7 @@
       <level value="INFO"/>
       <appender-ref ref="DbChangeAppender" />
       <appender-ref ref="ConsoleAppender" />
+      <appender-ref ref="DetailAppender" />
     </logger>
 
     <logger name="Topshelf" >
