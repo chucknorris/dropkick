@@ -103,6 +103,7 @@ namespace dropkick.DeploymentModel
             return _roles.Where(r => r.Name == name).First();
         }
 
+        //todo: keep this logger in mind
         static void DisplayResults(DeploymentResult results)
         {
             foreach (var result in results)
@@ -110,7 +111,8 @@ namespace dropkick.DeploymentModel
                 if (result.Status == DeploymentItemStatus.Error) Logging.Coarse(LogLevel.Error,"[{0,-5}] {1}", result.Status, result.Message);
                 if (result.Status == DeploymentItemStatus.Alert) Logging.Coarse(LogLevel.Warn, "[{0,-5}] {1}", result.Status, result.Message);
                 if (result.Status == DeploymentItemStatus.Good) Logging.Coarse(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
-                if (result.Status == DeploymentItemStatus.Note) Logging.Coarse(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Note) Logging.Fine(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Verbose) Logging.Fine(LogLevel.Debug, "[{0,-5}] {1}", result.Status, result.Message);
             }
         }
 

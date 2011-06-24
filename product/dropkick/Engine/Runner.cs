@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Diagnostics;
+using System.Reflection;
+
 namespace dropkick.Engine
 {
     using System;
@@ -22,7 +25,7 @@ namespace dropkick.Engine
 
     public static class Runner
     {
-        static readonly ILog _coarseLog = LogManager.GetLogger("dropkick.coarsegrain");
+        static readonly ILog _coarseLog = LogManager.GetLogger(LogNames.COARSE);
 
         static readonly SettingsParser _parser = new SettingsParser();
         static readonly ServerMapParser _serverParser = new ServerMapParser();
@@ -30,12 +33,12 @@ namespace dropkick.Engine
 
         public static void Deploy(string commandLine)
         {
-            if (!_coarseLog.IsDebugEnabled) { Console.WriteLine("Sad Emo Otter says \"DEBUG LOGGING IS OFF - THIS ISN'T GOING TO BE FUN :(\""); }
+            //if (!_coarseLog.IsDebugEnabled) { Console.WriteLine("Sad Emo Otter says \"DEBUG LOGGING IS OFF - THIS ISN'T GOING TO BE FUN :(\""); }
 
             try
             {
                 _coarseLog.Info("****************************************************");
-                _coarseLog.Info("DropkicK");
+                _coarseLog.InfoFormat("DropkicK v{0}",FileVersionInfo.GetVersionInfo(Assembly.GetExecutingAssembly().Location).FileVersion);
                 _coarseLog.Info("****************************************************");
                 _coarseLog.Info("");
 

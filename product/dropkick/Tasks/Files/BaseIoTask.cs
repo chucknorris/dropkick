@@ -11,7 +11,7 @@ namespace dropkick.Tasks.Files
     public abstract class BaseIoTask :
         BaseTask
     {
-        readonly ILog _fileLog = LogManager.GetLogger("dropkick.changes.files");
+        readonly ILog _fileLog = Logging.WellKnown.FileChanges;
         protected readonly Path _path;
 
         protected BaseIoTask(Path path)

@@ -5,6 +5,7 @@ namespace dropkick.DeploymentModel
         Good,
         Alert,
         Error,
-        Note
+        Note,
+        Verbose
     }
 }
