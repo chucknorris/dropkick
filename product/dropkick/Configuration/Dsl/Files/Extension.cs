@@ -61,5 +61,12 @@ namespace dropkick.Configuration.Dsl.Files
             protoServer.RegisterProtoTask(proto);
             return proto;
         }
+
+		public static UnzipOptions UnzipArchive(this ProtoServer protoServer, string archiveFilename)
+		{
+			var proto = new ProtoUnzipArchiveTask(new DotNetPath(), archiveFilename);
+			protoServer.RegisterProtoTask(proto);
+			return proto;
+		}
     }
 }
