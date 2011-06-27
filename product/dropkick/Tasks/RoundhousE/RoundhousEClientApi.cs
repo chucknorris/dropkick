@@ -27,12 +27,12 @@ namespace dropkick.Tasks.RoundhousE
 
         #region Methods
 
-        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin)
         {
-            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath, false, @"");
+            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath,commandTimeout,commandTimeoutAdmin, false, @"");
         }
 
-        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, bool restore, string restorePath)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath)
         {
             var migrate = new Migrate();
 
@@ -51,6 +51,8 @@ namespace dropkick.Tasks.RoundhousE
                     p.RepositoryPath = repositoryPath;
                     p.VersionFile = versionFile;
                     p.VersionXPath = versionXPath;
+                    p.CommandTimeout = commmandTimeout;
+                    p.CommandTimeoutAdmin = commandTimeoutAdmin;
                     p.Silent = true;
                 })
                 .Run();
