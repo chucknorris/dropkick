@@ -1,7 +1,9 @@
-﻿using dropkick.DeploymentModel;
+﻿using System;
+using dropkick.DeploymentModel;
 using dropkick.FileSystem;
 using dropkick.Tasks;
 using dropkick.Tasks.Files;
+using Magnum;
 
 namespace dropkick.Configuration.Dsl.Files
 {
@@ -14,6 +16,7 @@ namespace dropkick.Configuration.Dsl.Files
 
 		public ProtoUnzipArchiveTask(Path path, string archiveFilename)
 		{
+			Guard.AgainstEmpty(archiveFilename);
 			_path = path;
 			_archiveFilename = ReplaceTokens(archiveFilename);
 		}
