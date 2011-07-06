@@ -1,4 +1,5 @@
-﻿// ==============================================================================
+﻿//ReSharper disable ConvertToLambdaExpression
+// ==============================================================================
 // 
 // ACuriousMind and FerventCoder Copyright © 2011 - Released under the Apache 2.0 License
 // 
@@ -58,11 +59,11 @@ namespace $rootnamespace$
                                        s.Security(securityOptions =>
                                        {
                                            securityOptions.ForPath(settings.WebsitePath, fileSecurityConfig => fileSecurityConfig.GrantRead(settings.WebUserName));
-                                           securityOptions.ForPath(Path.Combine(settings.HostServicePath, "logs"), fs => fs.GrantReadWrite(settings.WebUserName));
-                                           securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework\v2.0.50727\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
-                                           if (Directory.Exists(@"~\C$\Windows\Microsoft.NET\Framework64\v2.0.50727\Temporary ASP.NET Files"))
+                                           securityOptions.ForPath(Path.Combine(settings.WebsitePath, "logs"), fs => fs.GrantReadWrite(settings.WebUserName));
+                                           securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework\v4.0.30319\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
+                                           if (Directory.Exists(@"~\C$\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files"))
                                            {
-                                               securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework64\v2.0.50727\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
+                                               securityOptions.ForPath(@"~\C$\Windows\Microsoft.NET\Framework64\v4.0.30319\Temporary ASP.NET Files", fs => fs.GrantReadWrite(settings.WebUserName));
                                            }
                                        });
                                    });
@@ -70,13 +71,14 @@ namespace $rootnamespace$
                 DeploymentStepsFor(VirtualDirectory,
                                    s =>
                                    {
-                                       s.Iis7Site(settings.VirtualDirectorySite).VirtualDirectory(settings.VirtualDirectoryName).SetAppPoolTo("__REPLACE_ME__",
-                                                                                                                                              pool =>
-                                                                                                                                              {
-                                                                                                                                                  pool.SetRuntimeToV4();
-                                                                                                                                                  //pool.UseClassicPipeline();
-                                                                                                                                                  //pool.Enable32BitAppOnWin64();
-                                                                                                                                              }).SetPathTo(@"{{WebsitePath}}");
+                                       s.Iis7Site(settings.VirtualDirectorySite)
+                                        .VirtualDirectory(settings.VirtualDirectoryName)
+                                        .SetAppPoolTo("Default Web Site", pool =>
+                                                        {
+                                                            pool.SetRuntimeToV4();
+                                                            //pool.UseClassicPipeline();
+                                                            //pool.Enable32BitAppOnWin64();
+                                                        }).SetPathTo(@"{{WebsitePath}}");
                                    });
 
                 DeploymentStepsFor(Host,
