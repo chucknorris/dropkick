@@ -1,5 +1,6 @@
 ﻿using System;
 using System.IO;
+using System.Security.AccessControl;
 using dropkick.DeploymentModel;
 using Ionic.Zip;
 using log4net;
@@ -94,7 +95,7 @@ namespace dropkick.Tasks.Files
 					count++;
 				}
 			}
-			logUnzip("{0} files unzipped", count);
+			result.AddGood("{0} files unzipped", count);
 		}
 
 		private ExtractExistingFileAction getExistingFileAction()
