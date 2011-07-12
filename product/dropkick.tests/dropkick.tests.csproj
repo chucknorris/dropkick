@@ -104,6 +104,15 @@
     <Compile Include="Engine\PhysicalServerTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem\PathConverterSpecs.cs" />
+    <Compile Include="Registry\CreateRegistryKeyTaskTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Registry\RegistryAssert.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Registry\RegistryExtensionTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="StringInterpolation\TestIt.cs" />
     <Compile Include="Tasks\Console\RemoteTest.cs" />
@@ -168,7 +177,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Prompting\" />
-    <Folder Include="Registry\" />
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Client.3.5">

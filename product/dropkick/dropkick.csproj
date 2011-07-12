@@ -101,6 +101,10 @@
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
+    <Compile Include="Configuration\Dsl\Registry\Extension.cs" />
+    <Compile Include="Configuration\Dsl\Registry\ProtoCreateRegistryKeyTask.cs" />
+    <Compile Include="Configuration\Dsl\Registry\RegistryExtension.cs" />
+    <Compile Include="Configuration\Dsl\Registry\RegistryKeyOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ClearAclOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\ACL\ProtoPathRemoveAclInheritanceTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Certificate\CertificateSecurityConfig.cs" />
@@ -141,6 +145,9 @@
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\Msmq\RemoteExtension.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
+    <Compile Include="Tasks\Registry\BaseRegistryTask.cs" />
+    <Compile Include="Tasks\Registry\CreateRegistryKeyTask.cs" />
+    <Compile Include="Tasks\Registry\CreateRegistryValueTask.cs" />
     <Compile Include="Tasks\RoundhousE\DatabaseRecoveryMode.cs" />
     <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />

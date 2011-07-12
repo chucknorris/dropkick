@@ -1,5 +1,4 @@
-﻿using System;
-using dropkick.DeploymentModel;
+﻿using dropkick.DeploymentModel;
 using dropkick.FileSystem;
 using dropkick.Tasks;
 using dropkick.Tasks.Files;

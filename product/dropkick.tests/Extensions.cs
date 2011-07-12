@@ -21,5 +21,10 @@ namespace dropkick.tests
         {
             Assert.AreEqual(typeof(T), actual.GetType());
         }
+
+		public static void ShouldNotBeNull(this object actual)
+		{
+			Assert.IsNotNull(actual);
+		}
     }
 }
