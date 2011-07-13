@@ -38,7 +38,7 @@ namespace dropkick.Tasks.Registry
 			var result = new DeploymentResult();
 
 			LogCoarseGrain("Opening registry hive '{0}' on '{1}'", Hive.AsRegistryHiveString(), ServerName);
-			using (var regHive = RegistryKey.OpenRemoteBaseKey(Hive, ServerName))
+			using (var regHive = OpenHive())
 				using (var regKey = regHive.CreateSubKey(Key))
 				{
 					if (regKey == null)

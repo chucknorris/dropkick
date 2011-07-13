@@ -42,8 +42,8 @@ namespace dropkick.Tasks.Registry
 			var result = new DeploymentResult();
 
 			LogCoarseGrain("Opening or creating registry key '{0}' on '{1}'", GetRegistryKeyDisplayString(Hive, Key), ServerName);
-			using (var regHive = RegistryKey.OpenRemoteBaseKey(Hive, ServerName))
-			using (var regKey = regHive.OpenSubKey(Key) ?? regHive.CreateSubKey(Key))
+			using (var regHive = OpenHive())
+			using (var regKey = regHive.OpenSubKey(Key, true) ?? regHive.CreateSubKey(Key))
 			{
 				LogCoarseGrain("Setting registry value '{0}' of type '{1}'", _valueName, _valueType.AsRegistryValueTypeString());
 				regKey.SetValue(_valueName, _value, _valueType);
@@ -55,7 +55,7 @@ namespace dropkick.Tasks.Registry
 
 		private void verifyKeyExists(DeploymentResult result)
 		{
-			using (var regHive = RegistryKey.OpenRemoteBaseKey(Hive, ServerName))
+			using (var regHive = OpenHive())
 				using (var regKey = regHive.OpenSubKey(Key))
 				{
 					if (regKey == null)

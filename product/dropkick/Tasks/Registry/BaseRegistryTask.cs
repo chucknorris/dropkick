@@ -10,6 +10,7 @@ namespace dropkick.Tasks.Registry
 		protected RegistryHive Hive { get; set; }
 		protected string Key { get; set; }
 		protected string ServerName { get; set; }
+		protected RegistryView RegistryView { get; set; }
 
 		protected static string GetRegistryKeyDisplayString(RegistryHive hive, string key,
 			string valueName = null, RegistryValueKind valueKind = RegistryValueKind.None)
@@ -34,6 +35,11 @@ namespace dropkick.Tasks.Registry
 				result.AddNote("Elevated permissions not required for Registry Hive '{0}'", Hive.AsRegistryHiveString());
 				return;
 			}
+		}
+
+		protected RegistryKey OpenHive()
+		{
+			return RegistryKey.OpenRemoteBaseKey(Hive, ServerName, RegistryView);
 		}
 	}
 }
