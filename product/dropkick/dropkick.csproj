@@ -101,6 +101,7 @@
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
+    <Compile Include="Configuration\Dsl\NetworkShare\ExistingShareOptions.cs" />
     <Compile Include="Configuration\Dsl\Registry\Extension.cs" />
     <Compile Include="Configuration\Dsl\Registry\ProtoCreateRegistryKeyTask.cs" />
     <Compile Include="Configuration\Dsl\Registry\RegistryExtension.cs" />

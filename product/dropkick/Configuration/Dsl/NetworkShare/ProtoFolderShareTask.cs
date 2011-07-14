@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System;
+
 namespace dropkick.Configuration.Dsl.NetworkShare
 {
     using DeploymentModel;
@@ -20,10 +22,11 @@ namespace dropkick.Configuration.Dsl.NetworkShare
         BaseProtoTask,
         FolderShareOptions
     {
-        readonly string _shareName;
+		readonly ExistingOptions _existingShareOptions = new ExistingOptions();
+		readonly string _shareName;
         string _pointingTo;
 
-        public ProtoFolderShareTask(string shareName)
+    	public ProtoFolderShareTask(string shareName)
         {
             _shareName = ReplaceTokens(shareName);
         }
@@ -40,8 +43,24 @@ namespace dropkick.Configuration.Dsl.NetworkShare
                           {
                               PointingTo = _pointingTo,
                               Server = s.Name,
-                              ShareName = _shareName
+                              ShareName = _shareName,
+							  DeleteAndRecreate = _existingShareOptions.deleteAndRecreate
                           });
         }
+
+    	public ExistingShareOptions IfExists
+    	{
+			get { return _existingShareOptions; }
+    	}
+
+		private class ExistingOptions : ExistingShareOptions
+		{
+			internal bool deleteAndRecreate;
+
+			public void DeleteAndRecreate()
+			{
+				deleteAndRecreate = true;
+			}
+		}
     }
 }
