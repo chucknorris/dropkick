@@ -113,6 +113,7 @@
     <Compile Include="Registry\RegistryExtensionTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Settings\ServerMapParsing.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="StringInterpolation\TestIt.cs" />
     <Compile Include="Tasks\Console\RemoteTest.cs" />
