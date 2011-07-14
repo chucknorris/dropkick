@@ -30,6 +30,8 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         RoundhousEOptions WithRepositoryPath(string repositoryPath);
         RoundhousEOptions WithVersionFile(string versionFile);
         RoundhousEOptions WithVersionXPath(string versionXPath);
+        RoundhousEOptions WithCommandTimeout(int timeout);
+        RoundhousEOptions WithCommandTimeoutAdmin(int timeout);
     }
 
 }

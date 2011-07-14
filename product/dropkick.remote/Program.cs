@@ -86,7 +86,8 @@ namespace dropkick.remote
                 if (result.Status == DeploymentItemStatus.Error) Logging.Coarse(LogLevel.Error, "[{0,-5}] {1}", result.Status, result.Message);
                 if (result.Status == DeploymentItemStatus.Alert) Logging.Coarse(LogLevel.Warn, "[{0,-5}] {1}", result.Status, result.Message);
                 if (result.Status == DeploymentItemStatus.Good) Logging.Coarse(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
-                if (result.Status == DeploymentItemStatus.Note) Logging.Coarse(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Note) Logging.Fine(LogLevel.Info, "[{0,-5}] {1}", result.Status, result.Message);
+                if (result.Status == DeploymentItemStatus.Verbose) Logging.Fine(LogLevel.Debug, "[{0,-5}] {1}", result.Status, result.Message);
             }
         }
 

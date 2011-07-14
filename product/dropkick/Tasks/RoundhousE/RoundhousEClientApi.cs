@@ -16,42 +16,45 @@ namespace dropkick.Tasks.RoundhousE
     using log4net;
     using roundhouse;
     using roundhouse.infrastructure.logging;
-    
+
     public class RoundhousEClientApi
     {
         #region Constants
 
-        private static readonly ILog _logger = LogManager.GetLogger(typeof (RoundhousEClientApi));
+        private static readonly ILog _logger = LogManager.GetLogger(typeof(RoundhousEClientApi));
 
         #endregion
 
         #region Methods
 
-        public static void Run(Logger log, string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode,string repositoryPath,string versionFile,string versionXPath)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin)
         {
-            Run(log, connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode,repositoryPath,versionFile,versionXPath, false, @"");
+            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath,commandTimeout,commandTimeoutAdmin, false, @"");
         }
 
-        public static void Run(Logger log, string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode,string repositoryPath,string versionFile,string versionXPath, bool restore, string restorePath)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath)
         {
             var migrate = new Migrate();
 
             migrate
-                .SetCustomLogging(log)
                 .Set(p =>
-                    {
-                        p.ConnectionString = connectionString;
-                        p.SqlFilesDirectory = scriptsLocation;
-                        p.EnvironmentName = environmentName;
-                        p.Drop = dropDatabase;
-                        p.RecoveryModeSimple = useSimpleRecoveryMode;
-                        p.Restore = restore;
-                        p.RestoreFromPath = restorePath;
-                        p.RepositoryPath = repositoryPath;
-                        p.VersionFile = versionFile;
-                        p.VersionXPath = versionXPath;
-                        p.Silent = true;
-                    })
+                {
+                    p.Logger = new roundhouse.infrastructure.logging.custom.Log4NetLogger(Logging.WellKnown.DatabaseChanges);
+
+                    p.ConnectionString = connectionString;
+                    p.SqlFilesDirectory = scriptsLocation;
+                    p.EnvironmentName = environmentName;
+                    p.Drop = dropDatabase;
+                    p.RecoveryModeSimple = useSimpleRecoveryMode;
+                    p.Restore = restore;
+                    p.RestoreFromPath = restorePath;
+                    p.RepositoryPath = repositoryPath;
+                    p.VersionFile = versionFile;
+                    p.VersionXPath = versionXPath;
+                    p.CommandTimeout = commmandTimeout;
+                    p.CommandTimeoutAdmin = commandTimeoutAdmin;
+                    p.Silent = true;
+                })
                 .Run();
         }
 

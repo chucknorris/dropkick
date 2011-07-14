@@ -56,13 +56,13 @@
     </appender>
 
     <root>
-      <level value="INFO" />
+      <level value="ALL" />
     </root>
 
-    <!-- not working -->
     <logger name="dropkick.changes.file">
       <level value="INFO" />
       <appender-ref ref="FileChangeAppender" />
+      <appender-ref ref="DetailAppender" />
     </logger>
 
     <logger name="dropkick.changes.security">
@@ -78,30 +78,28 @@
     </logger>
 
     <logger name="dropkick.coarsegrain">
-      <level value="ALL" />
+      <level value="INFO" />
       <appender-ref ref="DetailAppender" />
       <appender-ref ref="ConsoleAppender" />
     </logger>
 
-    <!--Standard NHibernate Logging Settings-->
+    <logger name="dropkick.changes.database">
+      <level value="INFO"/>
+      <appender-ref ref="DetailAppender" />
+      <appender-ref ref="DbChangeAppender" />
+      <appender-ref ref="ConsoleAppender" />
+    </logger>
+
+    <logger name="roundhouse">
+      <level value="FATAL"/>
+    </logger>
+
     <logger name="NHibernate">
       <level value="ERROR"/>
     </logger>
 
     <logger name="NHibernate.SQL">
       <level value="ERROR"/>
-    </logger>
-
-    <!-- not working -->
-    <logger name="dropkick.changes.database">
-      <level value="INFO"/>
-      <appender-ref ref="DbChangeAppender" />
-    </logger>
-
-    <logger name="roundhouse">
-      <level value="INFO"/>
-      <appender-ref ref="DbChangeAppender" />
-      <appender-ref ref="ConsoleAppender" />
     </logger>
 
     <logger name="Topshelf" >

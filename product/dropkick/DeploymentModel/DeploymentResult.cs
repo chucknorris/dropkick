@@ -74,6 +74,11 @@ namespace dropkick.DeploymentModel
             AddItem(DeploymentItemStatus.Alert, string.Format(messageFormat, args));
         }
 
+        public void AddVerbose(string messageFormat, params object[] args)
+        {
+            AddItem(DeploymentItemStatus.Verbose, string.Format(messageFormat, args));
+        }
+
         public void AddNote(string message)
         {
             AddItem(DeploymentItemStatus.Note, message);

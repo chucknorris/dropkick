@@ -150,7 +150,6 @@
     <Compile Include="Tasks\Registry\CreateRegistryKeyTask.cs" />
     <Compile Include="Tasks\Registry\CreateRegistryValueTask.cs" />
     <Compile Include="Tasks\RoundhousE\DatabaseRecoveryMode.cs" />
-    <Compile Include="Tasks\RoundhousE\DeploymentLogger.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEClientApi.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousEMode.cs" />
     <Compile Include="Tasks\Security\Acl\RemoveAclsInheritanceTask.cs" />

@@ -33,8 +33,10 @@ namespace dropkick.Tasks.RoundhousE
         private readonly string _repositoryPath;
         private readonly string _versionFile;
         private readonly string _versionXPath;
+        private readonly int _commandTimeout;
+        private readonly int _commandTimeoutAdmin;
 
-        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath, string repositoryPath, string versionFile, string versionXPath)
+        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath, string repositoryPath, string versionFile, string versionXPath,int commandTimeout, int commandTimeoutAdmin)
         {
             _connectionString = connectionString;
             _scriptsLocation = scriptsLocation;
@@ -45,6 +47,8 @@ namespace dropkick.Tasks.RoundhousE
             _repositoryPath = repositoryPath;
             _versionFile = versionFile;
             _versionXPath = versionXPath;
+            _commandTimeout = commandTimeout;
+            _commandTimeoutAdmin = commandTimeoutAdmin;
         }
 
         public string Name
@@ -71,7 +75,6 @@ namespace dropkick.Tasks.RoundhousE
         public DeploymentResult Execute()
         {
             var results = new DeploymentResult();
-            var log = new DeploymentLogger(results);
             var scriptsPath = Path.GetFullPath(_scriptsLocation);
             var useSimpleRecovery = _recoveryMode == DatabaseRecoveryMode.Simple ? true : false;
 
@@ -80,25 +83,27 @@ namespace dropkick.Tasks.RoundhousE
                 switch (_roundhouseMode)
                 {
                     case RoundhousEMode.Drop:
-                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery,_repositoryPath,_versionFile,_versionXPath);
+                        RoundhousEClientApi.Run( _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery,_repositoryPath,_versionFile,_versionXPath,_commandTimeout,_commandTimeoutAdmin);
                         break;
                     case RoundhousEMode.Restore:
-                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, true, _restorePath);
+                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin, true, _restorePath);
                         break;
                     case RoundhousEMode.DropCreate:
-                        RoundhousEClientApi.Run(log, _connectionString, @".\", _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath);
+                        RoundhousEClientApi.Run(_connectionString, @".\", _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
                         goto case RoundhousEMode.Normal;
                     case RoundhousEMode.Normal:
-                        RoundhousEClientApi.Run(log, _connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath);
+                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
                         break;
                     default:
                         goto case RoundhousEMode.Normal;
                 }
 
+                results.AddGood("[roundhouse] Deployed migrations changes successfully");
+
             }
             catch (Exception ex)
             {
-                results.AddError("An error occured during RoundhousE execution.", ex);
+                results.AddError("[roundhouse] An error occured during RoundhousE execution.", ex);
             }
 
             return results;
