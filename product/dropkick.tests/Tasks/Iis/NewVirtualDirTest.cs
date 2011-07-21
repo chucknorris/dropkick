@@ -19,7 +19,8 @@ namespace dropkick.tests.Tasks.Iis
     using NUnit.Framework;
 
     [TestFixture]
-    public class NewVirtualDirTest
+	[Category("Iis7Task")]
+	public class NewVirtualDirTest
     {
         [Test, Explicit]
         public void Create_A_VirtualDiretory()

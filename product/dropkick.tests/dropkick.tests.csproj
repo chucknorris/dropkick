@@ -121,6 +121,7 @@
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="FileSystem\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
+    <Compile Include="Tasks\Iis\ExistingVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
