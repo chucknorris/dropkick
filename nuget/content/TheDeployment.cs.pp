@@ -23,6 +23,7 @@ using dropkick.Configuration.Dsl.Iis;
 using dropkick.Configuration.Dsl.RoundhousE;
 using dropkick.Configuration.Dsl.Security;
 using dropkick.Configuration.Dsl.WinService;
+using dropkick.Wmi;
 
 namespace $rootnamespace$
 {
