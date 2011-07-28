@@ -32,7 +32,7 @@ namespace dropkick.Settings
                 //c.AddJsonFile(file.FullName);
                 var content = File.ReadAllText(file.FullName);
                 c.AddJson(content);
-                //c.AddCommandLine(commandLine);
+                c.AddCommandLine(commandLine);
             });
 
             
