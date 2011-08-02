@@ -27,7 +27,7 @@ namespace dropkick.Tasks.NServiceBusHost
 		{
 			string args = string.IsNullOrEmpty(instanceName)
 							? ""
-							: " /instance:" + instanceName;
+							: " /instance:\"{0}\"".FormatWith(instanceName);
 
 			if (username != null && password != null)
 			{
@@ -38,9 +38,7 @@ namespace dropkick.Tasks.NServiceBusHost
 				if (shouldPromptForPassword(username, password))
 					pass = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(exeName, username));
 
-				args += " /username:{0}".FormatWith(user);
-				if (!string.IsNullOrEmpty(pass))
-					args += " /password:{0}".FormatWith(pass);
+				args += " /userName:\"{0}\" /password:\"{1}\"".FormatWith(user, pass);
 			}
 
 			if (!string.IsNullOrEmpty(serviceName))
