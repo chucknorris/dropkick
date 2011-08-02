@@ -25,8 +25,8 @@ namespace dropkick.Tasks.NServiceBusHost
 		public RemoteNServiceBusHostTask(string exeName, string location, string instanceName, PhysicalServer site, string username, string password, string serviceName, string displayName, string description)
 		{
 			string args = string.IsNullOrEmpty(instanceName)
-							  ? ""
-							  : " /instance:" + instanceName;
+							? ""
+							: " /instance:\"{0}\"".FormatWith(instanceName);
 
 			if (username != null && password != null)
 			{
@@ -34,10 +34,10 @@ namespace dropkick.Tasks.NServiceBusHost
 				var pass = password;
 				if (username.ShouldPrompt())
 					user = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(exeName));
-				if (password.ShouldPrompt())
+				if (shouldPromptForPassword(username, password))
 					pass = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(exeName, username));
 
-				args += " /username:{0} /password:{1}".FormatWith(user, pass);
+				args += " /userName:\"{0}\" /password:\"{1}\"".FormatWith(user, pass);
 			}
 
 			if (!string.IsNullOrEmpty(serviceName))
@@ -72,6 +72,11 @@ namespace dropkick.Tasks.NServiceBusHost
 		{
 			Logging.Coarse("[nservicebushost] Installing a remote NServiceBus.Host service");
 			return _task.Execute();
+		}
+
+		private bool shouldPromptForPassword(string username, string password)
+		{
+			return !WindowsAuthentication.IsBuiltInUsername(username) && password.ShouldPrompt();
 		}
 	}
 }
