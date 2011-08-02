@@ -78,13 +78,7 @@ namespace dropkick.Tasks.WinService
 
     	private bool shouldPromptForPassword()
     	{
-    		return !isBuiltInUsername(UserName) && Password.ShouldPrompt();
-    	}
-
-    	private bool isBuiltInUsername(string userName)
-    	{
-			const string ntAuthorityPrefix = @"NT AUTHORITY\";
-    		return String.Compare(ntAuthorityPrefix, 0, userName, 0, ntAuthorityPrefix.Length, true) == 0;
+    		return !WindowsAuthentication.IsBuiltInUsername(UserName) && Password.ShouldPrompt();
     	}
     }
 }

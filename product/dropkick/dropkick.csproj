@@ -312,6 +312,7 @@
     <Compile Include="Engine\Runner.cs" />
     <Compile Include="Configuration\Dsl\ProtoTask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="WindowsAuthentication.cs" />
     <Compile Include="Wmi\ErrorControl.cs" />
     <Compile Include="Wmi\ProcessReturnCode.cs" />
     <Compile Include="Wmi\ServiceReturnCode.cs" />

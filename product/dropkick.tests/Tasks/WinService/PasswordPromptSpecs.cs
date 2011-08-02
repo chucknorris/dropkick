@@ -18,11 +18,6 @@ namespace dropkick.tests.Tasks.WinService
 			_result.Results.Where(x => x.Message.Contains("prompt for a password")).Count().ShouldBeEqualTo(0);
 		}
 		
-		public void It_should_prompt_for_password_if_not_supplied()
-		{
-			
-		}
-
 		public override void Context()
 		{
 			_task = new WinServiceCreateTask("localhost", "test");
