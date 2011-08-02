@@ -102,6 +102,9 @@
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\ExistingShareOptions.cs" />
+    <Compile Include="Configuration\Dsl\NServiceBusHost\Extension.cs" />
+    <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostConfigurator.cs" />
+    <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostOptions.cs" />
     <Compile Include="Configuration\Dsl\Registry\Extension.cs" />
     <Compile Include="Configuration\Dsl\Registry\ProtoCreateRegistryKeyTask.cs" />
     <Compile Include="Configuration\Dsl\Registry\RegistryExtension.cs" />
@@ -146,6 +149,8 @@
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\Msmq\RemoteExtension.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostTask.cs" />
     <Compile Include="Tasks\Registry\BaseRegistryTask.cs" />
     <Compile Include="Tasks\Registry\CreateRegistryKeyTask.cs" />
     <Compile Include="Tasks\Registry\CreateRegistryValueTask.cs" />
