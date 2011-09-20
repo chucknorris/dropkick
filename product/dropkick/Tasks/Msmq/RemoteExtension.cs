@@ -12,9 +12,9 @@ namespace dropkick.Tasks.Msmq
             return remoteTask.ExecuteAndGetResults(t);
         }
 
-        public static DeploymentResult CreateQueue(this RemoteDropkickExecutionTask remoteTask, QueueAddress path)
+        public static DeploymentResult CreateQueue(this RemoteDropkickExecutionTask remoteTask, QueueAddress path, bool transactional = false)
         {
-            var t = remoteTask.SetUpRemote("create_queue {0}".FormatWith(path.ActualUri));
+            var t = remoteTask.SetUpRemote("create_queue {0} {1}".FormatWith(path.ActualUri, transactional));
             return remoteTask.ExecuteAndGetResults(t);
         }
 
