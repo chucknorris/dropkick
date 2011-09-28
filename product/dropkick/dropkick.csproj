@@ -98,6 +98,7 @@
     <Compile Include="Configuration\Dsl\Files\ProtoUnzipArchiveTask.cs" />
     <Compile Include="Configuration\Dsl\Files\UnzipOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\ProcessModelIdentity.cs" />
+    <Compile Include="Configuration\Dsl\Msmq\MsmqQueueOptions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />

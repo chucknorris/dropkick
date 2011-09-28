@@ -110,8 +110,11 @@ namespace dropkick.remote
 
             var queuename = args[1];
             var queueAddress = new QueueAddress(queuename);
+            var transactional = false;
+            if (args.Length > 2)
+                bool.TryParse(args[2], out transactional);
 
-            result = new CreateLocalMsmqQueueTask(_server, queueAddress).Execute();
+            result = new CreateLocalMsmqQueueTask(_server, queueAddress, transactional).Execute();
 
             return result;
         }
