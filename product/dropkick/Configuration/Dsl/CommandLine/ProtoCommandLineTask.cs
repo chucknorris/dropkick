@@ -34,7 +34,7 @@ namespace dropkick.Configuration.Dsl.CommandLine
 
         public CommandLineOptions Args(string args)
         {
-            _args = args;
+            _args = ReplaceTokens(args);
             return this;
         }
 
