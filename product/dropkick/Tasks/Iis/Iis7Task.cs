@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System.Runtime.InteropServices;
+using dropkick.Exceptions;
+
 namespace dropkick.Tasks.Iis
 {
     using System;
@@ -24,10 +27,14 @@ namespace dropkick.Tasks.Iis
     {
         public bool UseClassicPipeline { get; set; }
         public bool Enable32BitAppOnWin64 { get; set; }
+		public bool SetProcessModelIdentity { get; set; }
+    	public ProcessModelIdentityType ProcessModelIdentityType { get; set; }
+		public string ProcessModelUsername { get; set; }
+		public string ProcessModelPassword { get; set; }
 
         readonly Path _path = new DotNetPath();
 
-        public override int VersionNumber
+    	public override int VersionNumber
         {
             get { return 7; }
         }
@@ -70,16 +77,20 @@ namespace dropkick.Tasks.Iis
             }
 
             Site site = GetSite(iisManager, WebsiteName);
+        	BuildVirtualDirectory(site, iisManager, result);
 
-            if (!DoesVirtualDirectoryExist(site))
-            {
-                result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
-                CreateVirtualDirectory(site, iisManager);
-                result.AddGood("'{0}' was created", VdirPath);
-            }
-
-            iisManager.CommitChanges();
-            LogCoarseGrain("[iis7] {0}", Name);
+        	try
+        	{
+				iisManager.CommitChanges();
+			}
+        	catch (COMException ex)
+        	{
+        		if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)
+					throw new DeploymentException("An exception occurred trying to apply deployment changes. If you are attempting to set the IIS " +
+						"Process Model's identity to a specific user then ensure that you are running DropKick with elevated privileges, or UAC is disabled.", ex);
+        		throw;
+        	}
+        	LogCoarseGrain("[iis7] {0}", Name);
             return result;
         }
 
@@ -117,46 +128,89 @@ namespace dropkick.Tasks.Iis
         {
             if (string.IsNullOrEmpty(AppPoolName)) return;
 
-            if (mgr.ApplicationPools.Any(x => x.Name == AppPoolName))
+        	ApplicationPool pool = mgr.ApplicationPools.FirstOrDefault(x => x.Name == AppPoolName);
+			if (pool == null)
+			{
+				LogIis("App pool '{0}' does not exist, creating.", AppPoolName);
+				pool = mgr.ApplicationPools.Add(AppPoolName);
+			}
+			else
             {
-                LogIis("[iis7] Found the AppPool '{0}' skipping work", AppPoolName);
-                return;
+                LogIis("[iis7] Found the AppPool '{0}', updating as necessary.", AppPoolName);
             }
 
-            var pool = mgr.ApplicationPools.Add(AppPoolName);
+			if (Enable32BitAppOnWin64)
+			{
+				pool.Enable32BitAppOnWin64 = true;
+				LogIis("[iis7] Enabling 32bit application on Win64.");
+			}
 
-            if (Enable32BitAppOnWin64)
-                pool.Enable32BitAppOnWin64 = true;
+        	pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
+			LogIis("[iis7] Using managed runtime version '{0}'", ManagedRuntimeVersion);
 
-            pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
+			if (UseClassicPipeline)
+			{
+				pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
+				LogIis("[iis7] Using Classic managed pipeline mode.");
+			}
 
-            if (UseClassicPipeline)
-                pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
+            result.AddGood("App pool '{0}' updated.", AppPoolName);
 
-            LogIis("[iis7] Created app pool '{0}'", AppPoolName);
-            result.AddGood("Created app pool '{0}'", AppPoolName);
+			if (SetProcessModelIdentity)
+			{
+				SetApplicationPoolIdentity(pool);
+				result.AddGood("Set process model identity '{0}'", ProcessModelIdentityType);
+			}
         }
 
-        void CreateVirtualDirectory(Site site, ServerManager mgr)
+		void SetApplicationPoolIdentity(ApplicationPool pool)
+		{
+			if (ProcessModelIdentityType != ProcessModelIdentityType.SpecificUser && pool.ProcessModel.IdentityType == ProcessModelIdentityType)
+				return;
+
+			pool.ProcessModel.IdentityType = ProcessModelIdentityType;
+			var identityUsername = ProcessModelIdentityType.ToString();
+			if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)
+			{
+				pool.ProcessModel.UserName = ProcessModelUsername;
+				pool.ProcessModel.Password = ProcessModelPassword;
+				identityUsername = ProcessModelUsername;
+			}
+			LogIis("[iis7] Set process model identity '{0}'", identityUsername);
+		}
+
+        void BuildVirtualDirectory(Site site, ServerManager mgr, DeploymentResult result)
         {
             Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VdirPath;
+        	var application = site.Applications.FirstOrDefault(x => x.Path == appPath);
 
-            foreach (var app in site.Applications)
-            {
-                if (app.Path.Equals(appPath))
-                {
-                    LogIis("[iis7] Found the application '{0}'".FormatWith(VdirPath));
-                    return;
-                }
-            }
+			if (application == null)
+			{
+				result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
+				application = site.Applications.Add(appPath, PathOnServer);
+				LogFineGrain("[iis7] Created application '{0}'", VdirPath);
+			}
+			else
+			{
+				result.AddNote("'{0}' already exists. Updating settings.", VdirPath);
+			}
 
-            var application = site.Applications.Add(appPath, PathOnServer);
-            LogIis("[iis7] Created application '{0}'", VdirPath);
+			if (application.ApplicationPoolName != AppPoolName)
+			{
+				application.ApplicationPoolName = AppPoolName;
+				LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VdirPath, AppPoolName);
+			}
 
-            application.ApplicationPoolName = AppPoolName;
-            LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VdirPath, AppPoolName);
-        }
+			var vdir = application.VirtualDirectories["/"];
+			if (vdir.PhysicalPath != PathOnServer)
+			{
+				vdir.PhysicalPath = PathOnServer;
+				LogFineGrain("[iis7] Updated physical path for '{0}' to '{1}'", VdirPath, PathOnServer);
+			}
+
+			result.AddGood("'{0}' was created", VdirPath);
+		}
 
         void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {

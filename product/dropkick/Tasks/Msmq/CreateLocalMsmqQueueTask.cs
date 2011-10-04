@@ -21,20 +21,28 @@ namespace dropkick.Tasks.Msmq
         BaseTask
     {
         readonly PhysicalServer _server;
+        readonly bool _transactional;
 
-        public CreateLocalMsmqQueueTask(PhysicalServer server, QueueAddress address)
-        {
-            _server = server;
-            Address = address;
-        }
         public CreateLocalMsmqQueueTask(PhysicalServer server, string queueName)
         {
             _server = server;
             var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
             Address = new QueueAddress(ub.Uri);
         }
-        public QueueAddress Address { get; set; }
+        
+        public CreateLocalMsmqQueueTask(PhysicalServer server, QueueAddress address)
+            : this(server, address, false)
+        {
+        }
 
+        public CreateLocalMsmqQueueTask(PhysicalServer server, QueueAddress address, bool transactional)
+        {
+            _server = server;
+            Address = address;
+            _transactional = transactional;
+        }
+
+        public QueueAddress Address { get; set; }
 
         public override string Name
         {
@@ -47,7 +55,6 @@ namespace dropkick.Tasks.Msmq
 
             VerifyInAdministratorRole(result);
 
-
             if (MessageQueue.Exists(Address.LocalName))
             {
                 result.AddGood("'{0}' does exist");
@@ -56,8 +63,6 @@ namespace dropkick.Tasks.Msmq
             {
                 result.AddAlert(string.Format("'{0}' doesn't exist and will be created.", Address.ActualUri));
             }
-
-
 
             return result;
         }
@@ -69,7 +74,7 @@ namespace dropkick.Tasks.Msmq
             if (!MessageQueue.Exists(Address.LocalName))
             {
                 result.AddAlert("'{0}' does not exist and will be created.".FormatWith(Address.FormatName));
-                MessageQueue.Create(Address.LocalName);
+                MessageQueue.Create(Address.LocalName, _transactional);
                 result.AddGood("Created queue '{0}'".FormatWith(Address.FormatName));
             }
             else
@@ -79,6 +84,5 @@ namespace dropkick.Tasks.Msmq
 
             return result;
         }
-
     }
 }

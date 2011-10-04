@@ -19,14 +19,15 @@ namespace dropkick.tests.Tasks.Iis
     using NUnit.Framework;
 
     [TestFixture]
-    public class NewVirtualDirTest
+	[Category("Iis7Task")]
+	public class NewVirtualDirTest
     {
         [Test, Explicit]
         public void Create_A_VirtualDiretory()
         {
             var task = new Iis7Task
                            {
-                               PathOnServer = "D:\\SomethingAwesome",
+                               PathOnServer = "C:\\SomethingAwesome",
                                ServerName = "localhost",
                                VdirPath = "Victastic",
                                WebsiteName = "Default Web Site",
@@ -48,7 +49,7 @@ namespace dropkick.tests.Tasks.Iis
         {
             var task = new Iis7Task
                            {
-                               PathOnServer = "D:\\SomethingAwesome",
+                               PathOnServer = "C:\\SomethingAwesome",
                                ServerName = "localhost",
                                VdirPath = "Victastic",
                                WebsiteName = "SCOTT",
@@ -68,7 +69,7 @@ namespace dropkick.tests.Tasks.Iis
         [Test, Explicit]
         public void Create_An_AppPool()
         {
-            ServerManager iis = ServerManager.OpenRemote("SrvTestWeb01");
+            ServerManager iis = ServerManager.OpenRemote("localhost");
             iis.ApplicationPools.Add("MATTYB");
 
             iis.CommitChanges();

@@ -22,18 +22,25 @@ namespace dropkick.Tasks.Msmq
         BaseTask
     {
         readonly PhysicalServer _server;
-
-        public CreateRemoteMsmqQueueTask(PhysicalServer server, QueueAddress address)
-        {
-            _server = server;
-            Address = address;
-        }
+        readonly bool _transactional;
 
         public CreateRemoteMsmqQueueTask(PhysicalServer server, string queueName)
         {
             _server = server;
             var ub = new UriBuilder("msmq", server.Name) { Path = queueName };
             Address = new QueueAddress(ub.Uri);
+        }
+
+        public CreateRemoteMsmqQueueTask(PhysicalServer server, QueueAddress address)
+            : this(server, address, false)
+        {
+        }
+
+        public CreateRemoteMsmqQueueTask(PhysicalServer server, QueueAddress address, bool transactional)
+        {
+            _server = server;
+            Address = address;
+            _transactional = transactional;
         }
 
         public QueueAddress Address { get; set; }
@@ -69,9 +76,8 @@ namespace dropkick.Tasks.Msmq
             using (var remote = new RemoteDropkickExecutionTask(_server))
             {
                 //capture output
-                var vresult = remote.CreateQueue(Address);
+                var vresult = remote.CreateQueue(Address, _transactional);
             }
-
 
             return result;
         }

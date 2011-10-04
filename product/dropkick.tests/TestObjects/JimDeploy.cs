@@ -12,8 +12,6 @@ namespace dropkick.tests.TestObjects
         {
             Define(settings =>
             {
-                int i = 0; //shut up R#
-
                 DeploymentStepsFor(Service, targetServer=>
                 {
                     targetServer.WinService(settings.ServiceName).Stop();
@@ -25,15 +23,6 @@ namespace dropkick.tests.TestObjects
                         .ToDirectory(settings.TargetDir);
 
                     targetServer.RenameFile(@"{{Environment}}.app.config").To("app.config");
-
-//                    targetServer.Security(sec=>
-//                    {
-//                        sec.LocalPolicy(lp=>
-//                        {
-//                            lp.LogOnAsBatch("Account");
-//                            lp.LogOnAsService("Account");
-//                        });
-//                    } );
 
                     targetServer.WinService(settings.ServiceName).Start();
                 });

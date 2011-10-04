@@ -44,6 +44,10 @@ namespace dropkick.Configuration.Dsl.Iis
         public string PathForWebsite { get; set; }
         public int PortForWebsite { get; set; }
         public bool Bit32Requested { get; set; }
+		public bool ProcessModelIdentityTypeSpecified { get; private set; }
+		public ProcessModelIdentity ProcessModelIdentityType { get; private set; }
+		public string ProcessModelUsername { get; private set; }
+		public string ProcessModelPassword { get; private set; }
 
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
@@ -86,7 +90,21 @@ namespace dropkick.Configuration.Dsl.Iis
             ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V4;
         }
 
-        public void CreateIfItDoesntExist()
+    	public void SetProcessModelIdentity(string username, string password)
+    	{
+    		ProcessModelIdentityTypeSpecified = true;
+			ProcessModelIdentityType = ProcessModelIdentity.SpecificUser;
+    		ProcessModelUsername = username;
+    		ProcessModelPassword = password;
+    	}
+
+    	public void SetProcessModelIdentity(ProcessModelIdentity identity)
+    	{
+			ProcessModelIdentityTypeSpecified = true;
+			ProcessModelIdentityType = identity;
+    	}
+
+    	public void CreateIfItDoesntExist()
         {
             ShouldCreate = true;
         }
@@ -107,18 +125,22 @@ namespace dropkick.Configuration.Dsl.Iis
                               });
                 return;
             }
-            s.AddTask(new Iis7Task
-                          {
-                              PathOnServer = scrubbedPath,
-                              ServerName = s.Name,
-                              VdirPath = VdirPath,
-                              WebsiteName = WebsiteName,
-                              AppPoolName = AppPoolName,
-                              UseClassicPipeline = ClassicPipelineRequested,
-                              ManagedRuntimeVersion = this.ManagedRuntimeVersion,
-                              PathForWebsite = this.PathForWebsite,
-                              PortForWebsite = this.PortForWebsite,
-                              Enable32BitAppOnWin64 = Bit32Requested
+        	s.AddTask(new Iis7Task
+        	          	{
+        	          		PathOnServer = scrubbedPath,
+        	          		ServerName = s.Name,
+        	          		VdirPath = VdirPath,
+        	          		WebsiteName = WebsiteName,
+        	          		AppPoolName = AppPoolName,
+        	          		UseClassicPipeline = ClassicPipelineRequested,
+        	          		ManagedRuntimeVersion = this.ManagedRuntimeVersion,
+        	          		PathForWebsite = this.PathForWebsite,
+        	          		PortForWebsite = this.PortForWebsite,
+        	          		Enable32BitAppOnWin64 = Bit32Requested,
+							SetProcessModelIdentity = this.ProcessModelIdentityTypeSpecified,
+        	          		ProcessModelIdentityType = ProcessModelIdentityType.ToProcessModelIdentityType(),
+							ProcessModelUsername = this.ProcessModelUsername,
+							ProcessModelPassword = this.ProcessModelPassword
                           });
         }
 

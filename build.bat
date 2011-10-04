@@ -13,8 +13,10 @@ SET NANT="%DIR%lib\Nant\nant.exe"
 SET build.config.settings="%DIR%settings\UppercuT.config"
 
 %NANT% /f:.\build\default.build -D:build.config.settings=%build.config.settings% %*
-
 if %ERRORLEVEL% NEQ 0 goto errors
+
+SET nunitresults=%DIR%build_output\build_artifacts\nunit\nunit-results.xml
+echo ##teamcity[importData type='nunit' path='%nunitresults%']
 
 goto finish
 

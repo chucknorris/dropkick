@@ -9,6 +9,7 @@ namespace dropkick.tests.Tasks.Files
 {
     public class CopyDirectoryTaskSpecs
     {
+		[CLSCompliant(false)]
         public abstract class CopyDirectoryTaskSpecsBase : TinySpec
         {
             protected CopyDirectoryTask task;
@@ -38,6 +39,7 @@ namespace dropkick.tests.Tasks.Files
             }
         }
 
+		[CLSCompliant(false)]
         public class when_copying_files_to_a_local_directory : CopyDirectoryTaskSpecsBase
         {
             public override void Context()

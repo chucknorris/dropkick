@@ -26,10 +26,8 @@ namespace dropkick.tests.TestObjects
         {
             Define((settings) =>
                 {
-                    int i = 0; //stop bothering me R#
                     DeploymentStepsFor(File, s =>
                     {
-                        int ii = 0; //stop bothering me R#
                         s.Security(o =>
                         {
                             o.LocalPolicy(p => p.LogOnAsService(settings.AppAccount));

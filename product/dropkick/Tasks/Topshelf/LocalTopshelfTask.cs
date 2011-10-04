@@ -17,52 +17,57 @@ namespace dropkick.Tasks.Topshelf
     using FileSystem;
     using Prompting;
 
-    public class LocalTopshelfTask :
-        BaseTask
-    {
-        readonly LocalCommandLineTask _task;
-        readonly PromptService _prompt = new ConsolePromptService();
+	public class LocalTopshelfTask :
+		BaseTask
+	{
+		private readonly LocalCommandLineTask _task;
+		private readonly PromptService _prompt = new ConsolePromptService();
 
-        public LocalTopshelfTask(string exeName, string location, string instanceName, string username, string password)
-        {
-            string args = string.IsNullOrEmpty(instanceName)
-                              ? ""
-                              : " /instance:" + instanceName;
+		public LocalTopshelfTask(string exeName, string location, string instanceName, string username, string password)
+		{
+			string args = string.IsNullOrEmpty(instanceName)
+			              	? ""
+			              	: " /instance:" + instanceName;
 
-            if (username != null && password != null)
-            {
-                var user = username;
-                var pass = password;
-                if (username.ShouldPrompt())
-                    user = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(exeName));
-                if (password.ShouldPrompt())
-                    pass = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(exeName, username));
+			if (username != null && password != null)
+			{
+				var user = username;
+				var pass = password;
+				if (username.ShouldPrompt())
+					user = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(exeName));
+				if (shouldPromptForPassword(username, password))
+					pass = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(exeName, username));
 
-                args += " /username:{0} /password:{1}".FormatWith(user, pass);
-            }
+				args += " /username:{0} /password:{1}".FormatWith(user, pass);
+			}
 
-            _task = new LocalCommandLineTask(new DotNetPath(), exeName)
-                        {
-                            Args = "install " + args, 
-                            ExecutableIsLocatedAt = location,
-                            WorkingDirectory = location
-                        };
-        }
+			_task = new LocalCommandLineTask(new DotNetPath(), exeName)
+			        	{
+			        		Args = "install " + args,
+			        		ExecutableIsLocatedAt = location,
+			        		WorkingDirectory = location
+			        	};
+		}
 
-        public override string Name
-        {
-            get { return "[topshelf] local Installing"; }
-        }
+		public override string Name
+		{
+			get { return "[topshelf] local Installing"; }
+		}
 
-        public override DeploymentResult VerifyCanRun()
-        {
-            return _task.VerifyCanRun();
-        }
+		public override DeploymentResult VerifyCanRun()
+		{
+			return _task.VerifyCanRun();
+		}
 
-        public override DeploymentResult Execute()
-        {
-            Logging.Coarse("[topshelf] Installing a local Topshelf service.");
-            return _task.Execute();
-        }
-    }
+		public override DeploymentResult Execute()
+		{
+			Logging.Coarse("[topshelf] Installing a local Topshelf service.");
+			return _task.Execute();
+		}
+
+		private bool shouldPromptForPassword(string username, string password)
+		{
+			return !WindowsAuthentication.IsBuiltInUsername(username) && password.ShouldPrompt();
+		}
+	}
 }
