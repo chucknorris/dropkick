@@ -85,7 +85,7 @@ namespace dropkick.Tasks.Iis
             {
                 action();
             }
-            catch (UnauthorizedAccessException ex)
+            catch (UnauthorizedAccessException)
             {
                 throw new DeploymentException("The IIS7 operation you are attempting '{0}' requires elevated privileges. Retry running the task as an Administrator or with UAC disabled.".FormatWith(Operation));
             }
@@ -102,6 +102,7 @@ namespace dropkick.Tasks.Iis
                     }
                     else if (appPool.CanBeStopped())
                     {
+                        IisUtility.WaitForIisToCompleteAnyOperations();
                         checkForElevatedPrivileges(() => appPool.Stop());
                         result.AddGood("Application Pool '{0}' stopped.".FormatWith(ApplicationPool));
                     }
@@ -117,6 +118,7 @@ namespace dropkick.Tasks.Iis
                     }
                     else if (appPool.CanBeStarted())
                     {
+                        IisUtility.WaitForIisToCompleteAnyOperations();
                         checkForElevatedPrivileges(() => appPool.Start());
                         result.AddGood("Application Pool '{0}' started.".FormatWith(ApplicationPool));
                     }

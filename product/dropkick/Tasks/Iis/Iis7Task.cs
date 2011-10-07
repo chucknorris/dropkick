@@ -82,7 +82,8 @@ namespace dropkick.Tasks.Iis
         	try
         	{
 				iisManager.CommitChanges();
-			}
+        	    IisUtility.WaitForIisToCompleteAnyOperations();
+        	}
         	catch (COMException ex)
         	{
         		if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)

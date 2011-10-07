@@ -12,5 +12,9 @@ namespace dropkick.Tasks.Iis
                 result.AddAlert("This machine does not have IIS7 on it");
         }
 
+        public static void WaitForIisToCompleteAnyOperations()
+        {
+            System.Threading.Thread.Sleep(500);
+        }
     }
 }
