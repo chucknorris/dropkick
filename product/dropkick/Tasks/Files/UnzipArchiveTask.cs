@@ -1,6 +1,5 @@
 ﻿using System;
 using System.IO;
-using System.Security.AccessControl;
 using dropkick.DeploymentModel;
 using Ionic.Zip;
 using log4net;
@@ -20,6 +19,7 @@ namespace dropkick.Tasks.Files
         {
 			_zipArchiveFilename = zipArchiveFilename;
             _to = to;
+		    _options = options;
         }
 
 		public override string Name
