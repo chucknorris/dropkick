@@ -145,6 +145,8 @@
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Files\UnzipArchiveTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
+    <Compile Include="Tasks\Iis\Iis7OperationTask.cs" />
+    <Compile Include="Tasks\Iis\IisUtility.cs" />
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
     <Compile Include="Tasks\CommandLine\RemoteDropkickExecutionTask.cs" />
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />

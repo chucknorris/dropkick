@@ -52,7 +52,7 @@ namespace dropkick.Tasks.Iis
         {
             var result = new DeploymentResult();
 
-            CheckVersionOfWindowsAndIis(result);
+            IisUtility.CheckForIis7(result);
 
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
@@ -211,13 +211,6 @@ namespace dropkick.Tasks.Iis
 
 			result.AddGood("'{0}' was created", VdirPath);
 		}
-
-        void CheckVersionOfWindowsAndIis(DeploymentResult result)
-        {
-            int shouldBe6 = Environment.OSVersion.Version.Major;
-            if (shouldBe6 != 6)
-                result.AddAlert("This machine does not have IIS7 on it");
-        }
 
         public bool DoesVirtualDirectoryExist(Site site)
         {

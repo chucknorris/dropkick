@@ -1,4 +1,7 @@
+using System;
+using System.Collections.Generic;
 using Magnum;
+using dropkick.DeploymentModel;
 
 namespace dropkick.tests
 {
@@ -29,7 +32,7 @@ namespace dropkick.tests
 			Assert.IsNotNull(actual);
 		}
 
-		public static void ShouldContain<T>(this System.Collections.Generic.ICollection<T> collection, T item)
+		public static void ShouldContain<T>(this ICollection<T> collection, T item)
 		{
 			Guard.AgainstNull(collection, "Collection is null, cannot assert item membership.");
 			Assert.IsTrue(collection.Contains(item), 
@@ -37,5 +40,11 @@ namespace dropkick.tests
 				typeof(T).Name, 
 				item == null ? "(null)" : item.ToString());
 		}
+
+        public static void LogToConsole(this DeploymentResult deploymentResult)
+        {
+            foreach (var item in deploymentResult.Results)
+                Console.WriteLine(item.Message);
+        }
     }
 }
