@@ -17,6 +17,24 @@ namespace dropkick.Tasks.Iis
         {
             return applicationPool.State != ObjectState.Started && applicationPool.State != ObjectState.Starting;
         }
+
+        public static void StartAndWaitForCompletion(this ApplicationPool applicationPool)
+        {
+            applicationPool.Start();
+            do
+            {
+                IisUtility.WaitForIisToCompleteAnyOperations();
+            } while (applicationPool.State == ObjectState.Stopping);
+        }
+
+        public static void StopAndWaitForCompletion(this ApplicationPool applicationPool)
+        {
+            applicationPool.Stop();
+            do
+            {
+                IisUtility.WaitForIisToCompleteAnyOperations();
+            } while (applicationPool.State == ObjectState.Starting);
+        }
     }
 
     public enum Iis7Operation
@@ -102,8 +120,7 @@ namespace dropkick.Tasks.Iis
                     }
                     else if (appPool.CanBeStopped())
                     {
-                        IisUtility.WaitForIisToCompleteAnyOperations();
-                        checkForElevatedPrivileges(() => appPool.Stop());
+                        checkForElevatedPrivileges(appPool.StopAndWaitForCompletion);
                         result.AddGood("Application Pool '{0}' stopped.".FormatWith(ApplicationPool));
                     }
                     else
@@ -119,7 +136,7 @@ namespace dropkick.Tasks.Iis
                     else if (appPool.CanBeStarted())
                     {
                         IisUtility.WaitForIisToCompleteAnyOperations();
-                        checkForElevatedPrivileges(() => appPool.Start());
+                        checkForElevatedPrivileges(appPool.StartAndWaitForCompletion);
                         result.AddGood("Application Pool '{0}' started.".FormatWith(ApplicationPool));
                     }
                     else
