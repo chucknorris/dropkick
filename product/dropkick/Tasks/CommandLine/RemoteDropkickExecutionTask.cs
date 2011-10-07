@@ -52,7 +52,7 @@ namespace dropkick.Tasks.CommandLine
                     CopyFileWithNoLocking(src, dest);
                     //File.Copy(src, dest, true);
                 }
-                catch (IOException ex)
+                catch (IOException)
                 {
                     _fineLog.DebugFormat("[remote][file] Error copying '{0}' to '{1}'", file, remotePath);
                     throw;
