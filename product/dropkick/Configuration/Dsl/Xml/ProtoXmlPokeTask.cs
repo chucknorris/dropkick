@@ -32,6 +32,9 @@ namespace dropkick.Configuration.Dsl.Xml
 
         public XmlPokeOptions Set(string xPath, string value)
         {
+            xPath = ReplaceTokens(xPath);
+            value = ReplaceTokens(value);
+            
             if (_items.ContainsKey(xPath))
             {
                 _items[xPath] = value;
