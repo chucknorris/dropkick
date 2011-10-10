@@ -19,6 +19,11 @@ namespace dropkick.Tasks.Files
             _path = path;
         }
 
+        public void LogFileChange(string format, params object[] args)
+        {
+            _fileLog.InfoFormat(format, args);
+        }
+
         protected void ValidateIsFile(DeploymentResult result, string path)
         {
             if (!(new FileInfo(_path.GetFullPath(path)).Exists))

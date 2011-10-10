@@ -117,6 +117,8 @@
     <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantSecuritySpecs.cs" />
+    <Compile Include="Tasks\Xml\Context\XmlContextResult.cs" />
+    <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
@@ -159,6 +161,9 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tasks\MsSql\test.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

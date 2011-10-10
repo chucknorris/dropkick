@@ -66,7 +66,6 @@ namespace dropkick
                 .Single();
         }
 
-
         public static bool GetSwitch(this IEnumerable<ICommandLineElement> elements, string key)
         {
             return elements
@@ -76,6 +75,11 @@ namespace dropkick
                 .Select(x => x.Value)
                 .DefaultIfEmpty(false)
                 .Single();
+        }
+
+        public static IEnumerable<T> OrEmptyListIfNull<T>(this IEnumerable<T> source)
+        {
+            return source ?? Enumerable.Empty<T>();
         }
 
     }
