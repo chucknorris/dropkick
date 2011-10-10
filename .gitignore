@@ -11,6 +11,7 @@ NDependOut
 *.csproj.user
 *.resharper.user
 *.resharper
+*.TeamCity.user
 *.cache
 *.docstates
 *~
