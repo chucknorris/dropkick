@@ -14,9 +14,11 @@ namespace dropkick.Configuration.Dsl.Xml
 {
     public static class Extension
     {
-        public static XmlPokeOptions XmlPoke(string filePath)
+        public static XmlPokeOptions XmlPoke(this ProtoServer protoServer, string filePath)
         {
-            return new ProtoXmlPokeTask(filePath);
+            var proto = new ProtoXmlPokeTask(filePath);
+            protoServer.RegisterProtoTask(proto);
+            return proto;
         }
     }
 }
