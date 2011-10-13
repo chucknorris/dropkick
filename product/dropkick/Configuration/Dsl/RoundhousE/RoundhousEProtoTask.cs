@@ -33,6 +33,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private RoundhousEMode _roundhouseMode;
         private DatabaseRecoveryMode _recoveryMode;
         private string _restorePath;
+        private string _restoreCustomOptions;
 
         private string _userName;
         private string _password;
@@ -127,10 +128,11 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         }
 
 
-        //public RoundhousEOptions WithRestoreOptions(string options)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public RoundhousEOptions WithRestoreCustomOptions(string options)
+        {
+            _restoreCustomOptions = options;
+            return this;
+        }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
@@ -143,7 +145,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
             var task = new RoundhousETask(connectionString, _scriptsLocation,
                                           _environmentName, _roundhouseMode,
-                                          _recoveryMode, _restorePath, _repositoryPath, _versionFile, _versionXPath,_commandTimeout,_commandTimeoutAdmin);
+                                          _recoveryMode, _restorePath, _restoreCustomOptions,_repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
 
             site.AddTask(task);
         }

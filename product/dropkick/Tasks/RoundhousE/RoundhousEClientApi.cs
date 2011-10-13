@@ -29,10 +29,10 @@ namespace dropkick.Tasks.RoundhousE
 
         public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin)
         {
-            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath,commandTimeout,commandTimeoutAdmin, false, @"");
+            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath,commandTimeout,commandTimeoutAdmin, false, @"",string.Empty);
         }
 
-        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath, string restoreCustomOptions)
         {
             var migrate = new Migrate();
 
@@ -48,6 +48,7 @@ namespace dropkick.Tasks.RoundhousE
                     p.RecoveryModeSimple = useSimpleRecoveryMode;
                     p.Restore = restore;
                     p.RestoreFromPath = restorePath;
+                    p.RestoreCustomOptions = restoreCustomOptions;
                     p.RepositoryPath = repositoryPath;
                     p.VersionFile = versionFile;
                     p.VersionXPath = versionXPath;
