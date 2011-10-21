@@ -114,6 +114,24 @@ namespace dropkick.tests.Tasks.Files
             string s = File.ReadAllText(_path.Combine(_destinationFolderPath, "test.txt"));
             Assert.AreEqual("the test\r\n", s);
         }
+        
+        [Test]
+        public void CopyFileToFileWithSameNameAndOverwriteReadOnly()
+        {
+            var dest = _path.Combine(_destinationFolderPath, "test.txt");
+            File.WriteAllLines(dest, new[] { "bad file" });
+            var destFile = new FileInfo(dest);
+            //destFile.Attributes = (destFile.Attributes & FileAttributes.ReadOnly);
+            destFile.IsReadOnly = true;
+
+            Assert.IsTrue(destFile.IsReadOnly,"Expected the destination file to be readonly");
+
+            var t = new CopyFileTask(_sourceFilePath, _destinationFolderPath, "test.txt", new DotNetPath());
+            t.Execute();
+
+            string s = File.ReadAllText(_path.Combine(_destinationFolderPath, "test.txt"));
+            Assert.AreEqual("the test\r\n", s);
+        }
 
         [Test]
         [Explicit]

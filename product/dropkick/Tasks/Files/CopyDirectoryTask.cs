@@ -70,11 +70,9 @@ namespace dropkick.Tasks.Files
             _to = _path.GetFullPath(_to);
 
             //check can write from _to
-            if (_path.DirectoryDoesntExist(_to))
-                result.AddAlert(string.Format("'{0}' doesn't exist and will be created", _to));
+            if (_path.DirectoryDoesntExist(_to)) result.AddAlert(string.Format("'{0}' doesn't exist and will be created", _to));
 
-            if (_options == DestinationCleanOptions.Delete)
-                result.AddAlert("The files and directories in '{0}' will be deleted before deploying", _to);
+            if (_options == DestinationCleanOptions.Delete) result.AddAlert("The files and directories in '{0}' will be deleted before deploying", _to);
 
             if (_path.DirectoryExists(_from))
             {
