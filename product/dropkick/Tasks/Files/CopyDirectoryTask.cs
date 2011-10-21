@@ -60,9 +60,16 @@ namespace dropkick.Tasks.Files
             _from = _path.GetFullPath(_from);
             _to = _path.GetFullPath(_to);
 
-            if (_options == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
+			if (_options == DestinationCleanOptions.Delete)
+			{
+				DeleteDestinationFirst(new DirectoryInfo(_to), result);
+			}
+			else if (_options == DestinationCleanOptions.Clear)
+			{
+				ClearDirectoryContents(result, new DirectoryInfo(_to));
+			}
 
-            CopyDirectory(result, new DirectoryInfo(_from), new DirectoryInfo(_to), _ignorePatterns);
+            CopyDirectory(result, new DirectoryInfo(_from), new DirectoryInfo(_to));
 
             result.AddGood(Name);
 

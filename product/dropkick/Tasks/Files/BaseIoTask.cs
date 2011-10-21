@@ -60,7 +60,7 @@ namespace dropkick.Tasks.Files
             }
         }
 
-        protected void CopyDirectory(DeploymentResult result, DirectoryInfo source, DirectoryInfo destination, Regex[] ignorePatterns)
+        protected void CopyDirectory(DeploymentResult result, DirectoryInfo source, DirectoryInfo destination)
         {
             if (!destination.Exists)
             {
@@ -69,18 +69,12 @@ namespace dropkick.Tasks.Files
 
             // Copy all files.
 			FileInfo[] files = source.GetFiles();
-			
-            foreach (FileInfo file in files)
-            {
-				bool isIgnored = IsIgnored(ignorePatterns, file.Name);
 
-				if (!isIgnored)
-				{
-					string fileDestination = _path.Combine(destination.FullName, file.Name);
-
-					CopyFileToFile(result, file, new FileInfo(fileDestination));
-				}
-            }
+			foreach (FileInfo file in files)
+			{
+				string fileDestination = _path.Combine(destination.FullName, file.Name);
+				CopyFileToFile(result, file, new FileInfo(fileDestination));
+			}
 
             // Process subdirectories.
             DirectoryInfo[] dirs = source.GetDirectories();
@@ -90,7 +84,7 @@ namespace dropkick.Tasks.Files
                 string destinationDir = _path.Combine(destination.FullName, dir.Name);
 
                 // Call CopyDirectory() recursively.
-                CopyDirectory(result, dir, new DirectoryInfo(destinationDir), ignorePatterns);
+                CopyDirectory(result, dir, new DirectoryInfo(destinationDir));
             }
         }
 
