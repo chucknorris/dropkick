@@ -7,6 +7,9 @@ namespace dropkick.Tasks.Files
     using log4net;
     using ExtensionsToString = Magnum.Extensions.ExtensionsToString;
     using Path = FileSystem.Path;
+	using System.Text.RegularExpressions;
+	using System.Linq;
+	using System.Globalization;
 
     public abstract class BaseIoTask :
         BaseTask
@@ -65,13 +68,13 @@ namespace dropkick.Tasks.Files
             }
 
             // Copy all files.
-            FileInfo[] files = source.GetFiles();
-            foreach (var file in files)
-            {
-                string fileDestination = _path.Combine(destination.FullName,file.Name);
+			FileInfo[] files = source.GetFiles();
 
-                CopyFileToFile(result, file, new FileInfo(fileDestination));
-            }
+			foreach (FileInfo file in files)
+			{
+				string fileDestination = _path.Combine(destination.FullName, file.Name);
+				CopyFileToFile(result, file, new FileInfo(fileDestination));
+			}
 
             // Process subdirectories.
             DirectoryInfo[] dirs = source.GetDirectories();
@@ -84,6 +87,72 @@ namespace dropkick.Tasks.Files
                 CopyDirectory(result, dir, new DirectoryInfo(destinationDir));
             }
         }
+
+		/// <summary>
+		/// Determines whether a string matches the given ignore patterns.  This is used
+		/// to ignore files which shouldn't be copied from the source to target directories,
+		/// e.g. you may first place an App_Offline.htm file into the directory before copying
+		/// data to it.  You wouldn't want to delete the App_Offline.html file while copying files.
+		/// </summary>
+		/// <param name="ignorePatterns"></param>
+		/// <param name="fileName"></param>
+		/// <returns></returns>
+		private bool IsIgnored(Regex[] ignorePatterns, string fileName)
+		{
+			bool returnValue = false;
+
+			foreach (Regex ignorePattern in ignorePatterns)
+			{
+				if (ignorePattern.IsMatch(fileName))
+				{
+					returnValue = true;
+					break;
+				}
+			}
+
+			return returnValue;
+		}
+
+		/// <summary>
+		/// Clears the contents of a given directory.
+		/// </summary>
+		/// <param name="result">The Deployment results.</param>
+		/// <param name="directory">The directory to clear.</param>
+		protected void ClearDirectoryContents(DeploymentResult result, DirectoryInfo directory)
+		{
+			ClearDirectoryContents(result, directory, new Regex[] { });
+		}
+
+		/// <summary>
+		/// Clears the contents of a given directory.
+		/// </summary>
+		/// <param name="result">The Deployment results.</param>
+		/// <param name="directory">The directory to clear.</param>
+		/// <param name="ignorePatterns">Regular expressions which match the files to ignore, e.g. "[aA]pp_[Oo]ffline\.htm".</param>
+		protected void ClearDirectoryContents(DeploymentResult result, DirectoryInfo directory, Regex[] ignorePatterns)
+		{
+			if(ignorePatterns == null)
+			{
+				ignorePatterns = new Regex[] {};
+			}
+
+			result.Add(new DeploymentItem(DeploymentItemStatus.Good, string.Format(CultureInfo.InvariantCulture, "Clearing directory \"{0}\".", directory.Name)));
+
+			// Delete files.
+			FileInfo[] files = directory.GetFiles();
+			foreach(FileInfo file in files.Where(f => !IsIgnored(ignorePatterns, f.Name)))
+			{
+				File.Delete(file.FullName);
+			}
+
+			// Delete subdirectories.
+			foreach(DirectoryInfo subdirectory in directory.GetDirectories())
+			{
+				Directory.Delete(subdirectory.FullName, true);
+			}
+
+			result.Add(new DeploymentItem(DeploymentItemStatus.Good, string.Format(CultureInfo.InvariantCulture, "Directory \"{0}\" cleared.", directory.Name)));
+		}
 
         protected static void DeleteDestinationFirst(DirectoryInfo directory, DeploymentResult result)
         {

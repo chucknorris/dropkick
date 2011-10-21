@@ -17,6 +17,7 @@ namespace dropkick.Tasks.Files
     using DeploymentModel;
     using log4net;
     using Path = FileSystem.Path;
+	using System.Text.RegularExpressions;
 
     public class CopyDirectoryTask : BaseIoTask
     {
@@ -24,6 +25,7 @@ namespace dropkick.Tasks.Files
         readonly DestinationCleanOptions _options;
         string _from;
         string _to;
+		Regex[] _ignorePatterns = new Regex[] { };
 
         public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options, Path path) : base(path)
         {
@@ -31,6 +33,15 @@ namespace dropkick.Tasks.Files
             _to = to;
             _options = options;
         }
+
+		public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options, Path path, Regex[] ignorePatterns)
+			: base(path)
+		{
+			_from = from;
+			_to = to;
+			_options = options;
+			_ignorePatterns = ignorePatterns;
+		}
 
         #region Task Members
 
@@ -49,7 +60,14 @@ namespace dropkick.Tasks.Files
             _from = _path.GetFullPath(_from);
             _to = _path.GetFullPath(_to);
 
-            if (_options == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
+			if (_options == DestinationCleanOptions.Delete)
+			{
+				DeleteDestinationFirst(new DirectoryInfo(_to), result);
+			}
+			else if (_options == DestinationCleanOptions.Clear)
+			{
+				ClearDirectoryContents(result, new DirectoryInfo(_to));
+			}
 
             CopyDirectory(result, new DirectoryInfo(_from), new DirectoryInfo(_to));
 
