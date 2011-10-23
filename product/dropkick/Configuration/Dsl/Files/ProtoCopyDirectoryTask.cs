@@ -17,6 +17,7 @@ namespace dropkick.Configuration.Dsl.Files
     using FileSystem;
     using Tasks;
     using Tasks.Files;
+using System.Text.RegularExpressions;
 
     public class ProtoCopyDirectoryTask :
         BaseProtoTask,
@@ -27,6 +28,7 @@ namespace dropkick.Configuration.Dsl.Files
         readonly IList<string> _froms = new List<string>();
         DestinationCleanOptions _options = DestinationCleanOptions.None;
         string _to;
+		Regex[] _ignorePatterns = new Regex[] {};
 
         public ProtoCopyDirectoryTask(Path path)
         {
@@ -43,6 +45,16 @@ namespace dropkick.Configuration.Dsl.Files
         {
             _options = DestinationCleanOptions.Delete;
         }
+
+		/// <summary>
+		/// Clears the target directory before deploying, optionally ignoring some
+		/// files in the target directory (e.g. app_offline.htm);
+		/// </summary>
+		/// <param name="ignorePatterns">The files to ignore in the target directory.</param>
+		public void ClearFilesBeforeDeploying(Regex[] ignorePatterns)
+		{
+			_ignorePatterns = ignorePatterns;
+		}
 
         public void Include(string path)
         {
@@ -63,7 +75,7 @@ namespace dropkick.Configuration.Dsl.Files
 
             foreach (var f in _froms)
             {
-                var o = new CopyDirectoryTask(f, to, _options, _path);
+                var o = new CopyDirectoryTask(f, to, _options, _path, _ignorePatterns);
                 server.AddTask(o);
             }
         }
