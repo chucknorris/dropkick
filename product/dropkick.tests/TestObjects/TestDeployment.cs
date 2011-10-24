@@ -1,5 +1,6 @@
 namespace dropkick.tests.TestObjects
 {
+    using System.Text.RegularExpressions;
     using dropkick.Configuration.Dsl;
     using dropkick.Configuration.Dsl.CommandLine;
     using dropkick.Configuration.Dsl.Dsn;
@@ -28,12 +29,21 @@ namespace dropkick.tests.TestObjects
 
                     server.Msmq()
                         .PrivateQueue("bob");
-
                     server.CopyDirectory(o =>
                     {
                         o.Include(@"\\someserver\bob\bill");
+
                     }).To(@"E:\FHLBApplications\atlas");
 
+                    server.CopyDirectory(o =>
+                    {
+                        o.Include(@"\\someserver\someshare\bill");
+                        o.Exclude("*");
+                    }).ClearDestinationBeforeDeploying(except =>
+                    {
+                        except.Add(new Regex(@"[Aa]pp_[oO]ffline\.htm"));
+                        except.Add(new Regex("anotherfile"));
+                    });
 
                     server.WinService("MSMQ").Do(s =>
                     {
@@ -65,12 +75,12 @@ namespace dropkick.tests.TestObjects
                                 o.Include(@"\\srvtopeka00\whatever");
                             }).To(@".\code_drop\flameshost");
 
-                            
+
                             //TODO file actions
-//                            server.File.AppConfig
-//                                        .ReplaceIdentityTokensWithPrompt()
-//                                        .EncryptIdentity();
-                                
+                            //                            server.File.AppConfig
+                            //                                        .ReplaceIdentityTokensWithPrompt()
+                            //                                        .EncryptIdentity();
+
                         }); //auto-start   
                 });
             });

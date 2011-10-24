@@ -12,8 +12,12 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
+    using System.Text.RegularExpressions;
+
     public interface FromOptions
     {
         void Include(string path);
+        void Exclude(string pattern);
+        void Exclude(Regex pattern);
     }
 }

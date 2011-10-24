@@ -12,12 +12,13 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
+    using System;
     using System.Collections.Generic;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
     using Tasks.Files;
-using System.Text.RegularExpressions;
+    using System.Text.RegularExpressions;
 
     public class ProtoCopyDirectoryTask :
         BaseProtoTask,
@@ -26,9 +27,10 @@ using System.Text.RegularExpressions;
     {
         readonly Path _path;
         readonly IList<string> _froms = new List<string>();
-        DestinationCleanOptions _options = DestinationCleanOptions.None;
         string _to;
-		Regex[] _ignorePatterns = new Regex[] {};
+        readonly IList<Regex> _copyIgnorePatterns = new List<Regex>();
+        DestinationCleanOptions _options = DestinationCleanOptions.None;
+        readonly IList<Regex> _clearIgnorePatterns = new List<Regex>();
 
         public ProtoCopyDirectoryTask(Path path)
         {
@@ -46,20 +48,32 @@ using System.Text.RegularExpressions;
             _options = DestinationCleanOptions.Delete;
         }
 
-		/// <summary>
-		/// Clears the target directory before deploying, optionally ignoring some
-		/// files in the target directory (e.g. app_offline.htm);
-		/// </summary>
-		/// <param name="ignorePatterns">The files to ignore in the target directory.</param>
-		public void ClearFilesBeforeDeploying(Regex[] ignorePatterns)
-		{
-			_ignorePatterns = ignorePatterns;
-		}
+        public void ClearDestinationBeforeDeploying()
+        {
+            _options = DestinationCleanOptions.Clear;
+        }
+
+        public void ClearDestinationBeforeDeploying(Action<IList<Regex>> excludePatterns)
+        {
+            excludePatterns(_clearIgnorePatterns);
+            
+            _options = DestinationCleanOptions.Clear;
+        }
 
         public void Include(string path)
         {
             var p = ReplaceTokens(path);
             _froms.Add(p);
+        }
+
+        public void Exclude(string pattern)
+        {
+            Exclude(new Regex(pattern));
+        }
+
+        public void Exclude(Regex pattern)
+        {
+            _copyIgnorePatterns.Add(pattern);
         }
 
         public CopyOptions From(string sourcePath)
@@ -75,7 +89,7 @@ using System.Text.RegularExpressions;
 
             foreach (var f in _froms)
             {
-                var o = new CopyDirectoryTask(f, to, _options, _path, _ignorePatterns);
+                var o = new CopyDirectoryTask(f, to, _copyIgnorePatterns, _options, _clearIgnorePatterns, _path);
                 server.AddTask(o);
             }
         }

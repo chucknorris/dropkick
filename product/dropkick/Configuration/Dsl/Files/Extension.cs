@@ -13,6 +13,7 @@
 namespace dropkick.Configuration.Dsl.Files
 {
     using System;
+    using System.Text.RegularExpressions;
     using FileSystem;
 
     public static class Extension
@@ -28,7 +29,7 @@ namespace dropkick.Configuration.Dsl.Files
         {
             return CopyDirectory(protoServer, o => o.Include(from));
         }
-
+        
         public static CopyOptions CopyDirectory(this ProtoServer protoServer, Action<FromOptions> a)
         {
             var proto = new ProtoCopyDirectoryTask(new DotNetPath());

@@ -1,20 +1,20 @@
 namespace dropkick.Tasks.Files
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
+    using System.Text.RegularExpressions;
     using DeploymentModel;
     using Exceptions;
     using log4net;
-    using ExtensionsToString = Magnum.Extensions.ExtensionsToString;
+    using Magnum.Extensions;
     using Path = FileSystem.Path;
-	using System.Text.RegularExpressions;
-	using System.Linq;
-	using System.Globalization;
 
     public abstract class BaseIoTask :
         BaseTask
     {
-        readonly ILog _fileLog = Logging.WellKnown.FileChanges;
+        private readonly ILog _fileLog = Logging.WellKnown.FileChanges;
         protected readonly Path _path;
 
         protected BaseIoTask(Path path)
@@ -56,7 +56,7 @@ namespace dropkick.Tasks.Files
             }
         }
 
-        protected void CopyDirectory(DeploymentResult result, DirectoryInfo source, DirectoryInfo destination)
+        protected void CopyDirectory(DeploymentResult result, DirectoryInfo source, DirectoryInfo destination, IEnumerable<Regex> ignoredPatterns)
         {
             if (!destination.Exists)
             {
@@ -68,13 +68,12 @@ namespace dropkick.Tasks.Files
             }
 
             // Copy all files.
-			FileInfo[] files = source.GetFiles();
-
-			foreach (FileInfo file in files)
-			{
-                string fileDestination = _path.Combine(destination.FullName,file.Name);
-				CopyFileToFile(result, file, new FileInfo(fileDestination));
-			}
+            FileInfo[] files = source.GetFiles();
+            foreach (FileInfo file in files.Where(f => !IsIgnored(ignoredPatterns, f)))
+            {
+                string fileDestination = _path.Combine(destination.FullName, file.Name);
+                CopyFileToFile(result, file, new FileInfo(fileDestination));
+            }
 
             // Process subdirectories.
             DirectoryInfo[] dirs = source.GetDirectories();
@@ -84,75 +83,62 @@ namespace dropkick.Tasks.Files
                 string destinationDir = _path.Combine(destination.FullName, dir.Name);
 
                 // Call CopyDirectory() recursively.
-                CopyDirectory(result, dir, new DirectoryInfo(destinationDir));
+                CopyDirectory(result, dir, new DirectoryInfo(destinationDir), ignoredPatterns);
             }
         }
 
-		/// <summary>
-		/// Determines whether a string matches the given ignore patterns.  This is used
-		/// to ignore files which shouldn't be copied from the source to target directories,
-		/// e.g. you may first place an App_Offline.htm file into the directory before copying
-		/// data to it.  You wouldn't want to delete the App_Offline.html file while copying files.
-		/// </summary>
-		/// <param name="ignorePatterns"></param>
-		/// <param name="fileName"></param>
-		/// <returns></returns>
-		private bool IsIgnored(Regex[] ignorePatterns, string fileName)
-		{
-			bool returnValue = false;
+        /// <summary>
+        /// Determines whether a string matches the given ignore patterns.  This is used
+        /// to ignore files which shouldn't be copied from the source to target directories,
+        /// e.g. you may first place an App_Offline.htm file into the directory before copying
+        /// data to it.  You wouldn't want to delete the App_Offline.html file while copying files.
+        /// </summary>
+        /// <param name="ignorePatterns"></param>
+        /// <param name="file"></param>
+        /// <returns></returns>
+        protected bool IsIgnored(IEnumerable<Regex> ignorePatterns, FileInfo file)
+        {
+            bool returnValue = false;
 
-			foreach (Regex ignorePattern in ignorePatterns)
-			{
-				if (ignorePattern.IsMatch(fileName))
-				{
-					returnValue = true;
-					break;
-				}
-			}
+            foreach (Regex ignorePattern in ignorePatterns.OrEmptyListIfNull())
+            {
+                if (ignorePattern.IsMatch(file.FullName))
+                {
+                    returnValue = true;
+                    break;
+                }
+            }
 
-			return returnValue;
-		}
+            return returnValue;
+        }
 
-		/// <summary>
-		/// Clears the contents of a given directory.
-		/// </summary>
-		/// <param name="result">The Deployment results.</param>
-		/// <param name="directory">The directory to clear.</param>
-		protected void ClearDirectoryContents(DeploymentResult result, DirectoryInfo directory)
-		{
-			ClearDirectoryContents(result, directory, new Regex[] { });
-		}
+        /// <summary>
+        /// Clears the contents of a given directory.
+        /// </summary>
+        /// <param name="result">The Deployment results.</param>
+        /// <param name="directory">The directory to clear.</param>
+        /// <param name="ignoredPatterns">Regular expressions which match the files to ignore, e.g. "[aA]pp_[Oo]ffline\.htm".</param>
+        protected void CleanDirectoryContents(DeploymentResult result, DirectoryInfo directory, IList<Regex> ignoredPatterns)
+        {
+            if (ignoredPatterns == null) ignoredPatterns = new List<Regex>();
 
-		/// <summary>
-		/// Clears the contents of a given directory.
-		/// </summary>
-		/// <param name="result">The Deployment results.</param>
-		/// <param name="directory">The directory to clear.</param>
-		/// <param name="ignorePatterns">Regular expressions which match the files to ignore, e.g. "[aA]pp_[Oo]ffline\.htm".</param>
-		protected void ClearDirectoryContents(DeploymentResult result, DirectoryInfo directory, Regex[] ignorePatterns)
-		{
-			if(ignorePatterns == null)
-			{
-				ignorePatterns = new Regex[] {};
-			}
+            // Delete files
+            FileInfo[] files = directory.GetFiles("*", SearchOption.AllDirectories);
+            foreach (FileInfo file in files.Where(f => !IsIgnored(ignoredPatterns, f)))
+            {
+                RemoveReadOnlyAttributes(file, result);
+                File.Delete(file.FullName);
+            }
 
-			result.Add(new DeploymentItem(DeploymentItemStatus.Good, string.Format(CultureInfo.InvariantCulture, "Clearing directory \"{0}\".", directory.Name)));
+            //// Delete subdirectories.
+            //foreach (DirectoryInfo subdirectory in directory.GetDirectories())
+            //{
+            //    RemoveReadOnlyAttributes(subdirectory, result);
+            //    Directory.Delete(subdirectory.FullName, true);
+            //}
 
-			// Delete files.
-			FileInfo[] files = directory.GetFiles();
-			foreach(FileInfo file in files.Where(f => !IsIgnored(ignorePatterns, f.Name)))
-			{
-				File.Delete(file.FullName);
-			}
-
-			// Delete subdirectories.
-			foreach(DirectoryInfo subdirectory in directory.GetDirectories())
-			{
-				Directory.Delete(subdirectory.FullName, true);
-			}
-
-			result.Add(new DeploymentItem(DeploymentItemStatus.Good, string.Format(CultureInfo.InvariantCulture, "Directory \"{0}\" cleared.", directory.Name)));
-		}
+            result.AddGood("'{0}' cleared.".FormatWith(directory.FullName));
+        }
 
         protected void DeleteDestinationFirst(DirectoryInfo directory, DeploymentResult result)
         {
@@ -207,13 +193,13 @@ namespace dropkick.Tasks.Files
                 CopyFileToDirectory(result, new FileInfo(from), new DirectoryInfo(to));
         }
 
-        void CopyFileToDirectory(DeploymentResult result, FileInfo source, DirectoryInfo destination)
+        private void CopyFileToDirectory(DeploymentResult result, FileInfo source, DirectoryInfo destination)
         {
             if (!destination.Exists) destination.Create();
             CopyFileToFile(result, source, new FileInfo(_path.Combine(destination.FullName, source.Name)));
         }
 
-        void CopyFileToFile(DeploymentResult result, FileInfo source, FileInfo destination)
+        private void CopyFileToFile(DeploymentResult result, FileInfo source, FileInfo destination)
         {
             var overwrite = destination.Exists;
 
