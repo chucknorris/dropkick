@@ -13,26 +13,32 @@
 namespace dropkick.Tasks.Files
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using DeploymentModel;
     using log4net;
     using Path = FileSystem.Path;
+    using System.Text.RegularExpressions;
 
     public class CopyDirectoryTask : BaseIoTask
     {
-        readonly ILog _log = LogManager.GetLogger(typeof (CopyDirectoryTask));
-        readonly DestinationCleanOptions _options;
-        string _from;
-        string _to;
+        readonly ILog _log = LogManager.GetLogger(typeof(CopyDirectoryTask));
+        private string _from;
+        private string _to;
+        private readonly IList<Regex> _copyIgnorePatterns;
+        readonly DestinationCleanOptions _clearOptions;
+        private readonly IList<Regex> _clearIgnorePatterns;
 
-        public CopyDirectoryTask(string @from, string to, DestinationCleanOptions options, Path path) : base(path)
+        public CopyDirectoryTask(string @from, string to, IList<Regex> copyIgnorePatterns, DestinationCleanOptions clearOptions, IList<Regex> clearIgnorePatterns, Path path)
+            : base(path)
         {
             _from = from;
             _to = to;
-            _options = options;
+            _copyIgnorePatterns = copyIgnorePatterns;
+            _clearOptions = clearOptions;
+            _clearIgnorePatterns = clearIgnorePatterns;
         }
-
-        #region Task Members
 
         public override string Name
         {
@@ -49,15 +55,15 @@ namespace dropkick.Tasks.Files
             _from = _path.GetFullPath(_from);
             _to = _path.GetFullPath(_to);
 
-            if (_options == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
+            if (_clearOptions == DestinationCleanOptions.Delete) DeleteDestinationFirst(new DirectoryInfo(_to), result);
+            if (_clearOptions == DestinationCleanOptions.Clear) CleanDirectoryContents(result, new DirectoryInfo(_to), _clearIgnorePatterns);
 
-            CopyDirectory(result, new DirectoryInfo(_from), new DirectoryInfo(_to));
+            CopyDirectory(result, new DirectoryInfo(_from), new DirectoryInfo(_to), _copyIgnorePatterns);
 
             result.AddGood(Name);
 
             return result;
         }
-
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -72,21 +78,23 @@ namespace dropkick.Tasks.Files
             //check can write from _to
             if (_path.DirectoryDoesntExist(_to)) result.AddAlert(string.Format("'{0}' doesn't exist and will be created", _to));
 
-            if (_options == DestinationCleanOptions.Delete) result.AddAlert("The files and directories in '{0}' will be deleted before deploying", _to);
+            if (_clearOptions == DestinationCleanOptions.Delete) result.AddAlert("The files and directories in '{0}' will be deleted before deploying, except for items being ignored.", _to);
+            if (_clearOptions == DestinationCleanOptions.Clear) result.AddAlert("The files in '{0}' will be cleared before deploying, except for items being ignored.", _to);
 
-            if (_path.DirectoryExists(_from))
+            DirectoryInfo fromDirectory = new DirectoryInfo(_from);
+            if (fromDirectory.Exists)
             {
-                result.AddGood(string.Format("'{0}' exists", _from));
+                result.AddGood(string.Format("'{0}' exists", fromDirectory.FullName));
 
                 //check can read from _from
-                string[] readFiles = _path.GetFiles(_from);
-                foreach (var file in readFiles)
+                FileInfo[] readFiles = fromDirectory.GetFiles();
+                foreach (var file in readFiles.Where(f => !IsIgnored(_copyIgnorePatterns, f)))
                 {
                     Stream fs = new MemoryStream();
                     try
                     {
-                        fs = File.Open(file, FileMode.Open, FileAccess.Read);
-                        _log.DebugFormat("Going to copy '{0}' to '{1}'", file, _to);
+                        fs = File.Open(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                        _log.DebugFormat("Going to copy '{0}' to '{1}'", file.FullName, _to);
                     }
                     catch (Exception)
                     {
@@ -105,7 +113,5 @@ namespace dropkick.Tasks.Files
 
             return result;
         }
-
-        #endregion
     }
 }

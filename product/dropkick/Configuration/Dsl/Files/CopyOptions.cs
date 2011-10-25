@@ -12,9 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Files
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text.RegularExpressions;
+
     public interface CopyOptions
     {
         CopyOptions To(string destinationPath);
         void DeleteDestinationBeforeDeploying();
+        void ClearDestinationBeforeDeploying();
+        void ClearDestinationBeforeDeploying(Action<IList<Regex>> excludePatterns);
     }
 }
