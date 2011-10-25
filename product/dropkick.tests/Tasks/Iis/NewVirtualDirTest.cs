@@ -28,7 +28,7 @@ namespace dropkick.tests.Tasks.Iis
                            {
                                PathOnServer = "D:\\SomethingAwesome",
                                ServerName = "localhost",
-                               VdirPath = "Victastic",
+                               VirtualDirectoryPath = "Victastic",
                                WebsiteName = "Default Web Site",
                                AppPoolName = "VICKERS",
                                //could be set on either website or vdir basis
@@ -50,7 +50,7 @@ namespace dropkick.tests.Tasks.Iis
                            {
                                PathOnServer = "D:\\SomethingAwesome",
                                ServerName = "localhost",
-                               VdirPath = "Victastic",
+                               VirtualDirectoryPath = "Victastic",
                                WebsiteName = "SCOTT",
                                AppPoolName = "VICKERS",
                                //could be set on either website or vdir basis

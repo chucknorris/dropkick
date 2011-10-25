@@ -21,7 +21,7 @@ namespace dropkick.Tasks.Iis
     {
         ILog _log = LogManager.GetLogger("dropkick.changes.iis");
         public string WebsiteName { get; set; }
-        public string VdirPath { get; set; }
+        public string VirtualDirectoryPath { get; set; }
         public string PathOnServer { get; set; }
         public string ServerName { get; set; }
         public abstract int VersionNumber { get; }
@@ -39,7 +39,7 @@ namespace dropkick.Tasks.Iis
         {
             get
             {
-                return "IIS{0}: Create vdir '{1}' in site '{2}' on server '{3}'".FormatWith(VersionNumber, VdirPath,
+                return "IIS{0}: Create vdir '{1}' in site '{2}' on server '{3}'".FormatWith(VersionNumber, VirtualDirectoryPath,
                                                                                             WebsiteName, ServerName);
             }
         }
@@ -54,18 +54,18 @@ namespace dropkick.Tasks.Iis
 
                 if (vdir())
                 {
-                    result.AddGood("Found VDir '{0}'", VdirPath);
+                    result.AddGood("Found VirtualDirectory '{0}'", VirtualDirectoryPath);
                 }
                 else
                 {
-                    result.AddAlert("Couldn't find VDir '{0}'", VdirPath);
-                    result.AddAlert("The VDir '{0}' will be created", VdirPath);
+                    result.AddAlert("Couldn't find VirtualDirectory '{0}'", VirtualDirectoryPath);
+                    result.AddAlert("The VirtualDirectory '{0}' will be created", VirtualDirectoryPath);
                 }
             }
             else
             {
                 result.AddAlert("Couldn't find Website '{0}'", WebsiteName);
-                result.AddAlert("Website '{0}' and VDir '{1}' will be created", WebsiteName, VdirPath);
+                result.AddAlert("Website '{0}' and VirtualDirectory '{1}' will be created", WebsiteName, VirtualDirectoryPath);
             }
         }
 

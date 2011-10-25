@@ -13,14 +13,14 @@
 namespace dropkick.Tasks.Iis
 {
     using System;
+    using System.Collections.Generic;
     using DeploymentModel;
     using FileSystem;
     using Microsoft.Web.Administration;
     using System.Linq;
 
     //http://blogs.msdn.com/carlosag/archive/2006/04/17/MicrosoftWebAdministration.aspx
-    public class Iis7Task :
-        BaseIisTask
+    public class Iis7Task : BaseIisTask
     {
         public bool UseClassicPipeline { get; set; }
         public bool Enable32BitAppOnWin64 { get; set; }
@@ -50,8 +50,7 @@ namespace dropkick.Tasks.Iis
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
 
-            if (UseClassicPipeline)
-                result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
+            if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
 
             return result;
         }
@@ -59,27 +58,22 @@ namespace dropkick.Tasks.Iis
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-
             var iisManager = ServerManager.OpenRemote(ServerName);
-
             BuildApplicationPool(iisManager, result);
 
-            if (!DoesSiteExist(result))
-            {
-                CreateWebSite(iisManager, WebsiteName, result);
-            }
+            if (!DoesSiteExist(result)) CreateWebSite(iisManager, WebsiteName, result);
 
             Site site = GetSite(iisManager, WebsiteName);
-
             if (!DoesVirtualDirectoryExist(site))
             {
-                result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
+                result.AddAlert("'{0}' doesn't exist. creating.", VirtualDirectoryPath);
                 CreateVirtualDirectory(site, iisManager);
-                result.AddGood("'{0}' was created", VdirPath);
+                result.AddGood("'{0}' was created", VirtualDirectoryPath);
             }
 
             iisManager.CommitChanges();
             LogCoarseGrain("[iis7] {0}", Name);
+            
             return result;
         }
 
@@ -105,7 +99,6 @@ namespace dropkick.Tasks.Iis
             {
                 _path.CreateDirectory(PathForWebsite);
                 LogFineGrain("[iis7] Created '{0}'", PathForWebsite);
-
             }
 
             //TODO: check for port collision?
@@ -119,19 +112,19 @@ namespace dropkick.Tasks.Iis
 
             if (mgr.ApplicationPools.Any(x => x.Name == AppPoolName))
             {
+                ApplicationPool existingPool = mgr.ApplicationPools.First(x => x.Name == AppPoolName);
+                if (existingPool != null) existingPool.Recycle();
                 LogIis("[iis7] Found the AppPool '{0}' skipping work", AppPoolName);
+                
                 return;
             }
 
             var pool = mgr.ApplicationPools.Add(AppPoolName);
-
-            if (Enable32BitAppOnWin64)
-                pool.Enable32BitAppOnWin64 = true;
+            if (Enable32BitAppOnWin64) pool.Enable32BitAppOnWin64 = true;
 
             pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
 
-            if (UseClassicPipeline)
-                pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
+            if (UseClassicPipeline) pool.ManagedPipelineMode = ManagedPipelineMode.Classic;
 
             LogIis("[iis7] Created app pool '{0}'", AppPoolName);
             result.AddGood("Created app pool '{0}'", AppPoolName);
@@ -140,36 +133,35 @@ namespace dropkick.Tasks.Iis
         void CreateVirtualDirectory(Site site, ServerManager mgr)
         {
             Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
-            var appPath = "/" + VdirPath;
+            var appPath = "/" + VirtualDirectoryPath;
 
             foreach (var app in site.Applications)
             {
                 if (app.Path.Equals(appPath))
                 {
-                    LogIis("[iis7] Found the application '{0}'".FormatWith(VdirPath));
+                    LogIis("[iis7] Found the application '{0}'".FormatWith(VirtualDirectoryPath));
                     return;
                 }
             }
 
             var application = site.Applications.Add(appPath, PathOnServer);
-            LogIis("[iis7] Created application '{0}'", VdirPath);
+            LogIis("[iis7] Created application '{0}'", VirtualDirectoryPath);
 
             application.ApplicationPoolName = AppPoolName;
-            LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VdirPath, AppPoolName);
+            LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VirtualDirectoryPath, AppPoolName);
         }
 
         void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {
             int shouldBe6 = Environment.OSVersion.Version.Major;
-            if (shouldBe6 != 6)
-                result.AddAlert("This machine does not have IIS7 on it");
+            if (shouldBe6 != 6) result.AddAlert("This machine does not have IIS7 on it");
         }
 
         public bool DoesVirtualDirectoryExist(Site site)
         {
             foreach (var app in site.Applications)
             {
-                if (app.Path.Equals("/" + VdirPath))
+                if (app.Path.Equals("/" + VirtualDirectoryPath))
                 {
                     return true;
                 }
@@ -182,13 +174,10 @@ namespace dropkick.Tasks.Iis
         {
             foreach (var site in iisManager.Sites)
             {
-                if (site.Name.Equals(name))
-                {
-                    return site;
-                }
+                if (site.Name.Equals(name)) return site;
             }
 
-            throw new Exception("cant find site '{0}'".FormatWith(name));
+            throw new Exception("Unable to find site named '{0}'".FormatWith(name));
         }
     }
 }

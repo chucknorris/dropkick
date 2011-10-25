@@ -25,7 +25,7 @@ namespace dropkick.Tasks.Iis
 
         public override DeploymentResult Execute()
         {
-            var vdir = CreateVDirNode(WebsiteName, VdirPath, "IIsWebVirtualDir");
+            var vdir = CreateVDirNode(WebsiteName, VirtualDirectoryPath, "IIsWebVirtualDir");
             vdir.RefreshCache();
 
             vdir.Properties["Path"].Value = PathOnServer;
@@ -39,7 +39,7 @@ namespace dropkick.Tasks.Iis
 
         bool DoesVirtualDirectoryExist()
         {
-            var entry = new Iis6Path(ServerName, WebsiteName, VdirPath).ToDirectoryEntry();
+            var entry = new Iis6Path(ServerName, WebsiteName, VirtualDirectoryPath).ToDirectoryEntry();
 
             try
             {
@@ -59,10 +59,7 @@ namespace dropkick.Tasks.Iis
 
         DirectoryEntry CreateVDirNode(string siteName, string vDirName, string schemaClassName)
         {
-            if (DoesVirtualDirectoryExist())
-            {
-                return new Iis6Path(ServerName, siteName, vDirName).ToDirectoryEntry();
-            }
+            if (DoesVirtualDirectoryExist()) return new Iis6Path(ServerName, siteName, vDirName).ToDirectoryEntry();
 
             var path = new Iis6Path(ServerName, siteName);
             var parent = path.ToDirectoryEntry();
@@ -71,6 +68,7 @@ namespace dropkick.Tasks.Iis
             child.CommitChanges();
             parent.CommitChanges();
             parent.Close();
+
             return child;
         }
 
@@ -82,8 +80,7 @@ namespace dropkick.Tasks.Iis
         static void CheckVersionOfWindowsAndIis(DeploymentResult result)
         {
             var shouldBe5 = Environment.OSVersion.Version.Major;
-            if (shouldBe5 != 5)
-                result.AddAlert("This machine does not have IIS6 on it");
+            if (shouldBe5 != 5) result.AddAlert("This machine does not have IIS6 on it");
         }
     }
 }

@@ -7,18 +7,18 @@
     using System.Text;
     using DeploymentModel;
 
-    [DebuggerDisplay("{_siteName}->{_vDir}")]
+    [DebuggerDisplay("{ServerName}->{WebsiteName}->{VirtualDirectoryName}")]
     public class Iis6Path
     {
         public string ServerName { get; set; }
         public string WebsiteName { get; set; }
-        public string VDirName { get; set; }
+        public string VirtualDirectoryName { get; set; }
 
         public Iis6Path(string serverName, string webSiteName, string vDirName)
         {
             ServerName = serverName;
             WebsiteName = webSiteName;
-            VDirName = vDirName;
+            VirtualDirectoryName = vDirName;
         }
 
         public Iis6Path(string serverName, string webSiteName)
@@ -29,10 +29,9 @@
 
         public DirectoryEntry ToDirectoryEntry()
         {
-            if (VDirName == null)
-                return new DirectoryEntry(BuildIisSitePath(WebsiteName));
+            if (VirtualDirectoryName == null) return new DirectoryEntry(BuildIisSitePath(WebsiteName));
 
-            return new DirectoryEntry(BuildIisSiteAndVDirPath(WebsiteName, VDirName));
+            return new DirectoryEntry(BuildIisSiteAndVDirPath(WebsiteName, VirtualDirectoryName));
         }
 
         string BuildIisSiteAndVDirPath(int siteNumber, string vDirPath)
@@ -93,8 +92,6 @@
         public bool DoesSiteExist(DeploymentResult result)
         {
             var doesExist = ConvertSiteNameToSiteNumber(WebsiteName) > 0;
-
-            
 
             return doesExist;
         }

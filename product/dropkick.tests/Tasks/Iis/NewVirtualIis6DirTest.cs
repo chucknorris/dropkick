@@ -15,7 +15,7 @@
                            {
                                PathOnServer = "E:\\FHLBApp\\FHLBank.Security.Web",
                                ServerName = "srvtest19",
-                               VdirPath = "Test_dk",
+                               VirtualDirectoryPath = "Test_dk",
                                WebsiteName = "Exchequer",
                                AppPoolName = "Test_dk"
                            };

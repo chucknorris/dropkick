@@ -101,7 +101,7 @@ namespace dropkick.Configuration.Dsl.Iis
                               {
                                   PathOnServer = scrubbedPath,
                                   ServerName = s.Name,
-                                  VdirPath = VdirPath,
+                                  VirtualDirectoryPath = VdirPath,
                                   WebsiteName = WebsiteName,
                                   AppPoolName = AppPoolName
                               });
@@ -111,7 +111,7 @@ namespace dropkick.Configuration.Dsl.Iis
                           {
                               PathOnServer = scrubbedPath,
                               ServerName = s.Name,
-                              VdirPath = VdirPath,
+                              VirtualDirectoryPath = VdirPath,
                               WebsiteName = WebsiteName,
                               AppPoolName = AppPoolName,
                               UseClassicPipeline = ClassicPipelineRequested,
