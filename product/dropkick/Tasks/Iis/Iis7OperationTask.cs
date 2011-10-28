@@ -41,7 +41,7 @@ namespace dropkick.Tasks.Iis
     {
         Unspecified,
         StopApplicationPool,
-        StartApplicationPool
+        StartApplicationPool,
     }
 
     public class Iis7OperationTask : BaseTask
@@ -59,28 +59,26 @@ namespace dropkick.Tasks.Iis
         {
             var result = new DeploymentResult();
 
-            if (Operation == Iis7Operation.Unspecified)
-                result.AddError("IIS7 Operation has not been specified.");
-            if (String.IsNullOrEmpty(ServerName))
-                result.AddError("IIS7 Server Name has not been specified.");
-            if (String.IsNullOrEmpty(ApplicationPool))
-                result.AddError("IIS7 Application Pool has not been specified.");
+            if (Operation == Iis7Operation.Unspecified) result.AddError("IIS7 Operation has not been specified.");
+            if (String.IsNullOrEmpty(ServerName)) result.AddError("IIS7 Server Name has not been specified.");
+            if (String.IsNullOrEmpty(ApplicationPool)) result.AddError("IIS7 Application Pool has not been specified.");
 
             IisUtility.CheckForIis7(result);
 
             using (var iisManager = ServerManager.OpenRemote(ServerName))
-                checkApplicationPoolExists(iisManager, result);
-
+            {
+                CheckApplicationPoolExists(iisManager, result);    
+            }
+            
             return result;
         }
 
-        void checkApplicationPoolExists(ServerManager iisManager, DeploymentResult result)
+        private void CheckApplicationPoolExists(ServerManager iisManager, DeploymentResult result)
         {
-            if (!iisManager.ApplicationPools.Any(a => a.Name == ApplicationPool))
-                result.AddAlert(applicationPoolDoesNotExistError);
+            if (!iisManager.ApplicationPools.Any(a => a.Name == ApplicationPool)) result.AddAlert(ApplicationPoolDoesNotExistError);
         }
 
-        string applicationPoolDoesNotExistError
+        private string ApplicationPoolDoesNotExistError
         {
             get { return "Application Pool '{0}' does not exist on server '{1}'".FormatWith(ApplicationPool, ServerName); }
         }
@@ -92,12 +90,12 @@ namespace dropkick.Tasks.Iis
             using (var iisManager = ServerManager.OpenRemote(ServerName))
             {
                 var appPool = iisManager.ApplicationPools[ApplicationPool];
-                executeOperation(appPool, result);
+                ExecuteOperation(appPool, result);
             }
             return result;
         }
 
-        void checkForElevatedPrivileges(Action action)
+        private void CheckForElevatedPrivileges(Action action)
         {
             try
             {
@@ -109,18 +107,19 @@ namespace dropkick.Tasks.Iis
             }
         }
 
-        void executeOperation(ApplicationPool appPool, DeploymentResult result)
+        //todo: there is quite a bit going on in here...this is going to need to be looked at...
+        private void ExecuteOperation(ApplicationPool appPool, DeploymentResult result)
         {
             switch (Operation)
             {
                 case Iis7Operation.StopApplicationPool:
                     if (appPool == null)
                     {
-                        result.AddAlert(applicationPoolDoesNotExistError);
+                        result.AddAlert(ApplicationPoolDoesNotExistError);
                     }
                     else if (appPool.CanBeStopped())
                     {
-                        checkForElevatedPrivileges(appPool.StopAndWaitForCompletion);
+                        CheckForElevatedPrivileges(appPool.StopAndWaitForCompletion);
                         result.AddGood("Application Pool '{0}' stopped.".FormatWith(ApplicationPool));
                     }
                     else
@@ -131,12 +130,12 @@ namespace dropkick.Tasks.Iis
                 case Iis7Operation.StartApplicationPool:
                     if (appPool == null)
                     {
-                        throw new InvalidOperationException(applicationPoolDoesNotExistError);
+                        throw new InvalidOperationException(ApplicationPoolDoesNotExistError);
                     }
                     else if (appPool.CanBeStarted())
                     {
                         IisUtility.WaitForIisToCompleteAnyOperations();
-                        checkForElevatedPrivileges(appPool.StartAndWaitForCompletion);
+                        CheckForElevatedPrivileges(appPool.StartAndWaitForCompletion);
                         result.AddGood("Application Pool '{0}' started.".FormatWith(ApplicationPool));
                     }
                     else

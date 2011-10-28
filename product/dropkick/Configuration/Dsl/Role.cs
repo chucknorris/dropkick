@@ -55,8 +55,7 @@ namespace dropkick.Configuration.Dsl
         public static ServerRole GetRole(Role input)
         {
             var result = input as ServerRole;
-            if (result == null)
-                throw new ArgumentException(string.Format("The role is not valid for this deployment"), "input");
+            if (result == null) throw new ArgumentException(string.Format("The role is not valid for this deployment"), "input");
 
             return result;
         }

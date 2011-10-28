@@ -81,8 +81,7 @@ namespace dropkick.Configuration.Dsl
 
         void VerifyDeploymentConfiguration()
         {
-            if (_roles.Count == 0)
-                throw new DeploymentConfigurationException("A deployment must have at least one role to be valid.");
+            if (_roles.Count == 0) throw new DeploymentConfigurationException("A deployment must have at least one role to be valid.");
         }
 
         //initial setup to be called in the static constructor

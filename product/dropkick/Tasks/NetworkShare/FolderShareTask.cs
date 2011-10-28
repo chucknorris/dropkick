@@ -32,11 +32,8 @@ namespace dropkick.Tasks.NetworkShare
             //verify admin
             var result = new DeploymentResult();
 
-            if (!Directory.Exists(PointingTo))
-                result.AddAlert("'{0}' doesn't exist", PointingTo);
-            else
-                result.AddGood("'{0}' exists", PointingTo);
-
+            if (!Directory.Exists(PointingTo)) result.AddAlert("'{0}' doesn't exist", PointingTo);
+            else result.AddGood("'{0}' exists", PointingTo);
 
             return result;
         }
@@ -45,17 +42,11 @@ namespace dropkick.Tasks.NetworkShare
         {
             var result = new DeploymentResult();
 
-			if (DeleteAndRecreate)
-			{
-				Win32Share.Delete(Server, ShareName);
-			}
+			if (DeleteAndRecreate) Win32Share.Delete(Server, ShareName);
 
             ShareReturnCode returnCode = Win32Share.Create(Server, ShareName, PointingTo, Description);
 
-            if (returnCode != ShareReturnCode.Success)
-            {
-                throw new Exception("Unable to share directory '{0}' as '{2}' on '{1}'.".FormatWith(PointingTo, Server, ShareName));
-            }
+            if (returnCode != ShareReturnCode.Success) throw new Exception("Unable to share directory '{0}' as '{2}' on '{1}'.".FormatWith(PointingTo, Server, ShareName));
 
             result.AddGood("Created share");
 

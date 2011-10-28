@@ -99,8 +99,7 @@ namespace dropkick.Configuration.Dsl.Msmq
             if (!uri.AbsolutePath.Substring(1).Contains("/"))
                 return;
 
-            if (uri.AbsolutePath.Substring(1).ToLowerInvariant().Contains("public"))
-                throw new NotSupportedException(string.Format("Public queues are not supported (please submit a patch): {0}", uri));
+            if (uri.AbsolutePath.Substring(1).ToLowerInvariant().Contains("public")) throw new NotSupportedException(string.Format("Public queues are not supported (please submit a patch): {0}", uri));
 
             throw new UriParseException(
                 "MSMQ endpoints do not allow child folders unless it is 'public' (not supported yet, please submit patch). " +

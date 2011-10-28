@@ -91,11 +91,8 @@ namespace dropkick.Tasks.Security.Msmq
             }
             catch (MessageQueueException ex)
             {
-                if (ex.Message.Contains("does not exist"))
-                {
-                    var msg = "The queue '{0}' doesn't exist.";
-                    throw new DeploymentException(msg, ex);
-                }
+                if (ex.Message.Contains("does not exist")) throw new DeploymentException("The queue '{0}' doesn't exist.", ex);
+
                 throw;
             }
 

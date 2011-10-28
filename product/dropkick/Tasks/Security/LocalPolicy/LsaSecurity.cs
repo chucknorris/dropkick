@@ -138,16 +138,11 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
             uint ret = Win32Sec.LsaOpenPolicy(system, ref lsaAttr,
             (int)Access.POLICY_ALL_ACCESS, out lsaHandle);
-            if (ret == 0)
-                return;
-            if (ret == STATUS_ACCESS_DENIED)
-            {
-                throw new UnauthorizedAccessException();
-            }
-            if ((ret == STATUS_INSUFFICIENT_RESOURCES) || (ret == STATUS_NO_MEMORY))
-            {
-                throw new OutOfMemoryException();
-            }
+            
+            if (ret == 0) return;
+            if (ret == STATUS_ACCESS_DENIED)  throw new UnauthorizedAccessException();
+            if ((ret == STATUS_INSUFFICIENT_RESOURCES) || (ret == STATUS_NO_MEMORY)) throw new OutOfMemoryException();
+
             throw new Win32Exception(Win32Sec.LsaNtStatusToWinError((int)ret));
         }
 
@@ -157,16 +152,11 @@ namespace dropkick.Tasks.Security.LocalPolicy
             LSA_UNICODE_STRING[] privileges = new LSA_UNICODE_STRING[1];
             privileges[0] = InitLsaString(privilege);
             uint ret = Win32Sec.LsaAddAccountRights(lsaHandle, pSid, privileges, 1);
-            if (ret == 0)
-                return;
-            if (ret == STATUS_ACCESS_DENIED)
-            {
-                throw new UnauthorizedAccessException();
-            }
-            if ((ret == STATUS_INSUFFICIENT_RESOURCES) || (ret == STATUS_NO_MEMORY))
-            {
-                throw new OutOfMemoryException();
-            }
+
+            if (ret == 0) return;
+            if (ret == STATUS_ACCESS_DENIED) throw new UnauthorizedAccessException();
+            if ((ret == STATUS_INSUFFICIENT_RESOURCES) || (ret == STATUS_NO_MEMORY)) throw new OutOfMemoryException();
+
             throw new Win32Exception(Win32Sec.LsaNtStatusToWinError((int)ret));
         }
 
@@ -194,10 +184,10 @@ namespace dropkick.Tasks.Security.LocalPolicy
             IntPtr tdom = IntPtr.Zero;
             names[0] = InitLsaString(account);
             lts.Sid = IntPtr.Zero;
-            int ret = Win32Sec.LsaLookupNames2(lsaHandle, 0, 1, names, ref tdom, ref
-tsids);
-            if (ret != 0)
-                throw new Win32Exception(Win32Sec.LsaNtStatusToWinError(ret));
+            int ret = Win32Sec.LsaLookupNames2(lsaHandle, 0, 1, names, ref tdom, ref tsids);
+            
+            if (ret != 0) throw new Win32Exception(Win32Sec.LsaNtStatusToWinError(ret));
+
             lts = (LSA_TRANSLATED_SID2)Marshal.PtrToStructure(tsids,
             typeof(LSA_TRANSLATED_SID2));
             Win32Sec.LsaFreeMemory(tsids);
@@ -208,12 +198,13 @@ tsids);
         static LSA_UNICODE_STRING InitLsaString(string s)
         {
             // Unicode strings max. 32KB
-            if (s.Length > 0x7ffe)
-                throw new ArgumentException("String too long");
+            if (s.Length > 0x7ffe) throw new ArgumentException("String too long");
+
             LSA_UNICODE_STRING lus = new LSA_UNICODE_STRING();
             lus.Buffer = s;
             lus.Length = (ushort)(s.Length * sizeof(char));
             lus.MaximumLength = (ushort)(lus.Length + sizeof(char));
+
             return lus;
         }
     }

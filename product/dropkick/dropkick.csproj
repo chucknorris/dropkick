@@ -99,7 +99,6 @@
     <Compile Include="Configuration\Dsl\Files\UnzipOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisApplicationPoolOperationProtoTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisOperations.cs" />
-    <Compile Include="Configuration\Dsl\Iis\OperationExtension.cs" />
     <Compile Include="Configuration\Dsl\Iis\ProcessModelIdentity.cs" />
     <Compile Include="Configuration\Dsl\Msmq\MsmqQueueOptions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />

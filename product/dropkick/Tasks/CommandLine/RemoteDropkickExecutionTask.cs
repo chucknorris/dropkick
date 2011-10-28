@@ -37,7 +37,7 @@ namespace dropkick.Tasks.CommandLine
             Logging.Fine("Copying remote execution files from '{0}' to '{1}'", ewd, remotePath);
 
             var local = Path.GetDirectoryName(ewd);
-            if (local == null) throw new Exception("shouldn't be null");
+            if (local == null) throw new Exception("Path to dk remote files should not be null");
 
             var filesToCopy = Directory.GetFiles(ewd);
             foreach (var file in filesToCopy)

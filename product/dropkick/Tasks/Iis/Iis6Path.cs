@@ -83,8 +83,7 @@
             sb.AppendFormat("Couldn't find the website '{0}'", name);
             sb.AppendLine();
             sb.AppendLine("Found the following web sites:");
-            foreach (var site in foundWebsites)
-                sb.AppendFormat("  '{0}'{1}", site, Environment.NewLine);
+            foreach (var site in foundWebsites) sb.AppendFormat("  '{0}'{1}", site, Environment.NewLine);
 
             throw new Exception(sb.ToString());
         }

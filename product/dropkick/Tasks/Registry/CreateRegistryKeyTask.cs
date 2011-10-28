@@ -41,8 +41,7 @@ namespace dropkick.Tasks.Registry
 			using (var regHive = OpenHive())
 				using (var regKey = regHive.CreateSubKey(Key))
 				{
-					if (regKey == null)
-						throw new ApplicationException(String.Format("Creation of registry key '{0}' in hive '{1}' on '{2}' failed. ", Key, Hive, ServerName));
+					if (regKey == null) throw new ApplicationException(String.Format("Creation of registry key '{0}' in hive '{1}' on '{2}' failed. ", Key, Hive, ServerName));
 				}
 
 			result.AddGood(Name);

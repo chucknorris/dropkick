@@ -88,6 +88,7 @@ namespace dropkick.Wmi
                     if (name.EqualsIgnoreCase(shareName)) return path;
                 }
             }
+            
             throw new Exception("There is no share '{0}' on machine '{1}'".FormatWith(shareName, serverName));
         }
 

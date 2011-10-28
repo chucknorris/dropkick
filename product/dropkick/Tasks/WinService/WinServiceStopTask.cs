@@ -95,6 +95,7 @@ namespace dropkick.Tasks.WinService
                 }
                 Logging.Fine("[svc] Seriously...just die already");
             }
+            
             throw new Exception("Service has not died yet!");
         }
     }

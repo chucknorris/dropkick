@@ -31,10 +31,8 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterRealTasks(PhysicalServer server)
         {
-            if (_operation == Iis7Operation.Unspecified)
-                throw new InvalidOperationException("Application Pool Operation not specified.");
-            if (Version == IisVersion.Six)
-                throw new NotSupportedException("Application Pool Operations not supported on IIS 6.");
+            if (_operation == Iis7Operation.Unspecified) throw new InvalidOperationException("Application Pool Operation not specified.");
+            if (Version == IisVersion.Six) throw new NotSupportedException("Application Pool Operations not supported on IIS 6.");
 
             server.AddTask(new Iis7OperationTask
             {

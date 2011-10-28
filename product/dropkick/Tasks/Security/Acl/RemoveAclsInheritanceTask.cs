@@ -1,10 +1,3 @@
-// ==============================================================================
-// 
-// Heartland Common Framework
-// 
-// Copyright ©  2010-2011 Heartland Crop Insurance, Inc. All rights reserved.
-// 
-// ==============================================================================
 using System.IO;
 using dropkick.DeploymentModel;
 

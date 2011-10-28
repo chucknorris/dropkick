@@ -75,14 +75,12 @@ namespace dropkick.Tasks.Iis
 
         	try
         	{
-                result.AddAlert("'{0}' doesn't exist. creating.", VdirPath);
 				iisManager.CommitChanges();
-                result.AddGood("'{0}' was created", VdirPath);
+                result.AddGood("'{0}' was created/updated successfully.", VirtualDirectoryPath);
         	}
         	catch (COMException ex)
         	{
-        		if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)
-					throw new DeploymentException("An exception occurred trying to apply deployment changes. If you are attempting to set the IIS " +
+        		if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser) throw new DeploymentException("An exception occurred trying to apply deployment changes. If you are attempting to set the IIS " +
 						"Process Model's identity to a specific user then ensure that you are running DropKick with elevated privileges, or UAC is disabled.", ex);
         		throw;
         	}
@@ -150,7 +148,7 @@ namespace dropkick.Tasks.Iis
 				LogIis("[iis7] Using Classic managed pipeline mode.");
 			}
 
-            result.AddGood("App pool '{0}' updated.", AppPoolName);
+            result.AddGood("App pool '{0}' created/updated.", AppPoolName);
 
 			if (SetProcessModelIdentity)
 			{
@@ -158,7 +156,7 @@ namespace dropkick.Tasks.Iis
 				result.AddGood("Set process model identity '{0}'", ProcessModelIdentityType);
 			}
 			
-			pool.Recycle();
+			//pool.Recycle();
         }
 
 		void SetApplicationPoolIdentity(ApplicationPool pool)
@@ -207,7 +205,7 @@ namespace dropkick.Tasks.Iis
 				LogFineGrain("[iis7] Updated physical path for '{0}' to '{1}'", VirtualDirectoryPath, PathOnServer);
 			}
 
-			result.AddGood("'{0}' was created", VdirPath);
+            //result.AddGood("'{0}' was created/updated successfully", VirtualDirectoryPath);
 		}
 
         public bool DoesVirtualDirectoryExist(Site site)

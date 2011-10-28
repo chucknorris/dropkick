@@ -47,5 +47,10 @@ namespace dropkick.Configuration.Dsl.Iis
             protoServer.RegisterProtoTask(task);
             return task;
         }
+
+        public static IisOperations Iis7(this ProtoServer protoServer)
+        {
+            return new IisOperations(protoServer) { Version = IisVersion.Seven };
+        }
     }
 }
