@@ -39,7 +39,7 @@ namespace dropkick.Tasks.Iis
         {
             get
             {
-                return "IIS{0}: Create vdir '{1}' in site '{2}' on server '{3}'".FormatWith(VersionNumber, VirtualDirectoryPath,
+                return "IIS{0}: Create virtual directory '{1}' in site '{2}' on server '{3}'".FormatWith(VersionNumber, VirtualDirectoryPath,
                                                                                             WebsiteName, ServerName);
             }
         }

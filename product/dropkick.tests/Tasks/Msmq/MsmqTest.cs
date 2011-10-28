@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System.Linq;
+
 namespace dropkick.tests.Tasks.Msmq
 {
     using System;
@@ -55,6 +58,34 @@ namespace dropkick.tests.Tasks.Msmq
 
     [TestFixture]
     [Category("Integration")]
+    public class TransactionalLocalMsmqTest
+    {
+        [Test]
+        [Explicit]
+        public void ExecuteLocal()
+        {
+            var ps = new DeploymentServer(Environment.MachineName);
+            var ub = new UriBuilder("msmq", ps.Name) { Path = "dk_test2" };
+            var address = new QueueAddress(ub.Uri);
+
+            if (MessageQueue.Exists(address.LocalName))
+                MessageQueue.Delete(address.LocalName);
+
+            var t = new CreateLocalMsmqQueueTask(ps, address, transactional:true);
+            var r = t.Execute();
+
+            Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create execution.");
+
+            var queue =
+                MessageQueue.GetPrivateQueuesByMachine(Environment.MachineName).SingleOrDefault(
+                    x => address.LocalName.EndsWith(x.QueueName));
+            Assert.IsNotNull(queue, "Transactional queue was not created.");
+            Assert.IsTrue(queue.Transactional, "Queue was created but is not transactional.");
+        }
+    }
+
+    [TestFixture]
+    [Category("Integration")]
     public class RemoteCreateMsmqTest
     {
         [Test][Explicit]
@@ -83,6 +114,5 @@ namespace dropkick.tests.Tasks.Msmq
 
             Assert.IsFalse(r.ContainsError(), "Errors occured during MSMQ create verification.");
         }
-
     }
 }

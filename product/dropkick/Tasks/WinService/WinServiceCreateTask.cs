@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using System;
+
 namespace dropkick.Tasks.WinService
 {
     using DeploymentModel;
@@ -47,7 +49,7 @@ namespace dropkick.Tasks.WinService
             if (UserName.ShouldPrompt())
                 result.AddAlert("We are going to prompt for a username.");
 
-            if (Password.ShouldPrompt())
+			if (shouldPromptForPassword())
                 result.AddAlert("We are going to prompt for a password.");
 
             return result;
@@ -60,7 +62,7 @@ namespace dropkick.Tasks.WinService
             if (UserName.ShouldPrompt())
                 UserName = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(ServiceName));
 
-            if (Password.ShouldPrompt())
+            if (shouldPromptForPassword())
                 Password = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(ServiceName, UserName));
 
             ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceDisplayName, ServiceLocation,
@@ -73,5 +75,10 @@ namespace dropkick.Tasks.WinService
 
             return result;
         }
+
+    	private bool shouldPromptForPassword()
+    	{
+    		return !WindowsAuthentication.IsBuiltInUsername(UserName) && Password.ShouldPrompt();
+    	}
     }
 }

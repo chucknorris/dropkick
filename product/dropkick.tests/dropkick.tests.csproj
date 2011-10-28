@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>dropkick.tests</RootNamespace>
     <AssemblyName>dropkick.tests</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -32,6 +32,7 @@
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -91,8 +92,11 @@
     <Compile Include="..\..\SolutionVersion.cs">
       <Link>Properties\SolutionVersion.cs</Link>
     </Compile>
+    <Compile Include="ApplicationPoolTestExtensions.cs" />
     <Compile Include="Configuration\Dsl\CheckingPlanBuildingLogic.cs" />
     <Compile Include="Configuration\Dsl\CopyFilesProtoWithSettings.cs" />
+    <Compile Include="Configuration\Dsl\IisProtoTaskProcessModelSpec.cs" />
+    <Compile Include="Configuration\Dsl\ProcessModelIdentityTranslation.cs" />
     <Compile Include="Configuration\Dsl\roundhouse\RoundhouseProtoTest.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
@@ -101,6 +105,16 @@
     <Compile Include="Engine\PhysicalServerTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem\PathConverterSpecs.cs" />
+    <Compile Include="Registry\CreateRegistryKeyTaskTest.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Registry\RegistryAssert.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Registry\RegistryExtensionTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Settings\ServerMapParsing.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="StringInterpolation\TestIt.cs" />
     <Compile Include="Tasks\Console\RemoteTest.cs" />
@@ -108,6 +122,8 @@
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="FileSystem\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
+    <Compile Include="Tasks\Iis\AppPoolStopStartTest.cs" />
+    <Compile Include="Tasks\Iis\ExistingVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
@@ -118,7 +134,9 @@
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantSecuritySpecs.cs" />
     <Compile Include="Tasks\Xml\Context\XmlContextResult.cs" />
+    <Compile Include="Tasks\WinService\PasswordPromptSpecs.cs" />
     <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />
+    <Compile Include="TestContexts\ApplicationPoolTestContext.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />

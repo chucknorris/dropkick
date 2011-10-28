@@ -10,6 +10,8 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using Microsoft.Web.Administration;
+
 namespace dropkick.Configuration.Dsl.Iis
 {
     using System;
@@ -26,5 +28,7 @@ namespace dropkick.Configuration.Dsl.Iis
         void Enable32BitAppOnWin64();
         void UseClassicPipeline();
         void SetRuntimeToV4();
+    	void SetProcessModelIdentity(string username, string password);
+    	void SetProcessModelIdentity(ProcessModelIdentity identity);
     }
 }

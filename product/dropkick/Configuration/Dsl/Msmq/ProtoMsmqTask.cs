@@ -21,19 +21,31 @@ namespace dropkick.Configuration.Dsl.Msmq
         BaseProtoTask,
         MsmqOptions
     {
+        readonly QueueOptions _queueOptions = new QueueOptions();
         string _queueName;
 
-        public void PrivateQueue(string name)
+        public MsmqQueueOptions PrivateQueue(string name)
         {
             _queueName = ReplaceTokens(name);
+            return _queueOptions;
         }
 
         public override void RegisterRealTasks(PhysicalServer server)
         {
             var ub = new UriBuilder("msmq", server.Name) {Path = _queueName};
 
-            if(server.IsLocal) server.AddTask(new CreateLocalMsmqQueueTask(server, new QueueAddress(ub.Uri)));
-            else server.AddTask(new CreateRemoteMsmqQueueTask(server, new QueueAddress(ub.Uri)));
+            if(server.IsLocal) server.AddTask(new CreateLocalMsmqQueueTask(server, new QueueAddress(ub.Uri), _queueOptions.transactional));
+            else server.AddTask(new CreateRemoteMsmqQueueTask(server, new QueueAddress(ub.Uri), _queueOptions.transactional));
+        }
+
+        private class QueueOptions : MsmqQueueOptions
+        {
+            internal bool transactional;
+
+            public void Transactional()
+            {
+                transactional = true;
+            }
         }
     }
 }

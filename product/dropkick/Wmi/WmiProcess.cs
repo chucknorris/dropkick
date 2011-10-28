@@ -74,7 +74,7 @@
 
                 return true;
             }
-            catch (ArgumentException ex)
+            catch (ArgumentException)
             {
                 return false;
             }

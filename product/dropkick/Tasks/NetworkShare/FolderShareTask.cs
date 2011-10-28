@@ -14,7 +14,6 @@ namespace dropkick.Tasks.NetworkShare
 {
     using System;
     using System.IO;
-    using System.Management;
     using DeploymentModel;
     using Wmi;
 
@@ -25,6 +24,7 @@ namespace dropkick.Tasks.NetworkShare
         public string Description { get; set; }
         public string ShareName { get; set; }
         public string PointingTo { get; set; }
+		public bool DeleteAndRecreate { get; set; }
 
 
         public DeploymentResult VerifyCanRun()
@@ -44,6 +44,11 @@ namespace dropkick.Tasks.NetworkShare
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
+
+			if (DeleteAndRecreate)
+			{
+				Win32Share.Delete(Server, ShareName);
+			}
 
             ShareReturnCode returnCode = Win32Share.Create(Server, ShareName, PointingTo, Description);
 
