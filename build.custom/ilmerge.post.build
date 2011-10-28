@@ -27,14 +27,14 @@
   </target>
   
   <target name="copy_files_to_deploy_console">
-  <echo message="Removing original dropkick assemblies from ${dirs.deployment}\console."/>
+  <echo level="Warning" message="Removing original dropkick assemblies from ${dirs.deployment}\console."/>
     <delete>
       <fileset basedir="${dirs.drop}\sample\${folder.deployment}\console" >
         <include name="*.*" />
       </fileset>
     </delete>
   
-    <echo message="Copying dropkick assemblies from '${dirs.app.drop}\console' to '${dirs.deployment}\console'."/>
+    <echo level="Warning" message="Copying dropkick assemblies from '${dirs.app.drop}\console' to '${dirs.deployment}\console'."/>
     <copy todir="${dirs.drop}\sample\${folder.deployment}\console">
       <fileset basedir="${dirs.app.drop}\console">
         <include name="*.*" />

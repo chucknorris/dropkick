@@ -34,7 +34,7 @@
   <target name="go" depends="get_dropkick_remote_config_file" />
   
   <target name="get_dropkick_remote_config_file">
-   <echo message="Copying ${dirs.build}\${folder.app.drop}\dropkick.remote.exe.config to ${dirs.build}\${folder.app.drop}\_PublishedApplications\dropkick.remote" />
+   <echo level="Warning" message="Copying ${dirs.build}\${folder.app.drop}\dropkick.remote.exe.config to ${dirs.build}\${folder.app.drop}\_PublishedApplications\dropkick.remote" />
     <copy todir="${dirs.build}\${folder.app.drop}\_PublishedApplications\dropkick.remote" overwrite="true">
       <fileset basedir="${dirs.build}\${folder.app.drop}">
         <include name="dropkick.remote.exe.config" />

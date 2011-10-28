@@ -34,14 +34,14 @@
   <target name="go" depends="cleanup_drop, restructure_drop_folder, move_console_up, copy_notices, delete_extras, remove_unnecessary_files" />
   
   <target name="cleanup_drop">
-    <echo message="Removing ${dirs.drop}\${folder.app.drop}." />
+    <echo level="Warning" message="Removing ${dirs.drop}\${folder.app.drop}." />
     <delete>
       <fileset basedir="${dirs.drop}\${folder.app.drop}">
         <include name="**/*.*" />
       </fileset>
     </delete>
     
-    <echo message="Renaming ${dirs.drop}\_PublishedApplications to ${dirs.drop}\${folder.app.drop}." />
+    <echo level="Warning" message="Renaming ${dirs.drop}\_PublishedApplications to ${dirs.drop}\${folder.app.drop}." />
     <move todir="${dirs.drop}\${folder.app.drop}" overwrite="true">
       <fileset basedir="${dirs.drop}\_PublishedApplications">
         <include name="**/*.*" />
@@ -51,7 +51,7 @@
   </target>
 
   <target name="restructure_drop_folder">
-    <echo message="Renaming ${dirs.drop}\${folder.app.drop}\dropkick to ${dirs.drop}\${folder.app.drop}\lib." />
+    <echo level="Warning" message="Renaming ${dirs.drop}\${folder.app.drop}\dropkick to ${dirs.drop}\${folder.app.drop}\lib." />
     <move todir="${dirs.drop}\${folder.app.drop}\lib" overwrite="true">
       <fileset basedir="${dirs.drop}\${folder.app.drop}\dropkick">
         <include name="**/*.*" />
@@ -59,7 +59,7 @@
     </move>
     <delete dir="${dirs.drop}\${folder.app.drop}\dropkick" />
     
-    <echo message="Renaming ${dirs.drop}\${folder.app.drop}\dropkick.console to ${dirs.drop}\${folder.app.drop}\console." />
+    <echo level="Warning" message="Renaming ${dirs.drop}\${folder.app.drop}\dropkick.console to ${dirs.drop}\${folder.app.drop}\console." />
     <move todir="${dirs.drop}\${folder.app.drop}\console" overwrite="true">
       <fileset basedir="${dirs.drop}\${folder.app.drop}">
         <include name="dropkick.remote/*.*" />
@@ -71,7 +71,7 @@
   </target>
   
   <target name="move_console_up">
-   <echo message="Moving ${dirs.drop}\${folder.app.drop}\console\dropkick.console to ${dirs.drop}\${folder.app.drop}\console." />
+   <echo level="Warning" message="Moving ${dirs.drop}\${folder.app.drop}\console\dropkick.console to ${dirs.drop}\${folder.app.drop}\console." />
     <move todir="${dirs.drop}\${folder.app.drop}\console" overwrite="true">
       <fileset basedir="${dirs.drop}\${folder.app.drop}\console\dropkick.console">
         <include name="**" />
@@ -81,10 +81,10 @@
   </target>
   
   <target name ="copy_notices">
-    <echo message="Packaging readme file to ${dirs.drop}."/>
+    <echo level="Warning" message="Packaging readme file to ${dirs.drop}."/>
     <copy file="${dirs.current}\..\README.markdown" tofile="${dirs.drop}\ReadMe.txt" />
     
-    <echo message="Packaging other legal stuff to ${dirs.drop}\LEGAL."/>
+    <echo level="Warning" message="Packaging other legal stuff to ${dirs.drop}\LEGAL."/>
     <copy todir="${dirs.drop}\LEGAL">
       <fileset basedir="${dirs.current}\..\docs\legal">
         <include name="**/*" />

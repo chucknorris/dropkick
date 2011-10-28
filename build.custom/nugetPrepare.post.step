@@ -15,7 +15,7 @@
   <target name="go" depends="prep_nuget,remove_docs" />
   
   <target name="prep_nuget">
-    <echo message="Moving ${dirs.drop.nuget}\lib\console to ${dirs.drop.nuget}\bin." />
+    <echo level="Warning" message="Moving ${dirs.drop.nuget}\lib\console to ${dirs.drop.nuget}\bin." />
     <move todir="${dirs.drop.nuget}\bin" overwrite="true">
       <fileset basedir="${dirs.drop.nuget}\lib\console">
         <include name="**/*.*" />
@@ -23,7 +23,7 @@
     </move>
     <delete dir="${dirs.drop.nuget}\lib\console" />
   
-    <echo message="Moving ${dirs.drop.nuget}\lib\lib to ${dirs.drop.nuget}\lib." />
+    <echo level="Warning" message="Moving ${dirs.drop.nuget}\lib\lib to ${dirs.drop.nuget}\lib." />
     <move todir="${dirs.drop.nuget}\lib" overwrite="true">
       <fileset basedir="${dirs.drop.nuget}\lib\lib">
         <include name="*.*" />
@@ -31,7 +31,7 @@
     </move>
     <delete dir="${dirs.drop.nuget}\lib\lib" />
     
-    <echo message="Removing log4net from '${dirs.drop.nuget}\lib'" />
+    <echo level="Warning" message="Removing log4net from '${dirs.drop.nuget}\lib'" />
     <delete>
       <fileset basedir="${dirs.drop.nuget}\lib" >
         <include name="log4net.*" />
@@ -40,7 +40,7 @@
   </target>
   
   <target name="remove_docs">
-   <echo message="Removing unnecesary documents from '${dirs.drop.nuget}\docs'" />
+   <echo level="Warning" message="Removing unnecesary documents from '${dirs.drop.nuget}\docs'" />
     <delete>
       <fileset basedir="${dirs.drop.nuget}\docs" >
         <include name="logo/**" />
