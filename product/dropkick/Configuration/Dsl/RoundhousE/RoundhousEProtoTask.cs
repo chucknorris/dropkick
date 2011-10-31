@@ -41,6 +41,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private string _versionFile;
         private string _versionXPath;
         private int _commandTimeout;
+        private int _restoreTimeout;
         private int _commandTimeoutAdmin;
 
         public RoundhousEOptions OnInstance(string name)
@@ -97,6 +98,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithRestoreTimeout(int timeout)
+        {
+            _restoreTimeout = timeout;
+            return this;
+        }
+
         public RoundhousEOptions WithRepositoryPath(string repositoryPath)
         {
             _repositoryPath = repositoryPath;
@@ -108,7 +115,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             _versionFile = versionFile;
             return this;
         }
-        
+
         public RoundhousEOptions WithVersionXPath(string versionXPath)
         {
             _versionXPath = versionXPath;
@@ -136,7 +143,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-           // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
+            // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
             var instanceServer = site.Name;
             if (!string.IsNullOrEmpty(_instanceName))
                 instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
@@ -145,7 +152,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
             var task = new RoundhousETask(connectionString, _scriptsLocation,
                                           _environmentName, _roundhouseMode,
-                                          _recoveryMode, _restorePath, _restoreCustomOptions,_repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
+                                          _recoveryMode, _restorePath, _restoreTimeout,_restoreCustomOptions, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
 
             site.AddTask(task);
         }

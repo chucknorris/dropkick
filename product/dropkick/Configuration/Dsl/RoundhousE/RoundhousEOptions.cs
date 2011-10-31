@@ -27,6 +27,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         RoundhousEOptions WithDatabaseRecoveryMode(DatabaseRecoveryMode recoveryMode);
         RoundhousEOptions WithRestorePath(string restorePath);
         RoundhousEOptions WithRestoreCustomOptions(string options);
+        RoundhousEOptions WithRestoreTimeout(int timeout);
         RoundhousEOptions WithRepositoryPath(string repositoryPath);
         RoundhousEOptions WithVersionFile(string versionFile);
         RoundhousEOptions WithVersionXPath(string versionXPath);
