@@ -12,19 +12,19 @@
   <property name="folder.nuget" value="nuget" overwrite="false" />
   <property name="dirs.drop.nuget" value="${dirs.drop}${path.separator}${folder.nuget}" overwrite="false" />
   
-  <target name="go" depends="prep_nuget,remove_docs" />
+  <target name="go" depends="prep_nuget,remove_docs,update_dropkick_dependencies_with_new_version" />
   
   <target name="prep_nuget">
-    <echo level="Warning" message="Moving ${dirs.drop.nuget}\lib\console to ${dirs.drop.nuget}\bin." />
-    <move todir="${dirs.drop.nuget}\bin" overwrite="true">
+    <echo level="Warning" message="Moving ${dirs.drop.nuget}\lib\console to ${dirs.drop.nuget}\dropkick.core\tools\dropkick." />
+    <move todir="${dirs.drop.nuget}\dropkick.core\tools\dropkick" overwrite="true">
       <fileset basedir="${dirs.drop.nuget}\lib\console">
         <include name="**/*.*" />
       </fileset>
     </move>
     <delete dir="${dirs.drop.nuget}\lib\console" />
   
-    <echo level="Warning" message="Moving ${dirs.drop.nuget}\lib\lib to ${dirs.drop.nuget}\lib." />
-    <move todir="${dirs.drop.nuget}\lib" overwrite="true">
+    <echo level="Warning" message="Moving ${dirs.drop.nuget}\lib\lib to ${dirs.drop.nuget}\dropkick.core\lib." />
+    <move todir="${dirs.drop.nuget}\dropkick.core\lib" overwrite="true">
       <fileset basedir="${dirs.drop.nuget}\lib\lib">
         <include name="*.*" />
       </fileset>
@@ -48,6 +48,36 @@
         <include name="*.pptx" />
       </fileset>
     </delete>
+    
+    <echo level="Warning" message="Moving ${dirs.drop.nuget}\docs to ${dirs.drop.nuget}\dropkick.core\docs." />
+    <move todir="${dirs.drop.nuget}\dropkick.core\docs" overwrite="true">
+      <fileset basedir="${dirs.drop.nuget}\docs">
+        <include name="*.*" />
+      </fileset>
+    </move>
+    <delete dir="${dirs.drop.nuget}\docs" />
+  </target>
+  
+  <target name="update_dropkick_dependencies_with_new_version">
+    <echo level="Warning" message="Finding and updating dropkick version dependencies in all nuspec files in ${dirs.drop.nuget}."/>
+    <foreach item="File" property="spec.file">
+      <in>
+        <items>
+          <include name="${dirs.drop.nuget}${path.separator}**${path.separator}*.nuspec" />
+        </items>
+      </in>
+      <do>
+        <echo level="Warning" message="Replacing version in '${spec.file}'" />
+        <xmlpoke
+          file="${spec.file}"
+          xpath="/package/metadata/dependencies/dependency[@id='dropkick']/@version"
+          value="${assembly.version.full}" />
+        <xmlpoke
+          file="${spec.file}"
+          xpath="/package/metadata/dependencies/dependency[@id='dropkick.core']/@version"
+          value="${assembly.version.full}" />
+      </do>
+    </foreach>
   </target>
   
 </project>

@@ -1,0 +1,6 @@
+﻿{
+	Web:"127.0.0.1",
+	VirtualDirectory:"127.0.0.1",
+	Host:"127.0.0.1",
+	Db: "(local)"
+}

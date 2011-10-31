@@ -9,7 +9,9 @@ NOTE: If you are looking at the source - please run build.bat before opening the
   
 # INFO
 ## Overview
-DropkicK is a fluent deployment framework that seeks to make deployments easier.
+DropkicK is a fluent deployment framework that seeks to make deployments easier.  
+  
+## SEE THE [WIKI](http://github.com/chucknorris/dropkick/wiki) FOR DOCUMENTATION.  
   
 ## Join the mailing list
  Ask questions - get answers - [http://groups.google.com/group/chucknorrisframework](http://groups.google.com/group/chucknorrisframework)  
