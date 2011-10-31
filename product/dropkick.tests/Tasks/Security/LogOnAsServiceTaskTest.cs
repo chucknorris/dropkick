@@ -13,6 +13,8 @@
 namespace dropkick.tests.Tasks.Security
 {
     using System;
+    using System.Security.Principal;
+    using dropkick.DeploymentModel;
     using dropkick.Tasks.Security.LocalPolicy;
     using NUnit.Framework;
 
@@ -23,15 +25,26 @@ namespace dropkick.tests.Tasks.Security
         [Test]
         public void Verify()
         {
-            var t = new LogOnAsAServiceTask(Environment.MachineName,"dk_test");
+            var t = new LogOnAsAServiceTask(new DeploymentServer(Environment.MachineName), WindowsIdentity.GetCurrent().Name);
             var r = t.VerifyCanRun();
         }
 
-        [Test][Explicit]
+        [Test]
         public void Execute()
         {
-            var t = new LogOnAsAServiceTask(Environment.MachineName, "dk_test");
+            var t = new LogOnAsAServiceTask(new DeploymentServer(Environment.MachineName), WindowsIdentity.GetCurrent().Name);
             var r = t.Execute();
+            r.LogToConsole();
+            Assert.AreEqual(false,r.ContainsError());
+        }
+
+        [Fact]
+        public void should_work_remotely_as_well()
+        {
+            var t = new LogOnAsAServiceTask(new DeploymentServer("127.0.0.1"), WindowsIdentity.GetCurrent().Name);
+            var r = t.Execute();
+            r.LogToConsole();
+            Assert.AreEqual(false, r.ContainsError());
         }
     }
 }

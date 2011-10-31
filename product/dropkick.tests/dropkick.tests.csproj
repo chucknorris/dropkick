@@ -130,7 +130,7 @@
     <Compile Include="Tasks\Security\Acl\SecurityAclSpecs.cs" />
     <Compile Include="Tasks\Security\Certificate\SecurityX509CertificateSpecs.cs" />
     <Compile Include="Tasks\Security\LogOnAsBatchTaskTest.cs" />
-    <Compile Include="Tasks\Security\LogOnAsServiceTask.cs" />
+    <Compile Include="Tasks\Security\LogOnAsServiceTaskTest.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantSecuritySpecs.cs" />
     <Compile Include="Tasks\Xml\Context\XmlContextResult.cs" />

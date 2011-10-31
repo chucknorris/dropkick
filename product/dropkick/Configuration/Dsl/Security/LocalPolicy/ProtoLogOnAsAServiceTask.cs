@@ -28,7 +28,7 @@ namespace dropkick.Configuration.Dsl.Security.LocalPolicy
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            site.AddTask(new LogOnAsAServiceTask(site.Name, _userAccount));
+            site.AddTask(new LogOnAsAServiceTask(site, _userAccount));
         }
     }
 }

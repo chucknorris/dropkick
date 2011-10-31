@@ -19,18 +19,18 @@ namespace dropkick.Tasks.Security.LocalPolicy
     public class LogOnAsAServiceTask :
         BaseSecurityTask
     {
-        readonly string _serverName;
+        readonly PhysicalServer _server;
         readonly string _userAccount;
 
-        public LogOnAsAServiceTask(string serverName, string userAccount)
+        public LogOnAsAServiceTask(PhysicalServer server, string userAccount)
         {
-            _serverName = serverName;
+            _server = server;
             _userAccount = userAccount;
         }
 
         public override string Name
         {
-            get { return "Give '{0}' Log On As A Service on server '{1}'".FormatWith(_userAccount, _serverName); }
+            get { return "Give '{0}' Log On As A Service on server '{1}'".FormatWith(_userAccount, _server.Name); }
         }
 
         public override DeploymentResult VerifyCanRun()
@@ -47,11 +47,15 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
             try
             {
-                using (var lsa = new LsaWrapper())
-                {
-                    lsa.AddPrivileges(_userAccount, "SeServiceLogonRight");
-                }
-                LogSecurity("[security][lpo] Grant '{0}' LogOnAsService on '{1}'", _userAccount, _serverName);
+                var serverName = _server.Name;
+                if (!_server.IsLocal) serverName = "\\\\{0}".FormatWith(_server.Name);
+                LsaUtility.SetRight(serverName, _userAccount, "SeServiceLogonRight");
+
+                //using (var lsa = new LsaWrapper())
+                //{
+                //    lsa.AddPrivileges(_userAccount, "SeServiceLogonRight");
+                //}
+                LogSecurity("[security][lpo] Grant '{0}' LogOnAsService on '{1}'", _userAccount, _server.Name);
             }
             catch (Win32Exception ex)
             {
@@ -59,7 +63,7 @@ namespace dropkick.Tasks.Security.LocalPolicy
                 sb.AppendFormat("Error while attempting to grant '{0}' the right '{1}'", _userAccount, "SeServiceLogonRight");
                 result.AddError(sb.ToString(), ex);
             }
-            
+
 
             return result;
         }

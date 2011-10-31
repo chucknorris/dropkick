@@ -19,18 +19,18 @@ namespace dropkick.Tasks.Security.LocalPolicy
     public class LogOnAsBatchTask :
         BaseSecurityTask
     {
-        readonly string _serverName;
+        readonly PhysicalServer _server;
         readonly string _userAccount;
 
-        public LogOnAsBatchTask(string serverName, string userAccount)
+        public LogOnAsBatchTask(PhysicalServer server, string userAccount)
         {
-            _serverName = serverName;
+            _server = server;
             _userAccount = userAccount;
         }
 
         public override string Name
         {
-            get { return "Give '{0}' Log On As Batch on server '{1}'".FormatWith(_userAccount, _serverName); }
+            get { return "Give '{0}' Log On As Batch on server '{1}'".FormatWith(_userAccount, _server.Name); }
         }
 
         public override DeploymentResult VerifyCanRun()
@@ -46,17 +46,19 @@ namespace dropkick.Tasks.Security.LocalPolicy
             var result = new DeploymentResult();
             try
             {
-                using (var lsa = new LsaWrapper())
-                {
-                    lsa.AddPrivileges(_userAccount, "SeBatchLogonRight");
-                }
-                LogSecurity("[security][lpo] Grant '{0}' LogOnAsBatch on '{1}'", _userAccount, _serverName);
+                var serverName = _server.Name;
+                if (!_server.IsLocal) serverName = "\\\\{0}".FormatWith(_server.Name);
+                LsaUtility.SetRight(serverName, _userAccount, "SeBatchLogonRight");
+                //using (var lsa = new LsaWrapper(_serverName))
+                //{
+                //    lsa.AddPrivileges(_userAccount, "SeBatchLogonRight");
+                //}
+                LogSecurity("[security][lpo] Grant '{0}' LogOnAsBatch on '{1}'", _userAccount, _server.Name);
             }
             catch (Win32Exception ex)
             {
                 var sb = new StringBuilder();
-                sb.AppendFormat("Error while attempting to grant '{0}' the right '{1}'", _userAccount,
-                                "SeBatchLogonRight");
+                sb.AppendFormat("Error while attempting to grant '{0}' the right '{1}'", _userAccount,"SeBatchLogonRight");
                 result.AddError(sb.ToString(), ex);
             }
 

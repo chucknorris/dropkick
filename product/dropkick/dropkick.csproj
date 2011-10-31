@@ -171,6 +171,7 @@
     <Compile Include="Tasks\Security\Certificate\GrantReadCertificatePrivateKeyTask.cs" />
     <Compile Include="Tasks\Security\Certificate\RemoteExtension.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
+    <Compile Include="Tasks\Security\LocalPolicy\LsaUtility.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />

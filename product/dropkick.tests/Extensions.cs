@@ -43,8 +43,7 @@ namespace dropkick.tests
 
         public static void LogToConsole(this DeploymentResult deploymentResult)
         {
-            foreach (var item in deploymentResult.Results)
-                Console.WriteLine(item.Message);
+            foreach (var item in deploymentResult.Results) Console.WriteLine(item.Message);
         }
     }
 }

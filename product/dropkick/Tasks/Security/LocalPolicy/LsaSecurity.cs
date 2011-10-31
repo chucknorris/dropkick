@@ -115,9 +115,8 @@ namespace dropkick.Tasks.Security.LocalPolicy
 
         IntPtr lsaHandle;
 
-        public LsaWrapper()
-            : this(null)
-        { }
+        public LsaWrapper() : this(null) { }
+
         // // local system if systemName is null
         public LsaWrapper(string systemName)
         {
@@ -160,7 +159,6 @@ namespace dropkick.Tasks.Security.LocalPolicy
             throw new Win32Exception(Win32Sec.LsaNtStatusToWinError((int)ret));
         }
 
-
         public void Dispose()
         {
             if (lsaHandle != IntPtr.Zero)
@@ -170,6 +168,7 @@ namespace dropkick.Tasks.Security.LocalPolicy
             }
             GC.SuppressFinalize(this);
         }
+
         ~LsaWrapper()
         {
             Dispose();
