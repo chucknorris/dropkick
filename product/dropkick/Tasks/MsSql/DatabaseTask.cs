@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.SqlServer.Management.Smo;
 using dropkick.DeploymentModel;
+using Microsoft.SqlServer.Management.Common;
+using System.Data.SqlClient;
 
 namespace dropkick.Tasks.MsSql
 {
@@ -62,28 +64,33 @@ namespace dropkick.Tasks.MsSql
         public DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var server = new Server(DbServer);
-            Database db = GetDb(server);
-            if (db == null && CreateIfDoesntExists)
+            ServerConnection connection = new ServerConnection(DbServer);
+            try
             {
-                result.AddGood("New DB {0} created.", DbName);
-                db = CreateNewDb(server);
-            }
+                var server = new Server(connection);                
+                Database db = GetDb(server);
+                if (db == null && CreateIfDoesntExists)
+                {
+                    result.AddGood("New DB {0} created.", DbName);
+                    db = CreateNewDb(server);
+                }
 
-            if (db == null)
+                if (db == null)
+                {
+                    throw new Exception(String.Format("DB {0} doesn't exists on server {1}", DbName, DbServer));
+                }
+
+                if (RunScriptFile)
+                {
+                    string cmd = File.ReadAllText(ScriptFile);
+                    db.ExecuteNonQuery(cmd);                    
+                }
+            }
+            finally
             {
-                throw new Exception(String.Format("DB {0} doesn't exists on server {1}", DbName, DbServer));
+                connection.Disconnect();
             }
-
-            if (RunScriptFile)
-            {
-                string cmd = File.ReadAllText(ScriptFile);
-                db.ExecuteNonQuery(cmd);
-                result.AddGood("Script file {0} executed", ScriptFile);
-            }
-
             //TODO: backup
-
             return result;
         }
 
@@ -101,6 +108,6 @@ namespace dropkick.Tasks.MsSql
         public bool CreateBackup { get; set; }
         public string BackupPath { get; set; }
         public string ScriptFile { get; set; }
-        public bool RunScriptFile { get; set; }
+        public bool RunScriptFile { get { return !String.IsNullOrWhiteSpace(ScriptFile); } }
     }
 }
