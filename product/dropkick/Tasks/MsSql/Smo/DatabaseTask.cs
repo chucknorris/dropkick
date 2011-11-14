@@ -126,8 +126,7 @@ namespace dropkick.Tasks.MsSql.Smo
 
             if (db == null && crateIfDoesntExists)
             {
-                result.AddGood("New DB {0} created.", DbName);
-                db = CreateNewDb(server);
+                db = CreateNewDb(server, result);
             }
 
             if (db == null)
@@ -138,28 +137,31 @@ namespace dropkick.Tasks.MsSql.Smo
             if (recreateIfExists)
             {
                 db.Drop();
-                db = CreateNewDb(server);
+                result.AddGood("Existing DB {0} droped.", DbName);
+                db = CreateNewDb(server, result);                
             }            
 
-            ExecuteScriptFiles(ScriptFiles, db);
+            ExecuteScriptFiles(result, ScriptFiles, db);
 
             if (DropDb)
             {
                 db.Drop();
+                result.AddGood("Existing DB {0} created.", DbName);
             }
             return result;
         }
 
-        private void ExecuteScriptFiles(IEnumerable<string> files, Database db)
+        private void ExecuteScriptFiles(DeploymentResult result, IEnumerable<string> files, Database db)
         {
             foreach (var file in files)
             {
                 string cmd = File.ReadAllText(file);
                 db.ExecuteNonQuery(cmd);
+                result.AddGood("Script file {0} executed.", Path.GetFileName(file));
             }
         }
 
-        private Database CreateNewDb(Server server)
+        private Database CreateNewDb(Server server, DeploymentResult result)
         {
             var db = new Database(server, DbName);
 
@@ -178,8 +180,9 @@ namespace dropkick.Tasks.MsSql.Smo
 
             server.Databases.Add(db);
             db.Create();
+            result.AddGood("New DB {0} created.", DbName);
 
-            ExecuteScriptFiles(CreateScriptFiles, db);
+            ExecuteScriptFiles(result, CreateScriptFiles, db);
             return db;
         }
 
