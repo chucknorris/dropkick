@@ -27,6 +27,7 @@ namespace dropkick.Tasks.MsSql.Smo
         public DatabaseTask()
         {
             ScriptFiles = new List<string>();
+            CreateScriptFiles = new List<string>();
         }
 
         public string Name
@@ -46,9 +47,9 @@ namespace dropkick.Tasks.MsSql.Smo
             }
         }
 
-        private void CheckScriptFiles(DeploymentResult result, DeploymentItemStatus errorStatus)
+        private void CheckScriptFiles(IEnumerable<string> files, DeploymentResult result, DeploymentItemStatus errorStatus)
         {
-            foreach (var file in ScriptFiles)
+            foreach (var file in files)
             {
                 if (!File.Exists(file))
                 {
@@ -85,7 +86,10 @@ namespace dropkick.Tasks.MsSql.Smo
                 if (dbExists == false)
                 {
                     if (crateIfDoesntExists)
+                    {
                         result.AddGood(String.Format("DB {0} doesn't exists. It will be created.", DbName));
+                        CheckScriptFiles(CreateScriptFiles, result, DeploymentItemStatus.Alert);
+                    }
                     else
                         result.AddAlert(String.Format("DB {0} doesn't exists.", DbName));
                 }
@@ -97,7 +101,7 @@ namespace dropkick.Tasks.MsSql.Smo
                         result.AddGood(String.Format("DB {0} exists.", DbName));
                 }
 
-                CheckScriptFiles(result, DeploymentItemStatus.Alert);
+                CheckScriptFiles(ScriptFiles, result, DeploymentItemStatus.Alert);                
             }
             catch(Exception e)
             {
@@ -135,21 +139,24 @@ namespace dropkick.Tasks.MsSql.Smo
             {
                 db.Drop();
                 db = CreateNewDb(server);
-            }
+            }            
 
-            db.AutoShrink = false;
-
-            foreach (var file in ScriptFiles)
-            {
-                string cmd = File.ReadAllText(file);
-                db.ExecuteNonQuery(cmd);                    
-            }
+            ExecuteScriptFiles(ScriptFiles, db);
 
             if (DropDb)
             {
                 db.Drop();
             }
             return result;
+        }
+
+        private void ExecuteScriptFiles(IEnumerable<string> files, Database db)
+        {
+            foreach (var file in files)
+            {
+                string cmd = File.ReadAllText(file);
+                db.ExecuteNonQuery(cmd);
+            }
         }
 
         private Database CreateNewDb(Server server)
@@ -171,6 +178,8 @@ namespace dropkick.Tasks.MsSql.Smo
 
             server.Databases.Add(db);
             db.Create();
+
+            ExecuteScriptFiles(CreateScriptFiles, db);
             return db;
         }
 
@@ -179,6 +188,7 @@ namespace dropkick.Tasks.MsSql.Smo
         public string BackupPath { get; set; }
         public OpeningOptions OpeningOptions { get; set; }
         public List<string> ScriptFiles { get; set; }
+        public List<string> CreateScriptFiles { get; set; }
         public bool DropDb { get; set; }
         public DbSettings SettingsAppliedForNewDb { get; set; }
     }

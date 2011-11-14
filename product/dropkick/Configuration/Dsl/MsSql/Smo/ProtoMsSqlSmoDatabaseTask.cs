@@ -54,6 +54,7 @@ namespace dropkick.Configuration.Dsl.MsSql.Smo
             task.DbServer = options.DbServer;
             task.DbName = options.DbName;
             task.ScriptFiles = options.ScriptFiles.Select(server.MapPath).ToList();
+            task.CreateScriptFiles = options.CreateScriptFiles.Select(server.MapPath).ToList();
             task.DropDb = options.DropDb;
             task.SettingsAppliedForNewDb = options.DbSettings;
             return task;
@@ -66,7 +67,8 @@ namespace dropkick.Configuration.Dsl.MsSql.Smo
                 DbServer = dbServer;
                 DbName = dbName;
                 OpeningOptions = options;
-                ScriptFiles = new List<string>();                
+                ScriptFiles = new List<string>();
+                CreateScriptFiles = new List<string>();
             }
 
             public DbSettings DbSettings { get; set; }
@@ -80,6 +82,13 @@ namespace dropkick.Configuration.Dsl.MsSql.Smo
             {
                 ScriptFiles.Add(scriptFile);
             }
+
+            public void RunCreateScriptFile(string scriptFile)
+            {
+                CreateScriptFiles.Add(scriptFile);
+            }
+
+            public List<string> CreateScriptFiles { get; set; }
 
             public void Drop()
             {

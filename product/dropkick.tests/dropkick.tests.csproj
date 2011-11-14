@@ -183,6 +183,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Tasks\MsSql\Smo\newtable2.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tasks\MsSql\Smo\newtable.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

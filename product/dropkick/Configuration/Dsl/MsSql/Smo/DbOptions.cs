@@ -19,6 +19,7 @@ namespace dropkick.Configuration.Dsl.MsSql.Smo
     public interface DbOptions
     {
         void RunScriptFile(string scriptFile);
+        void RunCreateScriptFile(string scriptFile);
         void Drop();
 
         /// <summary>

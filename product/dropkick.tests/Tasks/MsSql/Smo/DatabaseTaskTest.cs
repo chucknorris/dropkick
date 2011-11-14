@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Text;
 using NUnit.Framework;
 using dropkick.Tasks.MsSql.Smo;
 
@@ -36,10 +37,12 @@ namespace dropkick.tests.Tasks.MsSql.Smo
             target.DbServer = TestDbServer;
             target.DbName = TestDb;
             target.ScriptFiles.Add(@".\tasks\mssql\smo\newtable.sql");
+            target.CreateScriptFiles.Add(@".\tasks\mssql\smo\newtable2.sql");
             target.Execute();
 
-            AssertTestDbExists();
-            AssertNewTableExists();
+            Assert.AreEqual(true, DbExists());
+            Assert.AreEqual(true, TableExists("NewTable"));
+            Assert.AreEqual(true, TableExists("NewTable2"));
         }
 
         [Test]
@@ -64,54 +67,51 @@ namespace dropkick.tests.Tasks.MsSql.Smo
             target.DbServer = TestDbServer;
             target.DbName = TestDb;
             target.ScriptFiles.Add(@".\tasks\mssql\smo\newtable.sql");
+            target.CreateScriptFiles.Add(@".\tasks\mssql\smo\newtable2.sql");
             target.Execute();
 
-            AssertTestDbExists();
-            AssertNewTableExists();
+            Assert.AreEqual(true, DbExists());
+            Assert.AreEqual(true, TableExists("NewTable"));
+            Assert.AreEqual(false, TableExists("NewTable2"));
         }
 
         [Test]
         public void DatabaseDropTest()
         {
             CreateTestDb();
-            AssertTestDbExists();
+            Assert.AreEqual(true, DbExists());
 
             var target = new DatabaseTask();
             target.OpeningOptions = OpeningOptions.FailIfDoesntExists;
             target.DbServer = TestDbServer;
             target.DbName = TestDb;
             target.ScriptFiles.Add(@".\tasks\mssql\smo\newtable.sql");
+            target.CreateScriptFiles.Add(@".\tasks\mssql\smo\newtable2.sql");
             target.DropDb = true;
             target.Execute();
 
-            Assert.AreEqual(false, GetTestDbExists());
+            Assert.AreEqual(false, DbExists());
         }
 
-        private void AssertNewTableExists()
+        private bool TableExists(string tableName)
         {
+            bool result = false;
             using (var connection = new SqlConnection(TestConnectionStringForMasterDb))
             {
                 connection.Open();
-                using (
-                    var cmd =
-                        new SqlCommand(
-                            "USE " + TestDb +
-                            ";SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = 'NewTable'",
-                            connection))
+                var cmdText = new StringBuilder();
+                cmdText.AppendFormat("USE {0}; ", TestDb);
+                cmdText.AppendFormat("SELECT COUNT(*) FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_SCHEMA = 'dbo' AND  TABLE_NAME = '{0}'", tableName);
+                using (var cmd = new SqlCommand(cmdText.ToString(),connection))
                 {
-                    int intValue = (int) cmd.ExecuteScalar();
-                    Assert.AreEqual(1, intValue);
+                    result = ((int)cmd.ExecuteScalar()) == 1;
                 }
                 connection.Close();
             }
+            return result;
         }
 
-        private void AssertTestDbExists()
-        {
-            Assert.AreEqual(true, GetTestDbExists());
-        }
-
-        private bool GetTestDbExists()
+        private bool DbExists()
         {
             bool result;
             using (var connection = new SqlConnection(TestConnectionStringForMasterDb))
