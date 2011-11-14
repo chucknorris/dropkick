@@ -76,6 +76,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\MsSqlSmo\Microsoft.SqlServer.Smo.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.SqlServer.SqlEnum, Version=10.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\lib\references\Microsoft\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
@@ -113,7 +114,12 @@
     <Compile Include="Configuration\Dsl\Iis\IisOperations.cs" />
     <Compile Include="Configuration\Dsl\Iis\ProcessModelIdentity.cs" />
     <Compile Include="Configuration\Dsl\Msmq\MsmqQueueOptions.cs" />
-    <Compile Include="Configuration\Dsl\MsSql\Smo\ProtoMsSqlSmoTask.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\Smo\Extension.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\Smo\DbServerOptions.cs" />
+    <Compile Include="Tasks\MsSql\Smo\DbSettings.cs" />
+    <Compile Include="Tasks\MsSql\Smo\OpeningOptions.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\Smo\DbOptions.cs" />
+    <Compile Include="Configuration\Dsl\MsSql\Smo\ProtoMsSqlSmoDatabaseTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
@@ -169,7 +175,7 @@
     <Compile Include="Tasks\CommandLine\RemoteDropkickExecutionTask.cs" />
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\Msmq\RemoteExtension.cs" />
-    <Compile Include="Tasks\MsSql\DatabaseTask.cs" />
+    <Compile Include="Tasks\MsSql\Smo\DatabaseTask.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
     <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostTask.cs" />
     <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostTask.cs" />
