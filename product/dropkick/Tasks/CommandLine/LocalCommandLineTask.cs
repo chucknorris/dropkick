@@ -76,6 +76,9 @@ namespace dropkick.Tasks.CommandLine
             if (!string.IsNullOrEmpty(WorkingDirectory)) psi.WorkingDirectory = WorkingDirectory;
 
             psi.FileName = _path.Combine(WorkingDirectory, Command);
+            
+            if (!File.Exists(psi.FileName))
+                psi.FileName = _path.Combine(ExecutableIsLocatedAt, Command); // this should be the correct path checked in VerifyCanRun
 
             string output;
             try
