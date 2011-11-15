@@ -115,16 +115,15 @@ namespace dropkick.Tasks.Iis
 
             checkForSiteBindingConflict(iisManager, websiteName, PortForWebsite);
 
-            var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
+            iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
             LogIis("[iis7] Created website '{0}'", WebsiteName);
         }
 
         static void checkForSiteBindingConflict(ServerManager iisManager, string targetSiteName, int port)
         {
             var conflictSite = iisManager.Sites
-                .FirstOrDefault(x =>
-                                x.Bindings.Any(b =>
-                                               b.EndPoint.Port == port));
+                .FirstOrDefault(x => x.Bindings.Any(b =>
+                    b.EndPoint != null && b.EndPoint.Port == port));
             if (conflictSite != null)
                 throw new InvalidOperationException(
                     String.Format("Cannot create site '{0}': port '{1}' is already in use by '{2}'.",
