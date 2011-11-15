@@ -113,9 +113,22 @@ namespace dropkick.Tasks.Iis
                 LogFineGrain("[iis7] Created '{0}'", PathForWebsite);
             }
 
-            //TODO: check for port collision?
+            checkForSiteBindingConflict(iisManager, websiteName, PortForWebsite);
+
             var site = iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
             LogIis("[iis7] Created website '{0}'", WebsiteName);
+        }
+
+        static void checkForSiteBindingConflict(ServerManager iisManager, string targetSiteName, int port)
+        {
+            var conflictSite = iisManager.Sites
+                .FirstOrDefault(x =>
+                                x.Bindings.Any(b =>
+                                               b.EndPoint.Port == port));
+            if (conflictSite != null)
+                throw new InvalidOperationException(
+                    String.Format("Cannot create site '{0}': port '{1}' is already in use by '{2}'.",
+                                  targetSiteName, port, conflictSite.Name));
         }
 
         void BuildApplicationPool(ServerManager mgr, DeploymentResult result)
@@ -228,7 +241,7 @@ namespace dropkick.Tasks.Iis
                 if (site.Name.Equals(name)) return site;
             }
 
-            throw new Exception("Unable to find site named '{0}'".FormatWith(name));
+            throw new ArgumentException("Unable to find site named '{0}'".FormatWith(name));
         }
     }
 }
