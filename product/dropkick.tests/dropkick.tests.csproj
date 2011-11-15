@@ -122,8 +122,9 @@
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="FileSystem\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
-    <Compile Include="Tasks\Iis\Iis7OperationSpecs.cs" />
+    <Compile Include="Tasks\Iis\Iis7ApplicationPoolOperationSpecs.cs" />
     <Compile Include="Tasks\Iis\ExistingVirtualDirectorySpecs.cs" />
+    <Compile Include="Tasks\Iis\Iis7SiteOperationSpecs.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />

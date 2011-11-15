@@ -17,11 +17,23 @@
             _protoServer.RegisterProtoTask(task);
             return task;
         }
+
+        public IisSiteOperation Site(string siteName)
+        {
+            var task = new IisSiteOperationProtoTask(siteName) { Version = Version };
+            _protoServer.RegisterProtoTask(task);
+            return task;
+        }
     }
 
     public interface IisApplicationPoolOperation
     {
         void Start();
         void Stop();
+    }
+
+    public interface IisSiteOperation
+    {
+        void Delete();
     }
 }
