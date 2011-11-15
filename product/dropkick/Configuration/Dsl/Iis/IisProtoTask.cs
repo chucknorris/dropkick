@@ -49,6 +49,14 @@ namespace dropkick.Configuration.Dsl.Iis
 		public string ProcessModelUsername { get; private set; }
 		public string ProcessModelPassword { get; private set; }
 
+        /// <summary>
+        /// Setup an application in the root directory of a site.
+        /// </summary>
+        public IisVirtualDirectoryOptions RootDirectory()
+        {
+            return VirtualDirectory(String.Empty);
+        }
+
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
             VdirPath = ReplaceTokens(name);

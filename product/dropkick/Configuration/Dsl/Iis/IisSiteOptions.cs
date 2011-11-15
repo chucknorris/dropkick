@@ -15,5 +15,10 @@ namespace dropkick.Configuration.Dsl.Iis
     public interface IisSiteOptions
     {
         IisVirtualDirectoryOptions VirtualDirectory(string name);
+
+        /// <summary>
+        /// Setup an application in the root directory of a site.
+        /// </summary>
+        IisVirtualDirectoryOptions RootDirectory();
     }
 }
