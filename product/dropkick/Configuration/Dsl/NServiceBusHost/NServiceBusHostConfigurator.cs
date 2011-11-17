@@ -30,6 +30,7 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 		string _exeName;
 		string _password;
 		string _username;
+	    string _profiles;
 
 		public NServiceBusHostConfigurator(Path path)
 		{
@@ -72,16 +73,21 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 			_description = description;
 		}
 
+        public void Profiles(string profiles)
+        {
+            _profiles = profiles;
+        }
+
 		public override void RegisterRealTasks(PhysicalServer site)
 		{
 			var location = _path.GetPhysicalPath(site, _location, true);
 			if (site.IsLocal)
 			{
-				site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description));
+				site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description, _profiles));
 			}
 			else
 			{
-				site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description));
+				site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description, _profiles));
 			}
 		}
 	}

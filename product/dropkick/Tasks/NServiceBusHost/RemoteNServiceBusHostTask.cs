@@ -22,7 +22,7 @@ namespace dropkick.Tasks.NServiceBusHost
 		readonly RemoteCommandLineTask _task;
 		readonly PromptService _prompt = new ConsolePromptService();
 
-		public RemoteNServiceBusHostTask(string exeName, string location, string instanceName, PhysicalServer site, string username, string password, string serviceName, string displayName, string description)
+		public RemoteNServiceBusHostTask(string exeName, string location, string instanceName, PhysicalServer site, string username, string password, string serviceName, string displayName, string description, string profiles)
 		{
 			string args = string.IsNullOrEmpty(instanceName)
 							? ""
@@ -48,6 +48,9 @@ namespace dropkick.Tasks.NServiceBusHost
 
 			if (!string.IsNullOrEmpty(description))
 				args += " /description:\"{0}\"".FormatWith(description);
+
+            if (!string.IsNullOrEmpty(profiles))
+                args += " {0}".FormatWith(profiles);
 
 			_task = new RemoteCommandLineTask(exeName)
 			{

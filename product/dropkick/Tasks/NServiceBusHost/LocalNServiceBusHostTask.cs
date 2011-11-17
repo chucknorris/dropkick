@@ -23,7 +23,7 @@ namespace dropkick.Tasks.NServiceBusHost
 		private readonly LocalCommandLineTask _task;
 		private readonly PromptService _prompt = new ConsolePromptService();
 
-		public LocalNServiceBusHostTask(string exeName, string location, string instanceName, string username, string password, string serviceName, string displayName, string description)
+		public LocalNServiceBusHostTask(string exeName, string location, string instanceName, string username, string password, string serviceName, string displayName, string description, string profiles)
 		{
 			string args = string.IsNullOrEmpty(instanceName)
 							? ""
@@ -49,6 +49,9 @@ namespace dropkick.Tasks.NServiceBusHost
 
 			if (!string.IsNullOrEmpty(description))
 				args += " /description:\"{0}\"".FormatWith(description);
+
+            if (!string.IsNullOrEmpty(profiles))
+                args += " {0}".FormatWith(profiles);
 
 			_task = new LocalCommandLineTask(new DotNetPath(), exeName)
 			{
