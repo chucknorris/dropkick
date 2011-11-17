@@ -12,15 +12,15 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
-	public interface NServiceBusHostOptions
-	{
-		void ExeName(string name);
-		void Instance(string name);
-		void LocatedAt(string location);
-		void PassCredentials(string username, string password);
-		void ServiceName(string name);
-		void ServiceDisplayName(string name);
-		void ServiceDescription(string description);
-	    void Profiles(string profiles);
-	}
+    public interface NServiceBusHostOptions
+    {
+        void ExeName(string name);
+        void Instance(string name);
+        void LocatedAt(string location);
+        void PassCredentials(string username, string password);
+        void ServiceName(string name);
+        void ServiceDisplayName(string name);
+        void ServiceDescription(string description);
+        void Profiles(string profiles);
+    }
 }

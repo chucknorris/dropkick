@@ -12,16 +12,16 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
-	using System;
-	using FileSystem;
+    using System;
+    using FileSystem;
 
-	public static class Extension
-	{
-		public static void NServiceBusHost(this ProtoServer server, Action<NServiceBusHostOptions> action)
-		{
-			var cfg = new NServiceBusHostConfigurator(new DotNetPath());
-			action(cfg);
-			server.RegisterProtoTask(cfg);
-		}
-	}
+    public static class Extension
+    {
+        public static void NServiceBusHost(this ProtoServer server, Action<NServiceBusHostOptions> action)
+        {
+            var cfg = new NServiceBusHostConfigurator(new DotNetPath());
+            action(cfg);
+            server.RegisterProtoTask(cfg);
+        }
+    }
 }
