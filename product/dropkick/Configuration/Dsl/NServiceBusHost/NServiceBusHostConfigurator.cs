@@ -12,77 +12,83 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
-	using DeploymentModel;
-	using FileSystem;
-	using Tasks;
-	using Tasks.NServiceBusHost;
+    using DeploymentModel;
+    using FileSystem;
+    using Tasks;
+    using Tasks.NServiceBusHost;
 
-	public class NServiceBusHostConfigurator :
-		BaseProtoTask,
-		NServiceBusHostOptions
-	{
-		readonly Path _path;
-		string _serviceName;
-		string _displayName;
-		string _description;
-		string _instanceName;
-		string _location;
-		string _exeName;
-		string _password;
-		string _username;
+    public class NServiceBusHostConfigurator :
+        BaseProtoTask,
+        NServiceBusHostOptions
+    {
+        readonly Path _path;
+        string _serviceName;
+        string _displayName;
+        string _description;
+        string _instanceName;
+        string _location;
+        string _exeName;
+        string _password;
+        string _username;
+        string _profiles;
 
-		public NServiceBusHostConfigurator(Path path)
-		{
-			_path = path;
-		}
+        public NServiceBusHostConfigurator(Path path)
+        {
+            _path = path;
+        }
 
-		public void ExeName(string name)
-		{
-			_exeName = name;
-		}
+        public void ExeName(string name)
+        {
+            _exeName = name;
+        }
 
-		public void Instance(string name)
-		{
-			_instanceName = name;
-		}
+        public void Instance(string name)
+        {
+            _instanceName = name;
+        }
 
-		public void LocatedAt(string location)
-		{
-			_location = location;
-		}
+        public void LocatedAt(string location)
+        {
+            _location = location;
+        }
 
-		public void PassCredentials(string username, string password)
-		{
-			_username = username;
-			_password = password;
-		}
+        public void PassCredentials(string username, string password)
+        {
+            _username = username;
+            _password = password;
+        }
 
-		public void ServiceName(string name)
-		{
-			_serviceName = name;
-		}
+        public void ServiceName(string name)
+        {
+            _serviceName = name;
+        }
 
-		public void ServiceDisplayName(string name)
-		{
-			_displayName = name;
-		}
+        public void ServiceDisplayName(string name)
+        {
+            _displayName = name;
+        }
 
-		public void ServiceDescription(string description)
-		{
-			_description = description;
-		}
+        public void ServiceDescription(string description)
+        {
+            _description = description;
+        }
 
-		public override void RegisterRealTasks(PhysicalServer site)
-		{
-			var location = _path.GetPhysicalPath(site, _location, true);
-			if (site.IsLocal)
-			{
-				site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description));
-			}
-			else
-			{
-				site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description));
-			}
-		}
-	}
+        public void Profiles(string profiles)
+        {
+            _profiles = profiles;
+        }
+
+        public override void RegisterRealTasks(PhysicalServer site)
+        {
+            var location = _path.GetPhysicalPath(site, _location, true);
+            if (site.IsLocal)
+            {
+                site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description, _profiles));
+            }
+            else
+            {
+                site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description, _profiles));
+            }
+        }
+    }
 }
