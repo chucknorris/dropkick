@@ -2,7 +2,6 @@
 {
     using System;
     using dropkick.Tasks.Iis;
-    using Microsoft.Web.Administration;
     using NUnit.Framework;
 
     [TestFixture]
@@ -13,10 +12,10 @@
         {
             var task = new Iis6Task
                            {
-                               PathOnServer = "E:\\FHLBApp\\FHLBank.Security.Web",
-                               ServerName = "srvtest19",
+                               PathOnServer = "C:\\Web\\FHLBank.Security.Web.Test",
+                               ServerName = "JASON-W2K3-VM",
                                VirtualDirectoryPath = "Test_dk",
-                               WebsiteName = "Exchequer",
+                               WebsiteName = "Default Web Site",
                                AppPoolName = "Test_dk"
                            };
 
@@ -25,15 +24,6 @@
             {
                 Console.WriteLine(item.Message);
             }
-        }
-
-        [Test, Explicit]
-        public void Create_An_AppPool()
-        {
-            var iis = ServerManager.OpenRemote("SrvTestWeb01");
-            iis.ApplicationPools.Add("MATTYB");
-
-            iis.CommitChanges();
         }
     }
 }
