@@ -13,7 +13,7 @@
 namespace dropkick.Configuration.Dsl.Files
 {
     using System;
-    using System.Text.RegularExpressions;
+    using System.Text;
     using FileSystem;
 
     public static class Extension
@@ -69,5 +69,17 @@ namespace dropkick.Configuration.Dsl.Files
 			protoServer.RegisterProtoTask(proto);
 			return proto;
 		}
+
+        public static FilePokeOptions FilePoke(this ProtoServer protoServer, string filePath)
+        {
+            return protoServer.FilePoke(filePath, Encoding.Default);
+        }
+
+        public static FilePokeOptions FilePoke(this ProtoServer protoServer, string filePath, Encoding encoding)
+        {
+            var proto = new ProtoFilePokeTask(filePath, encoding);
+            protoServer.RegisterProtoTask(proto);
+            return proto;
+        }
     }
 }

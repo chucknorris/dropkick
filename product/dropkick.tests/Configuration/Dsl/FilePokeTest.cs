@@ -7,6 +7,7 @@ using NUnit.Framework;
 using dropkick.Configuration;
 using dropkick.Configuration.Dsl.Files;
 using dropkick.DeploymentModel;
+using dropkick.tests.TestObjects;
 
 namespace dropkick.tests.Configuration.Dsl
 {
