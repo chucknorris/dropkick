@@ -28,6 +28,7 @@ namespace dropkick.tests.DeploymentModel
 
             var maps = new RoleToServerMap();
             maps.AddMap("DB", "BOB");
+            maps.AddMap("WEB","BILL");
 
             var ins = new DropkickDeploymentInspector(maps);
 
@@ -43,7 +44,8 @@ namespace dropkick.tests.DeploymentModel
             dep.Initialize(new SampleConfiguration());
 
             var maps = new RoleToServerMap();
-            maps.AddMap("DB","BOB");
+            maps.AddMap("DB", "BOB");
+            maps.AddMap("WEB", "BILL");
 
             var ins = new DropkickDeploymentInspector(maps);
             ins.RolesToGet("Db");
@@ -60,6 +62,8 @@ namespace dropkick.tests.DeploymentModel
             dep.Initialize(new SampleConfiguration());
 
             var maps = new RoleToServerMap();
+            maps.AddMap("DB", "BOB");
+            maps.AddMap("WEB", "BILL");
 
             var ins = new DropkickDeploymentInspector(maps);
 
