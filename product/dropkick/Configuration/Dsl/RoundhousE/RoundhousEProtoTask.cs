@@ -48,6 +48,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private string _sprocsFolderName;
         private string _viewsFolderName;
         private string _upFolderName;
+        private string _versionTable;
         private string _scriptsRunTable;
         private string _scriptsRunErrorTable;
         private bool? _warnOnOneTimeScriptChanges;
@@ -97,6 +98,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         public RoundhousEOptions WithUpFolder(string upFolderName)
         {
             _upFolderName = upFolderName;
+            return this;
+        }
+
+        public RoundhousEOptions WithVersionTable(string versionTable)
+        {
+            _versionTable = versionTable;
             return this;
         }
 
@@ -211,7 +218,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
                 _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
                 _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName,
-                _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges);
+                _versionTable, _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges);
 
             site.AddTask(task);
         }
