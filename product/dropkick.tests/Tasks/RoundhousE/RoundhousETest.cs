@@ -26,7 +26,7 @@ namespace dropkick.tests.Tasks.RoundhousE
         {
             var task = new RoundhousETask("server=(local);database=TestRoundhouse;integrated security=true;",
                                           @"C:\Solutions\roundhouse\code_drop\sample\db\SQLServer\TestRoundhousE", "TEST",
-                                          RoundhousEMode.DropCreate,DatabaseRecoveryMode.Simple,string.Empty,0,string.Empty,"git://somehwere","","",0,0, "", "", "", "");
+                                          RoundhousEMode.DropCreate,DatabaseRecoveryMode.Simple,string.Empty,0,string.Empty,"git://somehwere","","",0,0, "", "", "", "", "", "");
             DeploymentResult results = task.Execute();
 
             System.Console.WriteLine(results);

@@ -48,6 +48,8 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private string _sprocsFolderName;
         private string _viewsFolderName;
         private string _upFolderName;
+        private string _scriptsRunTable;
+        private string _scriptsRunErrorTable;
 
         public RoundhousEOptions OnInstance(string name)
         {
@@ -96,6 +98,19 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             _upFolderName = upFolderName;
             return this;
         }
+
+        public RoundhousEOptions WithScriptsRunTable(string scriptsRunTable)
+        {
+            _scriptsRunTable = scriptsRunTable;
+            return this;
+        }
+
+        public RoundhousEOptions WithScriptsRunErrorTable(string scriptsRunErrorTable)
+        {
+            _scriptsRunErrorTable = scriptsRunErrorTable;
+            return this;
+        }
+
         public RoundhousEOptions ForEnvironment(string environment)
         {
             _environmentName = ReplaceTokens(environment);
@@ -182,7 +197,8 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 _environmentName, _roundhouseMode,
                 _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
                 _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
-                _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName);
+                _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName,
+                _scriptsRunTable, _scriptsRunErrorTable);
 
             site.AddTask(task);
         }
