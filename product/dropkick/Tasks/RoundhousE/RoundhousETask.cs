@@ -37,8 +37,12 @@ namespace dropkick.Tasks.RoundhousE
         private readonly string _versionXPath;
         private readonly int _commandTimeout;
         private readonly int _commandTimeoutAdmin;
+        private readonly string _functionsFolderName;
+        private readonly string _sprocsFolderName;
+        private readonly string _viewsFolderName;
+        private readonly string _upFolderName;
 
-        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath, int restoreTimeout, string restoreCustomOptions, string repositoryPath, string versionFile, string versionXPath,int commandTimeout, int commandTimeoutAdmin)
+        public RoundhousETask(string connectionString, string scriptsLocation, string environmentName, RoundhousEMode roundhouseMode, DatabaseRecoveryMode recoveryMode, string restorePath, int restoreTimeout, string restoreCustomOptions, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin, string functionsFolderName, string sprocsFolderName, string viewsFolderName, string upFolderName)
         {
             _connectionString = connectionString;
             _scriptsLocation = scriptsLocation;
@@ -53,6 +57,10 @@ namespace dropkick.Tasks.RoundhousE
             _versionXPath = versionXPath;
             _commandTimeout = commandTimeout;
             _commandTimeoutAdmin = commandTimeoutAdmin;
+            _functionsFolderName = functionsFolderName;
+            _sprocsFolderName = sprocsFolderName;
+            _viewsFolderName = viewsFolderName;
+            _upFolderName = upFolderName;
         }
 
         public string Name
@@ -87,16 +95,16 @@ namespace dropkick.Tasks.RoundhousE
                 switch (_roundhouseMode)
                 {
                     case RoundhousEMode.Drop:
-                        RoundhousEClientApi.Run( _connectionString, scriptsPath, _environmentName, true, useSimpleRecovery,_repositoryPath,_versionFile,_versionXPath,_commandTimeout,_commandTimeoutAdmin);
+                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin, _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName);
                         break;
                     case RoundhousEMode.Restore:
-                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin, true, _restorePath,_restoreTimeout,_restoreCustomOptions);
+                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin, true, _restorePath, _restoreTimeout, _restoreCustomOptions, _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName);
                         break;
                     case RoundhousEMode.DropCreate:
-                        RoundhousEClientApi.Run(_connectionString, @".\", _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
+                        RoundhousEClientApi.Run(_connectionString, @".\", _environmentName, true, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin, _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName);
                         goto case RoundhousEMode.Normal;
                     case RoundhousEMode.Normal:
-                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
+                        RoundhousEClientApi.Run(_connectionString, scriptsPath, _environmentName, false, useSimpleRecovery, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin, _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName);
                         break;
                     default:
                         goto case RoundhousEMode.Normal;

@@ -44,6 +44,11 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private int _restoreTimeout;
         private int _commandTimeoutAdmin;
 
+        private string _functionsFolderName;
+        private string _sprocsFolderName;
+        private string _viewsFolderName;
+        private string _upFolderName;
+
         public RoundhousEOptions OnInstance(string name)
         {
             _instanceName = ReplaceTokens(name);
@@ -68,6 +73,29 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithFunctionsFolder(string functionsFolderName)
+        {
+            _functionsFolderName = functionsFolderName;
+            return this;
+        }
+
+        public RoundhousEOptions WithSprocsFolder(string sprocsFolderName)
+        {
+            _sprocsFolderName = sprocsFolderName;
+            return this;
+        }
+
+        public RoundhousEOptions WithViewsFolder(string viewsFolderName)
+        {
+            _viewsFolderName = viewsFolderName;
+            return this;
+        }
+
+        public RoundhousEOptions WithUpFolder(string upFolderName)
+        {
+            _upFolderName = upFolderName;
+            return this;
+        }
         public RoundhousEOptions ForEnvironment(string environment)
         {
             _environmentName = ReplaceTokens(environment);
@@ -151,8 +179,10 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
 
             var task = new RoundhousETask(connectionString, _scriptsLocation,
-                                          _environmentName, _roundhouseMode,
-                                          _recoveryMode, _restorePath, _restoreTimeout,_restoreCustomOptions, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
+                _environmentName, _roundhouseMode,
+                _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
+                _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
+                _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName);
 
             site.AddTask(task);
         }
