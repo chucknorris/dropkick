@@ -50,6 +50,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private string _upFolderName;
         private string _scriptsRunTable;
         private string _scriptsRunErrorTable;
+        private bool? _warnOnOneTimeScriptChanges;
 
         public RoundhousEOptions OnInstance(string name)
         {
@@ -184,6 +185,18 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WarnAndContinueOnOneTimeScriptChanges()
+        {
+            _warnOnOneTimeScriptChanges = true;
+            return this;
+        }
+
+        public RoundhousEOptions ErrorOnOneTimeScriptChanges()
+        {
+            _warnOnOneTimeScriptChanges = false;
+            return this;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
             // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
@@ -198,7 +211,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
                 _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
                 _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName,
-                _scriptsRunTable, _scriptsRunErrorTable);
+                _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges);
 
             site.AddTask(task);
         }
