@@ -68,10 +68,10 @@ namespace dropkick.Tasks.Iis
             var iisManager = ServerManager.OpenRemote(ServerName);
             buildApplicationPool(iisManager, result);
 
-            if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName, result);
+            if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName);
 
-            Site site = GetSite(iisManager, WebsiteName);
-        	buildVirtualDirectory(site, iisManager, result);
+            var site = GetSite(iisManager, WebsiteName);
+        	buildVirtualDirectory(site, result);
 
         	try
         	{
@@ -91,21 +91,19 @@ namespace dropkick.Tasks.Iis
 
         public bool DoesSiteExist(DeploymentResult result)
         {
-            var iisManager = ServerManager.OpenRemote(ServerName);
-            foreach (var site in iisManager.Sites)
+            using (var iisManager = ServerManager.OpenRemote(ServerName))
             {
-                if (site.Name.Equals(WebsiteName))
+                if (iisManager.Sites.Any(site => site.Name.Equals(WebsiteName)))
                 {
                     result.AddGood("'{0}' site exists", WebsiteName);
                     return true;
                 }
             }
-
             result.AddAlert("'{0}' site DOES NOT exist", WebsiteName);
             return false;
         }
 
-        void createWebSite(ServerManager iisManager, string websiteName, DeploymentResult result)
+        void createWebSite(ServerManager iisManager, string websiteName)
         {
             if (_path.DirectoryDoesntExist(PathOnServer))
             {
@@ -113,22 +111,42 @@ namespace dropkick.Tasks.Iis
                 LogFineGrain("[iis7] Created '{0}'", PathOnServer);
             }
 
-            var binding = Bindings.First();
-            checkForSiteBindingConflict(iisManager, websiteName, binding.Port);
+            checkForSiteBindingConflict(iisManager, websiteName, Bindings);
 
-            iisManager.Sites.Add(websiteName, PathOnServer, binding.Port);
+            var firstBinding = Bindings.First();
+            // Unfortunately the API for adding sites differs for HTTPS & HTTP
+            var site = firstBinding.Protocol != "https"
+                ? iisManager.Sites.Add(WebsiteName, firstBinding.Protocol, getBindingInformation(firstBinding),
+                                       PathOnServer)
+                : iisManager.Sites.Add(WebsiteName, getBindingInformation(firstBinding), PathOnServer, new byte[0]);
+            foreach (var binding in Bindings.Skip(1))
+                if (binding.Protocol != "https")
+                    site.Bindings.Add(getBindingInformation(binding), binding.Protocol);
+                else
+                    site.Bindings.Add(getBindingInformation(binding), null, null);
+
             LogIis("[iis7] Created website '{0}'", WebsiteName);
         }
 
-        static void checkForSiteBindingConflict(ServerManager iisManager, string targetSiteName, int port)
+        static string getBindingInformation(IisSiteBinding binding)
         {
-            var conflictSite = iisManager.Sites
-                .FirstOrDefault(x => x.Bindings.Any(b =>
-                    b.EndPoint != null && b.EndPoint.Port == port));
-            if (conflictSite != null)
-                throw new InvalidOperationException(
-                    String.Format("Cannot create site '{0}': port '{1}' is already in use by '{2}'.",
-                                  targetSiteName, port, conflictSite.Name));
+            return "*:{0}:".FormatWith(binding.Port);
+        }
+
+        static void checkForSiteBindingConflict(ServerManager iisManager, string targetSiteName, IEnumerable<IisSiteBinding> targetBindings)
+        {
+            foreach (var targetPort in targetBindings.Select(x => x.Port))
+            {
+                var conflictSite = iisManager.Sites
+                    .FirstOrDefault(x => x.Bindings.Any(b =>
+                        b.EndPoint != null &&
+                        targetPort == b.EndPoint.Port));
+
+                if (conflictSite != null)
+                    throw new InvalidOperationException(
+                        String.Format("Cannot create site '{0}': port '{1}' is already in use by '{2}'.",
+                                      targetSiteName, targetPort, conflictSite.Name));
+            }
         }
 
         void buildApplicationPool(ServerManager mgr, DeploymentResult result)
@@ -186,7 +204,7 @@ namespace dropkick.Tasks.Iis
 			LogIis("[iis7] Set process model identity '{0}'", identityUsername);
 		}
 
-        void buildVirtualDirectory(Site site, ServerManager mgr, DeploymentResult result)
+        void buildVirtualDirectory(Site site, DeploymentResult result)
         {
             Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VirtualDirectoryPath;
@@ -219,15 +237,7 @@ namespace dropkick.Tasks.Iis
 
         public bool DoesVirtualDirectoryExist(Site site)
         {
-            foreach (var app in site.Applications)
-            {
-                if (app.Path.Equals("/" + VirtualDirectoryPath))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return site.Applications.Any(app => app.Path.Equals("/" + VirtualDirectoryPath));
         }
 
         public Site GetSite(ServerManager iisManager, string name)
