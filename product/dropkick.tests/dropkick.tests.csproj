@@ -98,6 +98,7 @@
     <Compile Include="Configuration\Dsl\IisProtoTaskProcessModelSpec.cs" />
     <Compile Include="Configuration\Dsl\ProcessModelIdentityTranslation.cs" />
     <Compile Include="Configuration\Dsl\roundhouse\RoundhouseProtoTest.cs" />
+    <Compile Include="Configuration\Dsl\should_throw_if_missing_a_mapped_role.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
     <Compile Include="DeploymentModel\DeploymentPlanSpecs.cs" />

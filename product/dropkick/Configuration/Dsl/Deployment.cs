@@ -23,6 +23,7 @@ namespace dropkick.Configuration.Dsl
     {
         void Initialize(object settings);
         bool HardPrompt { get; }
+        IEnumerable<string> Roles { get; }
     }
 
     public class Deployment<Inheritor, SETTINGS> :
@@ -62,6 +63,11 @@ namespace dropkick.Configuration.Dsl
         }
 
         #endregion
+
+        public IEnumerable<string> Roles
+        {
+            get { return _roles.Keys; }
+        }
 
         public bool HardPrompt { get; private set; }
 
