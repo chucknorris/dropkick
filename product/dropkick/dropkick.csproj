@@ -152,6 +152,7 @@
     <Compile Include="Tasks\Files\UnzipArchiveTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
     <Compile Include="Tasks\Iis\Iis7ApplicationPoolOperationTask.cs" />
+    <Compile Include="Tasks\Iis\IisSiteBinding.cs" />
     <Compile Include="Tasks\Iis\Iis7SiteOperationTask.cs" />
     <Compile Include="Tasks\Iis\IisUtility.cs" />
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />

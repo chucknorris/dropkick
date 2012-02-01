@@ -10,13 +10,14 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using dropkick.Exceptions;
 
 namespace dropkick.Tasks.Iis
 {
     using System;
-    using System.Collections.Generic;
     using DeploymentModel;
     using FileSystem;
     using Microsoft.Web.Administration;
@@ -31,6 +32,7 @@ namespace dropkick.Tasks.Iis
     	public ProcessModelIdentityType ProcessModelIdentityType { get; set; }
 		public string ProcessModelUsername { get; set; }
 		public string ProcessModelPassword { get; set; }
+        public string ManagedRuntimeVersion { get; set; }
 
         readonly Path _path = new DotNetPath();
 
@@ -42,11 +44,9 @@ namespace dropkick.Tasks.Iis
         public Iis7Task()
         {
             ManagedRuntimeVersion = Iis.ManagedRuntimeVersion.V2;
-            PathForWebsite = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\inetpub\wwwroot");
+            PathOnServer = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\inetpub\wwwroot");
+            AppPoolName = "DefaultAppPool";
         }
-
-        public string PathForWebsite { get; set; }
-        public string ManagedRuntimeVersion { get; set; }
 
         public override DeploymentResult VerifyCanRun()
         {
@@ -66,17 +66,17 @@ namespace dropkick.Tasks.Iis
         {
             var result = new DeploymentResult();
             var iisManager = ServerManager.OpenRemote(ServerName);
-            BuildApplicationPool(iisManager, result);
+            buildApplicationPool(iisManager, result);
 
-            if (!DoesSiteExist(result)) CreateWebSite(iisManager, WebsiteName, result);
+            if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName, result);
 
             Site site = GetSite(iisManager, WebsiteName);
-        	BuildVirtualDirectory(site, iisManager, result);
+        	buildVirtualDirectory(site, iisManager, result);
 
         	try
         	{
 				iisManager.CommitChanges();
-                result.AddGood("'{0}' was created/updated successfully.", VirtualDirectoryPath);
+                result.AddGood("Virtual Director '{0}' was created/updated successfully.", VirtualDirectoryPath ?? "/");
         	}
         	catch (COMException ex)
         	{
@@ -105,17 +105,18 @@ namespace dropkick.Tasks.Iis
             return false;
         }
 
-        void CreateWebSite(ServerManager iisManager, string websiteName, DeploymentResult result)
+        void createWebSite(ServerManager iisManager, string websiteName, DeploymentResult result)
         {
-            if (_path.DirectoryDoesntExist(PathForWebsite))
+            if (_path.DirectoryDoesntExist(PathOnServer))
             {
-                _path.CreateDirectory(PathForWebsite);
-                LogFineGrain("[iis7] Created '{0}'", PathForWebsite);
+                _path.CreateDirectory(PathOnServer);
+                LogFineGrain("[iis7] Created '{0}'", PathOnServer);
             }
 
-            checkForSiteBindingConflict(iisManager, websiteName, PortForWebsite);
+            var binding = Bindings.First();
+            checkForSiteBindingConflict(iisManager, websiteName, binding.Port);
 
-            iisManager.Sites.Add(websiteName, PathForWebsite, PortForWebsite);
+            iisManager.Sites.Add(websiteName, PathOnServer, binding.Port);
             LogIis("[iis7] Created website '{0}'", WebsiteName);
         }
 
@@ -130,7 +131,7 @@ namespace dropkick.Tasks.Iis
                                   targetSiteName, port, conflictSite.Name));
         }
 
-        void BuildApplicationPool(ServerManager mgr, DeploymentResult result)
+        void buildApplicationPool(ServerManager mgr, DeploymentResult result)
         {
             if (string.IsNullOrEmpty(AppPoolName)) return;
 
@@ -164,14 +165,12 @@ namespace dropkick.Tasks.Iis
 
 			if (SetProcessModelIdentity)
 			{
-				SetApplicationPoolIdentity(pool);
+				setApplicationPoolIdentity(pool);
 				result.AddGood("Set process model identity '{0}'", ProcessModelIdentityType);
 			}
-			
-			//pool.Recycle();
         }
 
-		void SetApplicationPoolIdentity(ApplicationPool pool)
+		void setApplicationPoolIdentity(ApplicationPool pool)
 		{
 			if (ProcessModelIdentityType != ProcessModelIdentityType.SpecificUser && pool.ProcessModel.IdentityType == ProcessModelIdentityType)
 				return;
@@ -187,7 +186,7 @@ namespace dropkick.Tasks.Iis
 			LogIis("[iis7] Set process model identity '{0}'", identityUsername);
 		}
 
-        void BuildVirtualDirectory(Site site, ServerManager mgr, DeploymentResult result)
+        void buildVirtualDirectory(Site site, ServerManager mgr, DeploymentResult result)
         {
             Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VirtualDirectoryPath;
@@ -201,7 +200,7 @@ namespace dropkick.Tasks.Iis
 			}
 			else
 			{
-				result.AddNote("'{0}' already exists. Updating settings.", VirtualDirectoryPath);
+				result.AddNote("Virtual Directory '{0}' already exists. Updating settings.", VirtualDirectoryPath ?? "/");
 			}
 
 			if (application.ApplicationPoolName != AppPoolName)
@@ -216,8 +215,6 @@ namespace dropkick.Tasks.Iis
 				vdir.PhysicalPath = PathOnServer;
 				LogFineGrain("[iis7] Updated physical path for '{0}' to '{1}'", VirtualDirectoryPath, PathOnServer);
 			}
-
-            //result.AddGood("'{0}' was created/updated successfully", VirtualDirectoryPath);
 		}
 
         public bool DoesVirtualDirectoryExist(Site site)

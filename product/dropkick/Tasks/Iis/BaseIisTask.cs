@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System.Collections.Generic;
+
 namespace dropkick.Tasks.Iis
 {
     using System;
@@ -26,11 +29,11 @@ namespace dropkick.Tasks.Iis
         public string ServerName { get; set; }
         public abstract int VersionNumber { get; }
         public string AppPoolName { get; set; }
-        public int PortForWebsite { get; set; }
+        public IEnumerable<IisSiteBinding> Bindings { get; set; }
 
         protected BaseIisTask()
         {
-            PortForWebsite = 80;
+            Bindings = new [] { new IisSiteBinding() };
         }
 
         #region Task Members
