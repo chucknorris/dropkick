@@ -34,7 +34,29 @@ namespace dropkick.console
                 Environment.Exit(1);
             }
 
-            Runner.Deploy(args.Aggregate("", (a, b) => a + " " + b).Trim());
+            AddQuotesBackToArgs(args);
+            
+            Runner.Deploy(string.Join(" ", args));
+        }
+
+        private static void AddQuotesBackToArgs(string[] args)
+        {
+            if (args == null || args.Length <= 0) return;
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (WasSurroundedByDoubleQuotes(args[i]))
+                    args[i] = '"' + args[i] + '"';
+            }
+        }
+
+        static bool WasSurroundedByDoubleQuotes(string argument)
+        {
+            var indexOf = Environment.CommandLine.IndexOf(argument);
+            return indexOf > 0 &&
+                indexOf + argument.Length < Environment.CommandLine.Length && 
+                Environment.CommandLine[indexOf - 1] == '"' &&
+                Environment.CommandLine[indexOf + argument.Length] == '"';
         }
 
         private static string GetHelpMessage()
