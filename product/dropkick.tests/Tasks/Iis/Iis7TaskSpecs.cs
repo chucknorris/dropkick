@@ -30,7 +30,7 @@ namespace dropkick.tests.Tasks.Iis
 
             public override void AfterObservations()
             {
-                //DeleteSite();
+                DeleteSite();
             }
 
             protected void AssertSiteBinding(string protocol, int port)
@@ -42,7 +42,7 @@ namespace dropkick.tests.Tasks.Iis
 
                     var binding = site.Bindings.FirstOrDefault(x => x.EndPoint.Port == port);
                     Assert.IsNotNull(binding, "Site '{0}' is not bound to port '{1}'", TestWebSiteName, port);
-                    Assert.AreEqual("http", binding.Protocol);
+                    Assert.AreEqual(protocol, binding.Protocol);
                 }
             }
 
@@ -109,6 +109,69 @@ namespace dropkick.tests.Tasks.Iis
                                         new IisSiteBinding { Protocol = "http", Port = 16002 }
                                     };
 
+                base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_creating_a_site_with_a_single_https_binding : Iis7TaskSpecsContext
+        {
+            [Fact]
+            public void It_should_bind_the_https_protocol_and_port()
+            {
+                AssertSiteBinding("https", 16004);
+            }
+
+            public override void Because()
+            {
+                Task.Bindings = new[] { new IisSiteBinding { Protocol = "https", Port = 16004 } };
+                base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_creating_a_site_with_multiple_https_binding : Iis7TaskSpecsContext
+        {
+            [Fact]
+            public void It_should_bind_both_ports()
+            {
+                AssertSiteBinding("https", 16005);
+                AssertSiteBinding("https", 16006);
+            }
+
+            public override void Because()
+            {
+                Task.Bindings = new[]
+                                    {
+                                        new IisSiteBinding { Protocol = "https", Port = 16005 },
+                                        new IisSiteBinding { Protocol = "https", Port = 16006 }
+                                    };
+                base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_creating_a_site_with_http_and_https_binding : Iis7TaskSpecsContext
+        {
+            [Fact]
+            public void It_should_bind_the_http_protocol_and_port()
+            {
+                AssertSiteBinding("http", 16007);
+            }
+
+            [Fact]
+            public void It_should_bind_the_https_protocol_and_port()
+            {
+                AssertSiteBinding("https", 16008);
+            }
+
+            public override void Because()
+            {
+                Task.Bindings = new[]
+                                    {
+                                        new IisSiteBinding { Protocol = "http", Port = 16007 },
+                                        new IisSiteBinding { Protocol = "https", Port = 16008 }
+                                    };
                 base.Because();
             }
         }
