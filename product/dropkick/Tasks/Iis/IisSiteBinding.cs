@@ -10,5 +10,6 @@ namespace dropkick.Tasks.Iis
 
         public string Protocol { get; set; }
         public int Port { get; set; }
+        public string CertificateThumbPrint { get; set; }
     }
 }

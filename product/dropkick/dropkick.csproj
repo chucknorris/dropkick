@@ -171,6 +171,7 @@
     <Compile Include="Tasks\Security\Acl\RemoveAclsInheritanceTask.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
     <Compile Include="Tasks\Security\Certificate\BaseSecurityCertificatePermissionsTask.cs" />
+    <Compile Include="Tasks\Security\Certificate\CertificateStoreUtility.cs" />
     <Compile Include="Tasks\Security\Certificate\GrantReadCertificatePrivateKeyTask.cs" />
     <Compile Include="Tasks\Security\Certificate\RemoteExtension.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />

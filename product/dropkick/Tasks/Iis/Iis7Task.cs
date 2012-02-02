@@ -14,6 +14,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using dropkick.Exceptions;
+using dropkick.Tasks.Security.Certificate;
 
 namespace dropkick.Tasks.Iis
 {
@@ -56,6 +57,9 @@ namespace dropkick.Tasks.Iis
 
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
+            checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
+
+            // TODO: Check certificates
 
             if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
 
@@ -71,6 +75,7 @@ namespace dropkick.Tasks.Iis
             if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName);
 
             var site = GetSite(iisManager, WebsiteName);
+            updateSiteBindings(site);
         	buildVirtualDirectory(site, result);
 
         	try
@@ -87,6 +92,38 @@ namespace dropkick.Tasks.Iis
         	LogCoarseGrain("[iis7] {0}", Name);
             
             return result;
+        }
+
+        void updateSiteBindings(Site site)
+        {
+            // Update certificates on SSL bindings
+            var existingSslBindings = site.Bindings.Where(x => x.Protocol == "https");
+            foreach (var sslBinding in Bindings.Where(x => x.Protocol == "https"))
+            {
+                var existing = existingSslBindings.FirstOrDefault(x => x.EndPoint.Port == sslBinding.Port);
+                if (existing != null)
+                    existing.CertificateHash = getCertificateHashFor(sslBinding);
+            }
+
+            // Add new bindings
+            var existingBindings = site.Bindings.AsEnumerable();
+            foreach (var newBinding in Bindings)
+            {
+                if (!existingBindings.Any(x => x.Protocol == newBinding.Protocol && x.EndPoint.Port == newBinding.Port))
+                {
+                    if (newBinding.Protocol != "https") site.Bindings.Add(getBindingInformation(newBinding), newBinding.Protocol);
+                    else site.Bindings.Add(getBindingInformation(newBinding), getCertificateHashFor(newBinding), "MY");
+                }
+            }
+
+            for (var i = site.Bindings.Count - 1; i >= 0; i--)
+            {
+                var existingBinding = site.Bindings[i];
+                if (!Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port))
+                    site.Bindings.Remove(existingBinding);
+            }
+
+            LogIis("[iis7] Updating bindings for website '{0}'", WebsiteName);            
         }
 
         public bool DoesSiteExist(DeploymentResult result)
@@ -111,21 +148,22 @@ namespace dropkick.Tasks.Iis
                 LogFineGrain("[iis7] Created '{0}'", PathOnServer);
             }
 
-            checkForSiteBindingConflict(iisManager, websiteName, Bindings);
-
             var firstBinding = Bindings.First();
             // Unfortunately the API for adding sites differs for HTTPS & HTTP
             var site = firstBinding.Protocol != "https"
                 ? iisManager.Sites.Add(WebsiteName, firstBinding.Protocol, getBindingInformation(firstBinding),
                                        PathOnServer)
-                : iisManager.Sites.Add(WebsiteName, getBindingInformation(firstBinding), PathOnServer, new byte[0]);
-            foreach (var binding in Bindings.Skip(1))
-                if (binding.Protocol != "https")
-                    site.Bindings.Add(getBindingInformation(binding), binding.Protocol);
-                else
-                    site.Bindings.Add(getBindingInformation(binding), null, null);
+                : iisManager.Sites.Add(WebsiteName, getBindingInformation(firstBinding), PathOnServer,
+                                       getCertificateHashFor(firstBinding));                    
 
             LogIis("[iis7] Created website '{0}'", WebsiteName);
+        }
+
+        byte[] getCertificateHashFor(IisSiteBinding binding)
+        {
+            return binding.CertificateThumbPrint == null 
+                ? new byte[0] 
+                : CertificateStoreUtility.GetCertificateHashForThumbprint(binding.CertificateThumbPrint);
         }
 
         static string getBindingInformation(IisSiteBinding binding)

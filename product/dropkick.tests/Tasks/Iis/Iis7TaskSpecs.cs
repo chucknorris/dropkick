@@ -1,9 +1,10 @@
-﻿using System.Linq;
+using System.Linq;
 using System.Threading;
 using Microsoft.Web.Administration;
 using NUnit.Framework;
 using dropkick.DeploymentModel;
 using dropkick.Tasks.Iis;
+using dropkick.Tasks.Security.Certificate;
 
 namespace dropkick.tests.Tasks.Iis
 {
@@ -11,6 +12,9 @@ namespace dropkick.tests.Tasks.Iis
     {
         public abstract class Iis7TaskSpecsContext : TinySpec
         {
+            // TODO: This is specific to my self-signed cert.
+            protected const string CertificateThumbprint = @"13d8ae4000e8d5ac8930c3cdb6c995640c715b86";
+
             [Fact]
             public void It_should_not_return_any_errors_from_task_execution()
             {
@@ -33,7 +37,7 @@ namespace dropkick.tests.Tasks.Iis
                 DeleteSite();
             }
 
-            protected void AssertSiteBinding(string protocol, int port)
+            protected void AssertSiteBinding(string protocol, int port, string certificateThumbprint = null)
             {
                 using (var iis = ServerManager.OpenRemote(WebServerName))
                 {
@@ -43,9 +47,13 @@ namespace dropkick.tests.Tasks.Iis
                     var binding = site.Bindings.FirstOrDefault(x => x.EndPoint.Port == port);
                     Assert.IsNotNull(binding, "Site '{0}' is not bound to port '{1}'", TestWebSiteName, port);
                     Assert.AreEqual(protocol, binding.Protocol);
+
+                    if (certificateThumbprint != null)
+                    {
+                        Assert.AreEqual(CertificateStoreUtility.GetCertificateHashForThumbprint(certificateThumbprint), binding.CertificateHash);
+                    }
                 }
             }
-
 
             protected void DeleteSite()
             {
@@ -171,6 +179,51 @@ namespace dropkick.tests.Tasks.Iis
                                     {
                                         new IisSiteBinding { Protocol = "http", Port = 16007 },
                                         new IisSiteBinding { Protocol = "https", Port = 16008 }
+                                    };
+                base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_creating_a_site_with_https_binding_and_certificate : Iis7TaskSpecsContext
+        {
+            [Fact]
+            public void It_should_apply_the_correct_certificate_to_the_binding()
+            {
+                AssertSiteBinding("https", 16009, CertificateThumbprint);
+            }
+
+            public override void Because()
+            {
+                Task.Bindings = new[]
+                                    {
+                                        new IisSiteBinding()
+                                            {
+                                                Protocol = "https",
+                                                Port = 16009,
+                                                CertificateThumbPrint = CertificateThumbprint
+                                            }
+                                    };
+                base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_creating_a_site_with_multiple_https_bindings_and_certificates : Iis7TaskSpecsContext
+        {
+            [Fact]
+            public void It_should_apply_the_correct_certificate_to_the_binding()
+            {
+                AssertSiteBinding("https", 16010, CertificateThumbprint);
+                AssertSiteBinding("https", 16011, CertificateThumbprint);
+            }
+
+            public override void Because()
+            {
+                Task.Bindings = new[]
+                                    {
+                                        new IisSiteBinding { Protocol = "https", Port = 16010, CertificateThumbPrint = CertificateThumbprint },
+                                        new IisSiteBinding { Protocol = "https", Port = 16011, CertificateThumbPrint = CertificateThumbprint }
                                     };
                 base.Because();
             }
