@@ -58,12 +58,17 @@ namespace dropkick.Tasks.Iis
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
             checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
-
-            // TODO: Check certificates
+            checkCertificatesExist(Bindings.Where(x => !String.IsNullOrEmpty(x.CertificateThumbPrint)).Select(x => x.CertificateThumbPrint), result);
 
             if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
 
             return result;
+        }
+
+        static void checkCertificatesExist(IEnumerable<string> certificateThumbprints, DeploymentResult result)
+        {
+            foreach (var thumbprint in certificateThumbprints.Where(thumbprint => !CertificateStoreUtility.CertificateExists(thumbprint))) 
+                result.AddError("No certificate found with thumbprint '{0}'".FormatWith(thumbprint));
         }
 
         public override DeploymentResult Execute()
