@@ -28,3 +28,4 @@ SolutionVersion.cs
 SolutionVersion.vb
 dropkick.5.1.ReSharper.user
 /dropkick.5.0.ReSharper.user
+*.DotSettings.user
