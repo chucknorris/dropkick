@@ -79,43 +79,43 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithFunctionsFolder(string functionsFolderName)
         {
-            _functionsFolderName = functionsFolderName;
+            _functionsFolderName = ReplaceTokens(functionsFolderName);
             return this;
         }
 
         public RoundhousEOptions WithSprocsFolder(string sprocsFolderName)
         {
-            _sprocsFolderName = sprocsFolderName;
+            _sprocsFolderName = ReplaceTokens(sprocsFolderName);
             return this;
         }
 
         public RoundhousEOptions WithViewsFolder(string viewsFolderName)
         {
-            _viewsFolderName = viewsFolderName;
+            _viewsFolderName = ReplaceTokens(viewsFolderName);
             return this;
         }
 
         public RoundhousEOptions WithUpFolder(string upFolderName)
         {
-            _upFolderName = upFolderName;
+            _upFolderName = ReplaceTokens(upFolderName);
             return this;
         }
 
         public RoundhousEOptions WithVersionTable(string versionTable)
         {
-            _versionTable = versionTable;
+            _versionTable = ReplaceTokens(versionTable);
             return this;
         }
 
         public RoundhousEOptions WithScriptsRunTable(string scriptsRunTable)
         {
-            _scriptsRunTable = scriptsRunTable;
+            _scriptsRunTable = ReplaceTokens(scriptsRunTable);
             return this;
         }
 
         public RoundhousEOptions WithScriptsRunErrorTable(string scriptsRunErrorTable)
         {
-            _scriptsRunErrorTable = scriptsRunErrorTable;
+            _scriptsRunErrorTable = ReplaceTokens(scriptsRunErrorTable);
             return this;
         }
 
@@ -145,7 +145,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithRestorePath(string restorePath)
         {
-            _restorePath = restorePath;
+            _restorePath = ReplaceTokens(restorePath);
             return this;
         }
 
@@ -157,13 +157,13 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithRepositoryPath(string repositoryPath)
         {
-            _repositoryPath = repositoryPath;
+            _repositoryPath = ReplaceTokens(repositoryPath);
             return this;
         }
 
         public RoundhousEOptions WithVersionFile(string versionFile)
         {
-            _versionFile = versionFile;
+            _versionFile = ReplaceTokens(versionFile);
             return this;
         }
 
