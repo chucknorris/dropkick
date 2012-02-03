@@ -206,14 +206,16 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            var connectionInfo = new DbConnectionInfo{
+                Server = site.Name,
+                Instance = _instanceName,
+                DatabaseName = _databaseName,
+                UserName = _userName,
+                Password = _password
+            };
             // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
-            var instanceServer = site.Name;
-            if (!string.IsNullOrEmpty(_instanceName))
-                instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
 
-            var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
-
-            var task = new RoundhousETask(connectionString, _scriptsLocation,
+            var task = new RoundhousETask(connectionInfo, _scriptsLocation,
                 _environmentName, _roundhouseMode,
                 _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
                 _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
@@ -221,11 +223,6 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 _versionTable, _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges);
 
             site.AddTask(task);
-        }
-
-        public string BuildConnectionString(string instanceServer, string databaseName, string userName, string password)
-        {
-            return "data source={0};initial catalog={1};{2}".FormatWith(instanceServer, databaseName, string.IsNullOrEmpty(userName) ? "integrated security=sspi;" : "user id={0};password={1};".FormatWith(userName, password));
         }
     }
 }
