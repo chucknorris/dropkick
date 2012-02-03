@@ -140,6 +140,7 @@
     <Compile Include="Tasks\Xml\Context\XmlContextResult.cs" />
     <Compile Include="Tasks\WinService\PasswordPromptSpecs.cs" />
     <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />
+    <Compile Include="TestObjects\IisHttpsSiteDeploy.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
