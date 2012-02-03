@@ -27,6 +27,10 @@ namespace dropkick.Tasks.Iis
     //http://blogs.msdn.com/carlosag/archive/2006/04/17/MicrosoftWebAdministration.aspx
     public class Iis7Task : BaseIisTask
     {
+        const string DefaultAppPoolName = "DefaultAppPool";
+        static readonly string DefaultPathOnServer = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\inetpub\wwwroot");
+        const string DefaultManagedRuntimeVersion = Iis.ManagedRuntimeVersion.V2;
+
         public bool UseClassicPipeline { get; set; }
         public bool Enable32BitAppOnWin64 { get; set; }
 		public bool SetProcessModelIdentity { get; set; }
@@ -37,16 +41,16 @@ namespace dropkick.Tasks.Iis
 
         readonly Path _path = new DotNetPath();
 
-    	public override int VersionNumber
+        public override int VersionNumber
         {
             get { return 7; }
         }
 
         public Iis7Task()
         {
-            ManagedRuntimeVersion = Iis.ManagedRuntimeVersion.V2;
-            PathOnServer = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\inetpub\wwwroot");
-            AppPoolName = "DefaultAppPool";
+            ManagedRuntimeVersion = DefaultManagedRuntimeVersion;
+            PathOnServer = DefaultPathOnServer;
+            AppPoolName = DefaultAppPoolName;
         }
 
         public override DeploymentResult VerifyCanRun()
@@ -55,6 +59,8 @@ namespace dropkick.Tasks.Iis
 
             IisUtility.CheckForIis7(result);
 
+            LogIis("WebSite: {0}", WebsiteName);
+            LogIis("Application Pool: {0}", AppPoolName);
             var iisManager = ServerManager.OpenRemote(ServerName);
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
             checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
@@ -213,8 +219,8 @@ namespace dropkick.Tasks.Iis
 				LogIis("[iis7] Enabling 32bit application on Win64.");
 			}
 
-        	pool.ManagedRuntimeVersion = ManagedRuntimeVersion;
-			LogIis("[iis7] Using managed runtime version '{0}'", ManagedRuntimeVersion);
+        	pool.ManagedRuntimeVersion = ManagedRuntimeVersion ?? DefaultManagedRuntimeVersion;
+			LogIis("[iis7] Using managed runtime version '{0}'", pool.ManagedRuntimeVersion);
 
 			if (UseClassicPipeline)
 			{
@@ -264,17 +270,19 @@ namespace dropkick.Tasks.Iis
 				result.AddNote("Virtual Directory '{0}' already exists. Updating settings.", VirtualDirectoryPath ?? "/");
 			}
 
-			if (application.ApplicationPoolName != AppPoolName)
+            var apn = AppPoolName ?? DefaultAppPoolName;
+            if (application.ApplicationPoolName != apn)
 			{
-				application.ApplicationPoolName = AppPoolName;
-				LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VirtualDirectoryPath, AppPoolName);
+                application.ApplicationPoolName = apn;
+                LogFineGrain("[iis7] Set the ApplicationPool for '{0}' to '{1}'", VirtualDirectoryPath, apn);
 			}
 
 			var vdir = application.VirtualDirectories["/"];
-			if (vdir.PhysicalPath != PathOnServer)
+            var pon = PathOnServer ?? DefaultPathOnServer;
+            if (vdir.PhysicalPath != pon)
 			{
-				vdir.PhysicalPath = PathOnServer;
-				LogFineGrain("[iis7] Updated physical path for '{0}' to '{1}'", VirtualDirectoryPath, PathOnServer);
+                vdir.PhysicalPath = pon;
+                LogFineGrain("[iis7] Updated physical path for '{0}' to '{1}'", VirtualDirectoryPath, pon);
 			}
 		}
 

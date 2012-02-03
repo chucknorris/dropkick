@@ -14,7 +14,7 @@ namespace dropkick.Tasks.Iis
 {
     public class ManagedRuntimeVersion
     {
-        public static readonly string V2 = "v2.0";
-        public static readonly string V4 = "v4.0";
+        public const string V2 = "v2.0";
+        public const string V4 = "v4.0";
     }
 }
