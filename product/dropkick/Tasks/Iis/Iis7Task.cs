@@ -65,10 +65,17 @@ namespace dropkick.Tasks.Iis
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
             checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
             checkCertificatesExist(Bindings.Where(x => !String.IsNullOrEmpty(x.CertificateThumbPrint)).Select(x => x.CertificateThumbPrint), result);
+            checkHttpsBindingsHaveCertificate(result);
 
             if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
 
             return result;
+        }
+
+        void checkHttpsBindingsHaveCertificate(DeploymentResult result)
+        {
+            foreach (var invalidBinding in Bindings.Where(x => x.Protocol == "https" && String.IsNullOrEmpty(x.CertificateThumbPrint)))
+                result.AddError("Cannot bind https to port '{0}' as no certificate thumbprint was specified.".FormatWith(invalidBinding.Port));
         }
 
         static void checkCertificatesExist(IEnumerable<string> certificateThumbprints, DeploymentResult result)
@@ -92,7 +99,7 @@ namespace dropkick.Tasks.Iis
         	try
         	{
 				iisManager.CommitChanges();
-                result.AddGood("Virtual Director '{0}' was created/updated successfully.", VirtualDirectoryPath ?? "/");
+                result.AddGood("Virtual Directory '{0}' was created/updated successfully.", VirtualDirectoryPath ?? "/");
         	}
         	catch (COMException ex)
         	{
@@ -107,14 +114,10 @@ namespace dropkick.Tasks.Iis
 
         void updateSiteBindings(Site site)
         {
-            // Update certificates on SSL bindings
-            var existingSslBindings = site.Bindings.Where(x => x.Protocol == "https");
-            foreach (var sslBinding in Bindings.Where(x => x.Protocol == "https"))
-            {
-                var existing = existingSslBindings.FirstOrDefault(x => x.EndPoint.Port == sslBinding.Port);
-                if (existing != null)
-                    existing.CertificateHash = getCertificateHashFor(sslBinding);
-            }
+            // https bindings certificates cannot be compared or updated, these bindings must be recreated each time.
+            var httpsBindings = site.Bindings.Where(x => x.Protocol == "https").ToArray();
+            foreach (var httpsBinding in httpsBindings)
+                site.Bindings.Remove(httpsBinding);
 
             // Add new bindings
             var existingBindings = site.Bindings.AsEnumerable();

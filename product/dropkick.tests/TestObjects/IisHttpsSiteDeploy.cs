@@ -13,13 +13,14 @@
         {
             Define(settings =>
                        DeploymentStepsFor(Web, server =>
-                                                   server.Iis7Site("_Dropkick_6550", @"C:\Temp", bindings =>
-                                                       {
-                                                           bindings.Add("http", 16030);
-                                                           bindings.Add("https", 16031, "13d8ae4000e8d5ac8930c3cdb6c995640c715b86");
-                                                       })
-                                                   .VirtualDirectory("dk_test")
-                                                   .SetPathTo(@"C:\Temp")));
+                           {
+                               var application = server.Iis7Site("_Dropkick_6550", @"C:\Temp", bindings =>
+                                   {
+                                       bindings.Add("http", 16030);
+                                       bindings.Add("https", 16031, "13d8ae4000e8d5ac8930c3cdb6c995640c715b86");
+                                   })
+                                   .RootDirectory();
+                           }));
         }
 
         public static Role Web { get; set; }

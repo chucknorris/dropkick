@@ -16,6 +16,12 @@ namespace dropkick.tests.Tasks.Iis
             protected const string CertificateThumbprint = @"13d8ae4000e8d5ac8930c3cdb6c995640c715b86";
 
             [Fact]
+            public void It_should_not_return_any_errors_from_task_verification()
+            {
+                Assert.IsFalse(VerificationResult.ContainsError(), "Results of task verification contained an error.");
+            }
+
+            [Fact]
             public void It_should_not_return_any_errors_from_task_execution()
             {
                 Assert.IsFalse(ExecutionResult.ContainsError(), "Results of task execution contained an error.");
@@ -23,13 +29,15 @@ namespace dropkick.tests.Tasks.Iis
 
             public override void Context()
             {
-                Task = new Iis7Task { WebsiteName = TestWebSiteName };
+                Task = new Iis7Task { WebsiteName = TestWebSiteName, ServerName = WebServerName };
             }
 
             public override void Because()
             {
                 VerificationResult = Task.VerifyCanRun();
                 System.Diagnostics.Debug.WriteLine(VerificationResult);
+                if (VerificationResult.ContainsError()) return;
+                
                 ExecutionResult = Task.Execute();
                 System.Diagnostics.Debug.WriteLine(ExecutionResult);
             }
@@ -142,12 +150,12 @@ namespace dropkick.tests.Tasks.Iis
             [Fact]
             public void It_should_bind_the_https_protocol_and_port()
             {
-                AssertSiteBinding("https", 16004);
+                AssertSiteBinding("https", 16004, CertificateThumbprint);
             }
 
             public override void Because()
             {
-                Task.Bindings = new[] { new IisSiteBinding { Protocol = "https", Port = 16004 } };
+                Task.Bindings = new[] { new IisSiteBinding { Protocol = "https", Port = 16004, CertificateThumbPrint = CertificateThumbprint } };
                 base.Because();
             }
         }
@@ -158,16 +166,16 @@ namespace dropkick.tests.Tasks.Iis
             [Fact]
             public void It_should_bind_both_ports()
             {
-                AssertSiteBinding("https", 16005);
-                AssertSiteBinding("https", 16006);
+                AssertSiteBinding("https", 16005, CertificateThumbprint);
+                AssertSiteBinding("https", 16006, CertificateThumbprint);
             }
 
             public override void Because()
             {
                 Task.Bindings = new[]
                                     {
-                                        new IisSiteBinding { Protocol = "https", Port = 16005 },
-                                        new IisSiteBinding { Protocol = "https", Port = 16006 }
+                                        new IisSiteBinding { Protocol = "https", Port = 16005, CertificateThumbPrint = CertificateThumbprint },
+                                        new IisSiteBinding { Protocol = "https", Port = 16006, CertificateThumbPrint = CertificateThumbprint }
                                     };
                 base.Because();
             }
@@ -185,7 +193,7 @@ namespace dropkick.tests.Tasks.Iis
             [Fact]
             public void It_should_bind_the_https_protocol_and_port()
             {
-                AssertSiteBinding("https", 16008);
+                AssertSiteBinding("https", 16008, CertificateThumbprint);
             }
 
             public override void Because()
@@ -193,52 +201,7 @@ namespace dropkick.tests.Tasks.Iis
                 Task.Bindings = new[]
                                     {
                                         new IisSiteBinding { Protocol = "http", Port = 16007 },
-                                        new IisSiteBinding { Protocol = "https", Port = 16008 }
-                                    };
-                base.Because();
-            }
-        }
-
-        [Category("Integration")]
-        public class When_creating_a_site_with_https_binding_and_certificate : Iis7TaskSpecsContext
-        {
-            [Fact]
-            public void It_should_apply_the_correct_certificate_to_the_binding()
-            {
-                AssertSiteBinding("https", 16009, CertificateThumbprint);
-            }
-
-            public override void Because()
-            {
-                Task.Bindings = new[]
-                                    {
-                                        new IisSiteBinding()
-                                            {
-                                                Protocol = "https",
-                                                Port = 16009,
-                                                CertificateThumbPrint = CertificateThumbprint
-                                            }
-                                    };
-                base.Because();
-            }
-        }
-
-        [Category("Integration")]
-        public class When_creating_a_site_with_multiple_https_bindings_and_certificates : Iis7TaskSpecsContext
-        {
-            [Fact]
-            public void It_should_apply_the_correct_certificate_to_the_binding()
-            {
-                AssertSiteBinding("https", 16010, CertificateThumbprint);
-                AssertSiteBinding("https", 16011, CertificateThumbprint);
-            }
-
-            public override void Because()
-            {
-                Task.Bindings = new[]
-                                    {
-                                        new IisSiteBinding { Protocol = "https", Port = 16010, CertificateThumbPrint = CertificateThumbprint },
-                                        new IisSiteBinding { Protocol = "https", Port = 16011, CertificateThumbPrint = CertificateThumbprint }
+                                        new IisSiteBinding { Protocol = "https", Port = 16008, CertificateThumbPrint = CertificateThumbprint }
                                     };
                 base.Because();
             }
@@ -247,9 +210,10 @@ namespace dropkick.tests.Tasks.Iis
         [Category("Integration")]
         public class When_creating_a_site_that_already_exists : Iis7TaskSpecsContext
         {
-            readonly int PortToChange = 16014;
-            readonly int PortToAdd = 16013;
-            int PortToPreserve = 16015;
+            const int ExistingHttpsPort = 16016;
+            const int PortToChange = 16014;
+            const int PortToAdd = 16013;
+            const int PortToPreserve = 16015;
             const int PortToRemove = 16012;
 
             [Fact]
@@ -283,7 +247,8 @@ namespace dropkick.tests.Tasks.Iis
                                     {
                                         new IisSiteBinding { Protocol = "http", Port = PortToRemove },
                                         new IisSiteBinding { Protocol = "http", Port = PortToChange },
-                                        new IisSiteBinding { Protocol = "http", Port = PortToPreserve }
+                                        new IisSiteBinding { Protocol = "http", Port = PortToPreserve },
+                                        new IisSiteBinding { Protocol = "https", Port = ExistingHttpsPort, CertificateThumbPrint = CertificateThumbprint }
                                     };
                 base.Because();
 
@@ -294,9 +259,10 @@ namespace dropkick.tests.Tasks.Iis
                 // Update it
                 Task.Bindings = new[]
                                     {
-                                        new IisSiteBinding { Protocol = "https", Port = PortToChange, CertificateThumbPrint = "13d8ae4000e8d5ac8930c3cdb6c995640c715b86" },
+                                        new IisSiteBinding { Protocol = "https", Port = PortToChange, CertificateThumbPrint = CertificateThumbprint },
                                         new IisSiteBinding { Protocol = "http", Port = PortToAdd },
-                                        new IisSiteBinding { Protocol = "http", Port = PortToPreserve }
+                                        new IisSiteBinding { Protocol = "http", Port = PortToPreserve },
+                                        new IisSiteBinding { Protocol = "https", Port = ExistingHttpsPort, CertificateThumbPrint = CertificateThumbprint }
                                     };
                 base.Because();
             }
