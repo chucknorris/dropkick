@@ -189,7 +189,8 @@ namespace dropkick.Tasks.Iis
                 var conflictSite = iisManager.Sites
                     .FirstOrDefault(x => x.Bindings.Any(b =>
                         b.EndPoint != null &&
-                        targetPort == b.EndPoint.Port));
+                        targetPort == b.EndPoint.Port) &&
+                        x.Name != targetSiteName);
 
                 if (conflictSite != null)
                     throw new InvalidOperationException(

@@ -18,7 +18,7 @@ namespace dropkick.tests.Tasks.Iis
             [Fact]
             public void It_should_not_return_any_errors_from_task_execution()
             {
-                Assert.IsFalse(Result.ContainsError(), "Results of task execution contained an error.");
+                Assert.IsFalse(ExecutionResult.ContainsError(), "Results of task execution contained an error.");
             }
 
             public override void Context()
@@ -28,8 +28,10 @@ namespace dropkick.tests.Tasks.Iis
 
             public override void Because()
             {
-                Result = Task.Execute();
-                System.Diagnostics.Debug.WriteLine(Result);
+                VerificationResult = Task.VerifyCanRun();
+                System.Diagnostics.Debug.WriteLine(VerificationResult);
+                ExecutionResult = Task.Execute();
+                System.Diagnostics.Debug.WriteLine(ExecutionResult);
             }
 
             public override void AfterObservations()
@@ -52,6 +54,18 @@ namespace dropkick.tests.Tasks.Iis
                     {
                         Assert.AreEqual(CertificateStoreUtility.GetCertificateHashForThumbprint(certificateThumbprint), binding.CertificateHash);
                     }
+                }
+            }
+
+            protected void AssertNotSiteBinding(int port)
+            {
+                using (var iis = ServerManager.OpenRemote(WebServerName))
+                {
+                    var site = iis.Sites[TestWebSiteName];
+                    Assert.IsNotNull(site, "Site '{0}' was not found.", TestWebSiteName);
+
+                    var binding = site.Bindings.FirstOrDefault(x => x.EndPoint.Port == port);
+                    Assert.IsNull(binding, "Unexpected binding. Site '{0}' is bound to port '{1}'.", TestWebSiteName, port);
                 }
             }
 
@@ -78,7 +92,8 @@ namespace dropkick.tests.Tasks.Iis
             }
 
             protected Iis7Task Task;
-            protected DeploymentResult Result;
+            protected DeploymentResult ExecutionResult;
+            protected DeploymentResult VerificationResult;
             protected const string TestWebSiteName = "_DropKickTest_4789";
             protected const string WebServerName = "localhost";
         }
@@ -224,6 +239,64 @@ namespace dropkick.tests.Tasks.Iis
                                     {
                                         new IisSiteBinding { Protocol = "https", Port = 16010, CertificateThumbPrint = CertificateThumbprint },
                                         new IisSiteBinding { Protocol = "https", Port = 16011, CertificateThumbPrint = CertificateThumbprint }
+                                    };
+                base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_creating_a_site_that_already_exists : Iis7TaskSpecsContext
+        {
+            readonly int PortToChange = 16014;
+            readonly int PortToAdd = 16013;
+            int PortToPreserve = 16015;
+            const int PortToRemove = 16012;
+
+            [Fact]
+            public void It_should_remove_undefined_bindings()
+            {
+                AssertNotSiteBinding(PortToRemove);
+            }
+
+            [Fact]
+            public void It_should_add_newly_defined_bindings()
+            {
+                AssertSiteBinding("http", PortToAdd);
+            }
+
+            [Fact]
+            public void It_should_update_protocol_on_redefined_bindings()
+            {
+                AssertSiteBinding("https", PortToChange);
+            }
+
+            [Fact]
+            public void It_should_preserve_already_defined_bindings()
+            {
+                AssertSiteBinding("http", PortToPreserve);
+            }
+
+            public override void Because()
+            {
+                // Build existing site
+                Task.Bindings = new[]
+                                    {
+                                        new IisSiteBinding { Protocol = "http", Port = PortToRemove },
+                                        new IisSiteBinding { Protocol = "http", Port = PortToChange },
+                                        new IisSiteBinding { Protocol = "http", Port = PortToPreserve }
+                                    };
+                base.Because();
+
+                WaitForIis();
+
+                System.Diagnostics.Debug.WriteLine("Executing task again to update existing site.");
+                Context();
+                // Update it
+                Task.Bindings = new[]
+                                    {
+                                        new IisSiteBinding { Protocol = "https", Port = PortToChange, CertificateThumbPrint = "13d8ae4000e8d5ac8930c3cdb6c995640c715b86" },
+                                        new IisSiteBinding { Protocol = "http", Port = PortToAdd },
+                                        new IisSiteBinding { Protocol = "http", Port = PortToPreserve }
                                     };
                 base.Because();
             }
