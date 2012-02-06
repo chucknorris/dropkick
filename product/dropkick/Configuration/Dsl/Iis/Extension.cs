@@ -45,7 +45,7 @@ namespace dropkick.Configuration.Dsl.Iis
             var task = new IisProtoTask(websiteName, new DotNetPath())
                            {
                                Version = IisVersion.Seven,
-                               PathForWebsite = pathForWebsite,
+                               PathOnServer = pathForWebsite,
                                Bindings = new[] { new IisSiteBinding { Port = port } }
                            };
             protoServer.RegisterProtoTask(task);
@@ -59,7 +59,7 @@ namespace dropkick.Configuration.Dsl.Iis
             var task = new IisProtoTask(websiteName, new DotNetPath())
                            {
                                Version = IisVersion.Seven,
-                               PathForWebsite = pathForWebsite,
+                               PathOnServer = pathForWebsite,
                                Bindings = siteBindings
                            };
             protoServer.RegisterProtoTask(task);

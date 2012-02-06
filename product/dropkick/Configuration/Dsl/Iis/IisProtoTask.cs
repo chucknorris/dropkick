@@ -44,7 +44,6 @@ namespace dropkick.Configuration.Dsl.Iis
         protected string AppPoolName { get; set; }
         public bool ClassicPipelineRequested { get; set; }
         public string ManagedRuntimeVersion { get; set; }
-        public string PathForWebsite { get; set; }
         public IEnumerable<IisSiteBinding> Bindings { get; set; }
         public bool Bit32Requested { get; set; }
 		public bool ProcessModelIdentityTypeSpecified { get; private set; }
