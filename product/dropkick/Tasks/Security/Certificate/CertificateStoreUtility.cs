@@ -3,9 +3,21 @@ using System.Security.Cryptography.X509Certificates;
 
 namespace dropkick.Tasks.Security.Certificate
 {
-    public static class CertificateStoreUtility
+    public class CertificateStore
     {
-        public static byte[] GetCertificateHashForThumbprint(string certificateThumbprint)
+        readonly X509Store _store;
+
+        public CertificateStore() 
+        {
+            _store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
+        }
+
+        public CertificateStore(string machine)
+        {
+            _store = new X509Store(@"\\{0}\MY".FormatWith(machine), StoreLocation.LocalMachine);
+        }
+
+        public byte[] GetCertificateHashForThumbprint(string certificateThumbprint)
         {
             var certificate = getCertificateFromThumbprint(certificateThumbprint);
             if (certificate.Count == 0)
@@ -16,23 +28,22 @@ namespace dropkick.Tasks.Security.Certificate
             return certificate[0].GetCertHash();
         }
 
-        public static bool CertificateExists(string thumbprint)
+        public bool CertificateExists(string thumbprint)
         {
             return getCertificateFromThumbprint(thumbprint).Count > 0;
         }
 
-        static X509Certificate2Collection getCertificateFromThumbprint(string certificateThumbprint)
+        X509Certificate2Collection getCertificateFromThumbprint(string certificateThumbprint)
         {
-            var store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
-            store.Open(OpenFlags.OpenExistingOnly);
+            _store.Open(OpenFlags.OpenExistingOnly);
             try
             {
-                var certificate = store.Certificates.Find(X509FindType.FindByThumbprint, certificateThumbprint, false);
+                var certificate = _store.Certificates.Find(X509FindType.FindByThumbprint, certificateThumbprint, false);
                 return certificate;
             }
             finally
             {
-                store.Close();
+                _store.Close();
             }
         }
 

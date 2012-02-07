@@ -40,6 +40,7 @@ namespace dropkick.Tasks.Iis
         public string ManagedRuntimeVersion { get; set; }
 
         readonly Path _path = new DotNetPath();
+        CertificateStore _certificateStore;
 
         public override int VersionNumber
         {
@@ -59,17 +60,25 @@ namespace dropkick.Tasks.Iis
 
             IisUtility.CheckForIis7(result);
 
-            LogIis("WebSite: {0}", WebsiteName);
-            LogIis("Application Pool: {0}", AppPoolName);
-            var iisManager = ServerManager.OpenRemote(ServerName);
-            CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
-            checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
-            checkCertificatesExist(Bindings.Where(x => !String.IsNullOrEmpty(x.CertificateThumbPrint)).Select(x => x.CertificateThumbPrint), result);
-            checkHttpsBindingsHaveCertificate(result);
+            setupCertificateStore();
+            using (var iisManager = ServerManager.OpenRemote(ServerName))
+            {
+                CheckForSiteAndVDirExistance(DoesSiteExist,
+                                             () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
+                checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
+                checkCertificatesExist(Bindings.Where(x => 
+                    !String.IsNullOrEmpty(x.CertificateThumbPrint)).Select(x => x.CertificateThumbPrint), result);
+                checkHttpsBindingsHaveCertificate(result);
 
-            if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
+                if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
+            }
 
             return result;
+        }
+
+        void setupCertificateStore()
+        {
+            _certificateStore = new CertificateStore(ServerName);
         }
 
         void checkHttpsBindingsHaveCertificate(DeploymentResult result)
@@ -78,41 +87,47 @@ namespace dropkick.Tasks.Iis
                 result.AddError("Cannot bind https to port '{0}' as no certificate thumbprint was specified.".FormatWith(invalidBinding.Port));
         }
 
-        static void checkCertificatesExist(IEnumerable<string> certificateThumbprints, DeploymentResult result)
+        void checkCertificatesExist(IEnumerable<string> certificateThumbprints, DeploymentResult result)
         {
-            foreach (var thumbprint in certificateThumbprints.Where(thumbprint => !CertificateStoreUtility.CertificateExists(thumbprint))) 
+            foreach (var thumbprint in certificateThumbprints.Where(thumbprint => !_certificateStore.CertificateExists(thumbprint))) 
                 result.AddError("No certificate found with thumbprint '{0}'".FormatWith(thumbprint));
         }
 
         public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
-            var iisManager = ServerManager.OpenRemote(ServerName);
-            buildApplicationPool(iisManager, result);
+            setupCertificateStore();
+            using (var iisManager = ServerManager.OpenRemote(ServerName))
+            {
+                buildApplicationPool(iisManager, result);
 
-            if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName);
+                if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName);
 
-            var site = GetSite(iisManager, WebsiteName);
-            updateSiteBindings(site);
-        	buildVirtualDirectory(site, result);
+                var site = GetSite(iisManager, WebsiteName);
+                updateSiteBindings(site, result);
+                buildVirtualDirectory(site, result);
 
-        	try
-        	{
-				iisManager.CommitChanges();
-                result.AddGood("Virtual Directory '{0}' was created/updated successfully.", VirtualDirectoryPath ?? "/");
-        	}
-        	catch (COMException ex)
-        	{
-        		if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser) throw new DeploymentException("An exception occurred trying to apply deployment changes. If you are attempting to set the IIS " +
-						"Process Model's identity to a specific user then ensure that you are running DropKick with elevated privileges, or UAC is disabled.", ex);
-        		throw;
-        	}
-        	LogCoarseGrain("[iis7] {0}", Name);
-            
+                try
+                {
+                    iisManager.CommitChanges();
+                    result.AddGood("Virtual Directory '{0}' was created/updated successfully.",
+                                   VirtualDirectoryPath ?? "/");
+                }
+                catch (COMException ex)
+                {
+                    if (ProcessModelIdentityType == ProcessModelIdentityType.SpecificUser)
+                        throw new DeploymentException(
+                            "An exception occurred trying to apply deployment changes. If you are attempting to set the IIS " +
+                                "Process Model's identity to a specific user then ensure that you are running DropKick with elevated privileges, or UAC is disabled.",
+                            ex);
+                    throw;
+                }
+                LogCoarseGrain("[iis7] {0}", Name);
+            }
             return result;
         }
 
-        void updateSiteBindings(Site site)
+        void updateSiteBindings(Site site, DeploymentResult result)
         {
             // https bindings certificates cannot be compared or updated, these bindings must be recreated each time.
             var httpsBindings = site.Bindings.Where(x => x.Protocol == "https").ToArray();
@@ -127,6 +142,7 @@ namespace dropkick.Tasks.Iis
                 {
                     if (newBinding.Protocol != "https") site.Bindings.Add(getBindingInformation(newBinding), newBinding.Protocol);
                     else site.Bindings.Add(getBindingInformation(newBinding), getCertificateHashFor(newBinding), "MY");
+                    LogIis("[iis7] Added binding for {0}://*:{1}", newBinding.Protocol, newBinding.Port);
                 }
             }
 
@@ -134,10 +150,13 @@ namespace dropkick.Tasks.Iis
             {
                 var existingBinding = site.Bindings[i];
                 if (!Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port))
+                {
                     site.Bindings.Remove(existingBinding);
+                    LogIis("[iis7] Removed binding for {0}://*:{1}", existingBinding.Protocol, existingBinding.EndPoint.Port);
+                }
             }
 
-            LogIis("[iis7] Updating bindings for website '{0}'", WebsiteName);            
+            result.AddGood("Updated bindings for website '{0}'", WebsiteName);            
         }
 
         public bool DoesSiteExist(DeploymentResult result)
@@ -170,14 +189,14 @@ namespace dropkick.Tasks.Iis
                 : iisManager.Sites.Add(WebsiteName, getBindingInformation(firstBinding), PathOnServer,
                                        getCertificateHashFor(firstBinding));                    
 
-            LogIis("[iis7] Created website '{0}'", WebsiteName);
+            LogIis("[iis7] Created website '{0}' with binding for {1}://*:{2}", WebsiteName, firstBinding.Protocol, firstBinding.Port);
         }
 
         byte[] getCertificateHashFor(IisSiteBinding binding)
         {
             return binding.CertificateThumbPrint == null 
                 ? new byte[0] 
-                : CertificateStoreUtility.GetCertificateHashForThumbprint(binding.CertificateThumbPrint);
+                : _certificateStore.GetCertificateHashForThumbprint(binding.CertificateThumbPrint);
         }
 
         static string getBindingInformation(IisSiteBinding binding)

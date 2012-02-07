@@ -29,6 +29,7 @@ namespace dropkick.tests.Tasks.Iis
 
             public override void Context()
             {
+                _store = new CertificateStore(WebServerName);
                 Task = new Iis7Task { WebsiteName = TestWebSiteName, ServerName = WebServerName };
             }
 
@@ -60,7 +61,7 @@ namespace dropkick.tests.Tasks.Iis
 
                     if (certificateThumbprint != null)
                     {
-                        Assert.AreEqual(CertificateStoreUtility.GetCertificateHashForThumbprint(certificateThumbprint), binding.CertificateHash);
+                        Assert.AreEqual(_store.GetCertificateHashForThumbprint(certificateThumbprint), binding.CertificateHash);
                     }
                 }
             }
@@ -102,6 +103,7 @@ namespace dropkick.tests.Tasks.Iis
             protected Iis7Task Task;
             protected DeploymentResult ExecutionResult;
             protected DeploymentResult VerificationResult;
+            CertificateStore _store;
             protected const string TestWebSiteName = "_DropKickTest_4789";
             protected const string WebServerName = "localhost";
         }
