@@ -14,15 +14,17 @@ namespace dropkick.Tasks.Security.Certificate
 
         public CertificateStore(string machine)
         {
-            _store = new X509Store(@"\\{0}\MY".FormatWith(machine), StoreLocation.LocalMachine);
+            var storename = String.IsNullOrEmpty(machine) || String.Compare("localhost", machine, StringComparison.OrdinalIgnoreCase) == 0
+                ? "MY"
+                : @"\\{0}\MY".FormatWith(machine);
+            _store = new X509Store(storename.FormatWith(machine), StoreLocation.LocalMachine);
         }
 
         public byte[] GetCertificateHashForThumbprint(string certificateThumbprint)
         {
             var certificate = getCertificateFromThumbprint(certificateThumbprint);
             if (certificate.Count == 0)
-                throw new ArgumentException(String.Format(
-                                                          "No certificate was found with the specified thumbprint '{0}'",
+                throw new ArgumentException(String.Format("No certificate was found with the specified thumbprint '{0}'",
                                                           certificateThumbprint));
 
             return certificate[0].GetCertHash();
