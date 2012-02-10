@@ -18,7 +18,7 @@ namespace dropkick.tests.Tasks.RoundhousE
         public void Setup()
         {
             _prompt = new MockPromptService();
-            _info = new DbConnectionInfo(_prompt);
+            _info = new DbConnectionInfo(_prompt) { Server = "foo" };
         }
 
         [Test]
@@ -26,7 +26,7 @@ namespace dropkick.tests.Tasks.RoundhousE
         {
             var cs = _info.BuildConnectionString();
 
-            Assert.That(cs, Contains.Substring("integrated security=sspi"));
+            Assert.That(cs, Contains.Substring("Integrated Security=True"));
             Assert.That(_info.WillPromptForUserName() == false);
             Assert.That(_info.WillPromptForPassword() == false);
         }
@@ -38,8 +38,8 @@ namespace dropkick.tests.Tasks.RoundhousE
             _info.Password = "pass";
             var cs = _info.BuildConnectionString();
 
-            Assert.That(cs, Contains.Substring("userId=bob"));
-            Assert.That(cs, Contains.Substring("password=pass"));
+            Assert.That(cs, Contains.Substring("User ID=bob"));
+            Assert.That(cs, Contains.Substring("Password=pass"));
             Assert.That(_info.WillPromptForUserName() == false);
             Assert.That(_info.WillPromptForPassword() == false);
         }
@@ -90,8 +90,8 @@ namespace dropkick.tests.Tasks.RoundhousE
 
             var cs = _info.BuildConnectionString();
 
-            Assert.That(cs, Contains.Substring("userId=myuser"));
-            Assert.That(cs, Contains.Substring("password=mypassword"));
+            Assert.That(cs, Contains.Substring("User ID=myuser"));
+            Assert.That(cs, Contains.Substring("Password=mypassword"));
             Assert.That(_info.WillPromptForUserName());
             Assert.That(_info.WillPromptForPassword());
         }
