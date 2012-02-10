@@ -27,12 +27,12 @@ namespace dropkick.Tasks.RoundhousE
 
         #region Methods
 
-        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin, string functionsFolderName, string sprocsFolderName, string viewsFolderName, string upFolderName, string versionTable, string scriptsRunTable, string scriptsRunErrorTable, bool? warnOnOneTimeScriptChanges, string outputPath)
         {
-            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath,commandTimeout,commandTimeoutAdmin, false, @"",0,string.Empty);
+            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath, commandTimeout, commandTimeoutAdmin, false, @"", 0, string.Empty, functionsFolderName, sprocsFolderName, viewsFolderName, upFolderName, versionTable, scriptsRunTable, scriptsRunErrorTable, warnOnOneTimeScriptChanges, outputPath);
         }
 
-        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath,int restoreTimeout, string restoreCustomOptions)
+        public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath,int restoreTimeout, string restoreCustomOptions, string functionsFolderName, string sprocsFolderName, string viewsFolderName, string upFolderName, string versionTable, string scriptsRunTable, string scriptsRunErrorTable, bool? warnOnOneTimeScriptChanges, string outputPath)
         {
             var migrate = new Migrate();
 
@@ -55,6 +55,22 @@ namespace dropkick.Tasks.RoundhousE
                     p.VersionXPath = versionXPath;
                     p.CommandTimeout = commmandTimeout;
                     p.CommandTimeoutAdmin = commandTimeoutAdmin;
+
+                    p.FunctionsFolderName = functionsFolderName;
+                    p.SprocsFolderName = sprocsFolderName;
+                    p.ViewsFolderName = viewsFolderName;
+                    p.UpFolderName = upFolderName;
+
+                    p.VersionTableName = versionTable;
+                    p.ScriptsRunTableName = scriptsRunTable;
+                    p.ScriptsRunErrorsTableName = scriptsRunErrorTable;
+                    p.OutputPath = outputPath;
+
+                    if (warnOnOneTimeScriptChanges.HasValue)
+                    {
+                        p.WarnOnOneTimeScriptChanges = warnOnOneTimeScriptChanges.Value;
+                    }
+
                     p.Silent = true;
                 })
                 .Run();
