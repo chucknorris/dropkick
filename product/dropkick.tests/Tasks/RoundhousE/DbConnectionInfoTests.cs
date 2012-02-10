@@ -18,7 +18,7 @@ namespace dropkick.tests.Tasks.RoundhousE
         public void Setup()
         {
             _prompt = new MockPromptService();
-            _info = new DbConnectionInfo(_prompt) { Server = "foo" };
+            _info = new DbConnectionInfo(_prompt) { Server = "foo", DatabaseName = "bar" };
         }
 
         [Test]

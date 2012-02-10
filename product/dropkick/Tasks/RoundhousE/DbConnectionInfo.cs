@@ -37,8 +37,10 @@ namespace dropkick.Tasks.RoundhousE
         public string BuildConnectionString()
         {
 
-            var builder = new SqlConnectionStringBuilder();
-            builder.DataSource = Server;
+            var builder = new SqlConnectionStringBuilder{
+                InitialCatalog = DatabaseName, DataSource = Server
+            };
+
             if (Instance.IsNotEmpty())
             {
                 builder.DataSource = @"{0}\{1}".FormatWith(Server, Instance);
