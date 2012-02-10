@@ -1,3 +1,5 @@
+using System.Data.SqlClient;
+
 using dropkick.Prompting;
 
 using Magnum.Extensions;
@@ -34,32 +36,33 @@ namespace dropkick.Tasks.RoundhousE
 
         public string BuildConnectionString()
         {
-            var datasource = Server;
-            if (Instance.IsNotEmpty())
-                datasource = @"{0}\{1}".FormatWith(Server, Instance);
 
-            string credentials;
+            var builder = new SqlConnectionStringBuilder();
+            builder.DataSource = Server;
+            if (Instance.IsNotEmpty())
+            {
+                builder.DataSource = @"{0}\{1}".FormatWith(Server, Instance);
+            }
+
             if (UserName.IsEmpty())
             {
-                credentials = "integrated security=sspi;";
+                builder.IntegratedSecurity = true;
             }
             else
             {
-                credentials = "userId=";
+                builder.IntegratedSecurity = false; 
                 if (UserName.ShouldPrompt())
-                    credentials += _prompt.Prompt("Database '{0}' UserName".FormatWith(DatabaseName));
+                    builder.UserID = _prompt.Prompt("Database '{0}' UserName".FormatWith(DatabaseName));
                 else
-                    credentials += UserName;
+                    builder.UserID = UserName;
 
-                credentials += ";password=";
                 if (Password.ShouldPrompt())
-                    credentials += _prompt.Prompt("Database '{0}' Password".FormatWith(DatabaseName));
+                    builder.Password = _prompt.Prompt("Database '{0}' Password".FormatWith(DatabaseName));
                 else
-                    credentials += Password;
+                    builder.Password = Password;
             }
 
-            return "data source={0};initial catalog={1};{2};"
-                .FormatWith(datasource, DatabaseName, credentials);
+            return builder.ConnectionString;
         }
 
         private readonly PromptService _prompt;
