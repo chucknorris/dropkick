@@ -207,7 +207,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithOutputPath(string outputPath)
         {
-            _outputPath = outputPath;
+            _outputPath = ReplaceTokens(outputPath);
             return this;
         }
 
