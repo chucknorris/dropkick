@@ -59,6 +59,14 @@ namespace dropkick.Configuration.Dsl.Iis
             return VirtualDirectory(String.Empty);
         }
 
+        IisSiteOptions IisSiteOptions.Bindings(Action<IisSiteBindingCollection> bindings)
+        {
+            var siteBindings = new IisSiteBindingCollection();
+            bindings(siteBindings);
+            Bindings = siteBindings;
+            return this;
+        }
+
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
             VdirPath = ReplaceTokens(name);
