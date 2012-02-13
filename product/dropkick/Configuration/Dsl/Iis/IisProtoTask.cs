@@ -121,7 +121,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
-            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer,true);
+            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer ?? BaseIisTask.DefaultPathOnServer, true);
 
             if (Version == IisVersion.Six)
             {
@@ -145,7 +145,7 @@ namespace dropkick.Configuration.Dsl.Iis
         	          		AppPoolName = AppPoolName,
         	          		UseClassicPipeline = ClassicPipelineRequested,
         	          		ManagedRuntimeVersion = ManagedRuntimeVersion,
-        	          		Bindings = Bindings,
+                            Bindings = Bindings,
         	          		Enable32BitAppOnWin64 = Bit32Requested,
 							SetProcessModelIdentity = ProcessModelIdentityTypeSpecified,
         	          		ProcessModelIdentityType = ProcessModelIdentityType.ToProcessModelIdentityType(),
