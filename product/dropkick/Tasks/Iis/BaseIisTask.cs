@@ -22,6 +22,8 @@ namespace dropkick.Tasks.Iis
     public abstract class BaseIisTask :
         BaseTask
     {
+        public const string DefaultPathOnServer = @"C:\inetpub\wwwroot";
+        
         ILog _log = LogManager.GetLogger("dropkick.changes.iis");
         public string WebsiteName { get; set; }
         public string VirtualDirectoryPath { get; set; }
@@ -30,11 +32,6 @@ namespace dropkick.Tasks.Iis
         public abstract int VersionNumber { get; }
         public string AppPoolName { get; set; }
         public IEnumerable<IisSiteBinding> Bindings { get; set; }
-
-        protected BaseIisTask()
-        {
-            Bindings = new [] { new IisSiteBinding() };
-        }
 
         #region Task Members
 
