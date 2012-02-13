@@ -13,6 +13,7 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
+using Magnum;
 using dropkick.Exceptions;
 using dropkick.Tasks.Security.Certificate;
 
@@ -28,7 +29,6 @@ namespace dropkick.Tasks.Iis
     public class Iis7Task : BaseIisTask
     {
         const string DefaultAppPoolName = "DefaultAppPool";
-        static readonly string DefaultPathOnServer = Environment.ExpandEnvironmentVariables(@"%SystemDrive%\inetpub\wwwroot");
         const string DefaultManagedRuntimeVersion = Iis.ManagedRuntimeVersion.V2;
 
         public bool UseClassicPipeline { get; set; }
@@ -65,9 +65,10 @@ namespace dropkick.Tasks.Iis
             {
                 CheckForSiteAndVDirExistance(DoesSiteExist,
                                              () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
-                checkForSiteBindingConflict(iisManager, WebsiteName, Bindings);
-                checkCertificatesExist(Bindings.Where(x => 
-                    !String.IsNullOrEmpty(x.CertificateThumbPrint)).Select(x => x.CertificateThumbPrint), result);
+                checkForSiteBindingConflict(iisManager, WebsiteName, Bindings, result);
+                if (Bindings != null)
+                    checkCertificatesExist(Bindings.Where(x => 
+                        !String.IsNullOrEmpty(x.CertificateThumbPrint)).Select(x => x.CertificateThumbPrint), result);
                 checkHttpsBindingsHaveCertificate(result);
 
                 if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
@@ -83,6 +84,8 @@ namespace dropkick.Tasks.Iis
 
         void checkHttpsBindingsHaveCertificate(DeploymentResult result)
         {
+            if (Bindings == null) return;
+
             foreach (var invalidBinding in Bindings.Where(x => x.Protocol == "https" && String.IsNullOrEmpty(x.CertificateThumbPrint)))
                 result.AddError("Cannot bind https to port '{0}' as no certificate thumbprint was specified.".FormatWith(invalidBinding.Port));
         }
@@ -129,10 +132,19 @@ namespace dropkick.Tasks.Iis
 
         void updateSiteBindings(Site site, DeploymentResult result)
         {
+            if (Bindings == null)
+            {
+                result.AddNote("No site bindings specified.");
+                return;
+            }
+
             // https bindings certificates cannot be compared or updated, these bindings must be recreated each time.
             var httpsBindings = site.Bindings.Where(x => x.Protocol == "https").ToArray();
             foreach (var httpsBinding in httpsBindings)
+            {
                 site.Bindings.Remove(httpsBinding);
+                LogIis("[iis7] Removed binding for {0}://{1}:{2}", httpsBinding.Protocol, httpsBinding.EndPoint.Address, httpsBinding.EndPoint.Port);
+            }
 
             // Add new bindings
             var existingBindings = site.Bindings.AsEnumerable();
@@ -149,11 +161,11 @@ namespace dropkick.Tasks.Iis
             for (var i = site.Bindings.Count - 1; i >= 0; i--)
             {
                 var existingBinding = site.Bindings[i];
-                if (!Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port))
-                {
-                    site.Bindings.Remove(existingBinding);
-                    LogIis("[iis7] Removed binding for {0}://*:{1}", existingBinding.Protocol, existingBinding.EndPoint.Port);
-                }
+                if (Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port)) 
+                    continue;
+
+                site.Bindings.Remove(existingBinding);
+                LogIis("[iis7] Removed binding for {0}://*:{1}", existingBinding.Protocol, existingBinding.EndPoint.Port);
             }
 
             result.AddGood("Updated bindings for website '{0}'", WebsiteName);            
@@ -181,7 +193,8 @@ namespace dropkick.Tasks.Iis
                 LogFineGrain("[iis7] Created '{0}'", PathOnServer);
             }
 
-            var firstBinding = Bindings.First();
+            var firstBinding = Bindings.FirstOrDefault() ?? new IisSiteBinding();
+
             // Unfortunately the API for adding sites differs for HTTPS & HTTP
             var site = firstBinding.Protocol != "https"
                 ? iisManager.Sites.Add(WebsiteName, firstBinding.Protocol, getBindingInformation(firstBinding),
@@ -204,8 +217,14 @@ namespace dropkick.Tasks.Iis
             return "*:{0}:".FormatWith(binding.Port);
         }
 
-        static void checkForSiteBindingConflict(ServerManager iisManager, string targetSiteName, IEnumerable<IisSiteBinding> targetBindings)
+        static void checkForSiteBindingConflict(ServerManager iisManager, string targetSiteName, IEnumerable<IisSiteBinding> targetBindings, DeploymentResult result)
         {
+            if (targetBindings == null || !targetBindings.Any())
+            {
+                result.AddNote("[iis7] No bindings specified for site '{0}'".FormatWith(targetSiteName));
+                return;
+            }
+
             foreach (var targetPort in targetBindings.Select(x => x.Port))
             {
                 var conflictSite = iisManager.Sites
@@ -219,6 +238,7 @@ namespace dropkick.Tasks.Iis
                         String.Format("Cannot create site '{0}': port '{1}' is already in use by '{2}'.",
                                       targetSiteName, targetPort, conflictSite.Name));
             }
+            result.AddGood("[iis7] No site binding conflicts detected.");
         }
 
         void buildApplicationPool(ServerManager mgr, DeploymentResult result)
