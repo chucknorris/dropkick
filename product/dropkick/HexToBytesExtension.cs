@@ -22,7 +22,6 @@ namespace dropkick
             {
                 var strIdx = i * 2;
                 var s = new string(chars, strIdx, 2);
-                System.Diagnostics.Debug.WriteLine(s);
                 bytes[i] = Byte.Parse(s, NumberStyles.HexNumber);
             }
             return bytes;
