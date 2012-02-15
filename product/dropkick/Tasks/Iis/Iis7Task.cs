@@ -103,7 +103,7 @@ namespace dropkick.Tasks.Iis
             {
                 buildApplicationPool(iisManager, result);
 
-                if (!DoesSiteExist(result)) createWebSite(iisManager, WebsiteName);
+                if (!DoesSiteExist(result)) createWebSite(iisManager);
 
                 var site = GetSite(iisManager, WebsiteName);
                 updateSiteBindings(site, result);
@@ -137,40 +137,71 @@ namespace dropkick.Tasks.Iis
                 return;
             }
 
-            // https bindings certificates cannot be compared or updated, these bindings must be recreated each time.
-            var httpsBindings = site.Bindings.Where(x => x.Protocol == "https").ToArray();
-            foreach (var httpsBinding in httpsBindings)
-            {
-                site.Bindings.Remove(httpsBinding);
-                LogIis("[iis7] Removed binding for {0}://{1}:{2}", httpsBinding.Protocol, httpsBinding.EndPoint.Address, httpsBinding.EndPoint.Port);
-            }
+            LogFineGrain("Checking certificates on existing HTTPS bindings");
+            updateHttpsBindingCertificates(site, result);
 
-            // Add new bindings
-            var existingBindings = site.Bindings.AsEnumerable();
-            foreach (var newBinding in Bindings)
-            {
-                var bindingInformation = getBindingInformation(newBinding);
-                if (!existingBindings.Any(x => x.Protocol == newBinding.Protocol && x.BindingInformation == bindingInformation))
-                {
-                    if (newBinding.Protocol != "https") 
-                        site.Bindings.Add(getBindingInformation(newBinding), newBinding.Protocol);
-                    else
-                        site.Bindings.Add(getBindingInformation(newBinding), getCertificateHashFor(newBinding), "MY"); // TODO, should "MY" by "\\machine\MY"?
-                    LogIis("[iis7] Added binding for {0}://*:{1}", newBinding.Protocol, newBinding.Port);
-                }
-            }
+            LogFineGrain("Adding new IIS bindings");
+            addnewBindings(site, result);
 
+            LogFineGrain("Removing IIS bindings that are no longer required");
+            removeOldBindings(site, result);
+
+            result.AddGood("Updated bindings for website '{0}'", WebsiteName);            
+        }
+
+        void removeOldBindings(Site site, DeploymentResult result)
+        {
             for (var i = site.Bindings.Count - 1; i >= 0; i--)
             {
                 var existingBinding = site.Bindings[i];
-                if (Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port)) 
-                    continue;
+                if (Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port)) continue;
 
                 site.Bindings.Remove(existingBinding);
                 LogIis("[iis7] Removed binding for {0}://*:{1}", existingBinding.Protocol, existingBinding.EndPoint.Port);
             }
+        }
 
-            result.AddGood("Updated bindings for website '{0}'", WebsiteName);            
+        void addnewBindings(Site site, DeploymentResult result)
+        {
+            var existingBindings = site.Bindings.AsEnumerable();
+
+            foreach (var newBinding in 
+                from newBinding in Bindings
+                let bindingInformation = getBindingInformation(newBinding)
+                where !existingBindings.Any(x => x.Protocol == newBinding.Protocol && x.BindingInformation == bindingInformation)
+                select newBinding)
+            {
+                if (newBinding.Protocol != "https") 
+                    site.Bindings.Add(getBindingInformation(newBinding), newBinding.Protocol);
+                else
+                    site.Bindings.Add(getBindingInformation(newBinding), newBinding.CertificateThumbPrint.FromHexToBytes(), "MY");
+
+                LogIis("[iis7] Added binding for {0}://*:{1}", newBinding.Protocol, newBinding.Port);
+            }
+        }
+
+        void updateHttpsBindingCertificates(Site site, DeploymentResult result)
+        {
+            var httpsConfigs = Bindings.Where(x => x.Protocol == "https");
+            var existingBindings = site.Bindings.Where(x => x.Protocol == "https");
+
+            foreach (var cfg in httpsConfigs)
+            {
+                var binding = existingBindings.FirstOrDefault(x => x.BindingInformation == getBindingInformation(cfg));
+                if (binding == null) continue;
+
+                if (binding.CertificateHash.ToHex() == cfg.CertificateThumbPrint) continue;
+                result.AddAlert("Certificate Hash changed for binding https://*:{0}".FormatWith(cfg.Port));
+
+                var method = binding.Methods["AddSslCertificate"];
+                if (method == null) throw new UnauthorizedAccessException("Unable to access the AddSslCertificate configuration method");
+
+                var mi = method.CreateInstance();
+                mi.Input.SetAttributeValue("certificateHash", cfg.CertificateThumbPrint);
+                mi.Input.SetAttributeValue("certificateStoreName", "MY");
+                mi.Execute();
+                LogIis("[iis7] Applied new certificate to binding for https://{0}", binding.BindingInformation);
+            }
         }
 
         public bool DoesSiteExist(DeploymentResult result)
@@ -187,7 +218,7 @@ namespace dropkick.Tasks.Iis
             return false;
         }
 
-        void createWebSite(ServerManager iisManager, string websiteName)
+        void createWebSite(ServerManager iisManager)
         {
             if (_path.DirectoryDoesntExist(PathOnServer))
             {
@@ -201,17 +232,9 @@ namespace dropkick.Tasks.Iis
             var site = firstBinding.Protocol != "https"
                 ? iisManager.Sites.Add(WebsiteName, firstBinding.Protocol, getBindingInformation(firstBinding),
                                        PathOnServer)
-                : iisManager.Sites.Add(WebsiteName, getBindingInformation(firstBinding), PathOnServer,
-                                       getCertificateHashFor(firstBinding));                    
+                : iisManager.Sites.Add(WebsiteName, getBindingInformation(firstBinding), PathOnServer, firstBinding.CertificateThumbPrint.FromHexToBytes());                    
 
             LogIis("[iis7] Created website '{0}' with binding for {1}://*:{2}", WebsiteName, firstBinding.Protocol, firstBinding.Port);
-        }
-
-        byte[] getCertificateHashFor(IisSiteBinding binding)
-        {
-            return binding.CertificateThumbPrint == null
-                ? new byte[0]
-                : binding.CertificateThumbPrint.FromHexToBytes();
         }
 
         static string getBindingInformation(IisSiteBinding binding)
