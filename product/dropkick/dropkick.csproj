@@ -131,6 +131,7 @@
     <Compile Include="Configuration\Dsl\Xml\XmlPokeOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="FileSystem\PathConverter.cs" />
+    <Compile Include="HexToBytesExtension.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Log4NetLog.cs" />

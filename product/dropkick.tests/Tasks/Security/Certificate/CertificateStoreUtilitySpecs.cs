@@ -5,15 +5,12 @@ using dropkick.Tasks.Security.Certificate;
 namespace dropkick.tests.Tasks.Security.Certificate
 {
     [Category("Integration")]
-    public class When_getting_certificate_hash_for_a_known_thumbprint : TinySpec
+    public class When_querying_certificate_hash_for_a_known_thumbprint : TinySpec
     {
-        static readonly byte[] ExpectedHash =
-            ConfigurationManager.AppSettings["CertificateStore.LocalCertificateHash"].FromHexToBytes();
-
         [Fact]
-        public void It_should_return_the_correct_hash()
+        public void It_should_find_the_certificate()
         {
-            Assert.AreEqual(ExpectedHash, _certHash);
+            Assert.IsTrue(_store.CertificateExists(ConfigurationManager.AppSettings["CertificateStore.LocalCertificateThumbprint"]));
         }
 
         public override void Context()
@@ -22,11 +19,9 @@ namespace dropkick.tests.Tasks.Security.Certificate
         }
 
         public override void Because()
-        {
-            _certHash = _store.GetCertificateHashForThumbprint(ConfigurationManager.AppSettings["CertificateStore.LocalCertificateThumbprint"]);
+        {            
         }
 
-        byte[] _certHash;
         CertificateStore _store;
     }
 
@@ -36,7 +31,7 @@ namespace dropkick.tests.Tasks.Security.Certificate
         [Fact]
         public void It_should_find_the_certificate()
         {
-            Assert.IsNotNull(_certHash);
+            Assert.IsTrue(_store.CertificateExists(ConfigurationManager.AppSettings["CertificateStore.RemoteCertificateThumbprint"]));
         }
 
         public override void Context()
@@ -46,10 +41,8 @@ namespace dropkick.tests.Tasks.Security.Certificate
 
         public override void Because()
         {
-            _certHash = _store.GetCertificateHashForThumbprint(ConfigurationManager.AppSettings["CertificateStore.RemoteCertificateThumbprint"]);
         }
 
-        byte[] _certHash;
         CertificateStore _store;
     }
 }

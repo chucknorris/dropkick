@@ -20,16 +20,6 @@ namespace dropkick.Tasks.Security.Certificate
             _store = new X509Store(storename.FormatWith(machine), StoreLocation.LocalMachine);
         }
 
-        public byte[] GetCertificateHashForThumbprint(string certificateThumbprint)
-        {
-            var certificate = getCertificateFromThumbprint(certificateThumbprint);
-            if (certificate.Count == 0)
-                throw new ArgumentException(String.Format("No certificate was found with the specified thumbprint '{0}'",
-                                                          certificateThumbprint));
-
-            return certificate[0].GetCertHash();
-        }
-
         public bool CertificateExists(string thumbprint)
         {
             return getCertificateFromThumbprint(thumbprint).Count > 0;

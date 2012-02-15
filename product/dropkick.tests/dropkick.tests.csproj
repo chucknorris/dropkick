@@ -108,7 +108,6 @@
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem\PathConverterSpecs.cs" />
     <Compile Include="HexToByteExtensionTest.cs" />
-    <Compile Include="HexToBytesExtension.cs" />
     <Compile Include="Registry\CreateRegistryKeyTaskTest.cs">
       <SubType>Code</SubType>
     </Compile>

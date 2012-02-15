@@ -2,7 +2,7 @@ using System;
 using System.Globalization;
 using System.Text;
 
-namespace dropkick.tests
+namespace dropkick
 {
     public static class HexToBytesExtension
     {

@@ -13,7 +13,6 @@
 
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Magnum;
 using dropkick.Exceptions;
 using dropkick.Tasks.Security.Certificate;
 
@@ -150,10 +149,13 @@ namespace dropkick.Tasks.Iis
             var existingBindings = site.Bindings.AsEnumerable();
             foreach (var newBinding in Bindings)
             {
-                if (!existingBindings.Any(x => x.Protocol == newBinding.Protocol && x.EndPoint.Port == newBinding.Port))
+                var bindingInformation = getBindingInformation(newBinding);
+                if (!existingBindings.Any(x => x.Protocol == newBinding.Protocol && x.BindingInformation == bindingInformation))
                 {
-                    if (newBinding.Protocol != "https") site.Bindings.Add(getBindingInformation(newBinding), newBinding.Protocol);
-                    else site.Bindings.Add(getBindingInformation(newBinding), getCertificateHashFor(newBinding), "MY");
+                    if (newBinding.Protocol != "https") 
+                        site.Bindings.Add(getBindingInformation(newBinding), newBinding.Protocol);
+                    else
+                        site.Bindings.Add(getBindingInformation(newBinding), getCertificateHashFor(newBinding), "MY"); // TODO, should "MY" by "\\machine\MY"?
                     LogIis("[iis7] Added binding for {0}://*:{1}", newBinding.Protocol, newBinding.Port);
                 }
             }
@@ -207,9 +209,9 @@ namespace dropkick.Tasks.Iis
 
         byte[] getCertificateHashFor(IisSiteBinding binding)
         {
-            return binding.CertificateThumbPrint == null 
-                ? new byte[0] 
-                : _certificateStore.GetCertificateHashForThumbprint(binding.CertificateThumbPrint);
+            return binding.CertificateThumbPrint == null
+                ? new byte[0]
+                : binding.CertificateThumbPrint.FromHexToBytes();
         }
 
         static string getBindingInformation(IisSiteBinding binding)

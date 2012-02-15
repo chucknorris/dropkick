@@ -12,9 +12,6 @@ namespace dropkick.tests.Tasks.Iis
     {
         public abstract class Iis7TaskSpecsContext : TinySpec
         {
-            // TODO: This is specific to my self-signed cert.
-            protected const string CertificateThumbprint = @"13d8ae4000e8d5ac8930c3cdb6c995640c715b86";
-
             [Fact]
             public void It_should_not_return_any_errors_from_task_verification()
             {
@@ -61,7 +58,7 @@ namespace dropkick.tests.Tasks.Iis
 
                     if (certificateThumbprint != null)
                     {
-                        Assert.AreEqual(_store.GetCertificateHashForThumbprint(certificateThumbprint), binding.CertificateHash);
+                        Assert.AreEqual(certificateThumbprint.FromHexToBytes(), binding.CertificateHash);
                     }
                 }
             }
@@ -99,6 +96,9 @@ namespace dropkick.tests.Tasks.Iis
             {
                 Thread.Sleep(500);
             }
+
+            protected static readonly string CertificateThumbprint =
+                System.Configuration.ConfigurationManager.AppSettings["CertificateStore.LocalCertificateThumbprint"];
 
             protected Iis7Task Task;
             protected DeploymentResult ExecutionResult;
