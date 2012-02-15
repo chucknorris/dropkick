@@ -4,7 +4,6 @@ using Microsoft.Web.Administration;
 using NUnit.Framework;
 using dropkick.DeploymentModel;
 using dropkick.Tasks.Iis;
-using dropkick.Tasks.Security.Certificate;
 
 namespace dropkick.tests.Tasks.Iis
 {
@@ -26,7 +25,8 @@ namespace dropkick.tests.Tasks.Iis
 
             public override void Context()
             {
-                _store = new CertificateStore(WebServerName);
+                WebServerName = "localhost";
+                CertificateThumbprint = System.Configuration.ConfigurationManager.AppSettings["Iis7Task.LocalCertificateThumbprint"];
                 Task = new Iis7Task { WebsiteName = TestWebSiteName, ServerName = WebServerName };
             }
 
@@ -97,15 +97,12 @@ namespace dropkick.tests.Tasks.Iis
                 Thread.Sleep(500);
             }
 
-            protected static readonly string CertificateThumbprint =
-                System.Configuration.ConfigurationManager.AppSettings["CertificateStore.LocalCertificateThumbprint"];
-
             protected Iis7Task Task;
             protected DeploymentResult ExecutionResult;
             protected DeploymentResult VerificationResult;
-            CertificateStore _store;
             protected const string TestWebSiteName = "_DropKickTest_4789";
-            protected const string WebServerName = "localhost";
+            protected static string WebServerName;
+            protected string CertificateThumbprint;
         }
 
         [Category("Integration")]
@@ -267,6 +264,18 @@ namespace dropkick.tests.Tasks.Iis
                                         new IisSiteBinding { Protocol = "https", Port = ExistingHttpsPort, CertificateThumbPrint = CertificateThumbprint }
                                     };
                 base.Because();
+            }
+        }
+
+        [Category("Integration")]
+        public class When_manipulating_a_site_on_a_remote_server : When_creating_a_site_that_already_exists
+        {
+            public override void Context()
+            {
+                WebServerName = System.Configuration.ConfigurationManager.AppSettings["Iis7Task.RemoteMachineName"];
+                CertificateThumbprint =
+                    System.Configuration.ConfigurationManager.AppSettings["Iis7Task.RemoteCertificateThumbprint"];
+                base.Context();
             }
         }
     }
