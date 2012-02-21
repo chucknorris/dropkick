@@ -63,6 +63,8 @@ namespace dropkick.DeploymentModel
                 deploymentResult.MergedWith(o);
                 if (o.ContainsError())
                 {
+                    //display errors!
+                    DisplayResults(o);
                     //stop. report verify error.
                     return;
                 }
