@@ -154,6 +154,12 @@ namespace dropkick.Tasks.Iis
             for (var i = site.Bindings.Count - 1; i >= 0; i--)
             {
                 var existingBinding = site.Bindings[i];
+                if (existingBinding.EndPoint == null)
+                {
+                    result.AddAlert("[iis7] Binding {0} for protocol {1} has no endpoint.",
+                                    existingBinding.BindingInformation, existingBinding.Protocol);
+                    continue;
+                }
                 if (Bindings.Any(x => x.Protocol == existingBinding.Protocol && x.Port == existingBinding.EndPoint.Port)) continue;
 
                 site.Bindings.Remove(existingBinding);
