@@ -35,8 +35,22 @@ namespace dropkick.console
             }
 
             AddQuotesBackToArgs(args);
-            
+            EscapeUncPaths(args);
+
             Runner.Deploy(string.Join(" ", args));
+        }
+
+        static void EscapeUncPaths(string[] args)
+        {
+            if (args == null || args.Length <= 0) return;
+
+            for (var i = 0; i < args.Length; i++)
+            {
+                if (args[i].StartsWith(@"\\"))
+                    args[i] = @"\\" + args[i];
+                if (args[i].StartsWith(@"""\\"))
+                    args[i] = @"""\\" + args[i].Substring(1);
+            }
         }
 
         private static void AddQuotesBackToArgs(string[] args)
@@ -52,7 +66,7 @@ namespace dropkick.console
 
         static bool WasSurroundedByDoubleQuotes(string argument)
         {
-            var indexOf = Environment.CommandLine.IndexOf(argument);
+            var indexOf = Environment.CommandLine.IndexOf(argument, StringComparison.Ordinal);
             return indexOf > 0 &&
                 indexOf + argument.Length < Environment.CommandLine.Length && 
                 Environment.CommandLine[indexOf - 1] == '"' &&
