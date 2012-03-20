@@ -69,5 +69,11 @@ namespace dropkick.Configuration.Dsl.Files
 			protoServer.RegisterProtoTask(proto);
 			return proto;
 		}
+
+		public static void DeleteFile(this ProtoServer protoServer, string file)
+		{
+			var proto = new ProtoDeleteFileTask(file);
+			protoServer.RegisterProtoTask(proto);
+		}
     }
 }
