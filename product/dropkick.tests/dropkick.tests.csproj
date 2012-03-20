@@ -97,7 +97,6 @@
     <Compile Include="Configuration\Dsl\CopyFilesProtoWithSettings.cs" />
     <Compile Include="Configuration\Dsl\IisProtoTaskProcessModelSpec.cs" />
     <Compile Include="Configuration\Dsl\ProcessModelIdentityTranslation.cs" />
-    <Compile Include="Configuration\Dsl\roundhouse\RoundhouseProtoTest.cs" />
     <Compile Include="Configuration\Dsl\should_throw_if_missing_a_mapped_role.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
@@ -127,6 +126,7 @@
     <Compile Include="Tasks\Iis\ExistingVirtualDirectorySpecs.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
+    <Compile Include="Tasks\RoundhousE\DbConnectionInfoTests.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
     <Compile Include="Tasks\Security\Acl\SecurityAclSpecs.cs" />
     <Compile Include="Tasks\Security\Certificate\SecurityX509CertificateSpecs.cs" />
