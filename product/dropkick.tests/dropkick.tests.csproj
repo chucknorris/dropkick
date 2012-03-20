@@ -185,6 +185,9 @@
     <Content Include="Tasks\MsSql\test.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tasks\Xml\Context\TestWithNamespace.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tasks\Xml\Context\Test.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

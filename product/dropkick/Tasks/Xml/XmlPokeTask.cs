@@ -26,12 +26,19 @@ namespace dropkick.Tasks.Xml
 
         private string _filePath;
         private readonly IDictionary<string, string> _replacementItems;
+        private readonly IDictionary<string, string> _namespacePrefixes; 
 
         public XmlPokeTask(string filePath, IDictionary<string, string> replacementItems, Path path)
+            : this(filePath, replacementItems, path, new Dictionary<string, string>())
+        {
+        }
+
+        public XmlPokeTask(string filePath, IDictionary<string, string> replacementItems, Path path, IDictionary<string, string> namespacePrefixes)
             : base(path)
         {
             _filePath = filePath;
             _replacementItems = replacementItems;
+            _namespacePrefixes = namespacePrefixes;
         }
 
         public override string Name
@@ -58,13 +65,13 @@ namespace dropkick.Tasks.Xml
             _filePath = _path.GetFullPath(_filePath);
             ValidateIsFile(result, _filePath);
 
-            UpdateXmlFile(result, _filePath, _replacementItems);
+            UpdateXmlFile(result, _filePath, _replacementItems, _namespacePrefixes);
 
             result.AddGood(Name);
             return result;
         }
 
-        private void UpdateXmlFile(DeploymentResult result, string filePath, IDictionary<string, string> replacementItems)
+        private void UpdateXmlFile(DeploymentResult result, string filePath, IDictionary<string, string> replacementItems, IDictionary<string, string> namespacePrefixes)
         {
             //XmlTextReader xmlReader = new XmlTextReader(_filePath);
             //XPathDocument xmlDoc = new XPathDocument(xmlReader);
@@ -74,11 +81,16 @@ namespace dropkick.Tasks.Xml
 
             XmlDocument document = new XmlDocument();
             document.Load(filePath);
-            XPathNavigator xpathNavigator = document.CreateNavigator();
+            var nsManager = new XmlNamespaceManager(document.NameTable);
+            foreach (var prefix in namespacePrefixes)
+            {
+                nsManager.AddNamespace(prefix.Key, prefix.Value);
+            }
 
+            XPathNavigator xpathNavigator = document.CreateNavigator();
             foreach (KeyValuePair<string, string> item in replacementItems.OrEmptyListIfNull())
             {
-                UpdateValueInFile(result, xpathNavigator, item.Key, item.Value);
+                UpdateValueInFile(result, xpathNavigator, item.Key, item.Value, nsManager);
             } 
 
             LogFileChange("[xmlpoke] Completed changes to '{0}'.",filePath);
@@ -86,9 +98,9 @@ namespace dropkick.Tasks.Xml
             document.Save(filePath);
         }
 
-        private void UpdateValueInFile(DeploymentResult result, XPathNavigator xpathNavigator, string xPath, string value)
+        private void UpdateValueInFile(DeploymentResult result, XPathNavigator xpathNavigator, string xPath, string value, XmlNamespaceManager nsManager)
         {
-            foreach (XPathNavigator navigator in xpathNavigator.Select(xPath))
+            foreach (XPathNavigator navigator in xpathNavigator.Select(xPath, nsManager))
             {
                 string original = navigator.Value;
                 navigator.SetValue(value);
