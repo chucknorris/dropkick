@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.Files
 {
     using System;
     using System.Text;
+    using System.Text.RegularExpressions;
     using FileSystem;
 
     public static class Extension
@@ -68,6 +69,12 @@ namespace dropkick.Configuration.Dsl.Files
 			var proto = new ProtoUnzipArchiveTask(new DotNetPath(), archiveFilename);
 			protoServer.RegisterProtoTask(proto);
 			return proto;
+		}
+
+		public static void DeleteFile(this ProtoServer protoServer, string file)
+		{
+			var proto = new ProtoDeleteFileTask(file);
+			protoServer.RegisterProtoTask(proto);
 		}
 
         public static FilePokeOptions FilePoke(this ProtoServer protoServer, string filePath)
