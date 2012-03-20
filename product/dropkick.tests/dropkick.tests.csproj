@@ -95,6 +95,7 @@
     <Compile Include="ApplicationPoolTestExtensions.cs" />
     <Compile Include="Configuration\Dsl\CheckingPlanBuildingLogic.cs" />
     <Compile Include="Configuration\Dsl\CopyFilesProtoWithSettings.cs" />
+    <Compile Include="Configuration\Dsl\FilePokeTest.cs" />
     <Compile Include="Configuration\Dsl\IisProtoTaskProcessModelSpec.cs" />
     <Compile Include="Configuration\Dsl\ProcessModelIdentityTranslation.cs" />
     <Compile Include="Configuration\Dsl\should_throw_if_missing_a_mapped_role.cs" />
@@ -121,6 +122,7 @@
     <Compile Include="Tasks\Files\CopyDirectoryTaskSpecs.cs" />
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="FileSystem\DotNetPathTests.cs" />
+    <Compile Include="Tasks\Files\FilePokeTaskTest.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
     <Compile Include="Tasks\Iis\Iis7OperationSpecs.cs" />
     <Compile Include="Tasks\Iis\ExistingVirtualDirectorySpecs.cs" />
@@ -158,6 +160,8 @@
     <Compile Include="TestObjects\SampleConfiguration.cs" />
     <Compile Include="TestObjects\SecurityDeployment.cs" />
     <Compile Include="TestObjects\SingleRoleDeploy.cs" />
+    <Compile Include="TestObjects\TestPhysicalServer.cs" />
+    <Compile Include="TestObjects\TestProtoServer.cs" />
     <Compile Include="TestObjects\TopshelfDeploy.cs" />
     <Compile Include="TestObjects\TwoRoleDeploy.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

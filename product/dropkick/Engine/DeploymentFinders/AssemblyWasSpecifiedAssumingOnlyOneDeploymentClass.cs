@@ -43,9 +43,11 @@ namespace dropkick.Engine.DeploymentFinders
             try
             {
                 var asm = Assembly.LoadFile(path);
-                var foundDeploymentTypes = asm.GetTypes().Where(t => typeof (Deployment).IsAssignableFrom(t));
+                var foundDeploymentTypes = asm.GetTypes().Where(t => typeof (Deployment).IsAssignableFrom(t)).ToList();
 
                 if(foundDeploymentTypes.Count() > 1) throw new DeploymentConfigurationException("There was more than one deployment in the assembly '{0}'".FormatWith(assemblyName));
+
+                if (!foundDeploymentTypes.Any()) return new NullDeployment();
 
                 return new TypeWasSpecifiedAssumingItHasADefaultConstructor().Find(foundDeploymentTypes.First());
             }

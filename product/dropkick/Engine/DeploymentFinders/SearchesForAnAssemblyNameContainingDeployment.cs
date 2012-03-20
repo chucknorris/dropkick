@@ -26,12 +26,18 @@ namespace dropkick.Engine.DeploymentFinders
             var pathToSearch = AppDomain.CurrentDomain.BaseDirectory;
             var ass = Directory.GetFiles(pathToSearch);
 
-            var deploymentAssemblyCandidates = ass.Where(x => x.Contains("Deployment"));
+            var deploymentAssemblyCandidates = ass.Where(x => x.Contains("Deployment") 
+                && (Path.GetExtension(x) == ".dll" || Path.GetExtension(x) == ".exe"));
 
-            if (deploymentAssemblyCandidates.Count() == 0)
-                return new NullDeployment();
+            Deployment deployment = new NullDeployment();
+            foreach (var candidate in deploymentAssemblyCandidates)
+            {
+                deployment = new AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass().Find(candidate);
+                if (deployment.GetType() != typeof(NullDeployment))
+                    return deployment;
+            }
 
-            return new AssemblyWasSpecifiedAssumingOnlyOneDeploymentClass().Find(deploymentAssemblyCandidates.First());
+            return deployment;
         }
 
         public string Name

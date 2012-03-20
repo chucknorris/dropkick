@@ -94,6 +94,8 @@
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
+    <Compile Include="Configuration\Dsl\Files\FilePokeOptions.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoFilePokeTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoEncryptAppConfigTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoUnzipArchiveTask.cs" />
     <Compile Include="Configuration\Dsl\Files\UnzipOptions.cs" />
@@ -150,6 +152,8 @@
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataReaderTask.cs" />
     <Compile Include="Configuration\Dsl\Security\MsSql\ProtoGrantDataWriterTask.cs" />
     <Compile Include="Tasks\BaseTask.cs" />
+    <Compile Include="Tasks\Files\FilePokeReplacement.cs" />
+    <Compile Include="Tasks\Files\FilePokeTask.cs" />
     <Compile Include="Tasks\Files\UnzipArchiveTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
     <Compile Include="Tasks\Iis\Iis7OperationTask.cs" />

@@ -16,7 +16,15 @@ namespace dropkick.Wmi
                 }
             };
 
-            scope.Connect();
+            try
+            {
+                scope.Connect();
+            }
+            catch (Exception exc)
+            {
+                throw new SystemException("Problem connecting WMI scope on " + machineName + ".", exc);
+            }
+
             return scope;
         }
 
