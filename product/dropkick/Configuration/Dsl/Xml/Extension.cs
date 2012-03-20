@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System.Collections.Generic;
+
 namespace dropkick.Configuration.Dsl.Xml
 {
     public static class Extension
@@ -17,6 +20,13 @@ namespace dropkick.Configuration.Dsl.Xml
         public static XmlPokeOptions XmlPoke(this ProtoServer protoServer, string filePath)
         {
             var proto = new ProtoXmlPokeTask(filePath);
+            protoServer.RegisterProtoTask(proto);
+            return proto;
+        }
+
+        public static XmlPokeOptions XmlPoke(this ProtoServer protoServer, string filePath, IDictionary<string, string> namespacePrefixes)
+        {
+            var proto = new ProtoXmlPokeTask(filePath, namespacePrefixes);
             protoServer.RegisterProtoTask(proto);
             return proto;
         }
