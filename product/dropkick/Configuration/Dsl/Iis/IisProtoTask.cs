@@ -10,6 +10,9 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System.Collections.Generic;
+
 namespace dropkick.Configuration.Dsl.Iis
 {
     using System;
@@ -24,7 +27,7 @@ namespace dropkick.Configuration.Dsl.Iis
         IisVirtualDirectoryOptions,
         AppPoolOptions
     {
-        Path _path;
+        readonly Path _path;
 
         public IisProtoTask(string websiteName, Path path)
         {
@@ -41,13 +44,28 @@ namespace dropkick.Configuration.Dsl.Iis
         protected string AppPoolName { get; set; }
         public bool ClassicPipelineRequested { get; set; }
         public string ManagedRuntimeVersion { get; set; }
-        public string PathForWebsite { get; set; }
-        public int PortForWebsite { get; set; }
+        public IEnumerable<IisSiteBinding> Bindings { get; set; }
         public bool Bit32Requested { get; set; }
 		public bool ProcessModelIdentityTypeSpecified { get; private set; }
 		public ProcessModelIdentity ProcessModelIdentityType { get; private set; }
 		public string ProcessModelUsername { get; private set; }
 		public string ProcessModelPassword { get; private set; }
+
+        /// <summary>
+        /// Setup an application in the root directory of a site.
+        /// </summary>
+        public IisVirtualDirectoryOptions RootDirectory()
+        {
+            return VirtualDirectory(String.Empty);
+        }
+
+        IisSiteOptions IisSiteOptions.Bindings(Action<IisSiteBindingCollection> bindings)
+        {
+            var siteBindings = new IisSiteBindingCollection();
+            bindings(siteBindings);
+            Bindings = siteBindings;
+            return this;
+        }
 
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
@@ -111,7 +129,7 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
-            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer,true);
+            var scrubbedPath = PathOnServer != null ? _path.GetPhysicalPath(s, PathOnServer, true) : null;
 
             if (Version == IisVersion.Six)
             {
@@ -121,7 +139,8 @@ namespace dropkick.Configuration.Dsl.Iis
                                   ServerName = s.Name,
                                   VirtualDirectoryPath = VdirPath,
                                   WebsiteName = WebsiteName,
-                                  AppPoolName = AppPoolName
+                                  AppPoolName = AppPoolName,
+                                  Bindings = Bindings
                               });
                 return;
             }
@@ -129,18 +148,17 @@ namespace dropkick.Configuration.Dsl.Iis
         	          	{
         	          		PathOnServer = scrubbedPath,
         	          		ServerName = s.Name,
-                              VirtualDirectoryPath = VdirPath,
+                            VirtualDirectoryPath = VdirPath,
         	          		WebsiteName = WebsiteName,
         	          		AppPoolName = AppPoolName,
         	          		UseClassicPipeline = ClassicPipelineRequested,
-        	          		ManagedRuntimeVersion = this.ManagedRuntimeVersion,
-        	          		PathForWebsite = this.PathForWebsite,
-        	          		PortForWebsite = this.PortForWebsite,
+        	          		ManagedRuntimeVersion = ManagedRuntimeVersion,
+        	          		Bindings = Bindings,
         	          		Enable32BitAppOnWin64 = Bit32Requested,
-							SetProcessModelIdentity = this.ProcessModelIdentityTypeSpecified,
+							SetProcessModelIdentity = ProcessModelIdentityTypeSpecified,
         	          		ProcessModelIdentityType = ProcessModelIdentityType.ToProcessModelIdentityType(),
-							ProcessModelUsername = this.ProcessModelUsername,
-							ProcessModelPassword = this.ProcessModelPassword
+							ProcessModelUsername = ProcessModelUsername,
+							ProcessModelPassword = ProcessModelPassword
                           });
         }
 

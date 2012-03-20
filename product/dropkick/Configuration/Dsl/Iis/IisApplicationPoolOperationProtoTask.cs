@@ -9,7 +9,7 @@ namespace dropkick.Configuration.Dsl.Iis
     public class IisApplicationPoolOperationProtoTask : BaseProtoTask, IisApplicationPoolOperation
     {
         readonly string _applicationPoolName;
-        Iis7Operation _operation;
+        Iis7ApplicationPoolOperation _operation;
 
         public IisApplicationPoolOperationProtoTask(string applicationPoolName)
         {
@@ -21,20 +21,20 @@ namespace dropkick.Configuration.Dsl.Iis
 
         public void Start()
         {
-            _operation = Iis7Operation.StartApplicationPool;
+            _operation = Iis7ApplicationPoolOperation.StartApplicationPool;
         }
 
         public void Stop()
         {
-            _operation = Iis7Operation.StopApplicationPool;
+            _operation = Iis7ApplicationPoolOperation.StopApplicationPool;
         }
 
         public override void RegisterRealTasks(PhysicalServer server)
         {
-            if (_operation == Iis7Operation.Unspecified) throw new InvalidOperationException("Application Pool Operation not specified.");
+            if (_operation == Iis7ApplicationPoolOperation.Unspecified) throw new InvalidOperationException("Application Pool Operation not specified.");
             if (Version == IisVersion.Six) throw new NotSupportedException("Application Pool Operations not supported on IIS 6.");
 
-            server.AddTask(new Iis7OperationTask
+            server.AddTask(new Iis7ApplicationPoolOperationTask
             {
                 ApplicationPool = _applicationPoolName,
                 Operation = _operation,

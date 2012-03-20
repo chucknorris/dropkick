@@ -64,6 +64,9 @@
     <Reference Include="Microsoft.Web.Administration, Version=7.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\..\lib\references\Microsoft\Microsoft.Web.Administration.dll</HintPath>
     </Reference>
+    <Reference Include="Moq">
+      <HintPath>..\..\packages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\packages\NUnit.2.5.9.10348\lib\nunit.framework.dll</HintPath>
@@ -75,11 +78,8 @@
     <Reference Include="pnunit.framework">
       <HintPath>..\..\packages\NUnit.2.5.9.10348\lib\pnunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Rhino.Mocks, Version=3.5.0.1337, Culture=neutral, PublicKeyToken=0b3305902db7183f, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\rhino.mocks\Rhino.Mocks.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -95,6 +95,7 @@
     <Compile Include="ApplicationPoolTestExtensions.cs" />
     <Compile Include="Configuration\Dsl\CheckingPlanBuildingLogic.cs" />
     <Compile Include="Configuration\Dsl\CopyFilesProtoWithSettings.cs" />
+    <Compile Include="Configuration\Dsl\IisDSLTest.cs" />
     <Compile Include="Configuration\Dsl\IisProtoTaskProcessModelSpec.cs" />
     <Compile Include="Configuration\Dsl\ProcessModelIdentityTranslation.cs" />
     <Compile Include="Configuration\Dsl\should_throw_if_missing_a_mapped_role.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Engine\PhysicalServerTests.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileSystem\PathConverterSpecs.cs" />
+    <Compile Include="HexToByteExtensionTest.cs" />
     <Compile Include="Registry\CreateRegistryKeyTaskTest.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -122,13 +124,16 @@
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="FileSystem\DotNetPathTests.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
-    <Compile Include="Tasks\Iis\Iis7OperationSpecs.cs" />
+    <Compile Include="Tasks\Iis\Iis7ApplicationPoolOperationSpecs.cs" />
     <Compile Include="Tasks\Iis\ExistingVirtualDirectorySpecs.cs" />
+    <Compile Include="Tasks\Iis\Iis7SiteOperationSpecs.cs" />
+    <Compile Include="Tasks\Iis\Iis7TaskSpecs.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
     <Compile Include="Tasks\RoundhousE\DbConnectionInfoTests.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
     <Compile Include="Tasks\Security\Acl\SecurityAclSpecs.cs" />
+    <Compile Include="Tasks\Security\Certificate\CertificateStoreUtilitySpecs.cs" />
     <Compile Include="Tasks\Security\Certificate\SecurityX509CertificateSpecs.cs" />
     <Compile Include="Tasks\Security\LogOnAsBatchTaskTest.cs" />
     <Compile Include="Tasks\Security\LogOnAsServiceTaskTest.cs" />
@@ -137,6 +142,7 @@
     <Compile Include="Tasks\Xml\Context\XmlContextResult.cs" />
     <Compile Include="Tasks\WinService\PasswordPromptSpecs.cs" />
     <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />
+    <Compile Include="TestObjects\IisHttpsSiteDeploy.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
@@ -206,9 +212,13 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="Nuget-References" BeforeTargets="BeforeBuild">
+    <Exec Command="&quot;$(SolutionDir)lib\NuGet\NuGet.exe&quot; install &quot;$(ProjectDir)packages.config&quot; -o &quot;$(SolutionDir)Packages&quot;" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

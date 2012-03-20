@@ -99,6 +99,8 @@
     <Compile Include="Configuration\Dsl\Files\UnzipOptions.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisApplicationPoolOperationProtoTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\IisOperations.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisSiteBindingCollection.cs" />
+    <Compile Include="Configuration\Dsl\Iis\IisSiteOperationProtoTask.cs" />
     <Compile Include="Configuration\Dsl\Iis\ProcessModelIdentity.cs" />
     <Compile Include="Configuration\Dsl\Msmq\MsmqQueueOptions.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\Extensions.cs" />
@@ -131,6 +133,7 @@
     <Compile Include="Configuration\Dsl\Xml\XmlPokeOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="FileSystem\PathConverter.cs" />
+    <Compile Include="HexToBytesExtension.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Log4NetLog.cs" />
@@ -152,7 +155,9 @@
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Files\UnzipArchiveTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
-    <Compile Include="Tasks\Iis\Iis7OperationTask.cs" />
+    <Compile Include="Tasks\Iis\Iis7ApplicationPoolOperationTask.cs" />
+    <Compile Include="Tasks\Iis\IisSiteBinding.cs" />
+    <Compile Include="Tasks\Iis\Iis7SiteOperationTask.cs" />
     <Compile Include="Tasks\Iis\IisUtility.cs" />
     <Compile Include="Tasks\Iis\ManagedRuntimeVersion.cs" />
     <Compile Include="Tasks\CommandLine\RemoteDropkickExecutionTask.cs" />
@@ -171,6 +176,7 @@
     <Compile Include="Tasks\Security\Acl\RemoveAclsInheritanceTask.cs" />
     <Compile Include="Tasks\Security\BaseSecurityTask.cs" />
     <Compile Include="Tasks\Security\Certificate\BaseSecurityCertificatePermissionsTask.cs" />
+    <Compile Include="Tasks\Security\Certificate\CertificateStoreUtility.cs" />
     <Compile Include="Tasks\Security\Certificate\GrantReadCertificatePrivateKeyTask.cs" />
     <Compile Include="Tasks\Security\Certificate\RemoteExtension.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
@@ -367,6 +373,9 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project=".\targets\Microsoft.Application.targets" />
+  <Target Name="Nuget-References" BeforeTargets="BeforeBuild">
+    <Exec Command="&quot;$(SolutionDir)lib\NuGet\NuGet.exe&quot; install &quot;$(ProjectDir)packages.config&quot; -o &quot;$(SolutionDir)Packages&quot;" />
+  </Target>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

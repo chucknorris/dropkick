@@ -10,6 +10,10 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System;
+using dropkick.Tasks.Iis;
+
 namespace dropkick.Configuration.Dsl.Iis
 {
     using FileSystem;
@@ -31,19 +35,33 @@ namespace dropkick.Configuration.Dsl.Iis
             var task = new IisProtoTask(websiteName, new DotNetPath())
                            {
                                Version = IisVersion.Seven,
-                       };
+                           };
             protoServer.RegisterProtoTask(task);
             return task;
         }
 
         public static IisSiteOptions Iis7Site(this ProtoServer protoServer, string websiteName, string pathForWebsite, int port)
         {
-            var task = new IisProtoTask(websiteName,new DotNetPath())
+            var task = new IisProtoTask(websiteName, new DotNetPath())
                            {
                                Version = IisVersion.Seven,
-                               PathForWebsite = pathForWebsite,
-                               PortForWebsite = port
-                       };
+                               PathOnServer = pathForWebsite,
+                               Bindings = new[] { new IisSiteBinding { Port = port } }
+                           };
+            protoServer.RegisterProtoTask(task);
+            return task;
+        }
+
+        public static IisSiteOptions Iis7Site(this ProtoServer protoServer, string websiteName, string pathForWebsite, Action<IisSiteBindingCollection> bindings)
+        {
+            var siteBindings = new IisSiteBindingCollection();
+            bindings(siteBindings);
+            var task = new IisProtoTask(websiteName, new DotNetPath())
+                           {
+                               Version = IisVersion.Seven,
+                               PathOnServer = pathForWebsite,
+                               Bindings = siteBindings
+                           };
             protoServer.RegisterProtoTask(task);
             return task;
         }

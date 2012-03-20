@@ -17,7 +17,7 @@ SET build.config.settings="%DIR%\settings\UppercuT.config"
 
 if %ERRORLEVEL% NEQ 0 goto errors
 
-SET nunitresults=%DIR%build_output\build_artifacts\nunit\nunit-results.xml
+SET nunitresults=%DIR%\build_output\build_artifacts\nunit\nunit-results.xml
 echo ##teamcity[importData type='nunit' path='%nunitresults%']
 
 goto finish

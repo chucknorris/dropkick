@@ -54,6 +54,7 @@ namespace dropkick.tests.Tasks.Iis
                                VirtualDirectoryPath = "Victastic",
                                WebsiteName = "SCOTT",
                                AppPoolName = "VICKERS",
+                               Bindings = new [] { new IisSiteBinding{Port = 16002}},
                                //could be set on either website or vdir basis
                                UseClassicPipeline = true
                            };
