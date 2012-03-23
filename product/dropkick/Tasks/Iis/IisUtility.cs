@@ -17,4 +17,13 @@ namespace dropkick.Tasks.Iis
             System.Threading.Thread.Sleep(500);
         }
     }
+
+    public enum IISAuthenticationMode {
+       digestAuthentication,
+       anonymousAuthentication,
+       iisClientCertificateMappingAuthentication,
+       basicAuthentication,
+       clientCertificateMappingAuthentication,
+       windowsAuthentication
+    }
 }
