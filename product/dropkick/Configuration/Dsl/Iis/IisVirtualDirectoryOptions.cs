@@ -27,6 +27,12 @@ namespace dropkick.Configuration.Dsl.Iis
        /// <returns></returns>
         IisVirtualDirectoryOptions DisableAllAuthentication();
        /// <summary>
+       /// Disable all, but this one...
+       /// </summary>
+       /// <param name="enabledAuthenticationType"></param>
+       /// <returns></returns>
+        IisVirtualDirectoryOptions DisableAllAuthenticationBut(dropkick.Tasks.Iis.IISAuthenticationMode enabledAuthenticationType);
+       /// <summary>
        /// Enable or disable a given authentication type.
        /// </summary>
        /// <param name="authenticationType"></param>
