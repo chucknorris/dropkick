@@ -162,5 +162,12 @@ using System.Collections.Generic;
            }
            return this;
         }
+       
+        public IisVirtualDirectoryOptions DisableAllAuthenticationBut(IISAuthenticationMode enabledAuthenticationType) {
+           foreach(IISAuthenticationMode mode in Enum.GetValues(typeof(IISAuthenticationMode))) {
+              AuthenticationToSet.Add(mode, mode == enabledAuthenticationType);
+           }
+           return this;
+        }
     }
 }
