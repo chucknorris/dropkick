@@ -14,6 +14,19 @@ namespace dropkick.Configuration.Dsl.Xml
 {
     public interface XmlPokeOptions
     {
-        XmlPokeOptions Set(string xPath, string value);
+       /// <summary>
+       /// set the value at the given xPath; items will be replaced only if present in the source xml
+       /// </summary>
+       /// <param name="xPath"></param>
+       /// <param name="value"></param>
+       /// <returns></returns>
+       XmlPokeOptions Set(string xPath, string value);
+       /// <summary>
+       /// set the value, or create new nodes according to the xPath; items will be replace or added if not present in the source xml
+       /// </summary>
+       /// <param name="xPath"></param>
+       /// <param name="value"></param>
+       /// <returns></returns>
+       XmlPokeOptions SetOrInsert(string xPath, string value);
     }
 }
