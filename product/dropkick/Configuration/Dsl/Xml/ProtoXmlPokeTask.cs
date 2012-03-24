@@ -25,6 +25,7 @@ namespace dropkick.Configuration.Dsl.Xml
         private readonly string _filePath;
         private IDictionary<string, string> _namespacePrefixes; 
         private IDictionary<string, string> _items = new Dictionary<string, string>();
+        private IDictionary<string, string> _setOrInsertItems = new Dictionary<string, string>();
 
         public ProtoXmlPokeTask(string filePath)
             : this(filePath, null)
@@ -53,11 +54,24 @@ namespace dropkick.Configuration.Dsl.Xml
             return this;
         }
 
+        public XmlPokeOptions SetOrInsert(string xPath, string value) {
+           xPath = ReplaceTokens(xPath);
+           value = ReplaceTokens(value);
+
+           if(_setOrInsertItems.ContainsKey(xPath)) {
+              _setOrInsertItems[xPath] = value;
+           } else {
+              _setOrInsertItems.Add(xPath, value);
+           }
+
+           return this;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string filePath = site.MapPath(_filePath);
 
-            var o = new XmlPokeTask(filePath, _items, new DotNetPath(), _namespacePrefixes);
+            var o = new XmlPokeTask(filePath, _items, _setOrInsertItems, new DotNetPath(), _namespacePrefixes);
             site.AddTask(o);
         }
     }
