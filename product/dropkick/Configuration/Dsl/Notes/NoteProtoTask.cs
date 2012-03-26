@@ -18,16 +18,21 @@ namespace dropkick.Configuration.Dsl.Notes
     public class NoteProtoTask :
         BaseProtoTask
     {
-        public NoteProtoTask(string message)
+        public NoteProtoTask(string messageFormat, params object[] args) : this(DeploymentItemStatus.Note, string.Format(messageFormat, args)) { }
+        public NoteProtoTask(string message) : this(DeploymentItemStatus.Note, message) { }
+        public NoteProtoTask(DeploymentItemStatus status, string messageFormat, params object[] args) : this(status, string.Format(messageFormat, args)) { }
+        public NoteProtoTask(DeploymentItemStatus status, string message)
         {
             Message = ReplaceTokens(message);
+            Status = status;
         }
 
         public string Message { get; private set; }
-
+        public DeploymentItemStatus Status { get; private set; }
+       
         public override void RegisterRealTasks(PhysicalServer s)
         {
-            s.AddTask(new NoteTask(Message));
+           s.AddTask(new NoteTask(Message, Status));
         }
     }
 }
