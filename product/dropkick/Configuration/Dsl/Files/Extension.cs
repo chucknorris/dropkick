@@ -88,5 +88,11 @@ namespace dropkick.Configuration.Dsl.Files
             protoServer.RegisterProtoTask(proto);
             return proto;
         }
+
+        public static ExistsOptions Exists(this ProtoServer protoserver) {
+           var proto = new ProtoExistsTask(new DotNetPath());
+           protoserver.RegisterProtoTask(proto);
+           return proto;
+        }
     }
 }

@@ -93,6 +93,8 @@
     <Compile Include="Configuration\DropkickConfiguration.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
+    <Compile Include="Configuration\Dsl\Files\ExistsOptions.cs" />
+    <Compile Include="Configuration\Dsl\Files\ProtoExistsTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\FilePokeOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoDeleteFileTask.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
     <Compile Include="Tasks\Files\BaseIoTask.cs" />
+    <Compile Include="Tasks\Files\ExistsTasks.cs" />
     <Compile Include="Tasks\Files\CopyOptions.cs" />
     <Compile Include="Tasks\Files\DeleteFileTask.cs" />
     <Compile Include="Tasks\Files\EmptyFolderTask.cs" />
