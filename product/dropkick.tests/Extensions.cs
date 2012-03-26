@@ -15,7 +15,7 @@ namespace dropkick.tests
         }
         public static void ShouldBeFalse(this bool actual)
         {
-            Assert.IsTrue(actual);
+            Assert.IsFalse(actual);
         }
         public static void ShouldBeEqualTo(this object actual,object expected)
         {
