@@ -20,5 +20,6 @@ namespace dropkick.Configuration.Dsl.Files
       ExistsOptions DirShouldExist(params string[] dirPaths);
       ExistsOptions FileShould_NOT_Exist(params string[] filePaths);
       ExistsOptions DirShould_NOT_Exist(params string[] dirPaths);
+      ExistsOptions ShouldAbortOnError();
 	}
 }

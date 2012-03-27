@@ -10,24 +10,31 @@
       BaseProtoTask, ExistsOptions {
 
       readonly Path _path;
+      readonly string _reason;
+      bool _shouldAbortOnError;
 
       readonly List<string> _filesShouldExist = new List<string>();
       readonly List<string> _directoriesShouldExist = new List<string>();
       readonly List<string> _filesShould_NOT_Exist = new List<string>();
       readonly List<string> _directoriesShould_NOT_Exist = new List<string>();
 
-      public ProtoExistsTask(Path path)
+      public ProtoExistsTask(Path path, string reason) : this(path, reason, false) { }
+      public ProtoExistsTask(Path path, string reason, bool shouldAbortOnError)
          : base() {
-            _path = path;
+         _path = path;
+         _reason = reason;
+         _shouldAbortOnError = shouldAbortOnError;
       }
 
       public override void RegisterRealTasks(PhysicalServer server) {
 
          server.AddTask(new ExistsTask(new DotNetPath(),
+            _reason,
             _filesShouldExist.Select(x => server.MapPath(x)).ToList(),
             _directoriesShouldExist.Select(x => server.MapPath(x)).ToList(),
             _filesShould_NOT_Exist.Select(x => server.MapPath(x)).ToList(),
-            _directoriesShould_NOT_Exist.Select(x => server.MapPath(x)).ToList()));
+            _directoriesShould_NOT_Exist.Select(x => server.MapPath(x)).ToList(),
+            _shouldAbortOnError));
       }
 
       public ExistsOptions FileShouldExist(params string[] filePaths) {
@@ -63,6 +70,11 @@
                _directoriesShould_NOT_Exist.Add(dirPath);
             }
          }
+         return this;
+      }
+
+      public ExistsOptions ShouldAbortOnError() {
+         _shouldAbortOnError = true;
          return this;
       }
    }
