@@ -34,7 +34,8 @@ namespace dropkick.Configuration.Dsl.Files
 		public override void RegisterRealTasks(PhysicalServer server)
 		{
 			var to = server.MapPath(_to);
-			var task = new UnzipArchiveTask(_archiveFilename, to, _options, _path);
+			var archiveFilename = server.MapPath(_archiveFilename);
+			var task = new UnzipArchiveTask(archiveFilename, to, _options, _path);
 			server.AddTask(task);
 		}
 	}
