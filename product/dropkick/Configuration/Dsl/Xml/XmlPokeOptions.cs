@@ -28,5 +28,15 @@ namespace dropkick.Configuration.Dsl.Xml
        /// <param name="value"></param>
        /// <returns></returns>
        XmlPokeOptions SetOrInsert(string xPath, string value);
+
+       /// <summary>
+       /// set the value, or create new nodes according to the xPath; items will be replace or added if not present in the source xml;
+       /// if shouldBeFirst is set to true, the inserted item will be inserted before the first node.
+       /// </summary>
+       /// <param name="xPath"></param>
+       /// <param name="value"></param>
+       /// <param name="shouldBeFirst"></param>
+       /// <returns></returns>
+       XmlPokeOptions SetOrInsert(string xPath, string value, bool shouldBeFirst);
     }
 }

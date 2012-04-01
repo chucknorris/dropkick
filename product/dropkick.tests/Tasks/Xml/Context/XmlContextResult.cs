@@ -28,6 +28,16 @@
   </connectionStrings>
 </configuration>";
 
+        public static string ResultInsert_shouldBeFirst = @"<?xml version=""1.0"" encoding=""utf-8""?>
+<configuration>
+  <connectionStrings>
+    <add name=""newConnection2"" connectionString=""newConnectionString2"" providerName=""System.Data.OleDb"" />
+    <add name=""bob"" connectionString=""bob"" providerName=""System.Data.OleDb"" />
+    <add name=""nancy"" connectionString=""Data Source=(local);Initial Catalog=Nancy;Integrated Security=True;Pooling=false;Connection Timeout=600"" providerName=""System.Data.SqlClient"" />
+    <add name=""newDB"" connectionString=""newConnectionString"" providerName=""System.Data.SqlClient"" />
+  </connectionStrings>
+</configuration>";
+
         public static string ResultInsertWithNamespace = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <configuration xmlns=""http://example.com/schemas/test"">
   <connectionStrings>
@@ -40,8 +50,6 @@
 
         public static string ResultWebConfigWithElmah = @"<?xml version=""1.0"" encoding=""utf-8""?>
 <configuration>
-  <connectionStrings>
-  </connectionStrings>
   <configSections>
      <sectionGroup name=""elmah"">
        <section name=""security"" requirePermission=""false"" type=""Elmah.SecuritySectionHandler, Elmah"" />
@@ -50,7 +58,17 @@
        <section name=""errorFilter"" requirePermission=""false"" type=""Elmah.ErrorFilterSectionHandler, Elmah"" />
      </sectionGroup>
   </configSections>
+  <connectionStrings>
+  </connectionStrings>
+  <location path=""DifferentModule.axd"" inheritInChildApplications=""false"">
+    <system.web>
+      <httpModules>
+        <add name=""DifferentModule"" type=""DifferentModule.Something, DifferentModule"" />
+      </httpModules>
+    </system.web>
+  </location>
 
+ <location path=""."" inheritInChildApplications=""false"">
   <system.web>
      <httpModules>
        <add name=""ErrorLog"" type=""Elmah.ErrorLogModule, Elmah"" />
@@ -66,6 +84,7 @@
       <add name=""ErrorFilter"" type=""Elmah.ErrorFilterModule, Elmah"" preCondition=""managedHandler"" />
     </modules>
   </system.webServer>
+</location>
 
   <elmah>
     <security allowRemoteAccess=""1"" />
@@ -82,7 +101,7 @@
   <location path=""elmah.axd"">
     <system.web>
       <authorization>        
-        <allow users=""testDomain\admin, testDomain\otherAdmin""/>
+        <allow users=""testDomain\admin, testDomain\otherAdmin"" groups=""testDomain\admins""/>
         <deny users=""*""/>
       </authorization>
       <httpHandlers>
@@ -94,6 +113,7 @@
         <authorization>
           <clear></clear>
           <add users=""testDomain\admin, testDomain\otherAdmin"" accessType=""Allow""/>
+          <add groups=""testDomain\admins"" accessType=""Allow""/>
         </authorization>
       </security>
       <handlers>
@@ -101,6 +121,8 @@
       </handlers>
     </system.webServer>
   </location>
+
+
 </configuration>";
     }
 }
