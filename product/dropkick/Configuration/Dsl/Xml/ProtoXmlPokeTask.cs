@@ -17,7 +17,7 @@ namespace dropkick.Configuration.Dsl.Xml
     using FileSystem;
     using Tasks;
     using Tasks.Xml;
-using System;
+    using System;
 
     public class ProtoXmlPokeTask :
         BaseProtoTask,
