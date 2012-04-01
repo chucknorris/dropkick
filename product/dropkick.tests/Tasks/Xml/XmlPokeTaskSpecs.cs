@@ -1,4 +1,5 @@
-namespace dropkick.tests.Tasks.Xml {
+namespace dropkick.tests.Tasks.Xml
+{
    using System;
    using System.Collections.Generic;
    using System.IO;
@@ -9,8 +10,10 @@ namespace dropkick.tests.Tasks.Xml {
    using FileSystem;
    using NUnit.Framework;
 
-   public class XmlPokeTaskSpecs {
-      public abstract class XmlPokeTaskSpecsBase : TinySpec {
+   public class XmlPokeTaskSpecs
+   {
+      public abstract class XmlPokeTaskSpecsBase : TinySpec
+      {
          protected DeploymentResult result;
          protected XmlPokeTask task;
          protected string file_path = @".\Tasks\Xml\Context\Test.xml";
@@ -37,7 +40,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_updating_the_settings_in_an_xml_file : XmlPokeTaskSpecsBase {
+      public class when_updating_the_settings_in_an_xml_file : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
 
          public override void Context()
@@ -57,7 +61,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_inserting_into_the_settings_in_an_xml_file : XmlPokeTaskSpecsBase {
+      public class when_inserting_into_the_settings_in_an_xml_file : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
          protected IDictionary<string, Tuple<string, bool>> insert_items = new Dictionary<string, Tuple<string, bool>>();
 
@@ -85,7 +90,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_inserting_into_the_settings_in_an_xml_file_using_shouldBeFirst : XmlPokeTaskSpecsBase {
+      public class when_inserting_into_the_settings_in_an_xml_file_using_shouldBeFirst : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
          protected IDictionary<string, Tuple<string, bool>> insert_items = new Dictionary<string, Tuple<string, bool>>();
 
@@ -114,7 +120,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_updating_the_settings_in_an_xml_file_with_namespaces : XmlPokeTaskSpecsBase {
+      public class when_updating_the_settings_in_an_xml_file_with_namespaces : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
          protected IDictionary<string, string> namespace_prefixes = new Dictionary<string, string> { { "test", "http://example.com/schemas/test" } };
 
@@ -136,7 +143,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_inserting_into_the_settings_in_an_xml_file_with_namespaces : XmlPokeTaskSpecsBase {
+      public class when_inserting_into_the_settings_in_an_xml_file_with_namespaces : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
          protected IDictionary<string, Tuple<string, bool>> insert_items = new Dictionary<string, Tuple<string, bool>>();
          protected IDictionary<string, string> namespace_prefixes = new Dictionary<string, string> { { "test", "http://example.com/schemas/test" } };
@@ -165,7 +173,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_adding_Elmah_to_web_config_file : XmlPokeTaskSpecsBase {
+      public class when_adding_Elmah_to_web_config_file : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
 
 
@@ -196,7 +205,8 @@ namespace dropkick.tests.Tasks.Xml {
 
       [ConcernFor("Xml")]
       [Category("Integration")]
-      public class when_adding_Elmah_to_web_config_file_with_namespace : XmlPokeTaskSpecsBase {
+      public class when_adding_Elmah_to_web_config_file_with_namespace : XmlPokeTaskSpecsBase
+      {
          protected IDictionary<string, string> replacement_items = new Dictionary<string, string>();
 
 
