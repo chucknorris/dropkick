@@ -1,52 +1,55 @@
-namespace dropkick.Tasks {
-   using DeploymentModel;
+namespace dropkick.Tasks
+{
+    using System;
+    using System.Collections.Generic;
+    using DeploymentModel;
 
-   public class NoteTask :
-       Task {
-      readonly DeploymentItemStatus _status;
-      readonly string _message;
+    public class NoteTask :
+        Task
+    {
+        readonly DeploymentItemStatus _status;
+        readonly string _message;
+        Dictionary<DeploymentItemStatus, Action<DeploymentResult>> _actions;
 
-      public NoteTask(string message, DeploymentItemStatus status) {
-         _message = message;
-         _status = status;
-      }
-      public NoteTask(string message):this(message, DeploymentItemStatus.Note) {}
+        public NoteTask(string message, DeploymentItemStatus status)
+        {
+            _message = message;
+            _status = status;
 
-      public string Name {
-         get { return "NOTE: {0}".FormatWith(_message); }
-      }
+            _actions = new Dictionary<DeploymentItemStatus, Action<DeploymentResult>>();
+            _actions.Add(DeploymentItemStatus.Good, r=> r.AddGood(_message));
+            _actions.Add(DeploymentItemStatus.Alert, r=> r.AddAlert(_message));
+            _actions.Add(DeploymentItemStatus.Error, r=> r.AddError(_message));
+            _actions.Add(DeploymentItemStatus.Note, r=> r.AddNote(_message));
+            _actions.Add(DeploymentItemStatus.Verbose, r=> r.AddVerbose(_message));
+        }
 
-      public DeploymentResult VerifyCanRun() {
-         return ReturnResult();
-      }
+        public NoteTask(string message) : this(message, DeploymentItemStatus.Note)
+        {
+        }
 
-      public DeploymentResult Execute() {
-         return ReturnResult();
-      }
+        public string Name
+        {
+            get { return "NOTE: {0}".FormatWith(_message); }
+        }
 
-      private DeploymentResult ReturnResult() {
-         var dr = new DeploymentResult();
-         switch(_status) {
-            case DeploymentItemStatus.Good:
-               dr.AddGood(_message);
-               break;
-            case DeploymentItemStatus.Alert:
-               dr.AddAlert(_message);
-               break;
-            case DeploymentItemStatus.Error:
-               dr.AddError(_message);
-               break;
-            case DeploymentItemStatus.Note:
-               dr.AddNote(_message);
-               break;
-            case DeploymentItemStatus.Verbose:
-               dr.AddVerbose(_message);
-               break;
-            default:
-               dr.AddError(string.Format(@"Unkown DeploymentItemStatus: '{0}'; message: '{1}'", _status, _message));
-               break;
-         }
-         return dr;
-      }
-   }
+        public DeploymentResult VerifyCanRun()
+        {
+            return ReturnResult();
+        }
+
+        public DeploymentResult Execute()
+        {
+            return ReturnResult();
+        }
+
+        DeploymentResult ReturnResult()
+        {
+            var dr = new DeploymentResult();
+
+            _actions[_status](dr);
+
+            return dr;
+        }
+    }
 }

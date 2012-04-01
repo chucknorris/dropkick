@@ -22,16 +22,6 @@ namespace dropkick.Configuration.Dsl.Notes
             protoServer.RegisterProtoTask(proto);
         }
 
-        /// <summary>
-        /// Ads an 'Alert' to the output
-        /// </summary>
-        /// <param name="protoServer"></param>
-        /// <param name="messageFormat"></param>
-        /// <param name="args"></param>
-        public static void StrongNote(this ProtoServer protoServer, string messageFormat, params object[] args) {
-           var proto = new NoteProtoTask(DeploymentModel.DeploymentItemStatus.Alert, messageFormat, args);
-           protoServer.RegisterProtoTask(proto);
-        }
         public static void Note(this ProtoServer protoServer, string messageFormat, params object[] args) {
            var proto = new NoteProtoTask(messageFormat, args);
            protoServer.RegisterProtoTask(proto);

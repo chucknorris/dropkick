@@ -56,7 +56,8 @@ using System;
         }
 
         public XmlPokeOptions SetOrInsert(string xPath, string value) {
-           return SetOrInsert(xPath, value, false);}
+           return SetOrInsert(xPath, value, false);
+        }
 
         public XmlPokeOptions SetOrInsert(string xPath, string value, bool shouldBeFirst)
         {

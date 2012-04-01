@@ -150,7 +150,7 @@ namespace dropkick.Tasks.Xml
 
            XmlNodeList nodes = doc.SelectNodes(xpath, nsManager);
            if(nodes.Count > 1) {
-              throw new XPathException("Xpath '" + xpath + "' was not found multiple times!");
+              throw new XPathException("Xpath '" + xpath + "' was found multiple times!");
            } else if(nodes.Count == 0) {
               createXPath(doc, xpath, nsManager, shouldBeFirst).InnerText = value;
            } else {
