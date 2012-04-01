@@ -187,6 +187,15 @@
     <Content Include="Tasks\MsSql\test.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Tasks\Xml\Context\TestInsert_shouldBeFirst.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\TestAddingElmahToWebConfigWithNamespace__fails_if_namespace_not_set_properly.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\TestAddingElmahToWebConfigWithNamespace.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Tasks\Xml\Context\TestAddingElmahToWebConfig.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
