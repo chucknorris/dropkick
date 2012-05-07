@@ -75,7 +75,7 @@ namespace dropkick.Tasks.CommandLine
 
             if (!string.IsNullOrEmpty(WorkingDirectory)) psi.WorkingDirectory = WorkingDirectory;
 
-            psi.FileName = _path.Combine(WorkingDirectory, Command);
+            psi.FileName = _path.Combine(ExecutableIsLocatedAt, Command);
 
             string output;
             try
