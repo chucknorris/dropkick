@@ -143,6 +143,7 @@
     <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
+    <Compile Include="TestObjects\RavenDbAsServiceTestDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />
