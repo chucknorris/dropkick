@@ -15,18 +15,18 @@ namespace dropkick.Tasks.RavenDb
     using CommandLine;
     using DeploymentModel;
 
-    internal class RemoteRavenDbAsServiceTask : BaseTask
+    internal class RemoteUninstallRavenDbAsServiceTask : BaseTask
     {
         readonly string _location;
         readonly RemoteCommandLineTask _task;
 
-        public RemoteRavenDbAsServiceTask(PhysicalServer site, string location)
+        public RemoteUninstallRavenDbAsServiceTask(PhysicalServer site, string location)
         {
             _location = location;
 
-            _task = new RemoteCommandLineTask("Raven.Server.exe")
+            _task = new RemoteCommandLineTask(RavenConstants.RavenServerExecutable)
             {
-                Args = "/install",
+                Args = RavenConstants.RavenAsServiceUninstallSwitch,
                 ExecutableIsLocatedAt = location,
                 Machine = site.Name,
                 WorkingDirectory = location
@@ -35,7 +35,7 @@ namespace dropkick.Tasks.RavenDb
 
         public override string Name
         {
-            get { return "[ravendb] Installing remote RavenDb as a service from location {0}.".FormatWith(_location); }
+            get { return "Uninstalling remote RavenDb as a service from location {0}.".FormatWith(_location); }
         }
 
         public override DeploymentResult VerifyCanRun()
@@ -45,8 +45,11 @@ namespace dropkick.Tasks.RavenDb
 
         public override DeploymentResult Execute()
         {
-            Logging.Coarse("[ravendb] Installing a remote RavenDb as a service.");
-            return _task.Execute();
+            var result = _task.Execute();
+
+            result.AddGood("Uninstalled a remote RavenDb as a service from location {0}.", _location);
+
+            return result;
         }
     }
 }

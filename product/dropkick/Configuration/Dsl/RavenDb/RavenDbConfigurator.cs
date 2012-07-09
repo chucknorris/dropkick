@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.RavenDb
 {
+    using System.Collections.Generic;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
@@ -21,31 +22,43 @@ namespace dropkick.Configuration.Dsl.RavenDb
         : BaseProtoTask,
         RavenDbOptions
     {
-        BaseProtoTask _innerTask;
+        readonly List<BaseProtoTask> _innerTasks;
         readonly Path _path;
         
         public RavenDbConfigurator(Path path)
         {
             _path = path;
+            _innerTasks = new List<BaseProtoTask>();
         }
 
-        public RavenDbOptionsAsService Service()
+        public RavenDbOptionsAsService InstallAsService()
         {
-            _innerTask = new RavenDbConfiguratorAsService(this);
-            return (RavenDbOptionsAsService) _innerTask;
+            var task = new RavenDbConfiguratorInstallAsService(this);
+            _innerTasks.Add(task);
+            return task;
+        }
+
+        public RavenDbOptionsAsService UninstallAsService()
+        {
+            var task = new RavenDbConfiguratorUninstallAsService(this);
+            _innerTasks.Add(task);
+            return task;
         }
 
         public override void RegisterRealTasks(PhysicalServer server)
         {
-            _innerTask.RegisterRealTasks(server);
+            foreach (BaseProtoTask task in _innerTasks)
+            {
+                task.RegisterRealTasks(server);
+            }
         }
 
-        private class RavenDbConfiguratorAsService : BaseProtoTask, RavenDbOptionsAsService
+        private class RavenDbConfiguratorInstallAsService : BaseProtoTask, RavenDbOptionsAsService
         {
             string _location;
             readonly RavenDbConfigurator _configurator;
 
-            public RavenDbConfiguratorAsService(RavenDbConfigurator configurator)
+            public RavenDbConfiguratorInstallAsService(RavenDbConfigurator configurator)
             {
                 _configurator = configurator;
             }
@@ -55,11 +68,40 @@ namespace dropkick.Configuration.Dsl.RavenDb
                 var location = _configurator._path.GetPhysicalPath(server, _location, true);
                 if (server.IsLocal)
                 {
-                    server.AddTask(new LocalRavenDbAsServiceTask(location));
+                    server.AddTask(new LocalInstallRavenDbAsServiceTask(location));
                 }
                 else
                 {
-                    server.AddTask(new RemoteRavenDbAsServiceTask(server, location));
+                    server.AddTask(new RemoteInstallRavenDbAsServiceTask(server, location));
+                }
+            }
+
+            public void LocatedAt(string location)
+            {
+                _location = location;
+            }
+        }
+
+        private class RavenDbConfiguratorUninstallAsService : BaseProtoTask, RavenDbOptionsAsService
+        {
+            string _location;
+            readonly RavenDbConfigurator _configurator;
+
+            public RavenDbConfiguratorUninstallAsService(RavenDbConfigurator configurator)
+            {
+                _configurator = configurator;
+            }
+
+            public override void RegisterRealTasks(PhysicalServer server)
+            {
+                var location = _configurator._path.GetPhysicalPath(server, _location, true);
+                if (server.IsLocal)
+                {
+                    server.AddTask(new LocalUninstallRavenDbAsServiceTask(location));
+                }
+                else
+                {
+                    server.AddTask(new RemoteUninstallRavenDbAsServiceTask(server, location));
                 }
             }
 
