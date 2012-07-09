@@ -24,8 +24,12 @@ namespace dropkick.tests.TestObjects
                 {
                     server.RavenDb(config =>
                         {
+							config
+                                .UninstallAsService()
+                                .LocatedAt(@"C:\ravendb");
+						
                             config
-                                .Service()
+                                .InstallAsService()
                                 .LocatedAt(@"C:\ravendb");
                         });
                 }));

@@ -16,18 +16,18 @@ namespace dropkick.Tasks.RavenDb
     using DeploymentModel;
     using FileSystem;
 
-    public class LocalRavenDbAsServiceTask : BaseTask
+    public class LocalInstallRavenDbAsServiceTask : BaseTask
     {
         readonly string _location;
         readonly LocalCommandLineTask _task;
 
-        public LocalRavenDbAsServiceTask(string location)
+        public LocalInstallRavenDbAsServiceTask(string location)
         {
             _location = location;
 
-            _task = new LocalCommandLineTask(new DotNetPath(), "Raven.Server.exe")
+            _task = new LocalCommandLineTask(new DotNetPath(), RavenConstants.RavenServerExecutable)
             {
-                Args = "/install",
+                Args = RavenConstants.RavenAsServiceInstallSwitch,
                 ExecutableIsLocatedAt = location,
                 WorkingDirectory = location
             };
@@ -35,7 +35,7 @@ namespace dropkick.Tasks.RavenDb
 
         public override string Name
         {
-            get { return "[ravendb] Installing local RavenDb as a service from location {0}.".FormatWith(_location); }
+            get { return "Installing local RavenDb as a service from location {0}.".FormatWith(_location); }
         }
 
         public override DeploymentResult VerifyCanRun()
@@ -45,8 +45,11 @@ namespace dropkick.Tasks.RavenDb
 
         public override DeploymentResult Execute()
         {
-            Logging.Coarse("[ravendb] Installing a local RavenDb as a service.");
-            return _task.Execute();
+            var result = _task.Execute();
+
+            result.AddGood("Installed local RavenDb as a service from location {0}.", _location);
+
+            return result;
         }
     }
 }

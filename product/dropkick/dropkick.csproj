@@ -173,8 +173,11 @@
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
     <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostTask.cs" />
     <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostTask.cs" />
-    <Compile Include="Tasks\RavenDb\LocalRavenDbAsServiceTask.cs" />
-    <Compile Include="Tasks\RavenDb\RemoteRavenDbAsServiceTask.cs" />
+    <Compile Include="Tasks\RavenDb\LocalInstallRavenDbAsServiceTask.cs" />
+    <Compile Include="Tasks\RavenDb\LocalUninstallRavenDbAsServiceTask.cs" />
+    <Compile Include="Tasks\RavenDb\RavenConstants.cs" />
+    <Compile Include="Tasks\RavenDb\RemoteInstallRavenDbAsServiceTask.cs" />
+    <Compile Include="Tasks\RavenDb\RemoteUninstallRavenDbAsServiceTask.cs" />
     <Compile Include="Tasks\Registry\BaseRegistryTask.cs" />
     <Compile Include="Tasks\Registry\CreateRegistryKeyTask.cs" />
     <Compile Include="Tasks\Registry\CreateRegistryValueTask.cs" />
