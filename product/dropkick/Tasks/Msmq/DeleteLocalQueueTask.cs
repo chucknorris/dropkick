@@ -17,7 +17,7 @@ namespace dropkick.Tasks.Security.Msmq
     using DeploymentModel;
 
     public class DeleteLocalQueueTask :
-        Task
+        BaseTask
     {
         readonly string _queue;
 
@@ -26,18 +26,21 @@ namespace dropkick.Tasks.Security.Msmq
             _queue = queue;
         }
 
-
-        public string Name
+        public override string Name
         {
             get { return "Deleting Queue"; }
         }
 
-        public DeploymentResult VerifyCanRun()
+        public override DeploymentResult VerifyCanRun()
         {
-            throw new NotImplementedException();
+            var result = new DeploymentResult();
+
+            VerifyInAdministratorRole(result);
+
+            return result;
         }
 
-        public DeploymentResult Execute()
+        public override DeploymentResult Execute()
         {
             var result = new DeploymentResult();
 
