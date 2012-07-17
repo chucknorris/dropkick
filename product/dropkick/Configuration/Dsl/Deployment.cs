@@ -100,6 +100,7 @@ namespace dropkick.Configuration.Dsl
         protected void DeploymentStepsFor(Role inputRole, Action<ProtoServer> action)
         {
             var role = ServerRole.GetRole(inputRole);
+            Settings.Role = role.Name;
             role.BindAction(action);
         }
 
