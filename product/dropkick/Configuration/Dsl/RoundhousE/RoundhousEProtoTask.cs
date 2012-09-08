@@ -15,7 +15,6 @@ using dropkick.FileSystem;
 
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
-    using System;
     using DeploymentModel;
     using Tasks;
     using Tasks.RoundhousE;
@@ -224,7 +223,8 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithAlterDatabaseFolder(string alterDatabaseFolderName)
         {
-            throw new NotImplementedException();
+            _runAfterFirstUpFolderName = ReplaceTokens(alterDatabaseFolderName);
+            return this;
         }
 
 
