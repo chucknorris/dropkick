@@ -33,10 +33,16 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         RoundhousEOptions WithVersionXPath(string versionXPath);
         RoundhousEOptions WithCommandTimeout(int timeout);
         RoundhousEOptions WithCommandTimeoutAdmin(int timeout);
-        RoundhousEOptions WithFunctionsFolder(string functionsFolderName);
-        RoundhousEOptions WithSprocsFolder(string sprocsFolderName);
-        RoundhousEOptions WithViewsFolder(string viewsFolderName);
+        RoundhousEOptions WithAlterDatabaseFolder(string alterDatabaseFolderName); //pw
+        RoundhousEOptions WithRunAfterCreateDatabaseFolder(string runAfterCreateDatabaseFolderName); //pw
         RoundhousEOptions WithUpFolder(string upFolderName);
+        RoundhousEOptions WithRunAfterFirstUpFolder(string runAfterFirstUpFolderName); //pw
+        RoundhousEOptions WithFunctionsFolder(string functionsFolderName);
+        RoundhousEOptions WithViewsFolder(string viewsFolderName);
+        RoundhousEOptions WithSprocsFolder(string sprocsFolderName);
+        RoundhousEOptions WithIndexesFolder(string indexesFolderName); //pw
+        RoundhousEOptions WithRunAfterOtherAnyTimeScriptsFolder(string runAfterAnyOtherTimeScriptsFolderName); //pw
+        RoundhousEOptions WithPermissionsFolder(string permissionsFolderName); //pw
         RoundhousEOptions WithVersionTable(string versionTable);
         RoundhousEOptions WithScriptsRunTable(string scriptsRunTable);
         RoundhousEOptions WithScriptsRunErrorTable(string scriptsRunErrorTable);
