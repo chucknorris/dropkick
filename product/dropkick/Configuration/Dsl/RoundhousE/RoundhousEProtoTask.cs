@@ -84,9 +84,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        public RoundhousEOptions WithRunAfterFirstUpFolder(string runAfterFirstUpFolderName)
+        public RoundhousEOptions WithRunFirstAfterUpFolder(string runFirstAfterUpFolderName)
         {
-            _runFirstAfterUpFolderName = ReplaceTokens(runAfterFirstUpFolderName);
+            _runFirstAfterUpFolderName = ReplaceTokens(runFirstAfterUpFolderName);
             return this;
         }
 
