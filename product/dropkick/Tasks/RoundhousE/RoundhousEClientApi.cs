@@ -27,13 +27,13 @@ namespace dropkick.Tasks.RoundhousE
         #region Methods
 
         public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath, int commandTimeout, int commandTimeoutAdmin, string functionsFolderName, string sprocsFolderName, string viewsFolderName, string upFolderName, string versionTable, string scriptsRunTable, string scriptsRunErrorTable, bool? warnOnOneTimeScriptChanges, string outputPath, 
-            string alterDatabaseFolderName, string runAfterCreateDatabaseFolderName, string runFirstAfterUpFolderName, string indexesFolderName, string runAfterOtherAnyTimeScriptsFolderName, string permissionsFolderName)
+            string alterDatabaseFolderName, string runAfterCreateDatabaseFolderName, string runBeforeUpFolderName, string runFirstAfterUpFolderName, string indexesFolderName, string runAfterOtherAnyTimeScriptsFolderName, string permissionsFolderName)
         {
-            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath, commandTimeout, commandTimeoutAdmin, false, @"", 0, string.Empty, functionsFolderName, sprocsFolderName, viewsFolderName, upFolderName, versionTable, scriptsRunTable, scriptsRunErrorTable, warnOnOneTimeScriptChanges, outputPath, alterDatabaseFolderName, runAfterCreateDatabaseFolderName, runFirstAfterUpFolderName, indexesFolderName, runAfterOtherAnyTimeScriptsFolderName, permissionsFolderName);
+            Run(connectionString, scriptsLocation, environmentName, dropDatabase, useSimpleRecoveryMode, repositoryPath, versionFile, versionXPath, commandTimeout, commandTimeoutAdmin, false, @"", 0, string.Empty, functionsFolderName, sprocsFolderName, viewsFolderName, upFolderName, versionTable, scriptsRunTable, scriptsRunErrorTable, warnOnOneTimeScriptChanges, outputPath, alterDatabaseFolderName, runAfterCreateDatabaseFolderName, runBeforeUpFolderName, runFirstAfterUpFolderName, indexesFolderName, runAfterOtherAnyTimeScriptsFolderName, permissionsFolderName);
         }
 
         public static void Run(string connectionString, string scriptsLocation, string environmentName, bool dropDatabase, bool useSimpleRecoveryMode, string repositoryPath, string versionFile, string versionXPath,int commmandTimeout,int commandTimeoutAdmin, bool restore, string restorePath,int restoreTimeout, string restoreCustomOptions, string functionsFolderName, string sprocsFolderName, string viewsFolderName, string upFolderName, string versionTable, string scriptsRunTable, string scriptsRunErrorTable, bool? warnOnOneTimeScriptChanges, string outputPath, 
-            string alterDatabaseFolderName, string runAfterCreateDatabaseFolderName, string runFirstAfterUpFolderName, string indexesFolderName, string runAfterOtherAnyTimeScriptsFolderName, string permissionsFolderName)
+            string alterDatabaseFolderName, string runAfterCreateDatabaseFolderName, string runBeforeUpFolderName, string runFirstAfterUpFolderName, string indexesFolderName, string runAfterOtherAnyTimeScriptsFolderName, string permissionsFolderName)
         {
             var migrate = new Migrate();
 
@@ -59,6 +59,7 @@ namespace dropkick.Tasks.RoundhousE
 
                     p.AlterDatabaseFolderName = alterDatabaseFolderName;
                     p.RunAfterCreateDatabaseFolderName = runAfterCreateDatabaseFolderName;
+                    p.RunBeforeUpFolderName = runBeforeUpFolderName;
                     p.UpFolderName = upFolderName;
                     p.RunFirstAfterUpFolderName = runFirstAfterUpFolderName;
                     p.FunctionsFolderName = functionsFolderName;

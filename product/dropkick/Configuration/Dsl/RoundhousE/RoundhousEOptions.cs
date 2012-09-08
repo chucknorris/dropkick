@@ -33,16 +33,17 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         RoundhousEOptions WithVersionXPath(string versionXPath);
         RoundhousEOptions WithCommandTimeout(int timeout);
         RoundhousEOptions WithCommandTimeoutAdmin(int timeout);
-        RoundhousEOptions WithAlterDatabaseFolder(string alterDatabaseFolderName); //pw
-        RoundhousEOptions WithRunAfterCreateDatabaseFolder(string runAfterCreateDatabaseFolderName); //pw
+        RoundhousEOptions WithAlterDatabaseFolder(string alterDatabaseFolderName);
+        RoundhousEOptions WithRunAfterCreateDatabaseFolder(string runAfterCreateDatabaseFolderName);
+        RoundhousEOptions WithRunBeforeUpFolder(string runBeforeUpFolderName);
         RoundhousEOptions WithUpFolder(string upFolderName);
-        RoundhousEOptions WithRunAfterFirstUpFolder(string runAfterFirstUpFolderName); //pw
+        RoundhousEOptions WithRunAfterFirstUpFolder(string runAfterFirstUpFolderName);
         RoundhousEOptions WithFunctionsFolder(string functionsFolderName);
         RoundhousEOptions WithViewsFolder(string viewsFolderName);
         RoundhousEOptions WithSprocsFolder(string sprocsFolderName);
-        RoundhousEOptions WithIndexesFolder(string indexesFolderName); //pw
-        RoundhousEOptions WithRunAfterOtherAnyTimeScriptsFolder(string runAfterAnyOtherTimeScriptsFolderName); //pw
-        RoundhousEOptions WithPermissionsFolder(string permissionsFolderName); //pw
+        RoundhousEOptions WithIndexesFolder(string indexesFolderName);
+        RoundhousEOptions WithRunAfterOtherAnyTimeScriptsFolder(string runAfterAnyOtherTimeScriptsFolderName);
+        RoundhousEOptions WithPermissionsFolder(string permissionsFolderName);
         RoundhousEOptions WithVersionTable(string versionTable);
         RoundhousEOptions WithScriptsRunTable(string scriptsRunTable);
         RoundhousEOptions WithScriptsRunErrorTable(string scriptsRunErrorTable);

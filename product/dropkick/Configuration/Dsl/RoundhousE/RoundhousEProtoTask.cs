@@ -45,8 +45,9 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         private string _alterDatabaseFolderName;
         private string _runAfterCreateDatabaseFolderName;
+        private string _runBeforeUpFolderName;
         private string _upFolderName;
-        private string _runAfterFirstUpFolderName;
+        private string _runFirstAfterUpFolderName;
         private string _functionsFolderName;
         private string _viewsFolderName;
         private string _sprocsFolderName;
@@ -85,7 +86,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithRunAfterFirstUpFolder(string runAfterFirstUpFolderName)
         {
-            _runAfterFirstUpFolderName = ReplaceTokens(runAfterFirstUpFolderName);
+            _runFirstAfterUpFolderName = ReplaceTokens(runAfterFirstUpFolderName);
             return this;
         }
 
@@ -128,6 +129,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         public RoundhousEOptions WithRunAfterCreateDatabaseFolder(string runAfterCreateDatabaseFolderName)
         {
             _runAfterCreateDatabaseFolderName = ReplaceTokens(runAfterCreateDatabaseFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithRunBeforeUpFolder(string runBeforeUpFolderName)
+        {
+            _runBeforeUpFolderName = ReplaceTokens(runBeforeUpFolderName);
             return this;
         }
 
@@ -223,7 +230,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithAlterDatabaseFolder(string alterDatabaseFolderName)
         {
-            _runAfterFirstUpFolderName = ReplaceTokens(alterDatabaseFolderName);
+            _alterDatabaseFolderName = ReplaceTokens(alterDatabaseFolderName);
             return this;
         }
 
@@ -261,7 +268,6 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 UserName = _userName,
                 Password = _password
             };
-            // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
 
             var task = new RoundhousETask(connectionInfo, _scriptsLocation,
                 _environmentName, _roundhouseMode,
@@ -269,7 +275,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
                 _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName,
                 _versionTable, _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges, _outputPath, 
-                _alterDatabaseFolderName, _runAfterCreateDatabaseFolderName, _runAfterFirstUpFolderName,
+                _alterDatabaseFolderName, _runAfterCreateDatabaseFolderName, _runBeforeUpFolderName, _runFirstAfterUpFolderName,
                 _indexesFolderName, _runAfterOtherAnyTimeScriptsFolderName, _permissionsFolderName);
 
             site.AddTask(task);
