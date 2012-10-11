@@ -98,7 +98,7 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
                     RegisterUninstallTasks(site, location);
                     break;
                 default:
-                    throw new Exception("");
+                    throw new NotImplementedException(String.Format("Action [{0}] has not been implemented.", Enum.GetName(typeof(Action), _action)));
             }
         }
 
