@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
     public interface NServiceBusHostOptions
     {
+        void Action(Action action);
         void ExeName(string name);
         void Instance(string name);
         void LocatedAt(string location);
