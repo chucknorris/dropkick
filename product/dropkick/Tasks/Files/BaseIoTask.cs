@@ -50,9 +50,9 @@ namespace dropkick.Tasks.Files
                     throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(path));
                 }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(path));
+                throw new DeploymentException("'{0}' is not an acceptable path. Must be a directory".FormatWith(path), ex);
             }
         }
 
