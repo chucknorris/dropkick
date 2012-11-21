@@ -146,7 +146,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
             var instanceServer = site.Name;
             if (!string.IsNullOrEmpty(_instanceName))
-                instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
+            {
+                if (_instanceName.ToLower().Contains("(localdb)"))
+                    instanceServer = _instanceName;
+                else
+                    instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
+            }
 
             var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
 
