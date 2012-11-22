@@ -19,6 +19,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         // RoundhousEOptions ForDatabaseType(string type);
         RoundhousEOptions OnInstance(string name);
         RoundhousEOptions OnDatabase(string name);
+        RoundhousEOptions OnConnectionString(string connectionString);
         RoundhousEOptions WithUserName(string userName);
         RoundhousEOptions WithPassword(string password);
         RoundhousEOptions WithRoundhousEMode(RoundhousEMode roundhouseMode);

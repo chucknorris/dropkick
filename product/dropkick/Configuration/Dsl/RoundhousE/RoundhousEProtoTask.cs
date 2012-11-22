@@ -29,6 +29,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         string _environmentName;
         string _instanceName;
         string _databaseName;
+        string _connectionString;
         string _scriptsLocation;
         private RoundhousEMode _roundhouseMode;
         private DatabaseRecoveryMode _recoveryMode;
@@ -53,6 +54,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         public RoundhousEOptions OnDatabase(string name)
         {
             _databaseName = ReplaceTokens(name);
+            return this;
+        }
+
+        public RoundhousEOptions OnConnectionString(string connectionString)
+        {
+            _connectionString = ReplaceTokens(connectionString);
             return this;
         }
 
@@ -153,9 +160,10 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                     instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
             }
 
-            var connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
+            if (string.IsNullOrEmpty(_connectionString))
+                _connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
 
-            var task = new RoundhousETask(connectionString, _scriptsLocation,
+            var task = new RoundhousETask(_connectionString, _scriptsLocation,
                                           _environmentName, _roundhouseMode,
                                           _recoveryMode, _restorePath, _restoreTimeout,_restoreCustomOptions, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
 
