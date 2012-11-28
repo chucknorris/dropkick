@@ -19,6 +19,15 @@ namespace dropkick.Tasks.RoundhousE
             _prompt = new ConsolePromptService();
         }
 
+        public DbConnectionInfo(string connectionString)
+        {
+            var builder = new SqlConnectionStringBuilder(connectionString);
+            Server = builder.DataSource;
+            DatabaseName = builder.InitialCatalog;
+            UserName = builder.UserID;
+            Password = builder.Password;
+        }
+
         public DbConnectionInfo(PromptService prompt)
         {
             _prompt = prompt;

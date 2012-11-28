@@ -11,12 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using dropkick.FileSystem;
-
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
-    using System;
     using DeploymentModel;
+    using Magnum.Extensions;
     using Tasks.RoundhousE;
     using Tasks;
 
@@ -24,8 +22,6 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         BaseProtoTask,
         RoundhousEOptions
     {
-        private readonly Path _path = new DotNetPath();
-
         string _environmentName;
         string _instanceName;
         string _databaseName;
@@ -220,13 +216,22 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var connectionInfo = new DbConnectionInfo{
-                Server = site.Name,
-                Instance = _instanceName,
-                DatabaseName = _databaseName,
-                UserName = _userName,
-                Password = _password
-            };
+            DbConnectionInfo connectionInfo;
+            if (_connectionString.IsNotEmpty())
+            {
+                connectionInfo = new DbConnectionInfo(_connectionString);
+            }
+            else
+            {
+                connectionInfo = new DbConnectionInfo
+                {
+                    Server = site.Name,
+                    Instance = _instanceName,
+                    DatabaseName = _databaseName,
+                    UserName = _userName,
+                    Password = _password
+                };
+            }
 
             var task = new RoundhousETask(connectionInfo, _scriptsLocation,
                 _environmentName, _roundhouseMode,
