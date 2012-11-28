@@ -56,20 +56,27 @@ namespace dropkick.DeploymentModel
         public DeploymentResult Execute()
         {
             var deploymentResult = new DeploymentResult();
-
+            bool abort = false;
             Ex(d =>
             {
-                var o = d.Verify();
-                deploymentResult.MergedWith(o);
-                if (o.ContainsError())
-                {
-                    //stop. report verify error.
-                    return;
-                }
+               if(!abort) {
+                  var o = d.Verify();
+                  deploymentResult.MergedWith(o);
+                  if(deploymentResult.ShouldAbort) { abort = true; }
+                  if(o.ContainsError()) {
+                     //display errors!
+                     DisplayResults(o);
+                     //stop. report verify error.
+                     return;
+                  }
 
-                var result = d.Execute();
-                DisplayResults(result);
-                deploymentResult.MergedWith(result);
+                  var result = d.Execute();
+                  DisplayResults(result);
+                  deploymentResult.MergedWith(result);
+                  if(deploymentResult.ShouldAbort) { abort = true; }
+               } else {
+                  Logging.Coarse(LogLevel.Error, "[Skip ] {0}", d.Name);
+               }
             });
 
             return deploymentResult;
@@ -115,6 +122,5 @@ namespace dropkick.DeploymentModel
                 if (result.Status == DeploymentItemStatus.Verbose) Logging.Fine(LogLevel.Debug, "[{0,-5}] {1}", result.Status, result.Message);
             }
         }
-
     }
 }

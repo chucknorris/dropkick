@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Magnum;
 using dropkick.DeploymentModel;
@@ -15,7 +16,7 @@ namespace dropkick.tests
         }
         public static void ShouldBeFalse(this bool actual)
         {
-            Assert.IsTrue(actual);
+            Assert.IsFalse(actual);
         }
         public static void ShouldBeEqualTo(this object actual,object expected)
         {
@@ -40,6 +41,10 @@ namespace dropkick.tests
 				typeof(T).Name, 
 				item == null ? "(null)" : item.ToString());
 		}
+
+      public static void ShouldContain(this dropkick.DeploymentModel.DeploymentResult resultNotExists, DeploymentItemStatus status, int count) {
+         resultNotExists.Results.Count(x => x.Status == status).ShouldBeEqualTo(count);
+      }
 
         public static void LogToConsole(this DeploymentResult deploymentResult)
         {

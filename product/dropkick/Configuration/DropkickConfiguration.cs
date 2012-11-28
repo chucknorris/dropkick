@@ -15,5 +15,6 @@ namespace dropkick.Configuration
     public class DropkickConfiguration
     {
         public string Environment { get; set; }
+        public string Role { get; set; }
     }
 }

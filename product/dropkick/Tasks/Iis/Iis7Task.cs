@@ -31,6 +31,7 @@ namespace dropkick.Tasks.Iis
     	public ProcessModelIdentityType ProcessModelIdentityType { get; set; }
 		public string ProcessModelUsername { get; set; }
 		public string ProcessModelPassword { get; set; }
+      public Dictionary<IISAuthenticationMode, bool> AuthenticationToSet { get; set; }
 
         readonly Path _path = new DotNetPath();
 
@@ -58,6 +59,9 @@ namespace dropkick.Tasks.Iis
             CheckForSiteAndVDirExistance(DoesSiteExist, () => DoesVirtualDirectoryExist(GetSite(iisManager, WebsiteName)), result);
 
             if (UseClassicPipeline) result.AddAlert("The Application Pool '{0}' will be set to Classic Pipeline Mode", AppPoolName);
+
+
+            ConfigureAuthentication(iisManager, result, false);
 
             return result;
         }
@@ -205,8 +209,30 @@ namespace dropkick.Tasks.Iis
 				LogFineGrain("[iis7] Updated physical path for '{0}' to '{1}'", VirtualDirectoryPath, PathOnServer);
 			}
 
+         ConfigureAuthentication(mgr, result, true);
             //result.AddGood("'{0}' was created/updated successfully", VirtualDirectoryPath);
 		}
+
+       /// <summary>
+       /// 
+       /// </summary>
+       /// <param name="mgr"></param>
+       /// <param name="result"></param>
+       /// <param name="doUpdate">true: do the update; false: just verify it</param>
+        private void ConfigureAuthentication(ServerManager mgr, DeploymentResult result, bool doUpdate) {
+           if(AuthenticationToSet != null && AuthenticationToSet.Count > 0) {
+              Configuration config = mgr.GetApplicationHostConfiguration();
+              foreach(var item in AuthenticationToSet) {
+                 ConfigurationSection section = config.GetSection("system.webServer/security/authentication/" + item.Key, WebsiteName + "/" + VirtualDirectoryPath);// settings.WFSiteName + "/" + settings.WFDirectoryName
+                 if(section == null) { result.AddError(String.Format(@"authentication type '{0}' not found!", item.Key)); } else {
+                    if(doUpdate) {
+                       LogCoarseGrain("[iis7] Setting authentication for application '{0}': '{1}' from '{2}' to '{3}'", VirtualDirectoryPath, item.Key, section["enabled"], item.Value);
+                       section["enabled"] = item.Value;
+                    }
+                 }
+              }
+           }
+        }
 
         public bool DoesVirtualDirectoryExist(Site site)
         {

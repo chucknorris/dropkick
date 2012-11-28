@@ -36,6 +36,20 @@ namespace dropkick.DeploymentModel
             get { return _items.Count; }
         }
 
+        /// <summary>
+        /// Deployment encountered a fatal error, so it should stop right now...
+        /// </summary>
+        public bool ShouldAbort { get; private set; }
+
+        /// <summary>
+        /// Sets 'ShouldAbort' to true, and logs an Error Item.
+        /// </summary>
+        /// <param name="abortReason"></param>
+        public void AddAbort(string abortReason) {
+           ShouldAbort = true;
+           AddItem(DeploymentItemStatus.Error, "Aborting deployment! Reason: {0}".FormatWith(abortReason));
+        }
+
         #region IEnumerable<DeploymentItem> Members
 
         IEnumerator IEnumerable.GetEnumerator()
@@ -115,6 +129,7 @@ namespace dropkick.DeploymentModel
             {
                 _items.Add(item);
             }
+            ShouldAbort |= result.ShouldAbort;
 
             return this;
         }

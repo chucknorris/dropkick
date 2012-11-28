@@ -17,6 +17,7 @@ namespace dropkick.Configuration.Dsl.Iis
     using FileSystem;
     using Tasks;
     using Tasks.Iis;
+using System.Collections.Generic;
 
     public class IisProtoTask :
         BaseProtoTask,
@@ -31,6 +32,7 @@ namespace dropkick.Configuration.Dsl.Iis
             _path = path;
             WebsiteName = websiteName;
             ManagedRuntimeVersion = Tasks.Iis.ManagedRuntimeVersion.V2;
+            AuthenticationToSet = new Dictionary<IISAuthenticationMode, bool>();
         }
 
         public bool ShouldCreate { get; set; }
@@ -48,6 +50,7 @@ namespace dropkick.Configuration.Dsl.Iis
 		public ProcessModelIdentity ProcessModelIdentityType { get; private set; }
 		public string ProcessModelUsername { get; private set; }
 		public string ProcessModelPassword { get; private set; }
+      public Dictionary<IISAuthenticationMode, bool> AuthenticationToSet { get; private set; }
 
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
@@ -140,9 +143,31 @@ namespace dropkick.Configuration.Dsl.Iis
 							SetProcessModelIdentity = this.ProcessModelIdentityTypeSpecified,
         	          		ProcessModelIdentityType = ProcessModelIdentityType.ToProcessModelIdentityType(),
 							ProcessModelUsername = this.ProcessModelUsername,
-							ProcessModelPassword = this.ProcessModelPassword
+							ProcessModelPassword = this.ProcessModelPassword,
+                     AuthenticationToSet = this.AuthenticationToSet
                           });
         }
 
+
+        public IisVirtualDirectoryOptions DisableAllAuthentication() {
+           foreach(IISAuthenticationMode mode in Enum.GetValues(typeof(IISAuthenticationMode))) {
+              AuthenticationToSet.Add(mode, false);
+           }
+           return this;
+        }
+
+        public IisVirtualDirectoryOptions SetAuthentication(IISAuthenticationMode authenticationType, bool enabled) {
+           if(AuthenticationToSet.ContainsKey(authenticationType)) { AuthenticationToSet[authenticationType] = enabled; } else {
+              AuthenticationToSet.Add(authenticationType, enabled);
+           }
+           return this;
+        }
+       
+        public IisVirtualDirectoryOptions DisableAllAuthenticationBut(IISAuthenticationMode enabledAuthenticationType) {
+           foreach(IISAuthenticationMode mode in Enum.GetValues(typeof(IISAuthenticationMode))) {
+              AuthenticationToSet.Add(mode, mode == enabledAuthenticationType);
+           }
+           return this;
+        }
     }
 }

@@ -63,5 +63,10 @@ namespace dropkick.Engine.DeploymentFinders
         {
             throw new NotImplementedException();
         }
+
+        public IEnumerable<string> Roles
+        {
+            get { throw new NotImplementedException(); }
+        }
     }
 }

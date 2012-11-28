@@ -45,6 +45,16 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private int _restoreTimeout;
         private int _commandTimeoutAdmin;
 
+        private string _functionsFolderName;
+        private string _sprocsFolderName;
+        private string _viewsFolderName;
+        private string _upFolderName;
+        private string _versionTable;
+        private string _scriptsRunTable;
+        private string _scriptsRunErrorTable;
+        private bool? _warnOnOneTimeScriptChanges;
+        private string _outputPath;
+
         public RoundhousEOptions OnInstance(string name)
         {
             _instanceName = ReplaceTokens(name);
@@ -75,6 +85,48 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithFunctionsFolder(string functionsFolderName)
+        {
+            _functionsFolderName = ReplaceTokens(functionsFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithSprocsFolder(string sprocsFolderName)
+        {
+            _sprocsFolderName = ReplaceTokens(sprocsFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithViewsFolder(string viewsFolderName)
+        {
+            _viewsFolderName = ReplaceTokens(viewsFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithUpFolder(string upFolderName)
+        {
+            _upFolderName = ReplaceTokens(upFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithVersionTable(string versionTable)
+        {
+            _versionTable = ReplaceTokens(versionTable);
+            return this;
+        }
+
+        public RoundhousEOptions WithScriptsRunTable(string scriptsRunTable)
+        {
+            _scriptsRunTable = ReplaceTokens(scriptsRunTable);
+            return this;
+        }
+
+        public RoundhousEOptions WithScriptsRunErrorTable(string scriptsRunErrorTable)
+        {
+            _scriptsRunErrorTable = ReplaceTokens(scriptsRunErrorTable);
+            return this;
+        }
+
         public RoundhousEOptions ForEnvironment(string environment)
         {
             _environmentName = ReplaceTokens(environment);
@@ -101,7 +153,7 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithRestorePath(string restorePath)
         {
-            _restorePath = restorePath;
+            _restorePath = ReplaceTokens(restorePath);
             return this;
         }
 
@@ -113,13 +165,13 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public RoundhousEOptions WithRepositoryPath(string repositoryPath)
         {
-            _repositoryPath = repositoryPath;
+            _repositoryPath = ReplaceTokens(repositoryPath);
             return this;
         }
 
         public RoundhousEOptions WithVersionFile(string versionFile)
         {
-            _versionFile = versionFile;
+            _versionFile = ReplaceTokens(versionFile);
             return this;
         }
 
@@ -148,31 +200,42 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
-        public override void RegisterRealTasks(PhysicalServer site)
+        public RoundhousEOptions WarnAndContinueOnOneTimeScriptChanges()
         {
-            // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
-            var instanceServer = site.Name;
-            if (!string.IsNullOrEmpty(_instanceName))
-            {
-                if (_instanceName.ToLower().Contains("(localdb)"))
-                    instanceServer = _instanceName;
-                else
-                    instanceServer = @"{0}\{1}".FormatWith(instanceServer, _instanceName);
-            }
-
-            if (string.IsNullOrEmpty(_connectionString))
-                _connectionString = BuildConnectionString(instanceServer, _databaseName, _userName, _password);
-
-            var task = new RoundhousETask(_connectionString, _scriptsLocation,
-                                          _environmentName, _roundhouseMode,
-                                          _recoveryMode, _restorePath, _restoreTimeout,_restoreCustomOptions, _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin);
-
-            site.AddTask(task);
+            _warnOnOneTimeScriptChanges = true;
+            return this;
         }
 
-        public string BuildConnectionString(string instanceServer, string databaseName, string userName, string password)
+        public RoundhousEOptions ErrorOnOneTimeScriptChanges()
         {
-            return "data source={0};initial catalog={1};{2}".FormatWith(instanceServer, databaseName, string.IsNullOrEmpty(userName) ? "integrated security=sspi;" : "user id={0};password={1};".FormatWith(userName, password));
+            _warnOnOneTimeScriptChanges = false;
+            return this;
+        }
+
+        public RoundhousEOptions WithOutputPath(string outputPath)
+        {
+            _outputPath = ReplaceTokens(outputPath);
+            return this;
+        }
+
+        public override void RegisterRealTasks(PhysicalServer site)
+        {
+            var connectionInfo = new DbConnectionInfo{
+                Server = site.Name,
+                Instance = _instanceName,
+                DatabaseName = _databaseName,
+                UserName = _userName,
+                Password = _password
+            };
+
+            var task = new RoundhousETask(connectionInfo, _scriptsLocation,
+                _environmentName, _roundhouseMode,
+                _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
+                _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
+                _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName,
+                _versionTable, _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges, _outputPath);
+
+            site.AddTask(task);
         }
     }
 }

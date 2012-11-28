@@ -87,6 +87,7 @@
     <Reference Include="System.Management" />
     <Reference Include="System.Messaging" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SolutionVersion.cs">
@@ -98,7 +99,7 @@
     <Compile Include="Configuration\Dsl\FilePokeTest.cs" />
     <Compile Include="Configuration\Dsl\IisProtoTaskProcessModelSpec.cs" />
     <Compile Include="Configuration\Dsl\ProcessModelIdentityTranslation.cs" />
-    <Compile Include="Configuration\Dsl\roundhouse\RoundhouseProtoTest.cs" />
+    <Compile Include="Configuration\Dsl\should_throw_if_missing_a_mapped_role.cs" />
     <Compile Include="Configuration\Dsl\WithTwoPartDeployContext.cs" />
     <Compile Include="Configuration\Dsl\Verification_Demos.cs" />
     <Compile Include="DeploymentModel\DeploymentPlanSpecs.cs" />
@@ -122,12 +123,14 @@
     <Compile Include="Tasks\Files\CopyDirectoryTaskSpecs.cs" />
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
     <Compile Include="FileSystem\DotNetPathTests.cs" />
+    <Compile Include="Tasks\Files\ExistsTests.cs" />
     <Compile Include="Tasks\Files\FilePokeTaskTest.cs" />
     <Compile Include="Tasks\Files\RenameTest.cs" />
     <Compile Include="Tasks\Iis\Iis7OperationSpecs.cs" />
     <Compile Include="Tasks\Iis\ExistingVirtualDirectorySpecs.cs" />
     <Compile Include="Tasks\Iis\NewVirtualDirTest.cs" />
     <Compile Include="Tasks\Iis\NewVirtualIis6DirTest.cs" />
+    <Compile Include="Tasks\RoundhousE\DbConnectionInfoTests.cs" />
     <Compile Include="Tasks\RoundhousE\RoundhousETest.cs" />
     <Compile Include="Tasks\Security\Acl\SecurityAclSpecs.cs" />
     <Compile Include="Tasks\Security\Certificate\SecurityX509CertificateSpecs.cs" />
@@ -140,6 +143,7 @@
     <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />
     <Compile Include="TestObjects\JimDeploy.cs" />
     <Compile Include="TestObjects\MsSsrsDeploy.cs" />
+    <Compile Include="TestObjects\RavenDbAsServiceTestDeploy.cs" />
     <Compile Include="TestObjects\RoundhousETestDeploy.cs" />
     <Compile Include="TestObjects\GenericDeploymentFinder.cs" />
     <Compile Include="Tasks\Console\PingTest.cs" />
@@ -182,6 +186,18 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Tasks\MsSql\test.sql">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\TestAddingElmahToWebConfig.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\TestInsert.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\TestWithNamespace.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Tasks\Xml\Context\TestInsertWithNamespace.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Tasks\Xml\Context\Test.xml">

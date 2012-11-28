@@ -67,7 +67,8 @@ namespace dropkick.Configuration.Dsl.CommandLine
                           {
                               Args = _args,
                               ExecutableIsLocatedAt = _path,
-                              WorkingDirectory = _workingDirectory
+                              WorkingDirectory = _workingDirectory,
+                              Machine = s.Name
                           });
         }
     }

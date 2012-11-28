@@ -45,8 +45,10 @@ namespace dropkick.Tasks.Files
             _to = _path.GetFullPath(_to);
 
             ValidatePaths(result);
-
-            result.AddGood(Name);
+            if(!result.ContainsError()) {
+                //don't report back 'good' on errors
+                result.AddGood(Name);
+            }
 
             return result;
         }
@@ -59,11 +61,12 @@ namespace dropkick.Tasks.Files
             _to = _path.GetFullPath(_to);
 
             ValidatePaths(result);
+            if(!result.ContainsError()) {
+                //don't continue on errors
+                CopyFile(result, _newFileName, _from, _to);
 
-            CopyFile(result, _newFileName, _from, _to);
-
-            result.AddGood(Name);
-
+                result.AddGood(Name);
+            }
             return result;
         }
 

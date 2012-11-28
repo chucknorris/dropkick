@@ -14,6 +14,7 @@ namespace dropkick.Configuration.Dsl.Files
 {
     using System;
     using System.Text;
+    using System.Text.RegularExpressions;
     using FileSystem;
 
     public static class Extension
@@ -70,6 +71,12 @@ namespace dropkick.Configuration.Dsl.Files
 			return proto;
 		}
 
+		public static void DeleteFile(this ProtoServer protoServer, string file)
+		{
+			var proto = new ProtoDeleteFileTask(file);
+			protoServer.RegisterProtoTask(proto);
+		}
+
         public static FilePokeOptions FilePoke(this ProtoServer protoServer, string filePath)
         {
             return protoServer.FilePoke(filePath, Encoding.Default);
@@ -80,6 +87,16 @@ namespace dropkick.Configuration.Dsl.Files
             var proto = new ProtoFilePokeTask(filePath, encoding);
             protoServer.RegisterProtoTask(proto);
             return proto;
+        }
+
+        public static ExistsOptions Exists(this ProtoServer protoserver, string reason) {
+           return Exists(protoserver, reason, false);
+        }
+
+        public static ExistsOptions Exists(this ProtoServer protoserver, string reason, bool shouldAbortOnError) {
+           var proto = new ProtoExistsTask(new DotNetPath(), reason, shouldAbortOnError);
+           protoserver.RegisterProtoTask(proto);
+           return proto;
         }
     }
 }

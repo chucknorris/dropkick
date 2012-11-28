@@ -22,6 +22,15 @@ namespace dropkick.Configuration.Dsl.Notes
             protoServer.RegisterProtoTask(proto);
         }
 
+        public static void Note(this ProtoServer protoServer, string messageFormat, params object[] args) {
+           var proto = new NoteProtoTask(messageFormat, args);
+           protoServer.RegisterProtoTask(proto);
+        }
+        public static void Note(this ProtoServer protoServer, dropkick.DeploymentModel.DeploymentItemStatus status, string messageFormat, params object[] args) {
+           var proto = new NoteProtoTask(status, messageFormat, args);
+           protoServer.RegisterProtoTask(proto);
+        }
+
         public static void Wait(this ProtoServer protoServer, TimeSpan span)
         {
             var proto = new WaitProtoTask(span);

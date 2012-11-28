@@ -18,6 +18,7 @@ namespace dropkick.Tasks.Xml
     using System.Xml.XPath;
     using DeploymentModel;
     using Files;
+    using System.Linq;
     using Path = FileSystem.Path;
 
     public class XmlPokeTask :
@@ -26,12 +27,34 @@ namespace dropkick.Tasks.Xml
 
         private string _filePath;
         private readonly IDictionary<string, string> _replacementItems;
+        private readonly IDictionary<string, string> _replaceOrInsertItems;
+        private readonly IDictionary<string, string> _namespacePrefixes;
 
         public XmlPokeTask(string filePath, IDictionary<string, string> replacementItems, Path path)
+           : this(filePath, replacementItems, new Dictionary<string, string>(), path, new Dictionary<string, string>()) {
+        }
+        public XmlPokeTask(string filePath, IDictionary<string, string> replacementItems, Path path, IDictionary<string, string> namespacePrefixes)
+           : this(filePath, replacementItems, new Dictionary<string, string>(), path, namespacePrefixes) {
+        }
+        public XmlPokeTask(string filePath, IDictionary<string, string> replacementItems, IDictionary<string, string> replaceOrInsertItems, Path path)
+           : this(filePath, replacementItems, replaceOrInsertItems, path, new Dictionary<string, string>()) {
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="replacementItems">these items will be replaced only if present in the source xml</param>
+        /// <param name="replaceOrInsertItems">these items will be replace or added if not present in the source xml</param>
+        /// <param name="path"></param>
+        /// <param name="namespacePrefixes"></param>
+        public XmlPokeTask(string filePath, IDictionary<string, string> replacementItems, IDictionary<string, string> replaceOrInsertItems, Path path, IDictionary<string, string> namespacePrefixes)
             : base(path)
         {
             _filePath = filePath;
             _replacementItems = replacementItems;
+            _replaceOrInsertItems = replaceOrInsertItems;
+            _namespacePrefixes = namespacePrefixes;
         }
 
         public override string Name
@@ -58,13 +81,13 @@ namespace dropkick.Tasks.Xml
             _filePath = _path.GetFullPath(_filePath);
             ValidateIsFile(result, _filePath);
 
-            UpdateXmlFile(result, _filePath, _replacementItems);
+            UpdateXmlFile(result, _filePath, _replacementItems, _replaceOrInsertItems, _namespacePrefixes);
 
             result.AddGood(Name);
             return result;
         }
 
-        private void UpdateXmlFile(DeploymentResult result, string filePath, IDictionary<string, string> replacementItems)
+        private void UpdateXmlFile(DeploymentResult result, string filePath, IDictionary<string, string> replacementItems,IDictionary<string, string> insertItems, IDictionary<string, string> namespacePrefixes)
         {
             //XmlTextReader xmlReader = new XmlTextReader(_filePath);
             //XPathDocument xmlDoc = new XPathDocument(xmlReader);
@@ -74,11 +97,20 @@ namespace dropkick.Tasks.Xml
 
             XmlDocument document = new XmlDocument();
             document.Load(filePath);
-            XPathNavigator xpathNavigator = document.CreateNavigator();
+            var nsManager = new XmlNamespaceManager(document.NameTable);
+            foreach (var prefix in namespacePrefixes)
+            {
+                nsManager.AddNamespace(prefix.Key, prefix.Value);
+            }
 
+            XPathNavigator xpathNavigator = document.CreateNavigator();
             foreach (KeyValuePair<string, string> item in replacementItems.OrEmptyListIfNull())
             {
-                UpdateValueInFile(result, xpathNavigator, item.Key, item.Value);
+                UpdateValueInFile(result, xpathNavigator, item.Key, item.Value, nsManager);
+            }
+
+            foreach(KeyValuePair<string, string> item in insertItems.OrEmptyListIfNull()) {
+               UpdateOrInsertValueInFile(result,document, xpathNavigator, item.Key, item.Value, nsManager);
             } 
 
             LogFileChange("[xmlpoke] Completed changes to '{0}'.",filePath);
@@ -86,9 +118,119 @@ namespace dropkick.Tasks.Xml
             document.Save(filePath);
         }
 
-        private void UpdateValueInFile(DeploymentResult result, XPathNavigator xpathNavigator, string xPath, string value)
+        private void UpdateOrInsertValueInFile(DeploymentResult result, XmlDocument document, XPathNavigator xpathNavigator, string xPath, string value, XmlNamespaceManager nsManager) {
+           var selected = xpathNavigator.Select(xPath, nsManager);
+           if(selected.Count > 0) {
+              foreach(XPathNavigator navigator in selected) {
+                 string original = navigator.Value;
+                 navigator.SetValue(value);
+                 LogFileChange("[xmlpoke] Updated '{0}' to '{1}'.", original, value);
+              }
+           } else {
+              Set(document, xPath, value, nsManager);
+              LogFileChange("[xmlpoke] Inserting '{0}' to xPath '{1}'.", value, xPath);
+           }
+        }
+
+       /// <summary>
+        /// original is from stackoverflow: http://stackoverflow.com/a/3465832
+       /// </summary>
+       /// <param name="doc"></param>
+       /// <param name="xpath"></param>
+       /// <param name="value"></param>
+       /// <param name="nsManager"></param>
+        static void Set(XmlDocument doc, string xpath, string value, XmlNamespaceManager nsManager) {
+           if(doc == null)
+              throw new ArgumentNullException("doc");
+           if(string.IsNullOrEmpty(xpath))
+              throw new ArgumentNullException("xpath");
+
+           XmlNodeList nodes = doc.SelectNodes(xpath, nsManager);
+           if(nodes.Count > 1) {
+              throw new XPathException("Xpath '" + xpath + "' was not found multiple times!");
+           } else if(nodes.Count == 0) {
+              createXPath(doc, xpath, nsManager).InnerText = value;
+           } else {
+              nodes[0].InnerText = value;
+           }
+        }
+
+        static XmlNode createXPath(XmlDocument doc, string xpath, XmlNamespaceManager nsManager) {
+           XmlNode node = doc;
+           //mod: trim off all leading slashes
+           foreach(string part in xpath.TrimStart('/', '\\').Split('/')) {
+              XmlNodeList nodes = node.SelectNodes(part, nsManager);
+              if(nodes.Count > 1)
+                 throw new XPathException("Xpath '" + xpath + "' was not found multiple times!");
+              else if(nodes.Count == 1) { node = nodes[0]; continue; }
+
+              if(part.StartsWith("@")) {
+                 var anode = doc.CreateAttribute(part.Substring(1));
+                 node.Attributes.Append(anode);
+                 node = anode;
+              } else {
+                 string elName, attrib = null;
+                 if(part.Contains("[")) {
+                    SplitOnce(part, "[", out elName, out attrib);
+                    if(!attrib.EndsWith("]"))
+                       throw new XPathException("Unsupported XPath (missing ]): " + part);
+                    attrib = attrib.Substring(0, attrib.Length - 1);
+                 } else
+                    elName = part;
+
+                 if(elName.Contains(':')) {
+                    //mod:if the element contains a namespace, some special handling required...
+                    var split = elName.Split(':');
+                    string elementName = split[1];
+                    string nsShort = split[0];
+                    string nsLong = nsManager.LookupNamespace(nsShort);
+
+                    XmlNode next = doc.CreateElement(elementName, nsLong);
+                    node.AppendChild(next);
+                    node = next;
+                 } else {
+                    XmlNode next = doc.CreateElement(elName);
+                    node.AppendChild(next);
+                    node = next;
+                 }
+
+                 if(attrib != null) {
+                    if(!attrib.StartsWith("@"))
+                       throw new XPathException("Unsupported XPath attrib (missing @): " + part);
+                    string name, value;
+                    SplitOnce(attrib.Substring(1), "='", out name, out value);
+                    if(string.IsNullOrEmpty(value) || !value.EndsWith("'"))
+                       throw new Exception("Unsupported XPath attrib: " + part);
+                    value = value.Substring(0, value.Length - 1);
+                    var anode = doc.CreateAttribute(name);
+                    anode.Value = value;
+                    node.Attributes.Append(anode);
+                 }
+              }
+           }
+           return node;
+        }
+
+        public static void SplitOnce(string value, string separator, out string part1, out string part2) {
+           if(value != null) {
+              int idx = value.IndexOf(separator);
+              if(idx >= 0) {
+                 part1 = value.Substring(0, idx);
+                 part2 = value.Substring(idx + separator.Length);
+              } else {
+                 part1 = value;
+                 part2 = null;
+              }
+           } else {
+              part1 = "";
+              part2 = null;
+           }
+        }
+
+
+        private void UpdateValueInFile(DeploymentResult result, XPathNavigator xpathNavigator, string xPath, string value, XmlNamespaceManager nsManager)
         {
-            foreach (XPathNavigator navigator in xpathNavigator.Select(xPath))
+            foreach (XPathNavigator navigator in xpathNavigator.Select(xPath, nsManager))
             {
                 string original = navigator.Value;
                 navigator.SetValue(value);

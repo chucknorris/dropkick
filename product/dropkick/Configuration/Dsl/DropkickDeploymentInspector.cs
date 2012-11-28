@@ -10,6 +10,10 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+
+using System.Linq;
+using dropkick.Exceptions;
+
 namespace dropkick.Configuration.Dsl
 {
     using System;
@@ -92,9 +96,24 @@ namespace dropkick.Configuration.Dsl
 
         public DeploymentPlan GetPlan(Deployment deployment)
         {
+            verifyRolesAreMapped(deployment);
+
             deployment.InspectWith(this);
 
             return _plan;
+        }
+
+        void verifyRolesAreMapped(Deployment deployment)
+        {
+            var mappedRoles = _serverMappings.Roles();
+            var deploymentRoles = deployment.Roles;
+            foreach(var role in deploymentRoles)
+            {
+                if(!mappedRoles.Contains(role))
+                {
+                    throw new DeploymentConfigurationException("You have not mapped a server to role '{0}'".FormatWith(role));
+                }
+            }
         }
 
         bool ShouldNotProcessRole(string role)

@@ -21,6 +21,24 @@ namespace dropkick.Configuration.Dsl.Iis
         IisVirtualDirectoryOptions SetPathTo(string path);
         IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName);
         IisVirtualDirectoryOptions SetAppPoolTo(string appPoolName, Action<AppPoolOptions> action);
+       /// <summary>
+        /// Disables all authentication types. Usefull if you want to make sure that only one is enabled...
+       /// </summary>
+       /// <returns></returns>
+        IisVirtualDirectoryOptions DisableAllAuthentication();
+       /// <summary>
+       /// Disable all, but this one...
+       /// </summary>
+       /// <param name="enabledAuthenticationType"></param>
+       /// <returns></returns>
+        IisVirtualDirectoryOptions DisableAllAuthenticationBut(dropkick.Tasks.Iis.IISAuthenticationMode enabledAuthenticationType);
+       /// <summary>
+       /// Enable or disable a given authentication type.
+       /// </summary>
+       /// <param name="authenticationType"></param>
+       /// <param name="enabled"></param>
+       /// <returns></returns>
+        IisVirtualDirectoryOptions SetAuthentication(dropkick.Tasks.Iis.IISAuthenticationMode authenticationType, bool enabled);
     }
 
     public interface AppPoolOptions
