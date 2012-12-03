@@ -75,8 +75,8 @@ namespace dropkick.Tasks.CommandLine
             ProcessReturnCode returnCode  = WmiProcess.Run(Machine, Command, Args, ExecutableIsLocatedAt);
 
             //TODO: Get the output file. Parse it out to get ERRORS and other things and add them to the results
-            
-            if (returnCode != ProcessReturnCode.Success) result.AddError(_status[(int)returnCode]);
+
+            if (returnCode != ProcessReturnCode.Success) result.AddError(_status[(int)returnCode] + " (" + p + ")");
 
             return result;
         }
