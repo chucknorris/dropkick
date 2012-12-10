@@ -60,10 +60,7 @@ namespace dropkick.Tasks.Security.Msmq
             var localAnonymousLogonName = new SecurityIdentifier(WellKnownSidType.AnonymousSid, null).Translate(typeof(NTAccount)).ToString();
             q.SetPermissions(localAnonymousLogonName, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
 
-            q.SetPermissions(_user, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(_user, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(_user, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
-            q.SetPermissions(_user, MessageQueueAccessRights.ChangeQueuePermissions, AccessControlEntryType.Allow);
+            q.SetPermissions(_user, MessageQueueAccessRights.FullControl, AccessControlEntryType.Allow);
 
             result.AddGood("Successfully granted NServiceBus permissions to '{0}' for queue '{1}'".FormatWith(_user, _address.ActualUri));
 
