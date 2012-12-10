@@ -35,6 +35,11 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         string _username;
         string _profiles;
         bool _createMsmqQueue;
+        bool _createMsmqRetriesQueue;
+        bool _createMsmqErrorsQueue;
+        bool _createMsmqSubscriptionsQueue;
+        bool _createMsmqAuditQueue;
+        bool _createMsmqTimeoutQueues;
 
         public NServiceBusHostConfigurator(Path path)
         {
@@ -87,9 +92,34 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             _createMsmqQueue = true;
         }
 
+        public void CreateMsmqRetriesQueue()
+        {
+            _createMsmqRetriesQueue = true;
+        }
+
+        public void CreateMsmqErrorsQueue()
+        {
+            _createMsmqErrorsQueue = true;
+        }
+
+        public void CreateMsmqSubscriptionsQueue()
+        {
+            _createMsmqSubscriptionsQueue = true;
+        }
+
+        public void CreateMsmqAuditQueue()
+        {
+            _createMsmqAuditQueue = true;
+        }
+
+        public void CreateMsmqTimeoutQueues()
+        {
+            _createMsmqTimeoutQueues = true;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            PromptIfNecessary();
+            PromptForUsernameAndPasswordIfNecessary();
 
             var location = _path.GetPhysicalPath(site, _location, true);
             if (site.IsLocal)
@@ -102,17 +132,23 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             }
 
             if (_createMsmqQueue)
+                RegisterMsmqQueueCreation(site, _serviceName);
+            if (_createMsmqRetriesQueue)
+                RegisterMsmqQueueCreation(site, _serviceName + ".retries");
+            if (_createMsmqErrorsQueue)
+                RegisterMsmqQueueCreation(site, _serviceName + ".errors");
+            if (_createMsmqSubscriptionsQueue)
+                RegisterMsmqQueueCreation(site, _serviceName + ".subscriptions");
+            if (_createMsmqAuditQueue)
+                RegisterMsmqQueueCreation(site, _serviceName + ".audit");
+            if (_createMsmqTimeoutQueues)
             {
-                var protoMsmqTask = new ProtoMsmqTask();
-                protoMsmqTask.PrivateQueue(_serviceName);
-                protoMsmqTask.RegisterRealTasks(site);
-
-                var msmqSecurity = new ProtoMsmqNServiceBusPermissionsTask(_serviceName, _username);
-                msmqSecurity.RegisterRealTasks(site);
+                RegisterMsmqQueueCreation(site, _serviceName + ".timeouts");
+                RegisterMsmqQueueCreation(site, _serviceName + ".timeoutsdispatcher");
             }
         }
 
-        void PromptIfNecessary()
+        void PromptForUsernameAndPasswordIfNecessary()
         {
             var prompt = new ConsolePromptService();
 
@@ -125,6 +161,16 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         bool ShouldPromptForPassword()
         {
             return !WindowsAuthentication.IsBuiltInUsername(_username) && _password.ShouldPrompt();
+        }
+
+        void RegisterMsmqQueueCreation(PhysicalServer site, string queueName)
+        {
+            var protoMsmqTask = new ProtoMsmqTask();
+            protoMsmqTask.PrivateQueue(queueName).Transactional();
+            protoMsmqTask.RegisterRealTasks(site);
+
+            var msmqSecurity = new ProtoMsmqNServiceBusPermissionsTask(queueName, _username);
+            msmqSecurity.RegisterRealTasks(site);
         }
     }
 }
