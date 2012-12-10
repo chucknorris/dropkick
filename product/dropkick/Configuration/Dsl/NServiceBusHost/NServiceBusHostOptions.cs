@@ -22,5 +22,6 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         void ServiceDisplayName(string name);
         void ServiceDescription(string description);
         void Profiles(string profiles);
+        void CreateMsmqQueue();
     }
 }

@@ -127,6 +127,7 @@
     <Compile Include="Configuration\Dsl\Security\Certificate\GrantReadCertificateOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\Certificate\ProtoGrantReadX509CertificatePrivateKeyTask.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqNServiceBusPermissionsTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantAccessRightsTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
@@ -194,6 +195,8 @@
     <Compile Include="Tasks\Security\Certificate\RemoteExtension.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LsaUtility.cs" />
+    <Compile Include="Tasks\Security\Msmq\RemoteMsmqNServiceBusPermissionsTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\LocalMsmqNServiceBusPermissionsTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantAccessRightsTask.cs" />
     <Compile Include="Tasks\Security\Msmq\LocalMsmqGrantAccessRightsTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />

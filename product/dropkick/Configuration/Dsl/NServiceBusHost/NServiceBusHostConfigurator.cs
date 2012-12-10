@@ -14,6 +14,9 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
     using DeploymentModel;
     using FileSystem;
+    using Msmq;
+    using Prompting;
+    using Security.Msmq;
     using Tasks;
     using Tasks.NServiceBusHost;
 
@@ -31,6 +34,7 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         string _password;
         string _username;
         string _profiles;
+        bool _createMsmqQueue;
 
         public NServiceBusHostConfigurator(Path path)
         {
@@ -78,8 +82,15 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             _profiles = profiles;
         }
 
+        public void CreateMsmqQueue()
+        {
+            _createMsmqQueue = true;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            PromptIfNecessary();
+
             var location = _path.GetPhysicalPath(site, _location, true);
             if (site.IsLocal)
             {
@@ -89,6 +100,31 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             {
                 site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description, _profiles));
             }
+
+            if (_createMsmqQueue)
+            {
+                var protoMsmqTask = new ProtoMsmqTask();
+                protoMsmqTask.PrivateQueue(_serviceName);
+                protoMsmqTask.RegisterRealTasks(site);
+
+                var msmqSecurity = new ProtoMsmqNServiceBusPermissionsTask(_serviceName, _username);
+                msmqSecurity.RegisterRealTasks(site);
+            }
+        }
+
+        void PromptIfNecessary()
+        {
+            var prompt = new ConsolePromptService();
+
+            if (_username.ShouldPrompt())
+                _username = prompt.Prompt("Win Service '{0}' UserName".FormatWith(_exeName));
+            if (ShouldPromptForPassword())
+                _password = prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(_exeName, _username));
+        }
+
+        bool ShouldPromptForPassword()
+        {
+            return !WindowsAuthentication.IsBuiltInUsername(_username) && _password.ShouldPrompt();
         }
     }
 }
