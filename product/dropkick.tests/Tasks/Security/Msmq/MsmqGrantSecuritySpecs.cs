@@ -52,7 +52,7 @@ namespace dropkick.tests.Tasks.Security.Msmq
             {
                 base.Context();
                 RemoveLocalQueueIfExistsAndCreate(address.LocalName);
-                
+
                 task = new LocalMsmqGrantReadTask(address, user);
             }
 
@@ -243,5 +243,83 @@ namespace dropkick.tests.Tasks.Security.Msmq
                 Assert.IsFalse(result.ContainsError(), "Errors occured during permission setting.{0}{1}".FormatWith(Environment.NewLine, result.ToString()));
             }
         }
+
+        [ConcernFor("MSMQ Tasks")]
+        [Category("Integration")]
+        public class when_granting_access_rights_to_a_local_queue_for_a_user : MsmqGrantSecuritySpecsBase
+        {
+            protected LocalMsmqGrantAccessRightsTask task;
+
+            public override void Context()
+            {
+                base.Context();
+                RemoveLocalQueueIfExistsAndCreate(address.LocalName);
+
+                task = new LocalMsmqGrantAccessRightsTask(address, user, MessageQueueAccessRights.DeleteMessage);
+            }
+
+            public override void Because()
+            {
+                result = task.Execute();
+            }
+
+            [Fact]
+            public void should_complete_successfully()
+            {
+                //no code issues
+            }
+
+            [Fact]
+            public void should_return_a_result()
+            {
+                Assert.IsNotNull(result);
+            }
+
+            [Fact]
+            public void should_not_contain_any_errors()
+            {
+                Assert.IsFalse(result.ContainsError(), "Errors occured during permission setting.{0}{1}".FormatWith(Environment.NewLine, result.ToString()));
+            }
+        }
+
+        [ConcernFor("MSMQ Tasks")]
+        [Category("Integration")]
+        public class when_granting_access_rights_to_a_local_queue_for_a_group : MsmqGrantSecuritySpecsBase
+        {
+            protected LocalMsmqGrantAccessRightsTask task;
+
+            public override void Context()
+            {
+                base.Context();
+                RemoveLocalQueueIfExistsAndCreate(address.LocalName);
+
+                task = new LocalMsmqGrantAccessRightsTask(address, @"Everyone", MessageQueueAccessRights.FullControl);
+            }
+
+            public override void Because()
+            {
+                result = task.Execute();
+            }
+
+
+            [Fact]
+            public void should_complete_successfully()
+            {
+                //no code issues
+            }
+
+            [Fact]
+            public void should_return_a_result()
+            {
+                Assert.IsNotNull(result);
+            }
+
+            [Fact]
+            public void should_not_contain_any_errors()
+            {
+                Assert.IsFalse(result.ContainsError(), "Errors occured during permission setting.{0}{1}".FormatWith(Environment.NewLine, result.ToString()));
+            }
+        }
+
     }
 }
