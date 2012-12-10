@@ -63,6 +63,7 @@ namespace dropkick.Tasks.Security.Msmq
             q.SetPermissions(_user, MessageQueueAccessRights.WriteMessage, AccessControlEntryType.Allow);
             q.SetPermissions(_user, MessageQueueAccessRights.ReceiveMessage, AccessControlEntryType.Allow);
             q.SetPermissions(_user, MessageQueueAccessRights.PeekMessage, AccessControlEntryType.Allow);
+            q.SetPermissions(_user, MessageQueueAccessRights.ChangeQueuePermissions, AccessControlEntryType.Allow);
 
             result.AddGood("Successfully granted NServiceBus permissions to '{0}' for queue '{1}'".FormatWith(_user, _address.ActualUri));
 
