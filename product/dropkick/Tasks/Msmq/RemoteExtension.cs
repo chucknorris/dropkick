@@ -4,6 +4,8 @@ using dropkick.Tasks.CommandLine;
 
 namespace dropkick.Tasks.Msmq
 {
+    using System.Messaging;
+
     public static class RemoteExtension
     {
         public static DeploymentResult VerifyQueueExists(this RemoteDropkickExecutionTask remoteTask, QueueAddress path)
@@ -44,6 +46,11 @@ namespace dropkick.Tasks.Msmq
             return remoteTask.ExecuteAndGetResults(t);
         }
 
+        public static DeploymentResult GrantMsmqAccessRights(this RemoteDropkickExecutionTask remoteTask, MessageQueueAccessRights accessRights, QueueAddress address, string @group)
+        {
+            var t = remoteTask.SetUpRemote("grant_queue {0} {1} {2}".FormatWith((int)accessRights, @group, address.ActualUri));
+            return remoteTask.ExecuteAndGetResults(t);
+        }
     }
 
     public enum QueuePermission
