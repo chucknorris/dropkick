@@ -113,6 +113,7 @@
     <Compile Include="Configuration\Dsl\NServiceBusHost\Extension.cs" />
     <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostConfigurator.cs" />
     <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostOptions.cs" />
+    <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostQueues.cs" />
     <Compile Include="Configuration\Dsl\RavenDb\Extension.cs" />
     <Compile Include="Configuration\Dsl\RavenDb\RavenDbConfigurator.cs" />
     <Compile Include="Configuration\Dsl\RavenDb\RavenDbOptions.cs" />

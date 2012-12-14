@@ -54,7 +54,7 @@ namespace dropkick.Tasks.Msmq
 
         public static DeploymentResult GrantMsmqNServiceBusPermissions(this RemoteDropkickExecutionTask remoteTask, QueueAddress address, string user)
         {
-            var t = remoteTask.SetUpRemote("grant_queue NServiceBus {1} {2}".FormatWith(user, address.ActualUri));
+            var t = remoteTask.SetUpRemote("grant_queue NServiceBus {0} {1}".FormatWith(user, address.ActualUri));
             return remoteTask.ExecuteAndGetResults(t);
         }
     }

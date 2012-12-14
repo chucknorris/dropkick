@@ -21,10 +21,8 @@ namespace dropkick.Tasks.NServiceBusHost
     {
         private readonly LocalCommandLineTask _task;
 
-        public LocalNServiceBusHostTask(string exeName, string location, string instanceName, string username, string password, string serviceName, string displayName, string description, string profiles)
+        public LocalNServiceBusHostTask(string exeName, string location, NServiceBusHostExeArgs args)
         {
-            var args = new NServiceBusHostExeArgs(exeName, instanceName, username, password, serviceName, displayName, description, profiles);
-
             _task = new LocalCommandLineTask(new DotNetPath(), exeName)
             {
                 Args = args.ToString(),

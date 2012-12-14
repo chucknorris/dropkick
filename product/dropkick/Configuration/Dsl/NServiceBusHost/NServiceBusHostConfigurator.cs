@@ -12,11 +12,9 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
+    using System;
     using DeploymentModel;
     using FileSystem;
-    using Msmq;
-    using Prompting;
-    using Security.Msmq;
     using Tasks;
     using Tasks.NServiceBusHost;
 
@@ -24,26 +22,16 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         BaseProtoTask,
         NServiceBusHostOptions
     {
+        readonly NServiceBusHostExeArgs _args;
+        NServiceBusHostQueues _queues;
         readonly Path _path;
-        string _serviceName;
-        string _displayName;
-        string _description;
-        string _instanceName;
         string _location;
         string _exeName;
-        string _password;
-        string _username;
-        string _profiles;
-        bool _createMsmqQueue;
-        bool _createMsmqRetriesQueue;
-        bool _createMsmqErrorsQueue;
-        bool _createMsmqSubscriptionsQueue;
-        bool _createMsmqAuditQueue;
-        bool _createMsmqTimeoutQueues;
 
         public NServiceBusHostConfigurator(Path path)
         {
             _path = path;
+            _args = new NServiceBusHostExeArgs();
         }
 
         public void ExeName(string name)
@@ -53,7 +41,7 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 
         public void Instance(string name)
         {
-            _instanceName = name;
+            _args.InstanceName = name;
         }
 
         public void LocatedAt(string location)
@@ -63,114 +51,63 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 
         public void PassCredentials(string username, string password)
         {
-            _username = username;
-            _password = password;
+            _args.Username = username;
+            _args.Password = password;
         }
 
         public void ServiceName(string name)
         {
-            _serviceName = name;
+            _args.ServiceName = name;
         }
 
         public void ServiceDisplayName(string name)
         {
-            _displayName = name;
+            _args.DisplayName = name;
         }
 
         public void ServiceDescription(string description)
         {
-            _description = description;
+            _args.Description = description;
+        }
+
+        public void EndpointConfigurationType(string iConfigureThisEndpointTypeFullName, string assembly)
+        {
+            _args.EndpointConfigurationType = iConfigureThisEndpointTypeFullName + ", " + assembly;
+        }
+
+        public void EndpointName(string name)
+        {
+            _args.EndpointName = name;
         }
 
         public void Profiles(string profiles)
         {
-            _profiles = profiles;
+            _args.Profiles = profiles;
         }
 
-        public void CreateMsmqQueue()
+        public void CreateServiceQueue(Action<NServiceBusHostQueues> queueOptions = null)
         {
-            _createMsmqQueue = true;
-        }
-
-        public void CreateMsmqRetriesQueue()
-        {
-            _createMsmqRetriesQueue = true;
-        }
-
-        public void CreateMsmqErrorsQueue()
-        {
-            _createMsmqErrorsQueue = true;
-        }
-
-        public void CreateMsmqSubscriptionsQueue()
-        {
-            _createMsmqSubscriptionsQueue = true;
-        }
-
-        public void CreateMsmqAuditQueue()
-        {
-            _createMsmqAuditQueue = true;
-        }
-
-        public void CreateMsmqTimeoutQueues()
-        {
-            _createMsmqTimeoutQueues = true;
+            _queues = new NServiceBusHostQueues();
+            if (queueOptions != null)
+                queueOptions(_queues);
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            PromptForUsernameAndPasswordIfNecessary();
+            _args.PromptForUsernameAndPasswordIfNecessary(_exeName);
 
             var location = _path.GetPhysicalPath(site, _location, true);
             if (site.IsLocal)
             {
-                site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description, _profiles));
+                site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _args));
             }
             else
             {
-                site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description, _profiles));
+                site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, site, _args));
             }
 
-            if (_createMsmqQueue)
-                RegisterMsmqQueueCreation(site, _serviceName);
-            if (_createMsmqRetriesQueue)
-                RegisterMsmqQueueCreation(site, _serviceName + ".retries");
-            if (_createMsmqErrorsQueue)
-                RegisterMsmqQueueCreation(site, _serviceName + ".errors");
-            if (_createMsmqSubscriptionsQueue)
-                RegisterMsmqQueueCreation(site, _serviceName + ".subscriptions");
-            if (_createMsmqAuditQueue)
-                RegisterMsmqQueueCreation(site, _serviceName + ".audit");
-            if (_createMsmqTimeoutQueues)
-            {
-                RegisterMsmqQueueCreation(site, _serviceName + ".timeouts");
-                RegisterMsmqQueueCreation(site, _serviceName + ".timeoutsdispatcher");
-            }
-        }
-
-        void PromptForUsernameAndPasswordIfNecessary()
-        {
-            var prompt = new ConsolePromptService();
-
-            if (_username.ShouldPrompt())
-                _username = prompt.Prompt("Win Service '{0}' UserName".FormatWith(_exeName));
-            if (ShouldPromptForPassword())
-                _password = prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(_exeName, _username));
-        }
-
-        bool ShouldPromptForPassword()
-        {
-            return !WindowsAuthentication.IsBuiltInUsername(_username) && _password.ShouldPrompt();
-        }
-
-        void RegisterMsmqQueueCreation(PhysicalServer site, string queueName)
-        {
-            var protoMsmqTask = new ProtoMsmqTask();
-            protoMsmqTask.PrivateQueue(queueName).Transactional();
-            protoMsmqTask.RegisterRealTasks(site);
-
-            var msmqSecurity = new ProtoMsmqNServiceBusPermissionsTask(queueName, _username);
-            msmqSecurity.RegisterRealTasks(site);
+            if (_queues != null)
+                _queues.RegisterRealTasks(site, _args.ServiceName, _args.Username);
         }
     }
 }

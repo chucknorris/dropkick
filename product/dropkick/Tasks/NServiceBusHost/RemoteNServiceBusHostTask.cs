@@ -20,10 +20,8 @@ namespace dropkick.Tasks.NServiceBusHost
     {
         readonly RemoteCommandLineTask _task;
 
-        public RemoteNServiceBusHostTask(string exeName, string location, string instanceName, PhysicalServer site, string username, string password, string serviceName, string displayName, string description, string profiles)
+        public RemoteNServiceBusHostTask(string exeName, string location, PhysicalServer site, NServiceBusHostExeArgs args)
         {
-            var args = new NServiceBusHostExeArgs(exeName, instanceName, username, password, serviceName, displayName, description, profiles);
-
             _task = new RemoteCommandLineTask(exeName)
             {
                 Args = args.ToString(),
