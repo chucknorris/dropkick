@@ -2,5 +2,7 @@
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=02B920D5E6BDCC4DA01F4350C408666D/AbsolutePath/@EntryValue">C:\dev\dropkick\dropkick.DotSettings</s:String>
 	<s:String x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=02B920D5E6BDCC4DA01F4350C408666D/RelativePath/@EntryValue">..\dropkick.DotSettings</s:String>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/FileInjectedLayer/=02B920D5E6BDCC4DA01F4350C408666D/@KeyIndexDefined">True</s:Boolean>
+	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File02B920D5E6BDCC4DA01F4350C408666D/@KeyIndexDefined">True</s:Boolean>
+	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File02B920D5E6BDCC4DA01F4350C408666D/RelativePriority/@EntryValue">2</s:Double>
 	<s:Boolean x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File_003A_003AC_003A_005Cdev_005Cdropkick_005Cdropkick_002EDotSettings/@KeyIndexDefined">True</s:Boolean>
 	<s:Double x:Key="/Default/Environment/InjectedLayers/InjectedLayerCustomization/=File_003A_003AC_003A_005Cdev_005Cdropkick_005Cdropkick_002EDotSettings/RelativePriority/@EntryValue">1</s:Double></wpf:ResourceDictionary>
