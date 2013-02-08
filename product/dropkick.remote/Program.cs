@@ -147,9 +147,6 @@ namespace dropkick.remote
                 case "default":
                     result = new SetSensibleMsmqDefaults(queueAddress).Execute();
                     break;
-                case "NServiceBus":
-                    result = new LocalMsmqNServiceBusPermissionsTask(queueAddress, user).Execute();
-                    break;
             }
 
             return result;
