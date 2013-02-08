@@ -49,7 +49,7 @@ namespace dropkick.remote
 
                 //TODO:remote needs to become as awesome as the regular console
 
-                DeploymentResult result = new DeploymentResult();
+                var result = new DeploymentResult();
 
                 switch (args[0])
                 {
@@ -93,7 +93,7 @@ namespace dropkick.remote
 
         private static DeploymentResult VerifyMsmqExists(string[] args)
         {
-            DeploymentResult result = new DeploymentResult();
+            var result = new DeploymentResult();
             var queuename = args[1];
             var queueAddress = new QueueAddress(queuename);
             var formattedName = queueAddress.LocalName;
@@ -106,22 +106,20 @@ namespace dropkick.remote
 
         private static DeploymentResult CreateMsmq(string[] args)
         {
-            DeploymentResult result = new DeploymentResult();
-
             var queuename = args[1];
             var queueAddress = new QueueAddress(queuename);
             var transactional = false;
             if (args.Length > 2)
                 bool.TryParse(args[2], out transactional);
 
-            result = new CreateLocalMsmqQueueTask(_server, queueAddress, transactional).Execute();
+            var result = new CreateLocalMsmqQueueTask(_server, queueAddress, transactional).Execute();
 
             return result;
         }
 
         private static DeploymentResult GrantMsmqPermissions(string[] args)
         {
-            DeploymentResult result = new DeploymentResult();
+            var result = new DeploymentResult();
 
             var perm = args[1];
             var user = args[2];
@@ -159,18 +157,18 @@ namespace dropkick.remote
 
         private static DeploymentResult GrantCertificatePermissions(string[] args)
         {
-            DeploymentResult result = new DeploymentResult();
+            var result = new DeploymentResult();
 
             var perm = args[1];
             var groupArray = args[2];
             var thumbprint = args[3];
-            string s_storeName = args[4];
-            var s_storeLocation = args[5];
+            var storeNameArg = args[4];
+            var storeLocationArg = args[5];
 
             var groups = groupArray.Split(new[]{"|"},StringSplitOptions.RemoveEmptyEntries);
 
-            StoreName storeName = (StoreName)Enum.Parse(typeof(StoreName), s_storeName,true);
-            StoreLocation storeLocation = (StoreLocation)Enum.Parse(typeof(StoreLocation), s_storeLocation,true);
+            var storeName = (StoreName)Enum.Parse(typeof(StoreName), storeNameArg,true);
+            var storeLocation = (StoreLocation)Enum.Parse(typeof(StoreLocation), storeLocationArg,true);
 
             switch (perm)
             {

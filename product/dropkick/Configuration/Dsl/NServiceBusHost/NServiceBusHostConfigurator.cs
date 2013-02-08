@@ -12,7 +12,6 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
-    using System;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
@@ -23,7 +22,6 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         NServiceBusHostOptions
     {
         readonly NServiceBusHostExeArgs _args;
-        NServiceBusHostQueues _queues;
         readonly Path _path;
         string _location;
         string _exeName;
@@ -85,13 +83,6 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             _args.Profiles = profiles;
         }
 
-        public void CreateServiceQueue(Action<NServiceBusHostQueues> queueOptions = null)
-        {
-            _queues = new NServiceBusHostQueues();
-            if (queueOptions != null)
-                queueOptions(_queues);
-        }
-
         public override void RegisterRealTasks(PhysicalServer site)
         {
             _args.PromptForUsernameAndPasswordIfNecessary(_exeName);
@@ -105,9 +96,6 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             {
                 site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, site, _args));
             }
-
-            if (_queues != null)
-                _queues.RegisterRealTasks(site, _args.ServiceName, _args.Username);
         }
     }
 }
