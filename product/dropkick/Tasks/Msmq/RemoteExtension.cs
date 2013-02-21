@@ -42,19 +42,19 @@ namespace dropkick.Tasks.Msmq
                     break;
             }
 
-            var t = remoteTask.SetUpRemote("grant_queue {0} {1} {2}".FormatWith(perm, @group, address.ActualUri));
+            var t = remoteTask.SetUpRemote("grant_queue {0} \"{1}\" {2}".FormatWith(perm, @group, address.ActualUri));
             return remoteTask.ExecuteAndGetResults(t);
         }
 
         public static DeploymentResult GrantMsmqAccessRights(this RemoteDropkickExecutionTask remoteTask, MessageQueueAccessRights accessRights, QueueAddress address, string @group)
         {
-            var t = remoteTask.SetUpRemote("grant_queue {0} {1} {2}".FormatWith((int)accessRights, @group, address.ActualUri));
+            var t = remoteTask.SetUpRemote("grant_queue {0} \"{1}\" {2}".FormatWith((int)accessRights, @group, address.ActualUri));
             return remoteTask.ExecuteAndGetResults(t);
         }
 
         public static DeploymentResult GrantMsmqNServiceBusPermissions(this RemoteDropkickExecutionTask remoteTask, QueueAddress address, string user)
         {
-            var t = remoteTask.SetUpRemote("grant_queue NServiceBus {0} {1}".FormatWith(user, address.ActualUri));
+            var t = remoteTask.SetUpRemote("grant_queue NServiceBus \"{0}\" {1}".FormatWith(user, address.ActualUri));
             return remoteTask.ExecuteAndGetResults(t);
         }
     }
