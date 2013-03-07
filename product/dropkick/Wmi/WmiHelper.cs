@@ -5,14 +5,16 @@ namespace dropkick.Wmi
 
     public class WmiHelper
     {
-        public static ManagementScope Connect(string machineName)
+        public static ManagementScope Connect(string machineName, string userName=null, string password=null)
         {
             var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(machineName))
             {
                 Options =
                 {
                     Impersonation = ImpersonationLevel.Impersonate,
-                    EnablePrivileges = true
+                    EnablePrivileges = true,
+					Username = userName, 
+					Password = password
                 }
             };
 
