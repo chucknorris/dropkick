@@ -25,15 +25,15 @@ namespace dropkick.Configuration.Dsl.AmazonS3
 	public class ProtoAmazonS3UploadDirectoryTask :
 		BaseProtoTask,
 		AmazonS3Options,
-		FromOptions,
-		CopyOptions
+		FromOptions
 	{
 		private string _bucketName;
 		private string _accessId;
 		private string _secretAccessKey;
 		readonly IList<string> _froms = new List<string>();
-		private string _to;
+		private string _to = string.Empty;
 		private readonly IList<Regex> _copyIgnorePatterns = new List<Regex>();
+		private AmazonAcl? _acl;
 
 
 		public void Include(string path)
@@ -52,42 +52,52 @@ namespace dropkick.Configuration.Dsl.AmazonS3
 			_copyIgnorePatterns.Add(pattern);
 		}
 
-		public CopyOptions From(string sourcePath)
+		public AmazonS3Options From(string sourcePath)
 		{
 			var p = ReplaceTokens(sourcePath);
 			_froms.Add(p);
 			return this;
 		}
 
+		public AmazonS3Options WithAcl(AmazonAcl acl)
+		{
+			_acl = acl;
+			return this;
+		}
+
 		public override void RegisterRealTasks(PhysicalServer server)
 		{
-			string to = server.MapPath(_to);
-
 			foreach (var f in _froms)
 			{
-				var o = new AmazonS3UploadDirectoryTask(new SdkAmazonService(), null, f, to, _copyIgnorePatterns);
+				var service = new SdkAmazonService();
+				var connectionInfo = new AmazonS3ConnectionInfo
+				{
+					AccessId = _accessId,
+					SecretAccessKey = _secretAccessKey,
+					BucketName = _bucketName
+				};
+				var o = new AmazonS3UploadDirectoryTask(service, connectionInfo, f, _to, _copyIgnorePatterns, _acl);
 				server.AddTask(o);
 			}
 		}
 
-		public CopyOptions To(string destinationPath)
+		public AmazonS3Options WithBucket(string bucketName)
 		{
-			throw new NotImplementedException();
+			_bucketName = bucketName;
+			return this;
 		}
 
-		public void DeleteDestinationBeforeDeploying()
+		public AmazonS3Options WithAuthentication(string accessId, string secretAccessKey)
 		{
-			throw new NotImplementedException();
+			_accessId = accessId;
+			_secretAccessKey = secretAccessKey;
+			return this;
 		}
 
-		public void ClearDestinationBeforeDeploying()
+		public AmazonS3Options To(string targetFolder)
 		{
-			throw new NotImplementedException();
-		}
-
-		public void ClearDestinationBeforeDeploying(Action<IList<Regex>> excludePatterns)
-		{
-			throw new NotImplementedException();
+			_to = targetFolder;
+			return this;
 		}
 	}
 }

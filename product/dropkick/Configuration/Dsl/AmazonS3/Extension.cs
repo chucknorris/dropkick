@@ -18,12 +18,12 @@ namespace dropkick.Configuration.Dsl.AmazonS3
 {
 	public static class Extension
 	{
-		public static CopyOptions AmazonS3UploadDirectory(this ProtoServer protoServer, string from)
+		public static AmazonS3Options AmazonS3UploadDirectory(this ProtoServer protoServer, string from)
 		{
 			return AmazonS3UploadDirectory(protoServer, o => o.Include(from));
 		}
 
-		public static CopyOptions AmazonS3UploadDirectory(this ProtoServer protoServer, Action<FromOptions> a)
+		public static AmazonS3Options AmazonS3UploadDirectory(this ProtoServer protoServer, Action<FromOptions> a)
 		{
 			var proto = new ProtoAmazonS3UploadDirectoryTask();
 			a(proto);

@@ -18,8 +18,9 @@ namespace dropkick.Tasks.AmazonS3
 		private string _to;
 		private IAmazonService _amazonService;
 		private IEnumerable<Regex> _copyIgnorePatterns;
+		private AmazonAcl? _acl;
 
-		public AmazonS3UploadDirectoryTask(IAmazonService amazonService, AmazonS3ConnectionInfo connectionInfo, string @from, string to, IEnumerable<Regex> copyIgnorePatterns)
+		public AmazonS3UploadDirectoryTask(IAmazonService amazonService, AmazonS3ConnectionInfo connectionInfo, string @from, string to, IEnumerable<Regex> copyIgnorePatterns, AmazonAcl? acl)
 			: base(new dropkick.FileSystem.DotNetPath())
 		{
 			_amazonService = amazonService;
@@ -27,6 +28,7 @@ namespace dropkick.Tasks.AmazonS3
 			_from = from;
 			_to = to;
 			_copyIgnorePatterns = copyIgnorePatterns;
+			_acl = acl;
 		}
 
 		public override string Name
@@ -112,7 +114,18 @@ namespace dropkick.Tasks.AmazonS3
 					targetFile = targetFile.Substring(1);
 				}
 				targetFile = targetFile.Replace("\\","/");
-				_amazonService.UploadFile(_connectionInfo.AccessId,_connectionInfo.SecretAccessKey, file.FullName, targetFile, _connectionInfo.BucketName, null);
+				if(!string.IsNullOrEmpty(_to))
+				{
+					if(_to.EndsWith("/"))
+					{
+						targetFile = _to + targetFile;
+					}
+					else 
+					{
+						targetFile = _to + "/" + targetFile;
+					}
+				}
+				_amazonService.UploadFile(_connectionInfo.AccessId,_connectionInfo.SecretAccessKey, file.FullName, targetFile, _connectionInfo.BucketName, _acl);
 			}
 
 			// Process subdirectories.

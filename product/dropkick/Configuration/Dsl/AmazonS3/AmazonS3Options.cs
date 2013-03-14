@@ -10,9 +10,14 @@
 // under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR 
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
+using dropkick.Tasks.AmazonS3;
 namespace dropkick.Configuration.Dsl.AmazonS3
 {
 	public interface AmazonS3Options
 	{
+		AmazonS3Options WithBucket(string bucketName);
+		AmazonS3Options WithAuthentication(string accessId, string secretAccessKey);
+		AmazonS3Options WithAcl(AmazonAcl acl);
+		AmazonS3Options To(string targetFolder);
 	}
 }
