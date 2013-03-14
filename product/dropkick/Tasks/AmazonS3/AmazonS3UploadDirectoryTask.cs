@@ -15,18 +15,18 @@ namespace dropkick.Tasks.AmazonS3
 		readonly ILog _log = LogManager.GetLogger(typeof(AmazonS3UploadDirectoryTask));
 		private AmazonS3ConnectionInfo _connectionInfo;
 		private string _from;
-		private string _to;
+		private string _targetFolder;
 		private IAmazonService _amazonService;
 		private IEnumerable<Regex> _copyIgnorePatterns;
 		private AmazonAcl? _acl;
 
-		public AmazonS3UploadDirectoryTask(IAmazonService amazonService, AmazonS3ConnectionInfo connectionInfo, string @from, string to, IEnumerable<Regex> copyIgnorePatterns, AmazonAcl? acl)
+		public AmazonS3UploadDirectoryTask(IAmazonService amazonService, AmazonS3ConnectionInfo connectionInfo, string @from, string targetFolder, IEnumerable<Regex> copyIgnorePatterns, AmazonAcl? acl)
 			: base(new dropkick.FileSystem.DotNetPath())
 		{
 			_amazonService = amazonService;
 			_connectionInfo = connectionInfo;
 			_from = from;
-			_to = to;
+			_targetFolder = targetFolder;
 			_copyIgnorePatterns = copyIgnorePatterns;
 			_acl = acl;
 		}
@@ -35,6 +35,12 @@ namespace dropkick.Tasks.AmazonS3
 		{
 			get { return string.Format("Upload from '{0}' to Amazon S3 '{1}'", _from, _connectionInfo.GetDescription()); }
 		}
+
+		public AmazonAcl? Acl { get { return _acl; } }
+		public string From { get { return _from; } }
+		public string TargetFolder { get { return _targetFolder; } }
+		public IEnumerable<Regex> IgnorePatterns { get { return _copyIgnorePatterns; } }
+		public AmazonS3ConnectionInfo ConnectionInfo { get { return _connectionInfo; } }
 
 		public override DeploymentResult VerifyCanRun()
 		{
@@ -57,7 +63,7 @@ namespace dropkick.Tasks.AmazonS3
 					try
 					{
 						fs = File.Open(file.FullName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-						_log.DebugFormat("Going to copy '{0}' to '{1}'", file.FullName, _to);
+						_log.DebugFormat("Going to copy '{0}' to '{1}'", file.FullName, _targetFolder);
 					}
 					catch (Exception)
 					{
@@ -114,15 +120,15 @@ namespace dropkick.Tasks.AmazonS3
 					targetFile = targetFile.Substring(1);
 				}
 				targetFile = targetFile.Replace("\\","/");
-				if(!string.IsNullOrEmpty(_to))
+				if(!string.IsNullOrEmpty(_targetFolder))
 				{
-					if(_to.EndsWith("/"))
+					if(_targetFolder.EndsWith("/"))
 					{
-						targetFile = _to + targetFile;
+						targetFile = _targetFolder + targetFile;
 					}
 					else 
 					{
-						targetFile = _to + "/" + targetFile;
+						targetFile = _targetFolder + "/" + targetFile;
 					}
 				}
 				_amazonService.UploadFile(_connectionInfo.AccessId,_connectionInfo.SecretAccessKey, file.FullName, targetFile, _connectionInfo.BucketName, _acl);
