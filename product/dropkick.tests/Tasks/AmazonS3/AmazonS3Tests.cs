@@ -45,7 +45,7 @@ namespace dropkick.tests.Tasks.AmazonS3
 				};
 				string targetFolder = Guid.NewGuid().ToString();
 
-				var sut = new AmazonS3UploadDirectoryTask(amazonService, connectionInfo, tempDirectory, targetFolder, null);
+				var sut = new AmazonS3UploadDirectoryTask(amazonService, connectionInfo, tempDirectory, targetFolder, null, null);
 				sut.Execute();
 
 				foreach (string filePath in tempFiles)
