@@ -119,6 +119,9 @@
     <Compile Include="Settings\ServerMapParsing.cs" />
     <Compile Include="Settings\SettingsParsing.cs" />
     <Compile Include="StringInterpolation\TestIt.cs" />
+    <Compile Include="Tasks\AmazonS3\AmazonS3Tests.cs" />
+    <Compile Include="Tasks\AmazonS3\SdkAmazonServiceTests.cs" />
+    <Compile Include="Tasks\AmazonS3\RestAmazonServiceTests.cs" />
     <Compile Include="Tasks\Console\RemoteTest.cs" />
     <Compile Include="Tasks\Files\CopyDirectoryTaskSpecs.cs" />
     <Compile Include="Tasks\Files\CopyFileTest.cs" />
