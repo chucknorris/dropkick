@@ -24,5 +24,6 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         void EndpointName(string name);
         void EndpointConfigurationType(string iConfigureThisEndpointTypeFullName, string assembly);
         void Profiles(string profiles);
+        void InstallInfrastructure();
     }
 }

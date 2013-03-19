@@ -83,6 +83,11 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
             _args.Profiles = profiles;
         }
 
+        public void InstallInfrastructure()
+        {
+            _args.InstallInfrastructure = true;
+        }
+
         public override void RegisterRealTasks(PhysicalServer site)
         {
             _args.PromptForUsernameAndPasswordIfNecessary(_exeName);
