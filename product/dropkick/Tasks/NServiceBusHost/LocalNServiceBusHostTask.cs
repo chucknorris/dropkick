@@ -43,7 +43,7 @@ namespace dropkick.Tasks.NServiceBusHost
 
         public override DeploymentResult Execute()
         {
-            Logging.Coarse("[nservicebushost] Installing a local NServiceBus.Host service.");
+            Logging.Coarse("[nservicebushost] Installing a local NServiceBus.Host service:\n\t{0}".FormatWith(_task.Args));
             return _task.Execute();
         }
     }

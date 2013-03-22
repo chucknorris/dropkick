@@ -25,6 +25,7 @@ namespace dropkick.Tasks.NServiceBusHost
         public string EndpointName { get; set; }
         public string EndpointConfigurationType { get; set; }
         public string Profiles { get; set; }
+        public bool InstallInfrastructure { get; set; }
 
         public override string ToString()
         {
@@ -53,6 +54,9 @@ namespace dropkick.Tasks.NServiceBusHost
 
             if (!string.IsNullOrEmpty(Profiles))
                 args += " {0}".FormatWith(Profiles);
+
+            if (InstallInfrastructure)
+                args += " /installInfrastructure";
 
             return args;
         }
