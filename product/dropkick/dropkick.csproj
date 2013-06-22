@@ -127,6 +127,7 @@
     <Compile Include="Configuration\Dsl\Security\Certificate\GrantReadCertificateOptions.cs" />
     <Compile Include="Configuration\Dsl\Security\Certificate\ProtoGrantReadX509CertificatePrivateKeyTask.cs" />
     <Compile Include="Configuration\Dsl\Security\LocalPolicy\ProtoLogOnBatchTask.cs" />
+    <Compile Include="Configuration\Dsl\Security\Msmq\ProtoMsmqGrantAccessRightsTask.cs" />
     <Compile Include="Configuration\Dsl\Security\Rights.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\Extension.cs" />
     <Compile Include="Configuration\Dsl\Topshelf\TopshelfConfigurator.cs" />
@@ -172,6 +173,7 @@
     <Compile Include="Tasks\Msmq\RemoteExtension.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
     <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\NServiceBusHostExeArgs.cs" />
     <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostTask.cs" />
     <Compile Include="Tasks\RavenDb\LocalInstallRavenDbAsServiceTask.cs" />
     <Compile Include="Tasks\RavenDb\LocalUninstallRavenDbAsServiceTask.cs" />
@@ -192,6 +194,8 @@
     <Compile Include="Tasks\Security\Certificate\RemoteExtension.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LogOnAsBatchTask.cs" />
     <Compile Include="Tasks\Security\LocalPolicy\LsaUtility.cs" />
+    <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantAccessRightsTask.cs" />
+    <Compile Include="Tasks\Security\Msmq\LocalMsmqGrantAccessRightsTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadTask.cs" />
     <Compile Include="Tasks\Security\Msmq\RemoteMsmqGrantReadWriteTask.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantWriteTask.cs" />

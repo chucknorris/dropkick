@@ -14,47 +14,17 @@ namespace dropkick.Tasks.NServiceBusHost
 {
     using CommandLine;
     using DeploymentModel;
-    using Prompting;
 
     public class RemoteNServiceBusHostTask :
         BaseTask
     {
         readonly RemoteCommandLineTask _task;
-        readonly PromptService _prompt = new ConsolePromptService();
 
-        public RemoteNServiceBusHostTask(string exeName, string location, string instanceName, PhysicalServer site, string username, string password, string serviceName, string displayName, string description, string profiles)
+        public RemoteNServiceBusHostTask(string exeName, string location, PhysicalServer site, NServiceBusHostExeArgs args)
         {
-            string args = string.IsNullOrEmpty(instanceName)
-                            ? ""
-                            : " /instance:\"{0}\"".FormatWith(instanceName);
-
-            if (username != null && password != null)
-            {
-                var user = username;
-                var pass = password;
-                if (username.ShouldPrompt())
-                    user = _prompt.Prompt("Win Service '{0}' UserName".FormatWith(exeName));
-                if (shouldPromptForPassword(username, password))
-                    pass = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(exeName, username));
-
-                args += " /userName:\"{0}\" /password:\"{1}\"".FormatWith(user, pass);
-            }
-
-            if (!string.IsNullOrEmpty(serviceName))
-                args += " /serviceName:\"{0}\"".FormatWith(serviceName);
-
-            if (!string.IsNullOrEmpty(displayName))
-                args += " /displayName:\"{0}\"".FormatWith(displayName);
-
-            if (!string.IsNullOrEmpty(description))
-                args += " /description:\"{0}\"".FormatWith(description);
-
-            if (!string.IsNullOrEmpty(profiles))
-                args += " {0}".FormatWith(profiles);
-
             _task = new RemoteCommandLineTask(exeName)
             {
-                Args = "/install" + args,
+                Args = args.ToString(),
                 ExecutableIsLocatedAt = location,
                 Machine = site.Name,
                 WorkingDirectory = location
@@ -73,13 +43,9 @@ namespace dropkick.Tasks.NServiceBusHost
 
         public override DeploymentResult Execute()
         {
-            Logging.Coarse("[nservicebushost] Installing a remote NServiceBus.Host service");
+            Logging.Coarse("[nservicebushost] Installing a remote NServiceBus.Host service:\n\t{0}".FormatWith(_task.Args));
             return _task.Execute();
         }
 
-        private bool shouldPromptForPassword(string username, string password)
-        {
-            return !WindowsAuthentication.IsBuiltInUsername(username) && password.ShouldPrompt();
-        }
     }
 }

@@ -11,12 +11,10 @@
 // CONDITIONS OF ANY KIND, either express or implied. See the License for the 
 // specific language governing permissions and limitations under the License.
 
-using dropkick.FileSystem;
-
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
-    using System;
     using DeploymentModel;
+    using Magnum.Extensions;
     using Tasks.RoundhousE;
     using Tasks;
 
@@ -24,11 +22,10 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         BaseProtoTask,
         RoundhousEOptions
     {
-        private readonly Path _path = new DotNetPath();
-
         string _environmentName;
         string _instanceName;
         string _databaseName;
+        string _connectionString;
         string _scriptsLocation;
         private RoundhousEMode _roundhouseMode;
         private DatabaseRecoveryMode _recoveryMode;
@@ -63,6 +60,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         public RoundhousEOptions OnDatabase(string name)
         {
             _databaseName = ReplaceTokens(name);
+            return this;
+        }
+
+        public RoundhousEOptions OnConnectionString(string connectionString)
+        {
+            _connectionString = ReplaceTokens(connectionString);
             return this;
         }
 
@@ -213,14 +216,22 @@ namespace dropkick.Configuration.Dsl.RoundhousE
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            var connectionInfo = new DbConnectionInfo{
-                Server = site.Name,
-                Instance = _instanceName,
-                DatabaseName = _databaseName,
-                UserName = _userName,
-                Password = _password
-            };
-            // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
+            DbConnectionInfo connectionInfo;
+            if (_connectionString.IsNotEmpty())
+            {
+                connectionInfo = new DbConnectionInfo(_connectionString);
+            }
+            else
+            {
+                connectionInfo = new DbConnectionInfo
+                {
+                    Server = site.Name,
+                    Instance = _instanceName,
+                    DatabaseName = _databaseName,
+                    UserName = _userName,
+                    Password = _password
+                };
+            }
 
             var task = new RoundhousETask(connectionInfo, _scriptsLocation,
                 _environmentName, _roundhouseMode,

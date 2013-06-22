@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.Security.Msmq
 {
+    using System.Messaging;
 
     public class QueueSecurityConfiguration :
         QueueSecurityConfig
@@ -46,6 +47,12 @@ namespace dropkick.Configuration.Dsl.Security.Msmq
         public void GrantReadWrite(string group)
         {
             var proto = new ProtoMsmqGrantReadWriteTask(_queue, group);
+            _server.RegisterProtoTask(proto);
+        }
+
+        public void GrantAccessRights(string group, MessageQueueAccessRights accessRights)
+        {
+            var proto = new ProtoMsmqGrantAccessRightsTask(_queue, group, accessRights);
             _server.RegisterProtoTask(proto);
         }
     }

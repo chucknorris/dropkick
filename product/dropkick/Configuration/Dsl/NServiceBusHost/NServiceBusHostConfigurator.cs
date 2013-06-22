@@ -21,20 +21,15 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         BaseProtoTask,
         NServiceBusHostOptions
     {
+        readonly NServiceBusHostExeArgs _args;
         readonly Path _path;
-        string _serviceName;
-        string _displayName;
-        string _description;
-        string _instanceName;
         string _location;
         string _exeName;
-        string _password;
-        string _username;
-        string _profiles;
 
         public NServiceBusHostConfigurator(Path path)
         {
             _path = path;
+            _args = new NServiceBusHostExeArgs();
         }
 
         public void ExeName(string name)
@@ -44,7 +39,7 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 
         public void Instance(string name)
         {
-            _instanceName = name;
+            _args.InstanceName = name;
         }
 
         public void LocatedAt(string location)
@@ -54,40 +49,57 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
 
         public void PassCredentials(string username, string password)
         {
-            _username = username;
-            _password = password;
+            _args.Username = username;
+            _args.Password = password;
         }
 
         public void ServiceName(string name)
         {
-            _serviceName = name;
+            _args.ServiceName = name;
         }
 
         public void ServiceDisplayName(string name)
         {
-            _displayName = name;
+            _args.DisplayName = name;
         }
 
         public void ServiceDescription(string description)
         {
-            _description = description;
+            _args.Description = description;
+        }
+
+        public void EndpointConfigurationType(string iConfigureThisEndpointTypeFullName, string assembly)
+        {
+            _args.EndpointConfigurationType = iConfigureThisEndpointTypeFullName + ", " + assembly;
+        }
+
+        public void EndpointName(string name)
+        {
+            _args.EndpointName = name;
         }
 
         public void Profiles(string profiles)
         {
-            _profiles = profiles;
+            _args.Profiles = profiles;
+        }
+
+        public void InstallInfrastructure()
+        {
+            _args.InstallInfrastructure = true;
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
+            _args.PromptForUsernameAndPasswordIfNecessary(_exeName);
+
             var location = _path.GetPhysicalPath(site, _location, true);
             if (site.IsLocal)
             {
-                site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description, _profiles));
+                site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _args));
             }
             else
             {
-                site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description, _profiles));
+                site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, site, _args));
             }
         }
     }

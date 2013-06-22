@@ -19,6 +19,15 @@ namespace dropkick.Tasks.RoundhousE
             _prompt = new ConsolePromptService();
         }
 
+        public DbConnectionInfo(string connectionString)
+        {
+            var builder = new SqlConnectionStringBuilder(connectionString);
+            Server = builder.DataSource;
+            DatabaseName = builder.InitialCatalog;
+            UserName = builder.UserID;
+            Password = builder.Password;
+        }
+
         public DbConnectionInfo(PromptService prompt)
         {
             _prompt = prompt;
@@ -43,7 +52,10 @@ namespace dropkick.Tasks.RoundhousE
 
             if (Instance.IsNotEmpty())
             {
-                builder.DataSource = @"{0}\{1}".FormatWith(Server, Instance);
+                if (Instance.ToLower().Contains("(localdb)"))
+                    builder.DataSource = Instance;
+                else
+                    builder.DataSource = @"{0}\{1}".FormatWith(Server, Instance);
             }
 
             if (UserName.IsEmpty())
