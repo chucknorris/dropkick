@@ -11,7 +11,7 @@
     <projectUrl>https://github.com/chucknorris/dropkick</projectUrl>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <tags>dropkick deploy deployment framework chocolatey</tags>
+    <tags>dropkick deploy deployment framework</tags>
     <!--<iconUrl>32x32.png</iconUrl>-->
     <dependencies>
       <dependency id="dropkick.core" version="0.4" />

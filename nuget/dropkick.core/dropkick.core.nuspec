@@ -11,6 +11,6 @@
     <projectUrl>https://github.com/chucknorris/dropkick</projectUrl>
     <licenseUrl>http://www.apache.org/licenses/LICENSE-2.0</licenseUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <tags>dropkick deploy deployment framework chocolatey</tags>
+    <tags>dropkick deploy deployment framework</tags>
   </metadata>
 </package>
