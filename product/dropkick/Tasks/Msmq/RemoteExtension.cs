@@ -8,13 +8,13 @@ namespace dropkick.Tasks.Msmq
     {
         public static DeploymentResult VerifyQueueExists(this RemoteDropkickExecutionTask remoteTask, QueueAddress path)
         {
-            var t = remoteTask.SetUpRemote("verify_queue {0}".FormatWith(path.ActualUri));
+            var t = remoteTask.SetUpRemote("verify_queue \"{0}\"".FormatWith(path.ActualUri));
             return remoteTask.ExecuteAndGetResults(t);
         }
 
         public static DeploymentResult CreateQueue(this RemoteDropkickExecutionTask remoteTask, QueueAddress path, bool transactional = false)
         {
-            var t = remoteTask.SetUpRemote("create_queue {0} {1}".FormatWith(path.ActualUri, transactional));
+            var t = remoteTask.SetUpRemote("create_queue \"{0}\" \"{1}\"".FormatWith(path.ActualUri, transactional));
             return remoteTask.ExecuteAndGetResults(t);
         }
 
@@ -40,7 +40,7 @@ namespace dropkick.Tasks.Msmq
                     break;
             }
 
-            var t = remoteTask.SetUpRemote("grant_queue {0} {1} {2}".FormatWith(perm, @group, address.ActualUri));
+            var t = remoteTask.SetUpRemote("grant_queue \"{0}\" \"{1}\" \"{2}\"".FormatWith(perm, @group, address.ActualUri));
             return remoteTask.ExecuteAndGetResults(t);
         }
 
