@@ -12,7 +12,7 @@ namespace dropkick.Wmi
 
         public static ServiceReturnCode Create(string machineName, string serviceName, string serviceDisplayName,
                                                string serviceLocation, ServiceStartMode startMode, string userName,
-                                               string password, string[] dependencies)
+                                               string password, string[] dependencies, string wmiUserName=null, string wmiPassword=null)
         {
             if (userName != null && userName.IndexOf('\\') < 0)
             {
@@ -39,7 +39,7 @@ namespace dropkick.Wmi
                                          null, // LoadOrderGroupDependencies | Load Order Dependencies
                                          dependencies //  ServiceDependencies
                                      };
-                return (ServiceReturnCode) WmiHelper.InvokeStaticMethod(machineName, CLASSNAME, methodName, parameters);
+                return (ServiceReturnCode) WmiHelper.InvokeStaticMethodWithAuthentication(machineName, CLASSNAME, methodName, parameters, wmiUserName, wmiPassword);
             }
             catch
             {
@@ -47,13 +47,13 @@ namespace dropkick.Wmi
             }
         }
 
-        public static ServiceReturnCode Delete(string machineName, string serviceName)
+        public static ServiceReturnCode Delete(string machineName, string serviceName, string wmiUserName=null, string wmiPassword=null)
         {
             try
             {
                 string methodName = "Delete";
                 return
-                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethod(machineName, CLASSNAME, serviceName, methodName);
+                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethodWithAuthentication(machineName, CLASSNAME, serviceName, methodName, wmiUserName, wmiPassword);
             }
             catch
             {
@@ -61,13 +61,13 @@ namespace dropkick.Wmi
             }
         }
 
-        public static ServiceReturnCode Start(string machineName, string serviceName)
+        public static ServiceReturnCode Start(string machineName, string serviceName, string wmiUserName, string wmiPassword)
         {
             try
             {
                 string methodName = "StartService";
                 return
-                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethod(machineName, CLASSNAME, serviceName, methodName);
+                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethodWithAuthentication(machineName, CLASSNAME, serviceName, methodName, wmiUserName, wmiPassword);
             }
             catch
             {
@@ -75,13 +75,13 @@ namespace dropkick.Wmi
             }
         }
 
-        public static ServiceReturnCode Stop(string machineName, string serviceName)
+        public static ServiceReturnCode Stop(string machineName, string serviceName, string wmiUserName, string wmiPassword)
         {
             try
             {
                 string methodName = "StopService";
                 return
-                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethod(machineName, CLASSNAME, serviceName, methodName);
+                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethodWithAuthentication(machineName, CLASSNAME, serviceName, methodName, wmiUserName, wmiPassword);
             }
             catch
             {
@@ -103,13 +103,13 @@ namespace dropkick.Wmi
             }
         }
 
-        public static ServiceReturnCode QueryService(string machineName, string serviceName)
+        public static ServiceReturnCode QueryService(string machineName, string serviceName, string userName, string password)
         {
             try
             {
                 string methodName = "InterrogateService";
                 return
-                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethod(machineName, CLASSNAME, serviceName, methodName);
+                    (ServiceReturnCode) WmiHelper.InvokeInstanceMethodWithAuthentication(machineName, CLASSNAME, serviceName, methodName, userName, password);
             }
             catch
             {

@@ -19,24 +19,77 @@ namespace dropkick.Tasks.WinService
     public abstract class BaseServiceTask :
         BaseTask
     {
-        protected BaseServiceTask(string machineName, string serviceName)
+        protected BaseServiceTask(string machineName, string serviceName, string wmiUserName, string wmiPassword)
         {
             MachineName = machineName;
             ServiceName = serviceName;
+            WmiUserName = wmiUserName;
+            WmiPassword = wmiPassword;
         }
 
         public string MachineName { get; set; }
         public string ServiceName { get; set; }
+        public string WmiUserName { get; set; }
+        public string WmiPassword { get; set; }
 
+        protected bool ServiceIsRunning()
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(WmiUserName) || string.IsNullOrEmpty(WmiPassword))
+                {
+                    using (var c = new ServiceController(ServiceName, MachineName))
+                    {
+                        return (c.Status == ServiceControllerStatus.Running);
+                    }
+                }
+                else
+                {
+                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName, WmiUserName, WmiPassword);
+                    switch (status)
+                    {
+                        case Wmi.ServiceReturnCode.ServiceAlreadyRunning:
+                        case Wmi.ServiceReturnCode.Success:
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         protected bool ServiceExists()
         {
             try
             {
-                using (var c = new ServiceController(ServiceName, MachineName))
+                if(string.IsNullOrEmpty(WmiUserName) || string.IsNullOrEmpty(WmiPassword))
                 {
-                    ServiceControllerStatus currentStatus = c.Status;
-                    return true;
+                    using (var c = new ServiceController(ServiceName, MachineName))
+                    {
+                        ServiceControllerStatus currentStatus = c.Status;
+                        return true;
+                    }
+                }
+                else 
+                {
+                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName, WmiUserName, WmiPassword);
+                    switch(status)
+                    {
+                        case Wmi.ServiceReturnCode.DependentServicesRunning:
+                        case Wmi.ServiceReturnCode.ServiceAlreadyPaused:
+                        case Wmi.ServiceReturnCode.ServiceAlreadyRunning:
+                        case Wmi.ServiceReturnCode.StatusServiceExists:
+                        case Wmi.ServiceReturnCode.Success:
+                        case Wmi.ServiceReturnCode.ServiceNotActive:
+                        case Wmi.ServiceReturnCode.InvalidServiceControl:
+                            return true;
+                        default:
+                            return false;
+                    }
                 }
             }
             catch (Exception)

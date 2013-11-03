@@ -24,8 +24,8 @@ namespace dropkick.Tasks.WinService
         //TODO: should be injected
         readonly PromptService _prompt = new ConsolePromptService();
 
-        public WinServiceCreateTask(string machineName, string serviceName)
-            : base(machineName, serviceName)
+        public WinServiceCreateTask(string machineName, string serviceName, string wmiUserName=null, string wmiPassword=null)
+            : base(machineName, serviceName, wmiUserName, wmiPassword)
         {
         }
 
@@ -65,8 +65,12 @@ namespace dropkick.Tasks.WinService
             if (shouldPromptForPassword())
                 Password = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(ServiceName, UserName));
 
-            ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceDisplayName, ServiceLocation,
-                                                             StartMode, UserName, Password, Dependencies);
+            string displayName = ServiceDisplayName;
+            if(string.IsNullOrEmpty(displayName))
+                displayName = ServiceName;
+
+            ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, displayName, ServiceLocation,
+                                                             StartMode, UserName, Password, Dependencies, WmiUserName, WmiPassword);
             
             if (returnCode != ServiceReturnCode.Success)
                 result.AddAlert("Create service returned {0}".FormatWith(returnCode.ToString()));

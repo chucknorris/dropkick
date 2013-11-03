@@ -33,6 +33,8 @@ namespace dropkick.Configuration.Dsl.WinService
         ServiceStartMode _startMode;
         string _userName;
         Path _path;
+        string _wmiUserName;
+        string _wmiPassword;
 
         public ProtoWinServiceCreateTask(Path path, string serviceName)
         {
@@ -58,6 +60,13 @@ namespace dropkick.Configuration.Dsl.WinService
             return this;
         }
 
+        public WinServiceCreateOptions WithAuthentication(string userName, string password)
+        {
+            _wmiUserName = userName;
+            _wmiPassword = password;
+            return this;
+        }
+
         public WinServiceCreateOptions WithCredentials(string username, string password)
         {
             _userName = ReplaceTokens(username);
@@ -78,7 +87,7 @@ namespace dropkick.Configuration.Dsl.WinService
             string serviceLocation = _installPath;
             serviceLocation = _path.GetPhysicalPath(site, _installPath, true);
 
-            site.AddTask(new WinServiceCreateTask(site.Name, _serviceName)
+            site.AddTask(new WinServiceCreateTask(site.Name, _serviceName, _wmiUserName, _wmiPassword)
                              {
                                  Dependencies = _dependencies.ToArray(),
                                  UserName = _userName,
