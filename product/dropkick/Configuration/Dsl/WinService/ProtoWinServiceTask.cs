@@ -61,7 +61,7 @@ namespace dropkick.Configuration.Dsl.WinService
 
         public WinServiceCreateOptions Create()
         {
-            var proto = new ProtoWinServiceCreateTask(new DotNetPath(), _serviceName);
+            var proto = new ProtoWinServiceCreateTask(new DotNetPath(), _serviceName, _wmiUserName, _wmiPassword);
             _protoServer.RegisterProtoTask(proto);
             return proto;
         }

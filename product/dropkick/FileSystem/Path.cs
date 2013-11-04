@@ -18,6 +18,7 @@ namespace dropkick.FileSystem
     public interface Path
     {
         string GetPhysicalPath(PhysicalServer server, string path, bool forceLocalPath);
+        string GetPhysicalPath(PhysicalServer server, string path, bool forceLocalPath, string wmiUserName, string wmiPassword);
         string Combine(string root, params string[] ex);
         string GetFullPath(string path);
         bool IsFile(string path);

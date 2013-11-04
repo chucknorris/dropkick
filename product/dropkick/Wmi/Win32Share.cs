@@ -73,10 +73,10 @@ namespace dropkick.Wmi
             return ShareReturnCode.UnknownFailure;
         }
 
-        public static string GetLocalPathForShare(string serverName, string shareName)
+        public static string GetLocalPathForShare(string serverName, string shareName, string wmiUserName=null, string wmiPassword=null)
         {
             var query = new WqlObjectQuery("select Name, Path from Win32_Share");
-            var scope = WmiHelper.Connect(serverName);
+            var scope = WmiHelper.Connect(serverName, wmiUserName, wmiPassword);
 
             using (var search = new ManagementObjectSearcher(scope, query))
             {

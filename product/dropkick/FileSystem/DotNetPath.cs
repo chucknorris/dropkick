@@ -25,7 +25,12 @@ namespace dropkick.FileSystem
     {
         #region Path Members
 
-        public string GetPhysicalPath(PhysicalServer site, string path,bool forceLocalPath)
+        public string GetPhysicalPath(PhysicalServer site, string path, bool forceLocalPath)
+        {
+            return this.GetPhysicalPath(site, path, forceLocalPath, null, null);
+        }
+
+        public string GetPhysicalPath(PhysicalServer site, string path,bool forceLocalPath, string wmiUserName, string wmiPassword)
         {
             var standardizedPath = path;
             if (!IsUncPath(standardizedPath))
@@ -45,7 +50,7 @@ namespace dropkick.FileSystem
                 if (shareMatch.Success)
                 {
                     var shareName = shareMatch.Groups["shareName"].Value;
-                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName);
+                    serviceLocation = Win32Share.GetLocalPathForShare(site.Name, shareName, wmiUserName, wmiPassword);
                 }
                 var rest = shareMatch.Groups["rest"].Value;
                 standardizedPath = System.IO.Path.Combine(serviceLocation, rest);
