@@ -98,5 +98,11 @@ namespace dropkick.Configuration.Dsl.Files
            protoserver.RegisterProtoTask(proto);
            return proto;
         }
+
+        public static void OpenFolderShareWithAuthentication(this ProtoServer protoServer, string folderName, string userName, string password)
+        {
+            var task = new OpenFolderShareAuthenticationProtoTask(folderName, userName, password);
+            protoServer.RegisterProtoTask(task);
+        }
     }
 }

@@ -94,6 +94,7 @@
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ExistsOptions.cs" />
+    <Compile Include="Configuration\Dsl\Files\OpenFolderShareAuthenticationProtoTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ProtoExistsTask.cs" />
     <Compile Include="Configuration\Dsl\Files\FileCopyOptions.cs" />
     <Compile Include="Configuration\Dsl\Files\FilePokeOptions.cs" />
@@ -139,6 +140,7 @@
     <Compile Include="Configuration\Dsl\Xml\XmlPokeOptions.cs" />
     <Compile Include="Engine\DeploymentFinders\FindResult.cs" />
     <Compile Include="FileSystem\PathConverter.cs" />
+    <Compile Include="FileSystem\PinvokeWindowsNetworking.cs" />
     <Compile Include="HUB.cs" />
     <Compile Include="Log.cs" />
     <Compile Include="Log4NetLog.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="Tasks\BaseTask.cs" />
     <Compile Include="Tasks\Files\FilePokeReplacement.cs" />
     <Compile Include="Tasks\Files\FilePokeTask.cs" />
+    <Compile Include="Tasks\Files\OpenFolderShareAuthenticationTask.cs" />
     <Compile Include="Tasks\Files\UnzipArchiveTask.cs" />
     <Compile Include="Tasks\Iis\Iis6Path.cs" />
     <Compile Include="Tasks\Iis\Iis7OperationTask.cs" />
@@ -350,6 +353,7 @@
     <Compile Include="WindowsAuthentication.cs" />
     <Compile Include="Tasks\Xml\XmlPokeTask.cs" />
     <Compile Include="Wmi\ErrorControl.cs" />
+    <Compile Include="FileSystem\FileShareAuthenticator.cs" />
     <Compile Include="Wmi\ProcessReturnCode.cs" />
     <Compile Include="Wmi\ServiceReturnCode.cs" />
     <Compile Include="Wmi\ServiceStartMode.cs" />
