@@ -12,6 +12,7 @@
 // specific language governing permissions and limitations under the License.
 namespace dropkick.Configuration.Dsl.NServiceBusHost
 {
+    using System;
     using DeploymentModel;
     using FileSystem;
     using Tasks;
@@ -31,10 +32,17 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         string _password;
         string _username;
         string _profiles;
+        Action _action;
 
         public NServiceBusHostConfigurator(Path path)
         {
             _path = path;
+            _action = NServiceBusHost.Action.Install;
+        }
+
+        public void Action(Action action)
+        {
+            _action = action;
         }
 
         public void ExeName(string name)
@@ -81,14 +89,45 @@ namespace dropkick.Configuration.Dsl.NServiceBusHost
         public override void RegisterRealTasks(PhysicalServer site)
         {
             var location = _path.GetPhysicalPath(site, _location, true);
+            switch (_action)
+            {
+                case NServiceBusHost.Action.Install:
+                    RegisterInstallTasks(site, location);
+                    break;
+                case NServiceBusHost.Action.Uninstall:
+                    RegisterUninstallTasks(site, location);
+                    break;
+                default:
+                    throw new NotImplementedException(String.Format("Action [{0}] has not been implemented.", Enum.GetName(typeof(Action), _action)));
+            }
+        }
+
+        public void RegisterInstallTasks(PhysicalServer site, string location)
+        {
             if (site.IsLocal)
             {
-                site.AddTask(new LocalNServiceBusHostTask(_exeName, location, _instanceName, _username, _password, _serviceName, _displayName, _description, _profiles));
+                site.AddTask(new LocalNServiceBusHostInstallTask(_exeName, location, _instanceName, _username,
+                                                          _password, _serviceName, _displayName, _description,
+                                                          _profiles));
             }
             else
             {
-                site.AddTask(new RemoteNServiceBusHostTask(_exeName, location, _instanceName, site, _username, _password, _serviceName, _displayName, _description, _profiles));
+                site.AddTask(new RemoteNServiceBusHostInstallTask(_exeName, location, _instanceName, site, _username,
+                                                           _password, _serviceName, _displayName, _description,
+                                                           _profiles));
+            }            
+        }
+
+        public void RegisterUninstallTasks(PhysicalServer site, string location)
+        {
+            if (site.IsLocal)
+            {
+                site.AddTask(new LocalNServiceBusHostUninstallTask(_exeName, location, _instanceName, _serviceName));
             }
+            else
+            {
+                site.AddTask(new RemoteNServiceBusHostUninstallTask(_exeName, location, _instanceName, site, _serviceName));
+            }                        
         }
     }
 }

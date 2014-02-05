@@ -110,6 +110,7 @@
     <Compile Include="Configuration\Dsl\MsSrss\ProtoSsrsTask.cs" />
     <Compile Include="Configuration\Dsl\MsSrss\ReportOptions.cs" />
     <Compile Include="Configuration\Dsl\NetworkShare\ExistingShareOptions.cs" />
+    <Compile Include="Configuration\Dsl\NServiceBusHost\Action.cs" />
     <Compile Include="Configuration\Dsl\NServiceBusHost\Extension.cs" />
     <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostConfigurator.cs" />
     <Compile Include="Configuration\Dsl\NServiceBusHost\NServiceBusHostOptions.cs" />
@@ -171,8 +172,10 @@
     <Compile Include="Tasks\Msmq\CreateRemoteMsmqQueueTask.cs" />
     <Compile Include="Tasks\Msmq\RemoteExtension.cs" />
     <Compile Include="Tasks\MsSsrs\PublishSsrsTask.cs" />
-    <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostTask.cs" />
-    <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostInstallTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\LocalNServiceBusHostUninstallTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostInstallTask.cs" />
+    <Compile Include="Tasks\NServiceBusHost\RemoteNServiceBusHostUninstallTask.cs" />
     <Compile Include="Tasks\RavenDb\LocalInstallRavenDbAsServiceTask.cs" />
     <Compile Include="Tasks\RavenDb\LocalUninstallRavenDbAsServiceTask.cs" />
     <Compile Include="Tasks\RavenDb\RavenConstants.cs" />

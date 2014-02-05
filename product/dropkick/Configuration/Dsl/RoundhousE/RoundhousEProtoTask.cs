@@ -15,10 +15,9 @@ using dropkick.FileSystem;
 
 namespace dropkick.Configuration.Dsl.RoundhousE
 {
-    using System;
     using DeploymentModel;
-    using Tasks.RoundhousE;
     using Tasks;
+    using Tasks.RoundhousE;
 
     public class RoundhousEProtoTask :
         BaseProtoTask,
@@ -44,10 +43,17 @@ namespace dropkick.Configuration.Dsl.RoundhousE
         private int _restoreTimeout;
         private int _commandTimeoutAdmin;
 
-        private string _functionsFolderName;
-        private string _sprocsFolderName;
-        private string _viewsFolderName;
+        private string _alterDatabaseFolderName;
+        private string _runAfterCreateDatabaseFolderName;
+        private string _runBeforeUpFolderName;
         private string _upFolderName;
+        private string _runFirstAfterUpFolderName;
+        private string _functionsFolderName;
+        private string _viewsFolderName;
+        private string _sprocsFolderName;
+        private string _indexesFolderName;
+        private string _runAfterOtherAnyTimeScriptsFolderName;
+        private string _permissionsFolderName;
         private string _versionTable;
         private string _scriptsRunTable;
         private string _scriptsRunErrorTable;
@@ -78,6 +84,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithRunFirstAfterUpFolder(string runFirstAfterUpFolderName)
+        {
+            _runFirstAfterUpFolderName = ReplaceTokens(runFirstAfterUpFolderName);
+            return this;
+        }
+
         public RoundhousEOptions WithFunctionsFolder(string functionsFolderName)
         {
             _functionsFolderName = ReplaceTokens(functionsFolderName);
@@ -90,9 +102,39 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithIndexesFolder(string indexesFolderName)
+        {
+            _indexesFolderName = ReplaceTokens(indexesFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithRunAfterOtherAnyTimeScriptsFolder(string runAfterAnyOtherTimeScriptsFolderName)
+        {
+            _runAfterOtherAnyTimeScriptsFolderName = ReplaceTokens(runAfterAnyOtherTimeScriptsFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithPermissionsFolder(string permissionsFolderName)
+        {
+            _permissionsFolderName = ReplaceTokens(permissionsFolderName);
+            return this;
+        }
+
         public RoundhousEOptions WithViewsFolder(string viewsFolderName)
         {
             _viewsFolderName = ReplaceTokens(viewsFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithRunAfterCreateDatabaseFolder(string runAfterCreateDatabaseFolderName)
+        {
+            _runAfterCreateDatabaseFolderName = ReplaceTokens(runAfterCreateDatabaseFolderName);
+            return this;
+        }
+
+        public RoundhousEOptions WithRunBeforeUpFolder(string runBeforeUpFolderName)
+        {
+            _runBeforeUpFolderName = ReplaceTokens(runBeforeUpFolderName);
             return this;
         }
 
@@ -186,6 +228,12 @@ namespace dropkick.Configuration.Dsl.RoundhousE
             return this;
         }
 
+        public RoundhousEOptions WithAlterDatabaseFolder(string alterDatabaseFolderName)
+        {
+            _alterDatabaseFolderName = ReplaceTokens(alterDatabaseFolderName);
+            return this;
+        }
+
 
         public RoundhousEOptions WithRestoreCustomOptions(string options)
         {
@@ -220,14 +268,15 @@ namespace dropkick.Configuration.Dsl.RoundhousE
                 UserName = _userName,
                 Password = _password
             };
-            // string scriptsLocation = PathConverter.Convert(site, _path.GetFullPath(_scriptsLocation));
 
             var task = new RoundhousETask(connectionInfo, _scriptsLocation,
                 _environmentName, _roundhouseMode,
                 _recoveryMode, _restorePath, _restoreTimeout, _restoreCustomOptions,
                 _repositoryPath, _versionFile, _versionXPath, _commandTimeout, _commandTimeoutAdmin,
                 _functionsFolderName, _sprocsFolderName, _viewsFolderName, _upFolderName,
-                _versionTable, _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges, _outputPath);
+                _versionTable, _scriptsRunTable, _scriptsRunErrorTable, _warnOnOneTimeScriptChanges, _outputPath, 
+                _alterDatabaseFolderName, _runAfterCreateDatabaseFolderName, _runBeforeUpFolderName, _runFirstAfterUpFolderName,
+                _indexesFolderName, _runAfterOtherAnyTimeScriptsFolderName, _permissionsFolderName);
 
             site.AddTask(task);
         }
