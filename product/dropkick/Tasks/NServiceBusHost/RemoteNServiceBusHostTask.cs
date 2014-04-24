@@ -74,7 +74,9 @@ namespace dropkick.Tasks.NServiceBusHost
         public override DeploymentResult Execute()
         {
             Logging.Coarse("[nservicebushost] Installing a remote NServiceBus.Host service");
-            return _task.Execute();
+            var result = _task.Execute();
+            Logging.Coarse("[nservicebushost] Install ended");
+            return result;
         }
 
         private bool shouldPromptForPassword(string username, string password)
