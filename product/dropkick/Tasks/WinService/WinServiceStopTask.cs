@@ -17,6 +17,7 @@ namespace dropkick.Tasks.WinService
     using System.Diagnostics;
     using System.Linq;
     using System.ServiceProcess;
+    using System.Threading;
     using DeploymentModel;
     using Magnum.Extensions;
 
@@ -84,16 +85,19 @@ namespace dropkick.Tasks.WinService
 
         public void WaitForProcessToDie(int pid)
         {
+            const int sleepInterval = 500;
             DateTime timeout = DateTime.Now.AddMinutes(5);
             while (DateTime.Now < timeout)
             {
+                //TODO do we really need to get all processes? Why not just using GetProcessById WmiProcess.cs?
                 Process[] process = Process.GetProcesses(MachineName);
                 IEnumerable<Process> p = process.Where(x => x.Id == pid);
-                if (p.Count() == 0)
+                if (!p.Any())
                 {
                     return;
                 }
                 Logging.Fine("[svc] Seriously...just die already");
+                Thread.Sleep(sleepInterval);
             }
             
             throw new Exception("Service has not died yet!");
