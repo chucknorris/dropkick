@@ -44,8 +44,10 @@
 
         static void WaitForPidToDie(string machineName, uint pid)
         {
-            const int sleepInterval = 200;
-            const int totalAttemptsAllowed = 10;
+            const int sleepInterval = 500;
+            const int maxMinutesToWait = 2;
+            var deadline = DateTime.UtcNow.AddMinutes(maxMinutesToWait);
+
             var numberOfAttempts = 0;
 
             while (PidExists(machineName, pid))
@@ -57,9 +59,9 @@
                 Logging.Fine("[wmi] Sleeping for '{0}' milliseconds", sleep);
                 Thread.Sleep(sleep);
 
-                if (numberOfAttempts > totalAttemptsAllowed)
+                if (DateTime.UtcNow > deadline)
                 {
-                    Logging.Fine("[wmi] Tried waiting for '{0}' times, pid stil alive.", numberOfAttempts);
+                    Logging.Warn("[wmi] Tried waiting for more than '{0}' minutes, pid still alive.", maxMinutesToWait);
                     break;
                 }
             }
