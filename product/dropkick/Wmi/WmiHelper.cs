@@ -24,7 +24,14 @@ namespace dropkick.Wmi
             }
             catch (Exception exc)
             {
-                throw new SystemException("Problem connecting WMI scope on " + machineName + ".", exc);
+                if(string.IsNullOrEmpty(userName))
+                {
+                    throw new SystemException("Problem connecting WMI scope on " + machineName + " with current user account.", exc);
+                }
+                else 
+                {
+                    throw new SystemException("Problem connecting WMI scope on " + machineName + " with user account " + userName, exc);
+                }
             }
 
             return scope;
