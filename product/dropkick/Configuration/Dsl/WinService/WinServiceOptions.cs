@@ -20,7 +20,6 @@ namespace dropkick.Configuration.Dsl.WinService
         void Stop();
         WinServiceCreateOptions Create();
         void Delete();
-        WinServiceOptions WithAuthentication(string userName, string password);
         WinServiceOptions Do(Action<ProtoServer> registerAdditionalActions);
     }
 }

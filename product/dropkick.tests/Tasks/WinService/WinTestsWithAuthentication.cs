@@ -36,7 +36,7 @@ namespace dropkick.tests.Tasks.WinService
             {
                 return (WmiAuthenticationInfo)serializer.Deserialize(reader);
             }
-        }  
+        }
 
         [Test]
         [Explicit]
@@ -45,16 +45,18 @@ namespace dropkick.tests.Tasks.WinService
         {
             var authInfo = GetAuthenticationInfo();
 
-            var t = new WinServiceStopTask(authInfo.MachineName, "IISADMIN", authInfo.WmiUserName, authInfo.WmiPassword);
+            WmiService.WithAuthentication(authInfo.WmiUserName, authInfo.WmiPassword);
+
+            var t = new WinServiceStopTask(authInfo.MachineName, "IISADMIN");
             var verifyStopResult = t.VerifyCanRun();
             Log(verifyStopResult);
             AssertSuccess(verifyStopResult);
-            
+
             var stopResult = t.Execute();
             Log(stopResult);
             AssertSuccess(stopResult);
 
-            var t2 = new WinServiceStartTask(authInfo.MachineName, "IISADMIN", authInfo.WmiUserName, authInfo.WmiPassword);
+            var t2 = new WinServiceStartTask(authInfo.MachineName, "IISADMIN");
             var verifyStartResult = t2.VerifyCanRun();
             Log(verifyStartResult);
             AssertSuccess(verifyStartResult);
@@ -70,7 +72,8 @@ namespace dropkick.tests.Tasks.WinService
         {
             var authInfo = GetAuthenticationInfo();
 
-            var t = new WinServiceCreateTask(authInfo.MachineName, "DropKicKTestService", authInfo.WmiUserName, authInfo.WmiPassword);
+            WmiService.WithAuthentication(authInfo.WmiUserName, authInfo.WmiPassword);
+            var t = new WinServiceCreateTask(authInfo.MachineName, "DropKicKTestService");
 
             t.ServiceLocation = "C:\\Test\\TestService.exe";
             t.StartMode = ServiceStartMode.Automatic;
@@ -91,7 +94,9 @@ namespace dropkick.tests.Tasks.WinService
         {
             var authInfo = GetAuthenticationInfo();
 
-            var t = new WinServiceDeleteTask(authInfo.MachineName, "DropkicKTestService", authInfo.ServiceUserName, authInfo.ServicePassword);
+            WmiService.WithAuthentication(authInfo.ServiceUserName, authInfo.ServicePassword);
+
+            var t = new WinServiceDeleteTask(authInfo.MachineName, "DropkicKTestService");
 
             DeploymentResult o = t.VerifyCanRun();
             Log(o);
@@ -108,9 +113,9 @@ namespace dropkick.tests.Tasks.WinService
 
         private void Log(DeploymentResult result)
         {
-            if(result != null)
+            if (result != null)
             {
-                foreach(var item in result)
+                foreach (var item in result)
                 {
                     Debug.WriteLine(item.Message);
                 }

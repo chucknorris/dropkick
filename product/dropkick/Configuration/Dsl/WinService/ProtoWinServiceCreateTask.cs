@@ -33,21 +33,11 @@ namespace dropkick.Configuration.Dsl.WinService
         ServiceStartMode _startMode;
         string _userName;
         Path _path;
-        string _wmiUserName;
-        string _wmiPassword;
 
-        public ProtoWinServiceCreateTask(Path path, string serviceName, string wmiUserName, string wmiPassword)
+        public ProtoWinServiceCreateTask(Path path, string serviceName)
         {
             _path = path;
             _serviceName = ReplaceTokens(serviceName);
-            if(!string.IsNullOrEmpty(wmiUserName))
-            {
-                _wmiUserName = ReplaceTokens(wmiUserName);
-            }
-            if(!string.IsNullOrEmpty(wmiPassword))
-            {
-                _wmiPassword = ReplaceTokens(wmiPassword);
-            }
         }
 
         public WinServiceCreateOptions WithDisplayName(string displayName)
@@ -86,9 +76,9 @@ namespace dropkick.Configuration.Dsl.WinService
         public override void RegisterRealTasks(PhysicalServer site)
         {
             string serviceLocation = _installPath;
-            serviceLocation = _path.GetPhysicalPath(site, _installPath, true, _wmiUserName, _wmiPassword);
+            serviceLocation = _path.GetPhysicalPath(site, _installPath, true);
 
-            site.AddTask(new WinServiceCreateTask(site.Name, _serviceName, _wmiUserName, _wmiPassword)
+            site.AddTask(new WinServiceCreateTask(site.Name, _serviceName)
                              {
                                  Dependencies = _dependencies.ToArray(),
                                  UserName = _userName,

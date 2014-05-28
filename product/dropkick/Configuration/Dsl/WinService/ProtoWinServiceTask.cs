@@ -20,8 +20,6 @@ namespace dropkick.Configuration.Dsl.WinService
     {
         readonly ProtoServer _protoServer;
         readonly string _serviceName;
-        string _wmiUserName;
-        string _wmiPassword;
 
         public ProtoWinServiceTask(ProtoServer protoServer, string serviceName)
         {
@@ -29,46 +27,39 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = serviceName;
         }
 
-        public WinServiceOptions WithAuthentication(string wmiUserName, string wmiPassword)
-        {
-            _wmiUserName = wmiUserName;
-            _wmiPassword = wmiPassword;
-            return this;    
-        }
-
         public WinServiceOptions Do(Action<ProtoServer> registerAdditionalActions)
         {
-            _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName, _wmiUserName, _wmiPassword));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName));
 
             //child task
             registerAdditionalActions(_protoServer);
 
 
-            _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName, _wmiUserName, _wmiPassword));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName));
 
             return this;
         }
 
         public void Start()
         {
-            _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName, _wmiUserName, _wmiPassword));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName));
         }
 
         public void Stop()
         {
-            _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName, _wmiUserName, _wmiPassword));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName));
         }
 
         public WinServiceCreateOptions Create()
         {
-            var proto = new ProtoWinServiceCreateTask(new DotNetPath(), _serviceName, _wmiUserName, _wmiPassword);
+            var proto = new ProtoWinServiceCreateTask(new DotNetPath(), _serviceName);
             _protoServer.RegisterProtoTask(proto);
             return proto;
         }
 
         public void Delete()
         {
-            _protoServer.RegisterProtoTask(new ProtoWinServiceDeleteTask(_serviceName, _wmiUserName, _wmiPassword));
+            _protoServer.RegisterProtoTask(new ProtoWinServiceDeleteTask(_serviceName));
         }
     }
 }

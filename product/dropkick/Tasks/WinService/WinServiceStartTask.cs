@@ -9,8 +9,8 @@ namespace dropkick.Tasks.WinService
     public class WinServiceStartTask :
         BaseServiceTask
     {
-        public WinServiceStartTask(string machineName, string serviceName, string wmiUserName=null, string wmiPassword=null)
-            : base(machineName, serviceName, wmiUserName, wmiPassword)
+        public WinServiceStartTask(string machineName, string serviceName)
+            : base(machineName, serviceName)
         {
         }
 
@@ -43,7 +43,7 @@ namespace dropkick.Tasks.WinService
 
             if (ServiceExists())
             {
-                if(string.IsNullOrEmpty(WmiUserName) || string.IsNullOrEmpty(WmiPassword))
+                if(!dropkick.Wmi.WmiService.AuthenticationSpecified)
                 {
                     using (var c = new ServiceController(ServiceName, MachineName))
                     {
@@ -79,7 +79,7 @@ namespace dropkick.Tasks.WinService
                     {
                         try 
                         {
-                            var returnCode = dropkick.Wmi.WmiService.Start(MachineName, ServiceName, WmiUserName, WmiPassword);
+                            var returnCode = dropkick.Wmi.WmiService.Start(MachineName, ServiceName);
                             switch(returnCode)
                             {
                                 case Wmi.ServiceReturnCode.Success:
@@ -95,7 +95,7 @@ namespace dropkick.Tasks.WinService
                                     }
                                     break;
                                 default:
-                                    result.AddError("Failed to start service '{0}', most likely due to a logon issue.".FormatWith(ServiceName));
+                                    result.AddError("Failed to start service '{0}', most likely due to a logon issue, result: {1}".FormatWith(ServiceName, returnCode));
                                     LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.", ServiceName);
                                     break;
                             }

@@ -23,8 +23,8 @@ namespace dropkick.Tasks.WinService
     public class WinServiceStopTask :
         BaseServiceTask
     {
-        public WinServiceStopTask(string machineName, string serviceName, string wmiUserName=null, string wmiPassword=null)
-            : base(machineName, serviceName, wmiUserName, wmiPassword)
+        public WinServiceStopTask(string machineName, string serviceName)
+            : base(machineName, serviceName)
         {
         }
 
@@ -57,7 +57,7 @@ namespace dropkick.Tasks.WinService
 
             if (ServiceExists())
             {
-                if(string.IsNullOrEmpty(WmiUserName) || string.IsNullOrEmpty(WmiPassword))
+                if(!dropkick.Wmi.WmiService.AuthenticationSpecified)
                 {
                     using (var c = new ServiceController(ServiceName, MachineName))
                     {
@@ -84,7 +84,7 @@ namespace dropkick.Tasks.WinService
                     }
                     else 
                     {
-                        var status = dropkick.Wmi.WmiService.Stop(MachineName, ServiceName, WmiUserName, WmiPassword);
+                        var status = dropkick.Wmi.WmiService.Stop(MachineName, ServiceName);
                         switch (status)
                         {
                             case Wmi.ServiceReturnCode.StatusServiceExists:

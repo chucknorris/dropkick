@@ -20,25 +20,15 @@ namespace dropkick.Configuration.Dsl.WinService
         BaseProtoTask
     {
         readonly string _serviceName;
-        readonly string _wmiUserName;
-        readonly string _wmiPassword;
 
-        public ProtoWinServiceDeleteTask(string serviceName, string wmiUserName=null, string wmiPassword=null)
+        public ProtoWinServiceDeleteTask(string serviceName)
         {
             _serviceName = ReplaceTokens(serviceName);
-            if(!string.IsNullOrEmpty(wmiUserName))
-            {
-                _wmiUserName = ReplaceTokens(wmiUserName);
-            }
-            if(!string.IsNullOrEmpty(wmiPassword))
-            {
-                _wmiPassword = ReplaceTokens(wmiPassword);
-            }
         }
 
         public override void RegisterRealTasks(PhysicalServer site)
         {
-            site.AddTask(new WinServiceDeleteTask(site.Name, _serviceName, _wmiUserName, _wmiPassword));
+            site.AddTask(new WinServiceDeleteTask(site.Name, _serviceName));
         }
     }
 }

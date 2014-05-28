@@ -19,24 +19,20 @@ namespace dropkick.Tasks.WinService
     public abstract class BaseServiceTask :
         BaseTask
     {
-        protected BaseServiceTask(string machineName, string serviceName, string wmiUserName, string wmiPassword)
+        protected BaseServiceTask(string machineName, string serviceName)
         {
             MachineName = machineName;
             ServiceName = serviceName;
-            WmiUserName = wmiUserName;
-            WmiPassword = wmiPassword;
         }
 
         public string MachineName { get; set; }
         public string ServiceName { get; set; }
-        public string WmiUserName { get; set; }
-        public string WmiPassword { get; set; }
 
         protected bool ServiceIsRunning()
         {
             try
             {
-                if (string.IsNullOrEmpty(WmiUserName) || string.IsNullOrEmpty(WmiPassword))
+                if (!dropkick.Wmi.WmiService.AuthenticationSpecified)
                 {
                     using (var c = new ServiceController(ServiceName, MachineName))
                     {
@@ -45,7 +41,7 @@ namespace dropkick.Tasks.WinService
                 }
                 else
                 {
-                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName, WmiUserName, WmiPassword);
+                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName);
                     switch (status)
                     {
                         case Wmi.ServiceReturnCode.ServiceAlreadyRunning:
@@ -66,7 +62,7 @@ namespace dropkick.Tasks.WinService
         {
             try
             {
-                if(string.IsNullOrEmpty(WmiUserName) || string.IsNullOrEmpty(WmiPassword))
+                if(!dropkick.Wmi.WmiService.AuthenticationSpecified)
                 {
                     using (var c = new ServiceController(ServiceName, MachineName))
                     {
@@ -76,7 +72,7 @@ namespace dropkick.Tasks.WinService
                 }
                 else 
                 {
-                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName, WmiUserName, WmiPassword);
+                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName);
                     switch(status)
                     {
                         case Wmi.ServiceReturnCode.DependentServicesRunning:

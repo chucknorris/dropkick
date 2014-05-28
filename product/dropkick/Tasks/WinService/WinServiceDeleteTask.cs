@@ -18,7 +18,7 @@ namespace dropkick.Tasks.WinService
     public class WinServiceDeleteTask :
         BaseServiceTask
     {
-        public WinServiceDeleteTask(string machineName, string serviceName, string wmiUserName=null, string wmiPassword=null) : base(machineName, serviceName, wmiUserName, wmiPassword)
+        public WinServiceDeleteTask(string machineName, string serviceName) : base(machineName, serviceName)
         {
         }
 
@@ -47,7 +47,7 @@ namespace dropkick.Tasks.WinService
             }
             else 
             {
-                ServiceReturnCode returnCode = WmiService.Delete(MachineName, ServiceName, WmiUserName, WmiPassword);
+                ServiceReturnCode returnCode = WmiService.Delete(MachineName, ServiceName);
                 if(returnCode != ServiceReturnCode.Success)
                 {
                     result.AddAlert("Deleting service '{0}' failed: '{1}'".FormatWith(ServiceName, returnCode));

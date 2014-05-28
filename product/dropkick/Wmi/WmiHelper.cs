@@ -5,7 +5,18 @@ namespace dropkick.Wmi
 
     public class WmiHelper
     {
-        public static ManagementScope Connect(string machineName, string userName=null, string password=null)
+        [ThreadStatic]
+        private static string _wmiUserName;
+
+        [ThreadStatic]
+        private static string _wmiPassword;
+
+        public static bool AuthenticationSpecified 
+        { 
+            get { return !string.IsNullOrEmpty(_wmiUserName) || !string.IsNullOrEmpty(_wmiPassword); }
+        }
+
+        public static ManagementScope Connect(string machineName)
         {
             var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(machineName))
             {
@@ -13,42 +24,42 @@ namespace dropkick.Wmi
                 {
                     Impersonation = ImpersonationLevel.Impersonate,
                     EnablePrivileges = true,
-                    Username = userName,
-                    Password = password
+                    Username = _wmiUserName,
+                    Password = _wmiPassword
                 }
             };
-
+            
             try
             {
                 scope.Connect();
             }
             catch (Exception exc)
             {
-                if(string.IsNullOrEmpty(userName))
+                if(string.IsNullOrEmpty(_wmiUserName))
                 {
                     throw new SystemException("Problem connecting WMI scope on " + machineName + " with current user account.", exc);
                 }
                 else 
                 {
-                    throw new SystemException("Problem connecting WMI scope on " + machineName + " with user account " + userName, exc);
+                    throw new SystemException("Problem connecting WMI scope on " + machineName + " with user account " + _wmiUserName, exc);
                 }
             }
 
             return scope;
         }
 
-        static ManagementObject GetInstanceByName(string machineName, string className, string name, string userName=null, string password=null) {
+        static ManagementObject GetInstanceByName(string machineName, string className, string name) {
             var query = "SELECT * FROM " + className + " WHERE Name = '" + name + "'";
-            foreach (ManagementObject manObject in Query(machineName,query, userName, password)) {
+            foreach (ManagementObject manObject in Query(machineName,query)) {
                 return manObject;
             }
 
             return null;
         }
 
-        public static ManagementObjectCollection Query(string machineName, string query, string userName=null, string password=null)
+        public static ManagementObjectCollection Query(string machineName, string query)
         {
-            ManagementScope scope = Connect(machineName, userName, password);
+            ManagementScope scope = Connect(machineName);
             var queryObj = new ObjectQuery(query);
             var searcher = new ManagementObjectSearcher(scope, queryObj);
             ManagementObjectCollection results = searcher.Get();
@@ -58,9 +69,9 @@ namespace dropkick.Wmi
 
 
 
-        static ManagementClass GetStaticByName(string machineName, string className, string userName=null, string password=null)
+        static ManagementClass GetStaticByName(string machineName, string className)
         {
-            ManagementScope scope = Connect(machineName, userName, password);
+            ManagementScope scope = Connect(machineName);
             var getOptions = new ObjectGetOptions();
             var path = new ManagementPath(className);
             var manClass = new ManagementClass(scope, path, getOptions);
@@ -73,32 +84,12 @@ namespace dropkick.Wmi
             return InvokeInstanceMethod(machineName, className, name, methodName, null);
         }
 
-        public static int InvokeInstanceMethodWithAuthentication(string machineName, string className, string name, string methodName, string userName, string password)
-        {
-            return InvokeInstanceMethodWithAuthentication(machineName, className, name, methodName, userName, password, null);
-        }
-
         public static int InvokeInstanceMethod(string machineName, string className, string name, string methodName,
                                                object[] parameters)
         {
             try
             {
                 ManagementObject manObject = GetInstanceByName(machineName, className, name);
-                object result = manObject.InvokeMethod(methodName, parameters);
-                return Convert.ToInt32(result);
-            }
-            catch
-            {
-                return -1;
-            }
-        }
-
-        public static int InvokeInstanceMethodWithAuthentication(string machineName, string className, string name, string methodName,
-                                               string userName, string password, object[] parameters)
-        {
-            try
-            {
-                ManagementObject manObject = GetInstanceByName(machineName, className, name, userName, password);
                 object result = manObject.InvokeMethod(methodName, parameters);
                 return Convert.ToInt32(result);
             }
@@ -130,21 +121,10 @@ namespace dropkick.Wmi
             }
         }
 
-        public static int InvokeStaticMethodWithAuthentication(string machineName, string className, string methodName,
-                                             object[] parameters, string wmiUserName, string wmiPassword)
+        public static void WithAuthentication(string remoteUserName, string remotePassword)
         {
-            try
-            {
-                using (var managementClass = GetStaticByName(machineName, className, wmiUserName, wmiPassword))
-                {
-                    object result = managementClass.InvokeMethod(methodName, parameters);
-                    return Convert.ToInt32(result);
-                }
-            }
-            catch
-            {
-                return -1;
-            }
+            _wmiUserName = remoteUserName;
+            _wmiPassword = remotePassword;
         }
     }
 }
