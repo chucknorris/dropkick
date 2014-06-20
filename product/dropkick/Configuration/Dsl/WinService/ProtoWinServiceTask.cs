@@ -27,7 +27,6 @@ namespace dropkick.Configuration.Dsl.WinService
             _serviceName = serviceName;
         }
 
-
         public WinServiceOptions Do(Action<ProtoServer> registerAdditionalActions)
         {
             _protoServer.RegisterProtoTask(new ProtoWinServiceStopTask(_serviceName));
@@ -35,7 +34,7 @@ namespace dropkick.Configuration.Dsl.WinService
             //child task
             registerAdditionalActions(_protoServer);
 
-            
+
             _protoServer.RegisterProtoTask(new ProtoWinServiceStartTask(_serviceName));
 
             return this;

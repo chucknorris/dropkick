@@ -25,7 +25,7 @@ namespace dropkick.FileSystem
     {
         #region Path Members
 
-        public string GetPhysicalPath(PhysicalServer site, string path,bool forceLocalPath)
+        public string GetPhysicalPath(PhysicalServer site, string path, bool forceLocalPath)
         {
             var standardizedPath = path;
             if (!IsUncPath(standardizedPath))

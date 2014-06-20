@@ -31,7 +31,7 @@ namespace dropkick.Tasks.WinService
             }
             else
             {
-                result.AddAlert(string.Format("Can't find service '{0}'", ServiceName));
+                result.AddError(string.Format("Can't find service '{0}'", ServiceName));
             }
 
             return result;
@@ -43,26 +43,68 @@ namespace dropkick.Tasks.WinService
 
             if (ServiceExists())
             {
-                using (var c = new ServiceController(ServiceName, MachineName))
+                if(!dropkick.Wmi.WmiService.AuthenticationSpecified)
+                {
+                    using (var c = new ServiceController(ServiceName, MachineName))
+                    {
+                        Logging.Coarse("[svc] Starting service '{0}'", ServiceName);
+                        try
+                        {
+                            c.Start();
+                            LogCoarseGrain("[svc] Waiting up to 60 seconds because Windows can be silly");
+                            c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
+                        }
+                        catch (InvalidOperationException ex)
+                        {
+                            result.AddError("The service '{0}' did not start, most likely due to a logon issue.".FormatWith(ServiceName), ex);
+                            LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.{1}{2}", ServiceName, Environment.NewLine, ex);
+                            return result;
+                        }
+                        catch (TimeoutException)
+                        {
+                            result.AddAlert("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
+                            LogCoarseGrain("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
+                            return result;
+                        }
+                    }
+                }
+                else 
                 {
                     Logging.Coarse("[svc] Starting service '{0}'", ServiceName);
-                    try
+                    if (ServiceIsRunning())
                     {
-                        c.Start();
-                        LogCoarseGrain("[svc] Waiting up to 60 seconds because Windows can be silly");
-                        c.WaitForStatus(ServiceControllerStatus.Running, TimeSpan.FromSeconds(60));
+                        LogCoarseGrain("[svc] Service '{0}' is already running".FormatWith(ServiceName));
                     }
-                    catch (InvalidOperationException ex)
+                    else
                     {
-                        result.AddError("The service '{0}' did not start, most likely due to a logon issue.".FormatWith(ServiceName), ex);
-                        LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.{1}{2}", ServiceName, Environment.NewLine, ex);
-                        return result;
-                    }
-                    catch (TimeoutException)
-                    {
-                        result.AddAlert("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
-                        LogCoarseGrain("Service '{0}' did not finish starting during the specified timeframe.  You will need to manually verify if the service started successfully.", ServiceName);
-                        return result;
+                        try 
+                        {
+                            var returnCode = dropkick.Wmi.WmiService.Start(MachineName, ServiceName);
+                            switch(returnCode)
+                            {
+                                case Wmi.ServiceReturnCode.Success:
+                                    if(!ServiceIsRunning())
+                                    {
+                                        result.AddError("Failed to start service '{0}', most likely due to a logon issue.".FormatWith(ServiceName));
+                                        LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.", ServiceName);
+                                        break;
+                                    }
+                                    else 
+                                    {
+                                        //good!
+                                    }
+                                    break;
+                                default:
+                                    result.AddError("Failed to start service '{0}', most likely due to a logon issue, result: {1}".FormatWith(ServiceName, returnCode));
+                                    LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.", ServiceName);
+                                    break;
+                            }
+                        }
+                        catch(Exception ex)
+                        {
+                            result.AddError("The service '{0}' did not start, most likely due to a logon issue.".FormatWith(ServiceName), ex);
+                            LogCoarseGrain("The service '{0}' did not start, most likely due to a logon issue.{1}{2}", ServiceName, Environment.NewLine, ex);
+                        }
                     }
                 }
                 result.AddGood("Started the service '{0}'", ServiceName);

@@ -138,6 +138,7 @@
     <Compile Include="Tasks\Security\LogOnAsServiceTaskTest.cs" />
     <Compile Include="Tasks\Security\Msmq\SetSensibleMsmqDefaultsTest.cs" />
     <Compile Include="Tasks\Security\Msmq\MsmqGrantSecuritySpecs.cs" />
+    <Compile Include="Tasks\WinService\WinTestsWithAuthentication.cs" />
     <Compile Include="Tasks\Xml\Context\XmlContextResult.cs" />
     <Compile Include="Tasks\WinService\PasswordPromptSpecs.cs" />
     <Compile Include="Tasks\Xml\XmlPokeTaskSpecs.cs" />

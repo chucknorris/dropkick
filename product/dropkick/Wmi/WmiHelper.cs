@@ -5,6 +5,17 @@ namespace dropkick.Wmi
 
     public class WmiHelper
     {
+        [ThreadStatic]
+        private static string _wmiUserName;
+
+        [ThreadStatic]
+        private static string _wmiPassword;
+
+        public static bool AuthenticationSpecified 
+        { 
+            get { return !string.IsNullOrEmpty(_wmiUserName) || !string.IsNullOrEmpty(_wmiPassword); }
+        }
+
         public static ManagementScope Connect(string machineName)
         {
             var scope = new ManagementScope(@"\\{0}\root\cimv2".FormatWith(machineName))
@@ -12,17 +23,26 @@ namespace dropkick.Wmi
                 Options =
                 {
                     Impersonation = ImpersonationLevel.Impersonate,
-                    EnablePrivileges = true
+                    EnablePrivileges = true,
+                    Username = _wmiUserName,
+                    Password = _wmiPassword
                 }
             };
-
+            
             try
             {
                 scope.Connect();
             }
             catch (Exception exc)
             {
-                throw new SystemException("Problem connecting WMI scope on " + machineName + ".", exc);
+                if(string.IsNullOrEmpty(_wmiUserName))
+                {
+                    throw new SystemException("Problem connecting WMI scope on " + machineName + " with current user account.", exc);
+                }
+                else 
+                {
+                    throw new SystemException("Problem connecting WMI scope on " + machineName + " with user account " + _wmiUserName, exc);
+                }
             }
 
             return scope;
@@ -99,6 +119,12 @@ namespace dropkick.Wmi
             {
                 return -1;
             }
+        }
+
+        public static void WithAuthentication(string remoteUserName, string remotePassword)
+        {
+            _wmiUserName = remoteUserName;
+            _wmiPassword = remotePassword;
         }
     }
 }

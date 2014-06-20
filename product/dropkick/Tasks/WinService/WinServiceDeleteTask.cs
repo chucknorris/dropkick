@@ -30,7 +30,10 @@ namespace dropkick.Tasks.WinService
         public override DeploymentResult VerifyCanRun()
         {
             var result = new DeploymentResult();
-
+            if(!ServiceExists())
+            {
+                result.AddNote("Cannot delete service '{0}', service does not exist".FormatWith(ServiceName));
+            }
             return result;
         }
 
@@ -38,8 +41,18 @@ namespace dropkick.Tasks.WinService
         {
             var result = new DeploymentResult();
 
-            ServiceReturnCode returnCode = WmiService.Delete(MachineName, ServiceName);
-
+            if (!ServiceExists())
+            {
+                result.AddNote("Cannot delete service '{0}', service does not exist".FormatWith(ServiceName));
+            }
+            else 
+            {
+                ServiceReturnCode returnCode = WmiService.Delete(MachineName, ServiceName);
+                if(returnCode != ServiceReturnCode.Success)
+                {
+                    result.AddAlert("Deleting service '{0}' failed: '{1}'".FormatWith(ServiceName, returnCode));
+                }
+            }
             return result;
         }
     }

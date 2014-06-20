@@ -28,15 +28,64 @@ namespace dropkick.Tasks.WinService
         public string MachineName { get; set; }
         public string ServiceName { get; set; }
 
+        protected bool ServiceIsRunning()
+        {
+            try
+            {
+                if (!dropkick.Wmi.WmiService.AuthenticationSpecified)
+                {
+                    using (var c = new ServiceController(ServiceName, MachineName))
+                    {
+                        return (c.Status == ServiceControllerStatus.Running);
+                    }
+                }
+                else
+                {
+                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName);
+                    switch (status)
+                    {
+                        case Wmi.ServiceReturnCode.ServiceAlreadyRunning:
+                        case Wmi.ServiceReturnCode.Success:
+                            return true;
+                        default:
+                            return false;
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
 
         protected bool ServiceExists()
         {
             try
             {
-                using (var c = new ServiceController(ServiceName, MachineName))
+                if(!dropkick.Wmi.WmiService.AuthenticationSpecified)
                 {
-                    ServiceControllerStatus currentStatus = c.Status;
-                    return true;
+                    using (var c = new ServiceController(ServiceName, MachineName))
+                    {
+                        ServiceControllerStatus currentStatus = c.Status;
+                        return true;
+                    }
+                }
+                else 
+                {
+                    var status = dropkick.Wmi.WmiService.QueryService(MachineName, ServiceName);
+                    switch(status)
+                    {
+                        case Wmi.ServiceReturnCode.DependentServicesRunning:
+                        case Wmi.ServiceReturnCode.ServiceAlreadyPaused:
+                        case Wmi.ServiceReturnCode.ServiceAlreadyRunning:
+                        case Wmi.ServiceReturnCode.StatusServiceExists:
+                        case Wmi.ServiceReturnCode.Success:
+                        case Wmi.ServiceReturnCode.ServiceNotActive:
+                        case Wmi.ServiceReturnCode.InvalidServiceControl:
+                            return true;
+                        default:
+                            return false;
+                    }
                 }
             }
             catch (Exception)

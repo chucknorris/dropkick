@@ -58,21 +58,49 @@ namespace dropkick.Tasks.WinService
 
             if (ServiceExists())
             {
-                using (var c = new ServiceController(ServiceName, MachineName))
+                if(!dropkick.Wmi.WmiService.AuthenticationSpecified)
                 {
-                    Logging.Coarse("[svc] Stopping service '{0}'", ServiceName);
-                    if (c.CanStop)
+                    using (var c = new ServiceController(ServiceName, MachineName))
                     {
-                        int pid = GetProcessId(ServiceName);
+                        Logging.Coarse("[svc] Stopping service '{0}'", ServiceName);
+                        if (c.CanStop)
+                        {
+                            int pid = GetProcessId(ServiceName);
 
-                        c.Stop();
-                        c.WaitForStatus(ServiceControllerStatus.Stopped, 30.Seconds());
+                            c.Stop();
+                            c.WaitForStatus(ServiceControllerStatus.Stopped, 30.Seconds());
 
-                        WaitForProcessToDie(pid);
+                            WaitForProcessToDie(pid);
+                        }
                     }
+                    result.AddGood("Stopped Service '{0}'", ServiceName);
+                    Logging.Coarse("[svc] Stopped service '{0}'", ServiceName);
                 }
-                result.AddGood("Stopped Service '{0}'", ServiceName);
-                Logging.Coarse("[svc] Stopped service '{0}'", ServiceName);
+                else 
+                {
+                    if(!ServiceIsRunning())
+                    {
+                        result.AddGood("Stopping Service '{0}', Service Already Stopped", ServiceName);
+                        Logging.Coarse("[svc] Stopping service '{0}', service already stopped", ServiceName);
+                    }
+                    else 
+                    {
+                        var status = dropkick.Wmi.WmiService.Stop(MachineName, ServiceName);
+                        switch (status)
+                        {
+                            case Wmi.ServiceReturnCode.StatusServiceExists:
+                            case Wmi.ServiceReturnCode.Success:
+                                result.AddGood("Stopped Service '{0}'", ServiceName);
+                                Logging.Coarse("[svc] Stopped service '{0}'", ServiceName);
+                                break;
+                            default:
+                                //BAD
+                                throw new Exception("Failed to stop service {0}: {1}".FormatWith(ServiceName, status));
+                        }
+                    }
+                    result.AddGood("Stopped Service '{0}'", ServiceName);
+                    Logging.Coarse("[svc] Stopped service '{0}'", ServiceName);
+                }
             }
             else
             {

@@ -10,6 +10,11 @@ namespace dropkick.Wmi
         const string CLASSNAME = "Win32_Service";
         //private char NULL_VALUE = char(0);
 
+        public static bool AuthenticationSpecified 
+        { 
+            get { return WmiHelper.AuthenticationSpecified; }
+        }
+
         public static ServiceReturnCode Create(string machineName, string serviceName, string serviceDisplayName,
                                                string serviceLocation, ServiceStartMode startMode, string userName,
                                                string password, string[] dependencies)
@@ -129,6 +134,11 @@ namespace dropkick.Wmi
             {
                 return ServiceReturnCode.UnknownFailure;
             }
+        }
+
+        public static void WithAuthentication(string remoteUserName, string remotePassword)
+        {
+            WmiHelper.WithAuthentication(remoteUserName, remotePassword);
         }
     }
 }

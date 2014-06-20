@@ -65,7 +65,11 @@ namespace dropkick.Tasks.WinService
             if (shouldPromptForPassword())
                 Password = _prompt.Prompt("Win Service '{0}' For User '{1}' Password".FormatWith(ServiceName, UserName));
 
-            ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, ServiceDisplayName, ServiceLocation,
+            string displayName = ServiceDisplayName;
+            if(string.IsNullOrEmpty(displayName))
+                displayName = ServiceName;
+
+            ServiceReturnCode returnCode = WmiService.Create(MachineName, ServiceName, displayName, ServiceLocation,
                                                              StartMode, UserName, Password, Dependencies);
             
             if (returnCode != ServiceReturnCode.Success)
