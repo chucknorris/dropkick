@@ -1,5 +1,5 @@
-<?xml version="1.0" encoding="utf-8"?>
-<configuration>
+﻿<?xml version="1.0" encoding="utf-8"?>
+<configuration xmlns="http://schemas.microsoft.com/.NetConfiguration/v2.0">
   <connectionStrings>
   </connectionStrings>
   <location path="DifferentModule.axd" inheritInChildApplications="false">

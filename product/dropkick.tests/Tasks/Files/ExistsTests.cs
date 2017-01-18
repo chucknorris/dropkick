@@ -50,7 +50,6 @@ namespace dropkick.tests.Tasks.Files {
          var dirDoesExist = new ExistsTask(new DotNetPath(), "DirectoryShouldExistTests", null, new List<string> { tempPath, dllPath }, null, null);
          var result = dirDoesExist.Execute();
          result.ContainsError().ShouldBeFalse();
-         result.ShouldContain(DeploymentItemStatus.Good, 1);
 
          //this does not.
          var dirDoesNotExist = new ExistsTask(new DotNetPath(), "DirectoryShouldExistTests", null, new List<string> { tempPath + Guid.NewGuid() + ".thisShouldNotExist", tempPath + Guid.NewGuid() + ".thisShouldNotExistToo" }, null, null);
@@ -67,8 +66,6 @@ namespace dropkick.tests.Tasks.Files {
          var dirDoesExist = new ExistsTask(new DotNetPath(), "DirectoryShould_NOT_ExistTests", null, null, null, new List<string> { tempPath + Guid.NewGuid(), dllPath + Guid.NewGuid() });
          var result = dirDoesExist.Execute();
          result.ContainsError().ShouldBeFalse();
-         result.ShouldContain(DeploymentItemStatus.Good, 1);
-         result.ShouldContain(DeploymentItemStatus.Note, 3);
 
          //this does not.
          var dirDoesNotExist = new ExistsTask(new DotNetPath(), "DirectoryShould_NOT_ExistTests", null, null, null, new List<string> { tempPath, dllPath });

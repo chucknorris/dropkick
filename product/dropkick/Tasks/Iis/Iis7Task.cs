@@ -183,7 +183,10 @@ namespace dropkick.Tasks.Iis
         {
             Magnum.Guard.AgainstNull(site, "The site argument is null and should not be");
             var appPath = "/" + VirtualDirectoryPath;
-        	var application = site.Applications.FirstOrDefault(x => x.Path == appPath);
+
+            //this didn't find the application if there is a difference in letter casing like '/MyApplication' and '/Myapplication'. But threw an exception when tried to add it.
+        	   //var application = site.Applications.FirstOrDefault(x => x.Path == appPath);
+            var application = site.Applications.FirstOrDefault(x => x.Path.Equals(appPath, StringComparison.OrdinalIgnoreCase));
 
 			if (application == null)
 			{
@@ -236,15 +239,7 @@ namespace dropkick.Tasks.Iis
 
         public bool DoesVirtualDirectoryExist(Site site)
         {
-            foreach (var app in site.Applications)
-            {
-                if (app.Path.Equals("/" + VirtualDirectoryPath))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+           return site.Applications.Any(x => x.Path.Equals(VirtualDirectoryPath, StringComparison.OrdinalIgnoreCase));            
         }
 
         public Site GetSite(ServerManager iisManager, string name)

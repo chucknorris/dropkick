@@ -17,6 +17,7 @@ namespace dropkick.Configuration.Dsl.Xml
     using FileSystem;
     using Tasks;
     using Tasks.Xml;
+    using System;
 
     public class ProtoXmlPokeTask :
         BaseProtoTask,
@@ -25,7 +26,7 @@ namespace dropkick.Configuration.Dsl.Xml
         private readonly string _filePath;
         private IDictionary<string, string> _namespacePrefixes; 
         private IDictionary<string, string> _items = new Dictionary<string, string>();
-        private IDictionary<string, string> _setOrInsertItems = new Dictionary<string, string>();
+        private IDictionary<string, Tuple<string, bool>>_setOrInsertItems = new Dictionary<string, Tuple<string, bool>>();
 
         public ProtoXmlPokeTask(string filePath)
             : this(filePath, null)
@@ -55,13 +56,18 @@ namespace dropkick.Configuration.Dsl.Xml
         }
 
         public XmlPokeOptions SetOrInsert(string xPath, string value) {
+           return SetOrInsert(xPath, value, false);
+        }
+
+        public XmlPokeOptions SetOrInsert(string xPath, string value, bool shouldBeFirst)
+        {
            xPath = ReplaceTokens(xPath);
            value = ReplaceTokens(value);
 
            if(_setOrInsertItems.ContainsKey(xPath)) {
-              _setOrInsertItems[xPath] = value;
+              _setOrInsertItems[xPath] = Tuple.Create(value, shouldBeFirst);
            } else {
-              _setOrInsertItems.Add(xPath, value);
+              _setOrInsertItems.Add(xPath, Tuple.Create(value, shouldBeFirst));
            }
 
            return this;
