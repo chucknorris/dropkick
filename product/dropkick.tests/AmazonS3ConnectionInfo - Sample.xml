@@ -1,0 +1,5 @@
+<AmazonS3ConnectionInfo>
+	<BucketName>Bucket Name</BucketName>
+	<AccessId>Access ID</AccessId>
+	<SecretAccessKey>Secret Access Key</SecretAccessKey>
+</AmazonS3ConnectionInfo>

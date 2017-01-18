@@ -27,3 +27,9 @@ SolutionVersion.cs
 SolutionVersion.vb
 dropkick.5.1.ReSharper.user
 /dropkick.5.0.ReSharper.user
+*.ncrunchsolution
+*.ncrunchsolution.user
+
+/product/dropkick.tests/AmazonS3ConnectionInfo.xml
+/product/dropkick.tests/*.ncrunchproject
+*.ncrunchproject
