@@ -39,7 +39,14 @@ namespace dropkick.Configuration.Dsl.Iis
        /// <param name="enabled"></param>
        /// <returns></returns>
         IisVirtualDirectoryOptions SetAuthentication(dropkick.Tasks.Iis.IISAuthenticationMode authenticationType, bool enabled);
-    }
+		/// <summary>
+		/// Uses the provided administrator account for connecting via UNC and WMI
+		/// </summary>
+		/// <param name="userName"></param>
+		/// <param name="password"></param>
+		/// <returns></returns>
+		IisVirtualDirectoryOptions WithAdministratorAccount(string userName, string password);
+	}
 
     public interface AppPoolOptions
     {

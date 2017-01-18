@@ -51,6 +51,8 @@ using System.Collections.Generic;
 		public string ProcessModelUsername { get; private set; }
 		public string ProcessModelPassword { get; private set; }
       public Dictionary<IISAuthenticationMode, bool> AuthenticationToSet { get; private set; }
+	  public string AdministratorUserName { get; set; }
+	  public string AdministratorPassword { get; set; }
 
         public IisVirtualDirectoryOptions VirtualDirectory(string name)
         {
@@ -87,6 +89,12 @@ using System.Collections.Generic;
             return this;
         }
 
+		public IisVirtualDirectoryOptions WithAdministratorAccount(string userName, string password)
+		{
+			AdministratorUserName = ReplaceTokens(userName);
+			AdministratorPassword = ReplaceTokens(password);
+			return this;
+		}
 
         public void SetRuntimeToV4()
         {
@@ -114,7 +122,7 @@ using System.Collections.Generic;
 
         public override void RegisterRealTasks(PhysicalServer s)
         {
-            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer,true);
+            var scrubbedPath = _path.GetPhysicalPath(s, PathOnServer, true, this.AdministratorUserName, this.AdministratorPassword);
 
             if (Version == IisVersion.Six)
             {

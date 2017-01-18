@@ -54,6 +54,9 @@
     <CodeAnalysisRuleSet>AllRules.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK">
+      <HintPath>..\..\packages\AWSSDK.1.5.16.0\lib\AWSSDK.dll</HintPath>
+    </Reference>
     <Reference Include="Ionic.Zip">
       <HintPath>..\..\packages\DotNetZip.1.9\lib\Ionic.Zip.dll</HintPath>
     </Reference>
@@ -84,6 +87,7 @@
     <Reference Include="System.Data" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\..\SolutionVersion.cs">
@@ -91,6 +95,9 @@
     </Compile>
     <Compile Include="Configuration\DeploymentPlanBuilder.cs" />
     <Compile Include="Configuration\DropkickConfiguration.cs" />
+    <Compile Include="Configuration\Dsl\AmazonS3\AmazonS3Options.cs" />
+    <Compile Include="Configuration\Dsl\AmazonS3\ProtoAmazonS3UploadDirectoryTask.cs" />
+    <Compile Include="Configuration\Dsl\AmazonS3\Extension.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\CommandLineOptions.cs" />
     <Compile Include="Configuration\Dsl\CommandLine\ProtoCommandLineTask.cs" />
     <Compile Include="Configuration\Dsl\Files\ExistsOptions.cs" />
@@ -147,6 +154,11 @@
     <Compile Include="StringInterpolation\Interpolator.cs" />
     <Compile Include="StringInterpolation\CaseInsensitiveInterpolator.cs" />
     <Compile Include="Configuration\Dsl\Security\Msmq\ProtoSetSensibleMsmqDefaults.cs" />
+    <Compile Include="Tasks\AmazonS3\AmazonS3ConnectionInfo.cs" />
+    <Compile Include="Tasks\AmazonS3\AmazonS3UploadDirectoryTask.cs" />
+    <Compile Include="Tasks\AmazonS3\IAmazonService.cs" />
+    <Compile Include="Tasks\AmazonS3\RestAmazonService.cs" />
+    <Compile Include="Tasks\AmazonS3\SdkAmazonService.cs" />
     <Compile Include="Tasks\Files\BaseIoTask.cs" />
     <Compile Include="Tasks\Files\ExistsTasks.cs" />
     <Compile Include="Tasks\Files\CopyOptions.cs" />
